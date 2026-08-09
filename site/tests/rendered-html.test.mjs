@@ -19,15 +19,19 @@ test("ShelfDropのランディングページをサーバーレンダリング�
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
+  const htmlWithoutBreakHints = html
+    .replace(/<wbr\s*\/?\s*>/g, "")
+    .replace(/<\/?span\b[^>]*>/g, "");
   assert.match(html, /<html lang="ja">/);
   assert.match(html, /<title>ShelfDrop — 移動する前に、置いておく。<\/title>/);
   assert.match(html, /無料でダウンロード/);
+  assert.match(html, /<wbr\s*\/?/);
   assert.match(html, /v0\.5\.1/);
   assert.match(html, /Option \+ Tab/);
-  assert.match(html, /好きな場所へ取り出す/);
-  assert.match(html, /DMGからインストール/);
-  assert.match(html, /一行で導入・更新/);
-  assert.match(html, /クリップボードを自動で監視することはありません/);
+  assert.match(htmlWithoutBreakHints, /好きな場所へ取り出す/);
+  assert.match(htmlWithoutBreakHints, /DMGからインストール/);
+  assert.match(htmlWithoutBreakHints, /一行で導入・更新/);
+  assert.match(htmlWithoutBreakHints, /クリップボードを自動で監視することはありません/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 

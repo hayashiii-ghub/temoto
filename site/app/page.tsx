@@ -1,4 +1,5 @@
 import { CopyCommandButton } from "./CopyCommandButton";
+import { JapaneseText } from "./JapaneseText";
 
 const downloadUrl =
   "https://github.com/hayashiii-ghub/shelfdrop/releases/latest/download/ShelfDrop-macos.dmg";
@@ -145,10 +146,9 @@ export default function Home() {
       <section className="hero shell">
         <div className="heroCopy">
           <p className="eyebrow"><span /> FLOATING SHELF FOR MACOS</p>
-          <h1>移動する前に、<br />置いておく。</h1>
+          <h1><JapaneseText>移動する前に、置いておく。</JapaneseText></h1>
           <p className="lead">
-            ShelfDropは、ファイルやリンクを一時的に置ける小さな棚。
-            ウィンドウを行き来する手間を減らして、作業の流れを止めません。
+            <JapaneseText>ShelfDropは、ファイルやリンクを一時的に置ける小さな棚。ウィンドウを行き来する手間を減らして、作業の流れを止めません。</JapaneseText>
           </p>
           <div className="heroActions">
             <a className="button primary" href={downloadUrl}>無料でダウンロード <span aria-hidden="true">↘</span></a>
@@ -173,15 +173,15 @@ export default function Home() {
       <section className="section shell" id="features">
         <div className="sectionHeading">
           <p className="eyebrow"><span /> WHY SHELFDROP</p>
-          <h2>置き場所を決める前の、<br />ちょうどいい置き場所。</h2>
-          <p>コピー先を探すあいだも、別のアプリを開くあいだも。いま手にしているものを、画面の上に残しておけます。</p>
+          <h2><JapaneseText>置き場所を決める前の、ちょうどいい置き場所。</JapaneseText></h2>
+          <p><JapaneseText>コピー先を探すあいだも、別のアプリを開くあいだも。いま手にしているものを、画面の上に残しておけます。</JapaneseText></p>
         </div>
         <div className="capabilityGrid">
           {capabilities.map((item) => (
             <article className={`capabilityCard ${item.className}`} key={item.number}>
               <div className="capabilityTop"><span>{item.number}</span><i /></div>
               <div className="capabilityVisual">{item.visual}</div>
-              <div className="capabilityCopy"><h3>{item.title}</h3><p>{item.text}</p></div>
+              <div className="capabilityCopy"><h3><JapaneseText>{item.title}</JapaneseText></h3><p><JapaneseText>{item.text}</JapaneseText></p></div>
             </article>
           ))}
         </div>
@@ -191,14 +191,14 @@ export default function Home() {
         <div className="shell workflowGrid">
           <div className="workflowIntro">
             <p className="eyebrow"><span /> HOW IT WORKS</p>
-            <h2>選ぶ。置く。<br />取り出す。</h2>
-            <p>覚える操作はひとつだけ。Finderで選んだものを、キーボードから直接ShelfDropへ送れます。</p>
+            <h2><JapaneseText>選ぶ。置く。取り出す。</JapaneseText></h2>
+            <p><JapaneseText>覚える操作はひとつだけ。Finderで選んだものを、キーボードから直接ShelfDropへ送れます。</JapaneseText></p>
             <div className="bigShortcut"><kbd>option</kbd><span>+</span><kbd>tab</kbd></div>
           </div>
           <ol className="workflowSteps">
-            <li><span>01</span><div><h3>Finderで選ぶ</h3><p>ファイル、フォルダ、または複数の項目を選択します。</p></div></li>
-            <li><span>02</span><div><h3>Option + Tabで置く</h3><p>選択した項目が、いちばん手前のShelfDropへ追加されます。</p></div></li>
-            <li><span>03</span><div><h3>好きな場所へ取り出す</h3><p>移動先を開き、棚からドラッグ。まとめて移動、コピー、ZIP化もできます。</p></div></li>
+            <li><span>01</span><div><h3><JapaneseText>Finderで選ぶ</JapaneseText></h3><p><JapaneseText>ファイル、フォルダ、または複数の項目を選択します。</JapaneseText></p></div></li>
+            <li><span>02</span><div><h3><JapaneseText>Option + Tabで置く</JapaneseText></h3><p><JapaneseText>選択した項目が、いちばん手前のShelfDropへ追加されます。</JapaneseText></p></div></li>
+            <li><span>03</span><div><h3><JapaneseText>好きな場所へ取り出す</JapaneseText></h3><p><JapaneseText>移動先を開き、棚からドラッグ。まとめて移動、コピー、ZIP化もできます。</JapaneseText></p></div></li>
           </ol>
         </div>
       </section>
@@ -206,41 +206,41 @@ export default function Home() {
       <section className="section installSection shell" id="install">
         <div className="installHeading">
           <p className="eyebrow"><span /> GET SHELFDROP</p>
-          <h2>Macに、小さな棚を。</h2>
-          <p>アカウントも設定画面もありません。ダウンロードしてApplicationsへ移すだけで使い始められます。</p>
+          <h2><JapaneseText>Macに、小さな棚を。</JapaneseText></h2>
+          <p><JapaneseText>アカウントも設定画面もありません。ダウンロードしてApplicationsへ移すだけで使い始められます。</JapaneseText></p>
         </div>
         <div className="installOptions">
           <article className="installCard installPrimary">
             <div className="installMeta"><span>RECOMMENDED</span><em>01</em></div>
-            <h3>DMGからインストール</h3>
+            <h3><JapaneseText>DMGからインストール</JapaneseText></h3>
             <ol>
-              <li><span>1</span><p>最新版をダウンロード</p></li>
-              <li><span>2</span><p>ShelfDropをApplicationsへ移動</p></li>
-              <li><span>3</span><p>Applicationsから起動</p></li>
+              <li><span>1</span><p><JapaneseText>最新版をダウンロード</JapaneseText></p></li>
+              <li><span>2</span><p><JapaneseText>ShelfDropをApplicationsへ移動</JapaneseText></p></li>
+              <li><span>3</span><p><JapaneseText>Applicationsから起動</JapaneseText></p></li>
             </ol>
             <a className="button primary full" href={downloadUrl}>ShelfDrop for macOS <span aria-hidden="true">↘</span></a>
-            <small>初回のみ、macOSから起動の確認が表示される場合があります。</small>
+            <small><JapaneseText>初回のみ、macOSから起動の確認が表示される場合があります。</JapaneseText></small>
           </article>
           <article className="installCard installTerminal">
             <div className="installMeta"><span>TERMINAL</span><em>02</em></div>
-            <h3>一行で導入・更新</h3>
-            <p>未導入ならインストール、導入済みなら最新版へ安全に入れ替えます。</p>
+            <h3><JapaneseText>一行で導入・更新</JapaneseText></h3>
+            <p><JapaneseText>未導入ならインストール、導入済みなら最新版へ安全に入れ替えます。</JapaneseText></p>
             <div className="terminalWindow">
               <div className="terminalBar"><span /><span /><span /><small>zsh</small></div>
               <div className="commandRow"><code>{updateCommand}</code><CopyCommandButton command={updateCommand} /></div>
             </div>
-            <small>同じコマンドをもう一度実行すれば、いつでも最新版へ更新できます。</small>
+            <small><JapaneseText>同じコマンドをもう一度実行すれば、いつでも最新版へ更新できます。</JapaneseText></small>
           </article>
         </div>
         <div className="permissionNote">
           <span>⌥</span>
-          <div><strong>最初の一度だけ、Finderの操作を許可してください。</strong><p>Option + Tabで選択項目を取得するために使用します。クリップボードを自動で監視することはありません。</p></div>
+          <div><strong><JapaneseText>最初の一度だけ、Finderの操作を許可してください。</JapaneseText></strong><p><JapaneseText>Option + Tabで選択項目を取得するために使用します。クリップボードを自動で監視することはありません。</JapaneseText></p></div>
         </div>
       </section>
 
       <section className="finalCta shell">
         <p>Ready when you are.</p>
-        <h2>作業の流れを、<br />そのまま前へ。</h2>
+        <h2><JapaneseText>作業の流れを、そのまま前へ。</JapaneseText></h2>
         <a className="button primary" href={downloadUrl}>無料でダウンロード <span aria-hidden="true">↘</span></a>
       </section>
 
