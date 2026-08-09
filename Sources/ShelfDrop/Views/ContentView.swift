@@ -92,7 +92,7 @@ private struct ShelfHeader: View {
                         Image(nsImage: ShelfIcon.vectorTemplateImage())
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 15, height: 15)
+                            .frame(width: 16, height: 16)
                             .foregroundStyle(.primary)
                     } else {
                         Text("\(count)")
