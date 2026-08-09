@@ -26,7 +26,7 @@ test("ShelfDropのランディングページをサーバーレンダリング�
   assert.match(html, /<title>ShelfDrop — 移動する前に、置いておく。<\/title>/);
   assert.match(html, /無料でダウンロード/);
   assert.match(html, /<wbr\s*\/?/);
-  assert.match(html, /v0\.5\.1/);
+  assert.match(html, /v1\.0\.0/);
   assert.match(html, /Option \+ Tab/);
   assert.match(htmlWithoutBreakHints, /好きな場所へ取り出す/);
   assert.match(htmlWithoutBreakHints, /DMGからインストール/);

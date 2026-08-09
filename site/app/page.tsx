@@ -154,7 +154,7 @@ export default function Home() {
             <a className="button primary" href={downloadUrl}>無料でダウンロード <span aria-hidden="true">↘</span></a>
             <a className="textLink" href={repositoryUrl}>GitHubでソースを見る <span aria-hidden="true">↗</span></a>
           </div>
-          <p className="requirements">v0.5.1　·　macOS 26+　·　Apple Silicon / Intel　·　Open source</p>
+          <p className="requirements">v1.0.0　·　macOS 26+　·　Apple Silicon / Intel　·　Open source</p>
         </div>
         <ShelfPreview />
       </section>

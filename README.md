@@ -111,7 +111,7 @@ make check
 配布用DMGとZIPを作成:
 
 ```sh
-make package VERSION=v0.2.4
+make package VERSION=v1.0.0
 ```
 
 Release workflowでnotarized buildを作成するには、GitHub Secretsに`APPLE_DEVELOPER_ID_CERTIFICATE_BASE64`、`APPLE_DEVELOPER_ID_CERTIFICATE_PASSWORD`、`APPLE_NOTARY_KEY_BASE64`、`APPLE_NOTARY_KEY_ID`、`APPLE_NOTARY_ISSUER_ID`を設定します。
