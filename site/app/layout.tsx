@@ -17,19 +17,19 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://shelfdrop.haygsiiii.chatgpt.site"),
-  title: "ShelfDrop — 作業中のもの、いったんここへ。",
-  description: "ファイル、フォルダ、リンク、テキストを一時的に置いておける、macOS用フローティングシェルフ。",
+  title: "ShelfDrop — 移動する前に、置いておく。",
+  description: "ファイル、フォルダ、リンク、テキストを一時的に置ける、macOS用の小さなフローティングシェルフ。",
   openGraph: {
-    title: "ShelfDrop — 作業中のもの、いったんここへ。",
-    description: "Finderの選択項目も、リンクも、テキストも。必要になる瞬間まで手元に置けるmacOS用フローティングシェルフ。",
+    title: "ShelfDrop — 移動する前に、置いておく。",
+    description: "Finderの選択項目も、リンクも、テキストも。作業の流れを止めずに手元へ置けるmacOS用フローティングシェルフ。",
     type: "website",
     locale: "ja_JP",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "ShelfDrop — 作業中のもの、いったんここへ。" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "ShelfDrop — 移動する前に、置いておく。" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ShelfDrop — 作業中のもの、いったんここへ。",
-    description: "必要になる瞬間まで手元に置ける、macOS用フローティングシェルフ。",
+    title: "ShelfDrop — 移動する前に、置いておく。",
+    description: "作業の流れを止めずに手元へ置ける、macOS用フローティングシェルフ。",
     images: ["/og.png"],
   },
 };

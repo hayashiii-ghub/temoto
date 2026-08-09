@@ -2,187 +2,252 @@ import { CopyCommandButton } from "./CopyCommandButton";
 
 const downloadUrl =
   "https://github.com/hayashiii-ghub/shelfdrop/releases/latest/download/ShelfDrop-macos.dmg";
+const repositoryUrl = "https://github.com/hayashiii-ghub/shelfdrop";
 const updateCommand =
   "curl -fsSL https://github.com/hayashiii-ghub/shelfdrop/releases/latest/download/install_latest.sh | bash";
 
-const useCases = [
+const capabilities = [
   {
-    index: "01",
-    title: "離れたフォルダへ、まとめて運ぶ",
-    text: "Finderで選んだファイルを棚に置き、移動先を開いてから一度にドラッグ。ウィンドウを並べる必要はありません。",
+    number: "01",
+    title: "離れた場所へ、まとめて運ぶ。",
+    text: "Finderで選んだファイルを棚へ。移動先を開いてから、ひとつでも、まとめてでも取り出せます。",
+    className: "capabilityWide",
+    visual: <TransferVisual />,
   },
   {
-    index: "02",
-    title: "リンクやメモも、一緒に待機",
-    text: "URL、画像、テキストもファイルと同じ棚へ。いま使わないけれど、数分後に必要なものを手元に残せます。",
+    number: "02",
+    title: "ファイル以外も、同じ場所に。",
+    text: "フォルダ、画像、URL、テキスト。作業の途中にあるものを、種類を分けずに置いておけます。",
+    className: "capabilityTypes",
+    visual: <TypeStack />,
   },
   {
-    index: "03",
-    title: "受け渡し前に、ひとまとめ",
-    text: "棚の中身をコピー、移動、ZIP化。複数の素材をメールやチャットへ渡す直前の整理に使えます。",
-  },
-  {
-    index: "04",
-    title: "必要なあいだだけ、最前面に",
-    text: "小さな棚はほかのウィンドウより手前に常駐。使い終えたら閉じて、ショートカットですぐ呼び戻せます。",
+    number: "03",
+    title: "必要なあいだだけ、手前に。",
+    text: "小さく畳んで邪魔をせず、ショートカットですぐ呼び戻せます。",
+    className: "capabilityCompact",
+    visual: <CollapsedShelf />,
   },
 ];
 
-const steps = [
-  ["選ぶ", "Finderでファイルやフォルダを選択します。"],
-  ["置く", "Option + Tabで、選択したものをShelfDropへ送ります。"],
-  ["取り出す", "必要な場所へ、ひとつずつでもまとめてでもドラッグします。"],
-];
+function ShelfMark() {
+  return (
+    <span className="shelfMark" aria-hidden="true">
+      <i />
+      <i />
+    </span>
+  );
+}
 
-const details = [
-  ["⌥ ⇥", "Finderの選択項目を追加"],
-  ["⌥ ⇧ ⇥", "シェルフを表示・非表示"],
-  ["DRAG", "ヘッダーをつかんで移動"],
-];
+function CloseMark() {
+  return <span className="closeMark" aria-hidden="true" />;
+}
+
+function ChevronMark({ down = false }: { down?: boolean }) {
+  return <span className={`chevronMark${down ? " isDown" : ""}`} aria-hidden="true" />;
+}
+
+function FileMark({ kind }: { kind: "file" | "folder" | "link" }) {
+  return <span className={`fileMark fileMark-${kind}`} aria-hidden="true"><i /></span>;
+}
+
+function ShelfPreview() {
+  return (
+    <div className="shelfScene" aria-label="3つの項目が入ったShelfDropの画面イメージ">
+      <div className="sceneLabel sceneLabelTop"><span>ALWAYS ON TOP</span><i /></div>
+      <div className="appShelf">
+        <div className="appShelfHighlight" />
+        <div className="appHeader">
+          <span className="appCount">3</span>
+          <span className="appDrag" aria-hidden="true" />
+          <span className="appControl"><CloseMark /></span>
+          <span className="appControl"><ChevronMark /></span>
+        </div>
+        <div className="appItems">
+          <div className="appItem">
+            <FileMark kind="file" />
+            <span><strong>Final-cut.mov</strong><small>1.82 GB · Movie</small></span>
+            <em>•••</em>
+          </div>
+          <div className="appItem">
+            <FileMark kind="folder" />
+            <span><strong>Brand assets</strong><small>12 items · Folder</small></span>
+            <em>•••</em>
+          </div>
+          <div className="appItem">
+            <FileMark kind="link" />
+            <span><strong>Reference board</strong><small>www.figma.com</small></span>
+            <em>•••</em>
+          </div>
+        </div>
+        <div className="appActions" aria-hidden="true">
+          <span className="actionDrag"><i /><i /><i /></span>
+          <span className="actionClipboard" />
+          <span className="actionCopies"><i /></span>
+          <span className="actionFolder"><i /></span>
+          <span className="actionArchive"><i /></span>
+          <span className="actionTrash"><i /></span>
+        </div>
+      </div>
+      <div className="sceneLabel sceneLabelBottom"><i /><span>230 × 230 PX</span></div>
+      <div className="shortcutTag"><kbd>⌥</kbd><span>+</span><kbd>⇥</kbd><small>ADD FROM FINDER</small></div>
+    </div>
+  );
+}
+
+function TransferVisual() {
+  return (
+    <div className="transferVisual" aria-hidden="true">
+      <div className="transferNode"><FileMark kind="file" /><span>Finder</span></div>
+      <div className="transferLine"><i /><i /></div>
+      <div className="transferShelf"><ShelfMark /><span>3</span></div>
+      <div className="transferLine"><i /><i /></div>
+      <div className="transferNode destination"><FileMark kind="folder" /><span>Destination</span></div>
+    </div>
+  );
+}
+
+function TypeStack() {
+  return (
+    <div className="typeStack" aria-hidden="true">
+      <span><FileMark kind="file" /><small>FILE</small></span>
+      <span><FileMark kind="folder" /><small>FOLDER</small></span>
+      <span><FileMark kind="link" /><small>LINK</small></span>
+      <span className="textType">Aa<small>TEXT</small></span>
+    </div>
+  );
+}
+
+function CollapsedShelf() {
+  return (
+    <div className="collapsedShelf" aria-hidden="true">
+      <ShelfMark />
+      <i />
+      <CloseMark />
+      <ChevronMark down />
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <main>
+    <main id="top">
       <nav className="nav shell" aria-label="メインナビゲーション">
-        <a className="brand" href="#top" aria-label="ShelfDrop トップへ">
-          <span>ShelfDrop</span>
-        </a>
+        <a className="brand" href="#top" aria-label="ShelfDrop トップへ">ShelfDrop</a>
         <div className="navLinks">
-          <a href="#uses">できること</a>
-          <a href="#how">使い方</a>
-          <a href="#install">導入</a>
+          <a href="#features">できること</a>
+          <a href="#guide">使い方</a>
+          <a href="#install">インストール</a>
         </div>
-        <a className="navCta" href={downloadUrl}>ダウンロード</a>
+        <a className="navDownload" href={downloadUrl}><span>Download</span><i aria-hidden="true">↘</i></a>
       </nav>
 
-      <section className="hero shell" id="top">
+      <section className="hero shell">
         <div className="heroCopy">
-          <p className="eyebrow">A floating shelf for macOS</p>
-          <h1><span>作業中のもの、</span><span>いったんここへ。</span></h1>
+          <p className="eyebrow"><span /> FLOATING SHELF FOR MACOS</p>
+          <h1>移動する前に、<br />置いておく。</h1>
           <p className="lead">
-            ファイル、フォルダ、リンク、テキストを一時的に置いておける、
-            小さなmacOS用フローティングシェルフ。
+            ShelfDropは、ファイルやリンクを一時的に置ける小さな棚。
+            ウィンドウを行き来する手間を減らして、作業の流れを止めません。
           </p>
           <div className="heroActions">
-            <a className="button primary" href={downloadUrl}>最新版をダウンロード <span>↘</span></a>
-            <a className="button secondary" href="https://github.com/hayashiii-ghub/shelfdrop">GitHubで見る</a>
+            <a className="button primary" href={downloadUrl}>無料でダウンロード <span aria-hidden="true">↘</span></a>
+            <a className="textLink" href={repositoryUrl}>GitHubでソースを見る <span aria-hidden="true">↗</span></a>
           </div>
-          <p className="requirements"><span>v0.5.1</span> macOS 26以降 · Apple Silicon / Intel · 無料・オープンソース</p>
+          <p className="requirements">v0.5.1　·　macOS 26+　·　Apple Silicon / Intel　·　Open source</p>
         </div>
+        <ShelfPreview />
+      </section>
 
-        <div className="productStage" aria-label="ShelfDropのアプリ画面イメージ">
-          <div className="orb orbOne" />
-          <div className="orb orbTwo" />
-          <div className="shelfMock glass">
-            <div className="mockHeader">
-              <span className="mockCount">3</span>
-              <span className="mockDragArea">drag to move</span>
-              <div className="mockControls" aria-hidden="true">
-                <span className="controlGlyph closeGlyph">×</span>
-                <span className="controlGlyph collapseGlyph">⌃</span>
-              </div>
-            </div>
-            <div className="mockItems">
-              <div><span className="fileIcon">▧</span><span><strong>proposal.pdf</strong><small>2.4 MB</small></span><em>···</em></div>
-              <div><span className="fileIcon">◇</span><span><strong>references</strong><small>フォルダ</small></span><em>···</em></div>
-              <div><span className="fileIcon">↗</span><span><strong>Design notes</strong><small>リンク</small></span><em>···</em></div>
-            </div>
-            <div className="mockFooter"><span>⇧</span><span>▣</span><span>▢</span><span>⊞</span><span>⌑</span><span>⌫</span></div>
-          </div>
-          <div className="shortcutChip glass"><kbd>⌥</kbd><span>+</span><kbd>⇥</kbd><p>Finderから追加</p></div>
+      <section className="signalStrip" aria-label="ShelfDropの特徴">
+        <div className="shell signalInner">
+          <p>Keep it close.<br /><span>Keep moving.</span></p>
+          <dl>
+            <div><dt>01</dt><dd>ALWAYS ON TOP</dd></div>
+            <div><dt>02</dt><dd>ANY FILE TYPE</dd></div>
+            <div><dt>03</dt><dd>ZERO ACCOUNT</dd></div>
+          </dl>
         </div>
       </section>
 
-      <section className="statement">
-        <div className="shell statementInner">
-          {details.map(([key, label]) => (
-            <div className="quickDetail" key={key}><strong>{key}</strong><p>{label}</p></div>
-          ))}
+      <section className="section shell" id="features">
+        <div className="sectionHeading">
+          <p className="eyebrow"><span /> WHY SHELFDROP</p>
+          <h2>置き場所を決める前の、<br />ちょうどいい置き場所。</h2>
+          <p>コピー先を探すあいだも、別のアプリを開くあいだも。いま手にしているものを、画面の上に残しておけます。</p>
         </div>
-      </section>
-
-      <section className="section shell" id="uses">
-        <div className="sectionIntro">
-          <p className="eyebrow">One shelf, fewer detours</p>
-          <h2>ウィンドウを行き来する<br />小さな手間をなくす。</h2>
-          <p>作業の途中にあるものを、置き場所を決める前のままキープできます。</p>
-        </div>
-        <div className="useGrid">
-          {useCases.map((item) => (
-            <article className="useCard glass" key={item.index}>
-              <span className="cardIndex">{item.index}</span>
-              <div><h3>{item.title}</h3><p>{item.text}</p></div>
+        <div className="capabilityGrid">
+          {capabilities.map((item) => (
+            <article className={`capabilityCard ${item.className}`} key={item.number}>
+              <div className="capabilityTop"><span>{item.number}</span><i /></div>
+              <div className="capabilityVisual">{item.visual}</div>
+              <div className="capabilityCopy"><h3>{item.title}</h3><p>{item.text}</p></div>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="section howSection" id="how">
-        <div className="shell howGrid">
-          <div className="sectionIntro stickyIntro">
-            <p className="eyebrow">Three simple moves</p>
-            <h2>選んで、置いて、<br />あとで取り出す。</h2>
-            <p>ファイルの種類による制限はありません。リンクや画像、テキストは直接ドロップできます。</p>
+      <section className="workflow" id="guide">
+        <div className="shell workflowGrid">
+          <div className="workflowIntro">
+            <p className="eyebrow"><span /> HOW IT WORKS</p>
+            <h2>選ぶ。置く。<br />取り出す。</h2>
+            <p>覚える操作はひとつだけ。Finderで選んだものを、キーボードから直接ShelfDropへ送れます。</p>
+            <div className="bigShortcut"><kbd>option</kbd><span>+</span><kbd>tab</kbd></div>
           </div>
-          <ol className="steps">
-            {steps.map(([title, text], index) => (
-              <li key={title}>
-                <span className="stepNumber">{String(index + 1).padStart(2, "0")}</span>
-                <div><h3>{title}</h3><p>{text}</p></div>
-                {index === 1 && <div className="keys"><kbd>option</kbd><span>+</span><kbd>tab</kbd></div>}
-              </li>
-            ))}
+          <ol className="workflowSteps">
+            <li><span>01</span><div><h3>Finderで選ぶ</h3><p>ファイル、フォルダ、または複数の項目を選択します。</p></div></li>
+            <li><span>02</span><div><h3>Option + Tabで置く</h3><p>選択した項目が、いちばん手前のShelfDropへ追加されます。</p></div></li>
+            <li><span>03</span><div><h3>好きな場所へ取り出す</h3><p>移動先を開き、棚からドラッグ。まとめて移動、コピー、ZIP化もできます。</p></div></li>
           </ol>
         </div>
       </section>
 
-      <section className="section shell" id="install">
-        <div className="sectionIntro centered">
-          <p className="eyebrow">Ready when you are</p>
-          <h2>1分で、あなたのMacに。</h2>
-          <p>App Storeやアカウント登録は不要です。GitHub Releasesから直接インストールできます。</p>
+      <section className="section installSection shell" id="install">
+        <div className="installHeading">
+          <p className="eyebrow"><span /> GET SHELFDROP</p>
+          <h2>Macに、小さな棚を。</h2>
+          <p>アカウントも設定画面もありません。ダウンロードしてApplicationsへ移すだけで使い始められます。</p>
         </div>
-        <div className="installGrid">
-          <article className="installCard featured glass">
-            <span className="method">おすすめ</span>
+        <div className="installOptions">
+          <article className="installCard installPrimary">
+            <div className="installMeta"><span>RECOMMENDED</span><em>01</em></div>
             <h3>DMGからインストール</h3>
             <ol>
-              <li><span>1</span>最新版のDMGをダウンロード</li>
-              <li><span>2</span>ShelfDropをApplicationsへドラッグ</li>
-              <li><span>3</span>Applicationsから起動</li>
+              <li><span>1</span><p>最新版をダウンロード</p></li>
+              <li><span>2</span><p>ShelfDropをApplicationsへ移動</p></li>
+              <li><span>3</span><p>Applicationsから起動</p></li>
             </ol>
-            <p className="microcopy">初回起動時にmacOSの確認が表示される場合があります。</p>
-            <a className="button primary full" href={downloadUrl}>ShelfDropをダウンロード <span>↘</span></a>
+            <a className="button primary full" href={downloadUrl}>ShelfDrop for macOS <span aria-hidden="true">↘</span></a>
+            <small>初回のみ、macOSから起動の確認が表示される場合があります。</small>
           </article>
-          <article className="installCard glass">
-            <span className="method">ターミナル</span>
-            <h3>コマンドで導入・更新</h3>
-            <p>次のコマンドは、未導入ならインストール、導入済みなら最新版への更新を行います。</p>
-            <div className="codeBlock commandRow"><code>{updateCommand}</code><CopyCommandButton command={updateCommand} /></div>
-            <p className="microcopy">既存のアプリを検出し、安全に入れ替えてから自動で起動します。</p>
+          <article className="installCard installTerminal">
+            <div className="installMeta"><span>TERMINAL</span><em>02</em></div>
+            <h3>一行で導入・更新</h3>
+            <p>未導入ならインストール、導入済みなら最新版へ安全に入れ替えます。</p>
+            <div className="terminalWindow">
+              <div className="terminalBar"><span /><span /><span /><small>zsh</small></div>
+              <div className="commandRow"><code>{updateCommand}</code><CopyCommandButton command={updateCommand} /></div>
+            </div>
+            <small>同じコマンドをもう一度実行すれば、いつでも最新版へ更新できます。</small>
           </article>
         </div>
-        <aside className="permissionNote">
-          <span className="noteIcon">⌥</span>
-          <div><strong>最初の一度だけ、Finderの操作を許可してください。</strong><p>Option + Tabで選択項目を取得するため、macOSから確認が表示されます。クリップボードは自動監視しません。</p></div>
-        </aside>
+        <div className="permissionNote">
+          <span>⌥</span>
+          <div><strong>最初の一度だけ、Finderの操作を許可してください。</strong><p>Option + Tabで選択項目を取得するために使用します。クリップボードを自動で監視することはありません。</p></div>
+        </div>
       </section>
 
-      <section className="section shell updateSection">
-        <div className="updatePanel glass">
-          <div>
-            <p className="eyebrow">Stay current</p>
-            <h2>更新も、いつもの一行で。</h2>
-            <p>インストール時と同じコマンドをもう一度実行するか、メニューバーの「Download Latest Version...」から最新版を取得できます。</p>
-          </div>
-          <div className="updateCode"><span>Terminal</span><div className="commandRow"><code>{updateCommand}</code><CopyCommandButton command={updateCommand} /></div></div>
-        </div>
+      <section className="finalCta shell">
+        <p>Ready when you are.</p>
+        <h2>作業の流れを、<br />そのまま前へ。</h2>
+        <a className="button primary" href={downloadUrl}>無料でダウンロード <span aria-hidden="true">↘</span></a>
       </section>
 
       <footer className="footer shell">
-        <div className="brand"><span>ShelfDrop</span></div>
-        <p>置き場所を決める前の、小さな置き場所。</p>
-        <div><a href="https://github.com/hayashiii-ghub/shelfdrop">GitHub</a><a href="https://github.com/hayashiii-ghub/shelfdrop/issues">Issue</a><a href={downloadUrl}>Download</a></div>
+        <a className="brand" href="#top">ShelfDrop</a>
+        <p>© 2026 ShelfDrop</p>
+        <div><a href={repositoryUrl}>GitHub</a><a href={`${repositoryUrl}/issues`}>Issues</a><a href={downloadUrl}>Download</a></div>
       </footer>
     </main>
   );
