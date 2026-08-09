@@ -41,6 +41,7 @@ test("公開用メタデータと主要リンクを含む", async () => {
 
   assert.match(html, /property="og:image" content="https:\/\/shelfdrop\.haygsiiii\.chatgpt\.site\/og\.png"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
+  assert.match(html, /rel="icon" href="https:\/\/shelfdrop\.haygsiiii\.chatgpt\.site\/favicon\.svg" type="image\/svg\+xml"/);
   assert.match(html, /github\.com\/hayashiii-ghub\/shelfdrop\/releases\/latest\/download\/ShelfDrop-macos\.dmg/);
   assert.match(html, /github\.com\/hayashiii-ghub\/shelfdrop/);
 });
