@@ -28,20 +28,37 @@ export async function setVideoSpeed(speed) {
   return sendExtensionMessage("SET_VIDEO_SPEED", { speed });
 }
 
-export async function captureVisible() {
-  return sendExtensionMessage("CAPTURE_VISIBLE");
+export async function captureVisible(options) {
+  return sendExtensionMessage("CAPTURE_VISIBLE", { options });
 }
 
-export async function captureRegion() {
-  return sendExtensionMessage("START_REGION_CAPTURE");
+export async function captureFullPage(options) {
+  return sendExtensionMessage("CAPTURE_FULL_PAGE", { options });
+}
+
+export async function captureRegion(options) {
+  return sendExtensionMessage("START_REGION_CAPTURE", { options });
 }
 
 export async function startMeasure() {
+  if (!hasChromeApi()) {
+    await new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = `/content/measure.js?preview=${Date.now()}`;
+      script.onload = () => { script.remove(); resolve(); };
+      script.onerror = () => { script.remove(); reject(new Error("Could not start Inspect")); };
+      document.documentElement.appendChild(script);
+    });
+    return { ok: true, preview: true };
+  }
   return sendExtensionMessage("START_MEASURE");
 }
 
 export async function resetOrigin(origin) {
-  if (!hasChromeApi()) return { ok: true, preview: true };
+  if (!hasChromeApi()) {
+    await new Promise((resolve) => window.setTimeout(resolve, 900));
+    return { ok: true, preview: true };
+  }
   const granted = await chrome.permissions.request({ permissions: ["browsingData"] });
   if (!granted) return { ok: false, error: "Permission to clear site data is required" };
   return sendExtensionMessage("RESET_ORIGIN", { origin });
@@ -75,6 +92,7 @@ export async function getSettings() {
     },
     lastColor: "#7C5CFC",
     lastSpeed: 1.5,
+    screenshot: { delayMs: 0, forceReveal: false },
   };
   if (!hasChromeApi()) return defaults;
   const stored = await chrome.storage.local.get(defaults);

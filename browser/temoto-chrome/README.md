@@ -5,7 +5,7 @@
 ## Features
 
 - Pick a color from the screen and copy its hex value.
-- Capture the visible viewport or a selected region, then copy or save it as PNG.
+- Capture a selected region, the visible viewport, or the full page, with optional delay and scroll-reveal controls, then copy or save it as PNG.
 - Detect HTML5 video and change its playback speed.
 - Switch between Local, Staging, and Production while preserving the current path, query, and hash.
 - Clear cache, cookies, storage, and service workers for the current origin after an explicit permission prompt.
@@ -15,7 +15,7 @@ Proxy functionality is intentionally not included. It will be developed as a sep
 
 ## Privacy
 
-Page access happens only after the user opens temoto or runs a tool. Settings remain in Chrome's local extension storage, capture pixels are held in session storage only until the capture view loads, and no user data is sent to external servers.
+Page access happens only after the user opens temoto or runs a tool. Settings remain in Chrome's local extension storage, capture pixels are held temporarily in the extension's local IndexedDB only until the capture view loads, and no user data is sent to external servers.
 
 See [PRIVACY.md](./PRIVACY.md) for the complete policy and permission details.
 

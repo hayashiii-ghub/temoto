@@ -23,8 +23,8 @@
     <rect x="18" y="18" width="988" height="988" rx="256" fill="url(#tile)"/>
   </g>
 
-  <g transform="translate(512 512) scale(1.9) translate(-512 -512)" fill="#8c78a6" stroke="#8c78a6" stroke-width="9" stroke-linejoin="round" filter="url(#markShadow)">
-    <path d="M326 365 L451 287 Q460 281 470 287 L698 421 Q711 429 698 437 L574 515 Q564 521 554 515 L326 381 Q313 373 326 365Z"/>
-    <path d="M326 567 L451 489 Q460 483 470 489 L698 623 Q711 631 698 639 L574 717 Q564 723 554 717 L326 583 Q313 575 326 567Z"/>
+  <g transform="translate(512 512) scale(1.9) translate(-512 -512)" stroke="#8c78a6" stroke-linejoin="round" filter="url(#markShadow)">
+    <path fill="#8c78a6" stroke-width="9" d="M326 365 L451 287 Q460 281 470 287 L698 421 Q711 429 698 437 L574 515 Q564 521 554 515 L326 381 Q313 373 326 365Z"/>
+    <path fill="none" stroke-width="14" d="M326 567 L451 489 Q460 483 470 489 L698 623 Q711 631 698 639 L574 717 Q564 723 554 717 L326 583 Q313 575 326 567Z"/>
   </g>
 </svg>

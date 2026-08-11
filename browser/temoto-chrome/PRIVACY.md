@@ -10,7 +10,7 @@ Depending on the tool the user chooses, the extension may process:
 
 - The current page URL, origin, hostname, title, and whether the page contains HTML5 video.
 - The current playback speed of HTML5 video.
-- Pixels from a user-requested visible-page or selected-region screenshot.
+- Pixels from a user-requested selected-region, visible-page, or full-page screenshot.
 - Element dimensions, computed visual properties, and a generated CSS selector when Measure / Inspect is active.
 - User-provided Local, Staging, and Production origins.
 - The user's most recently selected color and playback speed.
@@ -28,7 +28,7 @@ The data above is used only to provide the tool the user explicitly requests. te
 ## Storage and retention
 
 - Environment settings, the last selected color, and the last playback speed are stored locally using `chrome.storage.local` until the user changes them, clears extension data, or uninstalls the extension.
-- A requested screenshot is stored temporarily using `chrome.storage.session` and removed after the capture view loads or fails to load. Session storage is also cleared when the browser session ends.
+- A requested screenshot is stored temporarily in the extension's local IndexedDB and removed after the capture view loads or fails to load.
 - Current-page details and measurement results are processed in memory and are not retained by temoto.
 
 ## Data sharing and transmission
@@ -39,7 +39,7 @@ temoto does not transmit user data to the developer or to any external server. I
 
 - `activeTab`: temporarily access the current tab after a user gesture.
 - `scripting`: detect and control video, show the region-selection overlay, and run Measure / Inspect on the current page.
-- `storage`: save local settings and hold a requested screenshot briefly during the current browser session.
+- `storage`: save local environment settings and the user's most recently selected color and playback speed.
 - `sidePanel`: show persistent environment settings and tool details.
 - `clipboardWrite`: copy colors, screenshots, and CSS selectors after a user action.
 - Optional `browsingData`: clear data only for the current origin when the user runs Site Reset. Chrome asks for this permission at that time.

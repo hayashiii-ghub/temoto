@@ -2,9 +2,27 @@
   window.__temotoMeasureCleanup?.();
   const outline = document.createElement("div");
   const tooltip = document.createElement("div");
+  const guide = document.createElement("div");
+  const cursorStyle = document.createElement("style");
   Object.assign(outline.style, { position: "fixed", zIndex: "2147483646", pointerEvents: "none", border: "1px solid #f4f4f2", background: "rgba(244,244,242,.08)", display: "none" });
   Object.assign(tooltip.style, { position: "fixed", zIndex: "2147483647", pointerEvents: "none", maxWidth: "360px", padding: "9px 11px", border: "1px solid rgba(255,255,255,.2)", borderRadius: "10px", background: "#161616", color: "#f4f4f2", font: "11px/1.5 ui-monospace, SFMono-Regular, monospace", whiteSpace: "pre", boxShadow: "0 14px 36px rgba(0,0,0,.42)", display: "none" });
-  document.documentElement.append(outline, tooltip);
+  Object.assign(guide.style, { position: "fixed", top: "16px", left: "50%", zIndex: "2147483647", pointerEvents: "none", maxWidth: "calc(100vw - 24px)", minHeight: "38px", padding: "0 11px", display: "flex", alignItems: "center", gap: "9px", transform: "translateX(-50%)", border: "1px solid rgba(255,255,255,.2)", borderRadius: "11px", background: "rgba(20,20,20,.94)", color: "#f4f4f2", font: "500 11px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", whiteSpace: "nowrap", boxShadow: "0 14px 36px rgba(0,0,0,.42)", backdropFilter: "blur(16px)" });
+  const status = document.createElement("span");
+  const instruction = document.createElement("span");
+  const keycap = document.createElement("kbd");
+  const exitLabel = document.createElement("span");
+  status.textContent = "Inspecting";
+  instruction.textContent = "Click to copy selector";
+  keycap.textContent = "Esc";
+  exitLabel.textContent = "Exit";
+  Object.assign(status.style, { color: "#bca7d0" });
+  Object.assign(instruction.style, { color: "#d0d0cd" });
+  Object.assign(keycap.style, { padding: "4px 6px", border: "1px solid rgba(255,255,255,.2)", borderRadius: "6px", background: "rgba(255,255,255,.07)", color: "#f4f4f2", font: "500 9px/1 ui-monospace, SFMono-Regular, monospace", boxShadow: "inset 0 -1px 0 rgba(255,255,255,.12)" });
+  Object.assign(exitLabel.style, { color: "#888885" });
+  guide.setAttribute("role", "status");
+  guide.append(status, instruction, keycap, exitLabel);
+  cursorStyle.textContent = "html, html * { cursor: crosshair !important; }";
+  document.documentElement.append(cursorStyle, outline, tooltip, guide);
 
   const selectorFor = (element) => {
     if (element.id) return `#${CSS.escape(element.id)}`;
@@ -54,7 +72,7 @@
   };
   const key = (event) => { if (event.key === "Escape") cleanup(); };
   const cleanup = () => {
-    document.removeEventListener("mousemove", move, true); document.removeEventListener("click", copy, true); window.removeEventListener("keydown", key, true); outline.remove(); tooltip.remove(); delete window.__temotoMeasureCleanup;
+    document.removeEventListener("mousemove", move, true); document.removeEventListener("click", copy, true); window.removeEventListener("keydown", key, true); cursorStyle.remove(); outline.remove(); tooltip.remove(); guide.remove(); delete window.__temotoMeasureCleanup;
   };
   window.__temotoMeasureCleanup = cleanup;
   document.addEventListener("mousemove", move, true);

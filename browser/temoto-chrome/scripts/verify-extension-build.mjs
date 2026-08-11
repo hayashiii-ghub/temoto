@@ -8,6 +8,8 @@ const required = [
   "dist/client/sidepanel.html",
   "dist/client/capture.html",
   "dist/client/service-worker.js",
+  "dist/client/capture-store.js",
+  "dist/client/capture-utils.js",
   "dist/client/content/selection.js",
   "dist/client/content/measure.js",
 ];

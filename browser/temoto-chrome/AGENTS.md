@@ -14,9 +14,10 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 - Use `/Users/hayashi/.codex/generated_images/019fef3f-0a29-76e1-a0f8-a4bf4df82b14/exec-98a56230-b922-4df8-bc2b-cffb65dfe8dc.png` as the latest visual source, modified by the user's explicit polish feedback below.
 - Preserve the established near-black, charcoal, off-white, muted-gray, translucent-border, softly rounded visual system.
 - Keep the Chrome popup a compact 440px square and use the same translucent, glass-like charcoal surfaces as `temoto for macOS`; avoid dense black slabs.
-- Render the supplied two-layer temoto mark as a tightly cropped vector with no CSS color filter so it stays crisp at toolbar-popup scale.
+- Render the two-layer temoto mark as a tightly cropped vector with a solid upper block and outlined lower block; use no CSS color filter so it stays crisp at toolbar-popup scale.
 - The Chrome home surface includes Color Picker, Screenshot, Video Speed, Environment Switcher, Site Reset, and Measure / Inspect.
-- Screenshot MVP includes selected-region and visible-viewport capture, clipboard copy, and PNG download; full-page capture is deferred.
+- Screenshot includes selected-region, visible-viewport, and full-page capture with clipboard copy and PNG download.
+- Keep lazy-content preloading and animation freezing automatic; expose only Delay and Force reveal inside a collapsed Capture options section.
 - Proxy is a separate future `temoto Proxy` companion because the mandatory Chrome proxy permission is too broad for the core extension.
 - Keep everyday actions in the popup and use the Chrome side panel for persistent detail and project configuration.
 - The popup home is a 440 × 440 square English-only launcher with six equal tools in a 3 × 2 grid; use only thin dividers, with no individual card borders, backgrounds, or corner radii. Do not show the current-page/video status strip or Proxy on this surface.
@@ -25,3 +26,8 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 - Chrome app-icon PNGs must use the enlarged temoto mark so the icon reads at the same visual scale as neighboring extensions.
 - Use the muted-purple temoto mark on a fully transparent background for both extension-list/app icons and the 16/32px toolbar action icon; Chromium/Comet may require a full browser restart before manifest icon and version changes leave its UI cache.
 - Selecting a launcher card replaces the grid with that tool's full-popup view and a clear Back action. Video availability is communicated only by the Video Speed card badge (`1.75x` or `No video`).
+- Keep every tool-detail header at the launcher's 64px height: use the full 64 × 64px area left of the divider as the Back button, then show a small Phosphor SVG beside the tool title. Tool bodies use one shared top-aligned description-and-controls rhythm with no oversized framed feature icons.
+- Extend the launcher's strict grid language through every tool detail: content runs edge to edge with no outer card padding, functional areas are fixed-height rows or equal grid cells separated by 1px rules, and standalone rounded cards or white floating primary buttons are avoided. Use muted purple for selection and red only for destructive actions.
+- Apply the same strict grid to Settings: the side panel fills its native width, uses label/input columns and full-width rows separated by 1px rules, and avoids rounded forms, cards, and floating save buttons. On wide previews only, cap the content grid at 640px.
+- While Inspect is active, show a compact persistent top guide for click-to-copy and Esc-to-exit, and use a crosshair cursor until cleanup.
+- Video Speed uses page shortcuts `G` for 1.5×, `D` for +0.25×, and `S` for −0.25×, capped at 5×; its slider dedicates roughly two-thirds of its travel to 0.25–2× and the final third to 2–5×.
