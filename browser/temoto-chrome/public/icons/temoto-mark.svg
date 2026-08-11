@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="5 4.5 26 28" shape-rendering="geometricPrecision">
-  <path fill="#8c78a6" d="M6.2 10.7 L14.5 5.5 Q15.1 5.1 15.8 5.5 L30 13.9 Q30.8 14.4 30 14.9 L21.7 20.1 Q21 20.5 20.4 20.1 L6.2 11.7 Q5.4 11.2 6.2 10.7Z"/>
-  <path fill="none" stroke="#8c78a6" stroke-width="1.8" stroke-linejoin="round" d="M6.2 21.9 L14.5 16.7 Q15.1 16.3 15.8 16.7 L30 25.1 Q30.8 25.6 30 26.1 L21.7 31.3 Q21 31.7 20.4 31.3 L6.2 22.9 Q5.4 22.4 6.2 21.9Z"/>
+  <path fill="#9674b6" d="M6.2 10.7 L14.5 5.5 Q15.1 5.1 15.8 5.5 L30 13.9 Q30.8 14.4 30 14.9 L21.7 20.1 Q21 20.5 20.4 20.1 L6.2 11.7 Q5.4 11.2 6.2 10.7Z"/>
+  <path fill="none" stroke="#9674b6" stroke-width="1.8" stroke-linejoin="round" d="M6.2 21.9 L14.5 16.7 Q15.1 16.3 15.8 16.7 L30 25.1 Q30.8 25.6 30 26.1 L21.7 31.3 Q21 31.7 20.4 31.3 L6.2 22.9 Q5.4 22.4 6.2 21.9Z"/>
 </svg>
