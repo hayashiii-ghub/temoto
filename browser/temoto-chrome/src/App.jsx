@@ -414,6 +414,11 @@ function CaptureApp() {
         }
         setReady(true);
         setStatus("");
+        chrome.storage.session.remove("pendingCapture").catch(() => {});
+      };
+      image.onerror = () => {
+        setStatus("Could not load the capture.");
+        chrome.storage.session.remove("pendingCapture").catch(() => {});
       };
       image.src = pendingCapture.dataUrl;
     });
