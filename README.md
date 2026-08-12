@@ -1,16 +1,16 @@
 <p align="center">
-  <img src="Assets/ShelfDrop.png" width="160" alt="ShelfDrop app icon">
+  <img src="Assets/ShelfDrop.png" width="160" alt="temoto app icon">
 </p>
 
-<h1 align="center">ShelfDrop</h1>
+<h1 align="center">temoto</h1>
 
 <p align="center">
   ファイル、フォルダ、リンク、テキストを一時的に置いておける、小さなmacOS用フローティングシェルフ。
 </p>
 
 <p align="center">
-  <a href="https://github.com/hayashiii-ghub/shelfdrop/releases/latest"><img src="https://img.shields.io/github/v/release/hayashiii-ghub/shelfdrop?display_name=tag&sort=semver" alt="Latest release"></a>
-  <a href="https://github.com/hayashiii-ghub/shelfdrop/actions/workflows/ci.yml"><img src="https://github.com/hayashiii-ghub/shelfdrop/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <a href="https://github.com/hayashiii-ghub/temoto/releases/latest"><img src="https://img.shields.io/github/v/release/hayashiii-ghub/temoto?display_name=tag&sort=semver" alt="Latest release"></a>
+  <a href="https://github.com/hayashiii-ghub/temoto/actions/workflows/ci.yml"><img src="https://github.com/hayashiii-ghub/temoto/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
   <img src="https://img.shields.io/badge/macOS-26%2B-black" alt="macOS 26 or later">
   <img src="https://img.shields.io/badge/Swift-5.9%2B-F05138" alt="Swift 5.9 or later">
 </p>
@@ -18,12 +18,12 @@
 <p align="center">
   <a href="https://shelfdrop.haygsiiii.chatgpt.site"><strong>Webサイト</strong></a>
   ・
-  <a href="https://github.com/hayashiii-ghub/shelfdrop/releases/latest/download/ShelfDrop-macos.dmg"><strong>最新版をダウンロード</strong></a>
+  <a href="https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.dmg"><strong>最新版をダウンロード</strong></a>
 </p>
 
-## ShelfDropとは
+## temotoとは
 
-ShelfDropは、作業中のファイルを一時的にまとめて置くためのmacOSアプリです。Finderから別のアプリへ複数のファイルを移す時や、離れたフォルダ間でファイルを整理する時に、常に手前に表示される小さな棚として使えます。
+temotoは、作業中のファイルを一時的にまとめて置くためのmacOSアプリです。Finderから別のアプリへ複数のファイルを移す時や、離れたフォルダ間でファイルを整理する時に、常に手前に表示される小さな棚として使えます。
 
 Apple IDやMac App Storeを使わず、GitHub Releasesから直接ダウンロードできます。Apple Silicon MacとIntel Macの両方に対応しています。
 
@@ -59,17 +59,17 @@ Apple IDやMac App Storeを使わず、GitHub Releasesから直接ダウンロ�
 
 ### DMGからインストール
 
-1. [最新の`ShelfDrop-macos.dmg`をダウンロード](https://github.com/hayashiii-ghub/shelfdrop/releases/latest/download/ShelfDrop-macos.dmg)します。
-2. DMGを開き、`ShelfDrop.app`を`Applications`へドラッグします。
-3. `Applications`フォルダから`ShelfDrop.app`を開きます。
+1. [最新の`temoto-macos.dmg`をダウンロード](https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.dmg)します。
+2. DMGを開き、`temoto.app`を`Applications`へドラッグします。
+3. `Applications`フォルダから`temoto.app`を開きます。
 
 ### ターミナルからインストール/更新
 
 ```sh
-curl -fsSL https://github.com/hayashiii-ghub/shelfdrop/releases/latest/download/install_latest.sh | bash
+curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/install_latest.sh | bash
 ```
 
-既存の`/Applications/ShelfDrop.app`または`~/Applications/ShelfDrop.app`を検出して最新版に入れ替えます。まだ入っていない場合は、書き込み可能なら`/Applications`、そうでなければ`~/Applications`にインストールします。
+既存の`temoto.app`を最新版に入れ替えます。旧名の`ShelfDrop.app`がある場合も同じ場所へ`temoto.app`として移行します。まだ入っていない場合は、書き込み可能なら`/Applications`、そうでなければ`~/Applications`にインストールします。
 
 > [!NOTE]
 > Apple Developer Program未登録のため、現在の配布版はad hoc署名です。初回起動時にmacOSの警告が表示される場合があります。
@@ -79,10 +79,10 @@ curl -fsSL https://github.com/hayashiii-ghub/shelfdrop/releases/latest/download/
 ターミナルから最新版へ入れ替える場合は、インストールと同じコマンドを使います。
 
 ```sh
-curl -fsSL https://github.com/hayashiii-ghub/shelfdrop/releases/latest/download/install_latest.sh | bash
+curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/install_latest.sh | bash
 ```
 
-`/Applications`または`~/Applications`にある既存の`ShelfDrop.app`を検出して更新します。メニューバーの`Download Latest Version...`から最新版のダウンロードを開始することもできます。
+`/Applications`または`~/Applications`にある既存の`temoto.app`を検出して更新します。旧名の`ShelfDrop.app`も自動的に移行されます。メニューバーの`Download Latest Version...`から最新版のダウンロードを開始することもできます。
 
 ## 権限
 

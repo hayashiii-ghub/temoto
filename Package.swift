@@ -3,21 +3,21 @@
 import PackageDescription
 
 let package = Package(
-    name: "ShelfDrop",
+    name: "temoto",
     platforms: [
         .macOS("26.0")
     ],
     products: [
-        .executable(name: "ShelfDrop", targets: ["ShelfDrop"])
+        .executable(name: "temoto", targets: ["Temoto"])
     ],
     targets: [
         .executableTarget(
-            name: "ShelfDrop",
+            name: "Temoto",
             path: "Sources/ShelfDrop"
         ),
         .testTarget(
-            name: "ShelfDropTests",
-            dependencies: ["ShelfDrop"],
+            name: "TemotoTests",
+            dependencies: ["Temoto"],
             path: "Tests/ShelfDropTests"
         )
     ]

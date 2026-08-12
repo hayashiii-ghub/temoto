@@ -13,7 +13,7 @@ async function render() {
   );
 }
 
-test("ShelfDropのランディングページをサーバーレンダリングする", async () => {
+test("temotoのランディングページをサーバーレンダリングする", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
@@ -23,7 +23,7 @@ test("ShelfDropのランディングページをサーバーレンダリング�
     .replace(/<wbr\s*\/?\s*>/g, "")
     .replace(/<\/?span\b[^>]*>/g, "");
   assert.match(html, /<html lang="ja">/);
-  assert.match(html, /<title>ShelfDrop — 移動する前に、置いておく。<\/title>/);
+  assert.match(html, /<title>temoto — 移動する前に、置いておく。<\/title>/);
   assert.match(html, /無料でダウンロード/);
   assert.match(html, /<wbr\s*\/?/);
   assert.match(html, /v1\.0\.0/);
@@ -39,9 +39,9 @@ test("公開用メタデータと主要リンクを含む", async () => {
   const response = await render();
   const html = await response.text();
 
-  assert.match(html, /property="og:image" content="https:\/\/shelfdrop\.haygsiiii\.chatgpt\.site\/og\.png"/);
+  assert.match(html, /property="og:image" content="https:\/\/shelfdrop\.haygsiiii\.chatgpt\.site\/og-temoto\.png"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
   assert.match(html, /rel="icon" href="https:\/\/shelfdrop\.haygsiiii\.chatgpt\.site\/favicon\.svg" type="image\/svg\+xml"/);
-  assert.match(html, /github\.com\/hayashiii-ghub\/shelfdrop\/releases\/latest\/download\/ShelfDrop-macos\.dmg/);
-  assert.match(html, /github\.com\/hayashiii-ghub\/shelfdrop/);
+  assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/releases\/latest\/download\/temoto-macos\.dmg/);
+  assert.match(html, /github\.com\/hayashiii-ghub\/temoto/);
 });

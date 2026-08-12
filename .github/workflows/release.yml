@@ -95,16 +95,16 @@ jobs:
           EXPECTED_VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '0.0.0' }}
         run: |
           EXPECTED_VERSION="${EXPECTED_VERSION#v}"
-          ACTUAL_VERSION="$(plutil -extract CFBundleShortVersionString raw dist/package/ShelfDrop.app/Contents/Info.plist)"
+          ACTUAL_VERSION="$(plutil -extract CFBundleShortVersionString raw dist/package/temoto.app/Contents/Info.plist)"
           test "$ACTUAL_VERSION" = "$EXPECTED_VERSION"
 
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ShelfDrop-macos
+          name: temoto-macos
           path: |
-            dist/ShelfDrop-macos.dmg
-            dist/ShelfDrop-macos.zip
+            dist/temoto-macos.dmg
+            dist/temoto-macos.zip
             script/install_latest.sh
 
       - name: Upload GitHub release asset
@@ -114,5 +114,5 @@ jobs:
           TAG_NAME: ${{ github.ref_name }}
         run: |
           gh release view "$TAG_NAME" >/dev/null 2>&1 || \
-            gh release create "$TAG_NAME" --title "$TAG_NAME" --notes "ShelfDrop macOS build."
-          gh release upload "$TAG_NAME" dist/ShelfDrop-macos.dmg dist/ShelfDrop-macos.zip script/install_latest.sh --clobber
+            gh release create "$TAG_NAME" --title "$TAG_NAME" --notes "temoto macOS build."
+          gh release upload "$TAG_NAME" dist/temoto-macos.dmg dist/temoto-macos.zip script/install_latest.sh --clobber

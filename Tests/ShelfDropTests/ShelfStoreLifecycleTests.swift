@@ -1,7 +1,7 @@
 import AppKit
 import Testing
 import UniformTypeIdentifiers
-@testable import ShelfDrop
+@testable import Temoto
 
 @MainActor
 struct ShelfStoreLifecycleTests {

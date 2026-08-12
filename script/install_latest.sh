@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="ShelfDrop"
+APP_NAME="temoto"
+LEGACY_APP_NAME="ShelfDrop"
 BUNDLE_ID="work.hayashigoto.ShelfDrop"
-ZIP_URL="https://github.com/hayashiii-ghub/shelfdrop/releases/latest/download/ShelfDrop-macos.zip"
+ZIP_URL="https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.zip"
 TMP_DIR="$(mktemp -d)"
 ZIP_PATH="$TMP_DIR/$APP_NAME-macos.zip"
 EXTRACT_DIR="$TMP_DIR/extract"
@@ -46,6 +47,16 @@ choose_install_dir() {
     return
   fi
 
+  if [[ -d "/Applications/$LEGACY_APP_NAME.app" ]]; then
+    printf '%s\n' "/Applications"
+    return
+  fi
+
+  if [[ -d "$HOME/Applications/$LEGACY_APP_NAME.app" ]]; then
+    printf '%s\n' "$HOME/Applications"
+    return
+  fi
+
   if [[ -w "/Applications" ]]; then
     printf '%s\n' "/Applications"
     return
@@ -57,6 +68,7 @@ choose_install_dir() {
 install_app() {
   local source_app="$1"
   local destination_app="$2"
+  local legacy_app="$3"
   local install_dir
   local staged_app
   local backup_app
@@ -95,7 +107,7 @@ install_app() {
   run_install ditto "$source_app" "$staged_app"
   if ! validate_app "$staged_app"; then
     run_install rm -rf "$staged_app"
-    echo "Staged ShelfDrop.app failed validation" >&2
+    echo "Staged $APP_NAME.app failed validation" >&2
     return 1
   fi
 
@@ -111,12 +123,16 @@ install_app() {
   fi
 
   run_install rm -rf "$backup_app"
+  if [[ "$legacy_app" != "$destination_app" && -e "$legacy_app" ]]; then
+    run_install rm -rf "$legacy_app"
+  fi
   run_install xattr -dr com.apple.quarantine "$destination_app" 2>/dev/null || true
   trap - HUP INT TERM
 }
 
 INSTALL_DIR="$(choose_install_dir)"
 DESTINATION_APP="$INSTALL_DIR/$APP_NAME.app"
+LEGACY_APP="$INSTALL_DIR/$LEGACY_APP_NAME.app"
 
 if [[ -n "${SHELFDROP_ZIP_PATH:-}" ]]; then
   echo "Using local $APP_NAME archive..."
@@ -138,11 +154,12 @@ fi
 if [[ "${SHELFDROP_SKIP_STOP:-0}" != "1" ]]; then
   echo "Stopping running $APP_NAME..."
   pkill -x "$APP_NAME" >/dev/null 2>&1 || true
+  pkill -x "$LEGACY_APP_NAME" >/dev/null 2>&1 || true
 fi
 
 mkdir -p "$INSTALL_DIR"
 echo "Installing to $DESTINATION_APP..."
-install_app "$SOURCE_APP" "$DESTINATION_APP"
+install_app "$SOURCE_APP" "$DESTINATION_APP" "$LEGACY_APP"
 
 if [[ "${SHELFDROP_SKIP_OPEN:-0}" != "1" ]]; then
   open "$DESTINATION_APP"

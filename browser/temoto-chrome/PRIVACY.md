@@ -58,4 +58,4 @@ The use of information received from Chrome APIs will adhere to the Chrome Web S
 
 ## Changes and contact
 
-Material changes to these practices will be disclosed by updating this policy and the Chrome Web Store privacy declarations. Questions can be submitted through the project's [GitHub issue tracker](https://github.com/hayashiii-ghub/shelfdrop/issues).
+Material changes to these practices will be disclosed by updating this policy and the Chrome Web Store privacy declarations. Questions can be submitted through the project's [GitHub issue tracker](https://github.com/hayashiii-ghub/temoto/issues).

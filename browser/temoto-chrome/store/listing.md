@@ -58,7 +58,7 @@ Provide web developers with local tools for inspecting and testing the current p
 
 **Privacy policy URL after this branch is merged**
 
-https://github.com/hayashiii-ghub/shelfdrop/blob/main/browser/temoto-chrome/PRIVACY.md
+https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY.md
 
 ## Graphic assets
 

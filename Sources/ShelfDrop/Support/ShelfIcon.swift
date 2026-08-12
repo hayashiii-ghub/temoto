@@ -20,12 +20,12 @@ enum ShelfIcon {
             if fileExtension != "png" {
                 return loadTemplateImage(withExtension: "png", pointSize: pointSize)
             }
-            return NSImage(systemSymbolName: "tray", accessibilityDescription: "ShelfDrop") ?? NSImage()
+            return NSImage(systemSymbolName: "tray", accessibilityDescription: "temoto") ?? NSImage()
         }
 
         image.isTemplate = true
         image.size = NSSize(width: pointSize, height: pointSize)
-        image.accessibilityDescription = "ShelfDrop"
+        image.accessibilityDescription = "temoto"
         return image
     }
 }
