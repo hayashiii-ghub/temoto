@@ -68,19 +68,21 @@ async function setForceReveal(tabId, enabled) {
   }, [FORCE_REVEAL_STYLE_ID, FORCE_REVEAL_CSS, enabled]);
 }
 
-async function capture(rect = null, viewport = null, rawOptions = {}) {
+async function capture(rect = null, viewport = null, rawOptions = {}, sourceTab = null) {
   const options = normalizeScreenshotOptions(rawOptions);
-  const tab = await activeTab();
+  const tab = sourceTab || await activeTab();
   let dataUrl;
   try {
     if (options.forceReveal) await setForceReveal(tab.id, true);
     if (options.delayMs) await wait(options.delayMs);
     if (options.forceReveal) await wait(CAPTURE_SCROLL_SETTLE_MS);
+    const [visibleTab] = await chrome.tabs.query({ active: true, windowId: tab.windowId });
+    if (visibleTab?.id !== tab.id) throw new Error("Keep the selected page active until the capture finishes");
     dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
   } finally {
     if (options.forceReveal) await setForceReveal(tab.id, false).catch(() => {});
   }
-  const currentViewport = viewport || (await executeInActiveTab(() => ({ width: window.innerWidth, height: window.innerHeight })))[0].result;
+  const currentViewport = viewport || await executeInTab(tab.id, () => ({ width: window.innerWidth, height: window.innerHeight }));
   await savePendingCapture({ type: "single", dataUrl, rect, viewport: currentViewport, createdAt: Date.now() });
   await chrome.tabs.create({ url: chrome.runtime.getURL("capture.html") });
 }
@@ -359,12 +361,13 @@ async function handleMessage(message, sender) {
       return { ok: true };
     }
     case "CAPTURE_REGION_SELECTED": {
-      if (!sender.tab?.active) return { ok: false, error: "The selected tab is not active" };
+      if (!sender.tab?.id) return { ok: false, error: "The selected tab is unavailable" };
       const optionsKey = `pendingRegionCaptureOptions:${sender.tab.id}`;
       const storedOptions = (await chrome.storage.session.get(optionsKey))[optionsKey];
       await chrome.storage.session.remove(optionsKey);
+      if (!sender.tab.active) return { ok: false, error: "The selected tab is not active" };
       await new Promise((resolve) => setTimeout(resolve, 80));
-      await capture(message.rect, message.viewport, { ...storedOptions, forceReveal: false });
+      await capture(message.rect, message.viewport, { ...storedOptions, forceReveal: false }, sender.tab);
       return { ok: true };
     }
     case "START_MEASURE": {

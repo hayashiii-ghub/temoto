@@ -464,7 +464,7 @@ function SidePanelApp() {
           <span className="module-pill">COMING NEXT</span>
         </section>
         <section className="settings-block compact">
-          <div><strong>Privacy</strong><small>Page access is requested only when you run a tool. Data is never sent outside the browser.</small></div>
+          <div><strong>Privacy</strong><small>Video shortcuts run locally on HTTP(S) pages. Other tools access a page only when selected. Data is never sent outside the browser.</small></div>
           <LockSimple size={20} />
         </section>
       </div>
