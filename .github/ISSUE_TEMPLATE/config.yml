@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: セキュリティ上の問題
-    url: https://github.com/hayashiii-ghub/shelfdrop/security
+    url: https://github.com/hayashiii-ghub/temoto/security
     about: 脆弱性は公開IssueではなくSecurityタブから報告してください。
   - name: 最新リリース
-    url: https://github.com/hayashiii-ghub/shelfdrop/releases/latest
+    url: https://github.com/hayashiii-ghub/temoto/releases/latest
     about: 報告前に最新版で再現するか確認してください。

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SHELFDROP_APP_NAME="ShelfDrop"
+SHELFDROP_APP_NAME="temoto"
 SHELFDROP_BUNDLE_ID="work.hayashigoto.ShelfDrop"
 SHELFDROP_MIN_SYSTEM_VERSION="26.0"
 
@@ -8,7 +8,7 @@ shelfdrop_copy_bundle_resources() {
   local root_dir="$1"
   local resources_dir="$2"
 
-  cp "$root_dir/Assets/ShelfDrop.icns" "$resources_dir/ShelfDrop-v2.icns"
+  cp "$root_dir/Assets/ShelfDrop.icns" "$resources_dir/temoto.icns"
   cp "$root_dir/Assets/MenuBarTemplate.png" "$resources_dir/MenuBarTemplate.png"
   cp "$root_dir/Assets/MenuBarTemplate.svg" "$resources_dir/MenuBarTemplate.svg"
 }
@@ -28,8 +28,10 @@ shelfdrop_write_info_plist() {
   <string>$SHELFDROP_BUNDLE_ID</string>
   <key>CFBundleName</key>
   <string>$SHELFDROP_APP_NAME</string>
+  <key>CFBundleDisplayName</key>
+  <string>$SHELFDROP_APP_NAME</string>
   <key>CFBundleIconFile</key>
-  <string>ShelfDrop-v2.icns</string>
+  <string>temoto.icns</string>
   <key>CFBundleShortVersionString</key>
   <string>$app_version</string>
   <key>CFBundleVersion</key>
@@ -41,7 +43,7 @@ shelfdrop_write_info_plist() {
   <key>NSHighResolutionCapable</key>
   <true/>
   <key>NSAppleEventsUsageDescription</key>
-  <string>ShelfDrop uses Finder access to add your selected files to the shelf.</string>
+  <string>temoto uses Finder access to add your selected files to the shelf.</string>
   <key>LSUIElement</key>
   <true/>
   <key>NSPrincipalClass</key>

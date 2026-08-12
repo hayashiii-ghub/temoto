@@ -2,10 +2,10 @@ import { CopyCommandButton } from "./CopyCommandButton";
 import { JapaneseText } from "./JapaneseText";
 
 const downloadUrl =
-  "https://github.com/hayashiii-ghub/shelfdrop/releases/latest/download/ShelfDrop-macos.dmg";
-const repositoryUrl = "https://github.com/hayashiii-ghub/shelfdrop";
+  "https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.dmg";
+const repositoryUrl = "https://github.com/hayashiii-ghub/temoto";
 const updateCommand =
-  "curl -fsSL https://github.com/hayashiii-ghub/shelfdrop/releases/latest/download/install_latest.sh | bash";
+  "curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/install_latest.sh | bash";
 
 const capabilities = [
   {
@@ -54,7 +54,7 @@ function FileMark({ kind }: { kind: "file" | "folder" | "link" }) {
 
 function ShelfPreview() {
   return (
-    <div className="shelfScene" aria-label="3つの項目が入ったShelfDropの画面イメージ">
+    <div className="shelfScene" aria-label="3つの項目が入ったtemotoの画面イメージ">
       <div className="sceneLabel sceneLabelTop"><span>ALWAYS ON TOP</span><i /></div>
       <div className="appShelf">
         <div className="appShelfHighlight" />
@@ -134,7 +134,7 @@ export default function Home() {
   return (
     <main id="top">
       <nav className="nav shell" aria-label="メインナビゲーション">
-        <a className="brand" href="#top" aria-label="ShelfDrop トップへ">ShelfDrop</a>
+        <a className="brand" href="#top" aria-label="temoto トップへ">temoto</a>
         <div className="navLinks">
           <a href="#features">できること</a>
           <a href="#guide">使い方</a>
@@ -148,7 +148,7 @@ export default function Home() {
           <p className="eyebrow"><span /> FLOATING SHELF FOR MACOS</p>
           <h1><JapaneseText>移動する前に、置いておく。</JapaneseText></h1>
           <p className="lead">
-            <JapaneseText>ShelfDropは、ファイルやリンクを一時的に置ける小さな棚。ウィンドウを行き来する手間を減らして、作業の流れを止めません。</JapaneseText>
+            <JapaneseText>temotoは、ファイルやリンクを一時的に置ける小さな棚。ウィンドウを行き来する手間を減らして、作業の流れを止めません。</JapaneseText>
           </p>
           <div className="heroActions">
             <a className="button primary" href={downloadUrl}>無料でダウンロード <span aria-hidden="true">↘</span></a>
@@ -159,7 +159,7 @@ export default function Home() {
         <ShelfPreview />
       </section>
 
-      <section className="signalStrip" aria-label="ShelfDropの特徴">
+      <section className="signalStrip" aria-label="temotoの特徴">
         <div className="shell signalInner">
           <p>Keep it close.<br /><span>Keep moving.</span></p>
           <dl>
@@ -172,7 +172,7 @@ export default function Home() {
 
       <section className="section shell" id="features">
         <div className="sectionHeading">
-          <p className="eyebrow"><span /> WHY SHELFDROP</p>
+          <p className="eyebrow"><span /> WHY TEMOTO</p>
           <h2><JapaneseText>置き場所を決める前の、ちょうどいい置き場所。</JapaneseText></h2>
           <p><JapaneseText>コピー先を探すあいだも、別のアプリを開くあいだも。いま手にしているものを、画面の上に残しておけます。</JapaneseText></p>
         </div>
@@ -192,12 +192,12 @@ export default function Home() {
           <div className="workflowIntro">
             <p className="eyebrow"><span /> HOW IT WORKS</p>
             <h2><JapaneseText>選ぶ。置く。取り出す。</JapaneseText></h2>
-            <p><JapaneseText>覚える操作はひとつだけ。Finderで選んだものを、キーボードから直接ShelfDropへ送れます。</JapaneseText></p>
+            <p><JapaneseText>覚える操作はひとつだけ。Finderで選んだものを、キーボードから直接temotoへ送れます。</JapaneseText></p>
             <div className="bigShortcut"><kbd>option</kbd><span>+</span><kbd>tab</kbd></div>
           </div>
           <ol className="workflowSteps">
             <li><span>01</span><div><h3><JapaneseText>Finderで選ぶ</JapaneseText></h3><p><JapaneseText>ファイル、フォルダ、または複数の項目を選択します。</JapaneseText></p></div></li>
-            <li><span>02</span><div><h3><JapaneseText>Option + Tabで置く</JapaneseText></h3><p><JapaneseText>選択した項目が、いちばん手前のShelfDropへ追加されます。</JapaneseText></p></div></li>
+            <li><span>02</span><div><h3><JapaneseText>Option + Tabで置く</JapaneseText></h3><p><JapaneseText>選択した項目が、いちばん手前のtemotoへ追加されます。</JapaneseText></p></div></li>
             <li><span>03</span><div><h3><JapaneseText>好きな場所へ取り出す</JapaneseText></h3><p><JapaneseText>移動先を開き、棚からドラッグ。まとめて移動、コピー、ZIP化もできます。</JapaneseText></p></div></li>
           </ol>
         </div>
@@ -205,7 +205,7 @@ export default function Home() {
 
       <section className="section installSection shell" id="install">
         <div className="installHeading">
-          <p className="eyebrow"><span /> GET SHELFDROP</p>
+          <p className="eyebrow"><span /> GET TEMOTO</p>
           <h2><JapaneseText>Macに、小さな棚を。</JapaneseText></h2>
           <p><JapaneseText>アカウントも設定画面もありません。ダウンロードしてApplicationsへ移すだけで使い始められます。</JapaneseText></p>
         </div>
@@ -215,10 +215,10 @@ export default function Home() {
             <h3><JapaneseText>DMGからインストール</JapaneseText></h3>
             <ol>
               <li><span>1</span><p><JapaneseText>最新版をダウンロード</JapaneseText></p></li>
-              <li><span>2</span><p><JapaneseText>ShelfDropをApplicationsへ移動</JapaneseText></p></li>
+              <li><span>2</span><p><JapaneseText>temotoをApplicationsへ移動</JapaneseText></p></li>
               <li><span>3</span><p><JapaneseText>Applicationsから起動</JapaneseText></p></li>
             </ol>
-            <a className="button primary full" href={downloadUrl}>ShelfDrop for macOS <span aria-hidden="true">↘</span></a>
+            <a className="button primary full" href={downloadUrl}>temoto for macOS <span aria-hidden="true">↘</span></a>
             <small><JapaneseText>初回のみ、macOSから起動の確認が表示される場合があります。</JapaneseText></small>
           </article>
           <article className="installCard installTerminal">
@@ -245,8 +245,8 @@ export default function Home() {
       </section>
 
       <footer className="footer shell">
-        <a className="brand" href="#top">ShelfDrop</a>
-        <p>© 2026 ShelfDrop</p>
+        <a className="brand" href="#top">temoto</a>
+        <p>© 2026 temoto</p>
         <div><a href={repositoryUrl}>GitHub</a><a href={`${repositoryUrl}/issues`}>Issues</a><a href={downloadUrl}>Download</a></div>
       </footer>
     </main>

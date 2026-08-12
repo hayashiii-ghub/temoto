@@ -2,7 +2,7 @@ import AppKit
 import Foundation
 import Testing
 import UniformTypeIdentifiers
-@testable import ShelfDrop
+@testable import Temoto
 
 @MainActor
 struct ShelfDragTests {

@@ -14,7 +14,7 @@ resolve_shelfdrop_version() {
   fi
 
   if [[ ! "$raw_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    echo "Invalid ShelfDrop version: $raw_version (expected vMAJOR.MINOR.PATCH)" >&2
+    echo "Invalid temoto version: $raw_version (expected vMAJOR.MINOR.PATCH)" >&2
     return 2
   fi
 

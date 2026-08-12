@@ -19,6 +19,7 @@ APP_BINARY="$APP_MACOS/$APP_NAME"
 INFO_PLIST="$APP_CONTENTS/Info.plist"
 
 pkill -x "$APP_NAME" >/dev/null 2>&1 || true
+pkill -x "ShelfDrop" >/dev/null 2>&1 || true
 
 cd "$ROOT_DIR"
 swift build

@@ -1,5 +1,5 @@
 import Testing
-@testable import ShelfDrop
+@testable import Temoto
 
 @MainActor
 struct ClipboardTextTests {

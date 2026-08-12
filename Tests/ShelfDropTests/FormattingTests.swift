@@ -1,5 +1,5 @@
 import Testing
-@testable import ShelfDrop
+@testable import Temoto
 
 struct FormattingTests {
     @Test(arguments: [".", ".."])

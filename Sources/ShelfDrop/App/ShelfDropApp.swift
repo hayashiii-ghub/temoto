@@ -13,10 +13,10 @@ final class ShelfDropApplication: NSObject, NSApplicationDelegate, NSMenuDelegat
     private static let shared = ShelfDropApplication()
     private static var singleInstanceGuard: SingleInstanceGuard?
     private static let latestDownloadURL = URL(
-        string: "https://github.com/hayashiii-ghub/shelfdrop/releases/latest/download/ShelfDrop-macos.zip"
+        string: "https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.zip"
     )!
     private static let releasesURL = URL(
-        string: "https://github.com/hayashiii-ghub/shelfdrop/releases/latest"
+        string: "https://github.com/hayashiii-ghub/temoto/releases/latest"
     )!
 
     private let store = ShelfStore()
@@ -146,7 +146,7 @@ final class ShelfDropApplication: NSObject, NSApplicationDelegate, NSMenuDelegat
         menu.addItem(NSMenuItem(title: "Open Release Page", action: #selector(openReleasePage), keyEquivalent: ""))
 
         menu.addItem(.separator())
-        menu.addItem(NSMenuItem(title: "Quit ShelfDrop", action: #selector(quit), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: "Quit temoto", action: #selector(quit), keyEquivalent: "q"))
 
         for item in menu.items where item.action != nil {
             item.target = self

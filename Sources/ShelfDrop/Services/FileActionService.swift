@@ -42,7 +42,7 @@ struct FileActionService {
     func chooseZipDestination() -> URL? {
         let panel = NSSavePanel()
         panel.allowedContentTypes = [.zip]
-        panel.nameFieldStringValue = "ShelfDrop-\(Date().compactTimestamp()).zip"
+        panel.nameFieldStringValue = "temoto-\(Date().compactTimestamp()).zip"
         panel.canCreateDirectories = true
         return panel.runModal() == .OK ? panel.url : nil
     }
@@ -79,8 +79,8 @@ struct FileActionService {
 
     func createZip(from items: [ShelfItem], destination: URL) throws {
         let stagingRoot = FileManager.default.temporaryDirectory
-            .appendingPathComponent("ShelfDrop-\(UUID().uuidString)", isDirectory: true)
-        let stagingItems = stagingRoot.appendingPathComponent("ShelfDrop Items", isDirectory: true)
+            .appendingPathComponent("temoto-\(UUID().uuidString)", isDirectory: true)
+        let stagingItems = stagingRoot.appendingPathComponent("temoto Items", isDirectory: true)
         try FileManager.default.createDirectory(at: stagingItems, withIntermediateDirectories: true)
         defer {
             try? FileManager.default.removeItem(at: stagingRoot)
@@ -89,7 +89,7 @@ struct FileActionService {
         try export(items: items, to: stagingItems, mode: .copy)
 
         let temporaryDestination = destination.deletingLastPathComponent()
-            .appendingPathComponent(".ShelfDrop-\(UUID().uuidString).zip")
+            .appendingPathComponent(".temoto-\(UUID().uuidString).zip")
         defer {
             try? FileManager.default.removeItem(at: temporaryDestination)
         }
