@@ -3,18 +3,30 @@ import SwiftUI
 struct ContentView: View {
     @ObservedObject var store: ShelfStore
     @ObservedObject var presentation: ShelfPresentationState
+    let mode: ShelfPresentationMode
     let onCollapseChange: (Bool) -> Void
     let onDismiss: () -> Void
+    let onPresentationModeChange: () -> Void
+    let onShowMenu: () -> Void
     @State private var isDropTargeted = false
-    private let panelShape = RoundedRectangle(cornerRadius: 32, style: .continuous)
+
+    private var panelShape: RoundedRectangle {
+        RoundedRectangle(
+            cornerRadius: mode == .floating ? 32 : 20,
+            style: .continuous
+        )
+    }
 
     var body: some View {
         VStack(spacing: 0) {
             ShelfHeader(
                 count: store.items.count,
                 isCollapsed: presentation.isCollapsed,
+                mode: mode,
                 onToggleCollapsed: toggleCollapsed,
-                onDismiss: onDismiss
+                onDismiss: onDismiss,
+                onPresentationModeChange: onPresentationModeChange,
+                onShowMenu: onShowMenu
             )
 
             if !presentation.isCollapsed {
@@ -81,32 +93,35 @@ struct ContentView: View {
 private struct ShelfHeader: View {
     let count: Int
     let isCollapsed: Bool
+    let mode: ShelfPresentationMode
     let onToggleCollapsed: () -> Void
     let onDismiss: () -> Void
+    let onPresentationModeChange: () -> Void
+    let onShowMenu: () -> Void
 
     var body: some View {
         HStack(spacing: 8) {
-            ZStack(alignment: .leading) {
-                Group {
-                    if count == 0 {
-                        Image(nsImage: ShelfIcon.vectorTemplateImage())
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 16, height: 16)
-                            .foregroundStyle(.primary)
-                    } else {
-                        Text("\(count)")
-                            .font(.system(size: 13, weight: .regular, design: .monospaced))
-                            .foregroundStyle(.primary)
-                    }
+            if mode == .floating {
+                ZStack(alignment: .leading) {
+                    countLabel
+                    WindowDragHandle()
                 }
-                    .padding(.leading, 3)
-                    .allowsHitTesting(false)
-
-                WindowDragHandle()
+                .frame(maxWidth: .infinity, minHeight: 27, maxHeight: 27, alignment: .leading)
+                .help("Drag to move")
+            } else {
+                countLabel
+                    .frame(maxWidth: .infinity, minHeight: 27, maxHeight: 27, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, minHeight: 27, maxHeight: 27, alignment: .leading)
-            .help("Drag to move")
+
+            Button(action: onPresentationModeChange) {
+                Image(systemName: mode == .floating ? "pin.slash" : "pin")
+                    .font(.system(size: 11, weight: .regular))
+                    .frame(width: 24, height: 24)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .focusEffectDisabled()
+            .help(mode == .floating ? "Return Shelf to Menu Bar" : "Keep Shelf on Screen")
 
             Button(action: onDismiss) {
                 Image(systemName: "xmark")
@@ -118,18 +133,49 @@ private struct ShelfHeader: View {
             .focusEffectDisabled()
             .help("Hide Shelf")
 
-            Button(action: onToggleCollapsed) {
-                Image(systemName: isCollapsed ? "chevron.down" : "chevron.up")
+            if mode == .floating {
+                Button(action: onToggleCollapsed) {
+                    Image(systemName: isCollapsed ? "chevron.down" : "chevron.up")
+                        .font(.system(size: 11, weight: .regular))
+                        .frame(width: 24, height: 24)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .focusEffectDisabled()
+                .help(isCollapsed ? "Expand Shelf" : "Collapse Shelf")
+            }
+
+            Button(action: onShowMenu) {
+                Image(systemName: "ellipsis")
                     .font(.system(size: 11, weight: .regular))
                     .frame(width: 24, height: 24)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .focusEffectDisabled()
-            .help(isCollapsed ? "Expand Shelf" : "Collapse Shelf")
+            .help("temoto Menu")
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 9)
+    }
+
+    @ViewBuilder
+    private var countLabel: some View {
+        Group {
+            if count == 0 {
+                Image(nsImage: ShelfIcon.vectorTemplateImage())
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 16, height: 16)
+                    .foregroundStyle(.primary)
+            } else {
+                Text("\(count)")
+                    .font(.system(size: 13, weight: .regular, design: .monospaced))
+                    .foregroundStyle(.primary)
+            }
+        }
+        .padding(.leading, 3)
+        .allowsHitTesting(false)
     }
 }
 

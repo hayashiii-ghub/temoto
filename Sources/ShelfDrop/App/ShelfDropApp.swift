@@ -21,14 +21,35 @@ final class ShelfDropApplication: NSObject, NSApplicationDelegate, NSMenuDelegat
 
     private let store = ShelfStore()
     private let finderSelectionReader = FinderSelectionReader()
-    private lazy var shelfWindowController = ShelfWindowController(store: store)
+    private let presentationPreference = ShelfPresentationPreference()
+    private lazy var shelfWindowController = ShelfWindowController(
+        store: store,
+        onReturnToMenuBar: { [weak self] in
+            self?.selectPresentationMode(.menuBar)
+        },
+        onShowMenu: { [weak self] in
+            self?.showStatusMenu()
+        }
+    )
+    private lazy var menuBarShelfController = MenuBarShelfController(
+        store: store,
+        onKeepOnScreen: { [weak self] in
+            self?.selectPresentationMode(.floating)
+        },
+        onShowMenu: { [weak self] in
+            self?.showStatusMenu()
+        }
+    )
     private var addFinderSelectionHotKey: GlobalHotKey?
     private var toggleShelfHotKey: GlobalHotKey?
     private var statusItem: NSStatusItem?
+    private var statusMenu: NSMenu?
     private var copyMenuItem: NSMenuItem?
     private var moveMenuItem: NSMenuItem?
     private var zipMenuItem: NSMenuItem?
     private var clearMenuItem: NSMenuItem?
+    private var floatingShelfMenuItem: NSMenuItem?
+    private var menuBarShelfMenuItem: NSMenuItem?
 
     static func main() {
         guard let instanceGuard = SingleInstanceGuard(identifier: bundleIdentifier) else {
@@ -65,7 +86,7 @@ final class ShelfDropApplication: NSObject, NSApplicationDelegate, NSMenuDelegat
 
         configureStatusItem()
         toggleShelfHotKey = GlobalHotKey(shortcut: .toggleShelf) { [weak self] in
-            self?.shelfWindowController.toggleShelf()
+            self?.togglePreferredShelf()
         }
         NSWorkspace.shared.notificationCenter.addObserver(
             self,
@@ -92,12 +113,19 @@ final class ShelfDropApplication: NSObject, NSApplicationDelegate, NSMenuDelegat
         moveMenuItem?.isEnabled = canManageItems
         zipMenuItem?.isEnabled = canManageItems
         clearMenuItem?.isEnabled = canManageItems
+        floatingShelfMenuItem?.state = presentationPreference.mode == .floating ? .on : .off
+        menuBarShelfMenuItem?.state = presentationPreference.mode == .menuBar ? .on : .off
     }
 
     private func configureStatusItem() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        item.button?.image = ShelfIcon.templateImage()
-        item.button?.imagePosition = .imageOnly
+        if let button = item.button {
+            button.image = ShelfIcon.templateImage()
+            button.imagePosition = .imageOnly
+            button.target = self
+            button.action = #selector(statusItemButtonPressed(_:))
+            button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        }
 
         let menu = NSMenu()
         menu.delegate = self
@@ -116,6 +144,28 @@ final class ShelfDropApplication: NSObject, NSApplicationDelegate, NSMenuDelegat
         )
         toggleShelfItem.keyEquivalentModifierMask = [.option, .shift]
         menu.addItem(toggleShelfItem)
+
+        let shelfLocationItem = NSMenuItem(title: "Shelf Location", action: nil, keyEquivalent: "")
+        let shelfLocationMenu = NSMenu()
+        let floatingItem = NSMenuItem(
+            title: "On Screen",
+            action: #selector(useFloatingShelf),
+            keyEquivalent: ""
+        )
+        let menuBarItem = NSMenuItem(
+            title: "Menu Bar",
+            action: #selector(useMenuBarShelf),
+            keyEquivalent: ""
+        )
+        floatingItem.target = self
+        menuBarItem.target = self
+        shelfLocationMenu.addItem(floatingItem)
+        shelfLocationMenu.addItem(menuBarItem)
+        shelfLocationItem.submenu = shelfLocationMenu
+        floatingShelfMenuItem = floatingItem
+        menuBarShelfMenuItem = menuBarItem
+        menu.addItem(shelfLocationItem)
+
         menu.addItem(
             NSMenuItem(
                 title: "Add Clipboard Text",
@@ -152,17 +202,38 @@ final class ShelfDropApplication: NSObject, NSApplicationDelegate, NSMenuDelegat
             item.target = self
         }
 
-        item.menu = menu
+        statusMenu = menu
         statusItem = item
     }
 
+    @objc private func statusItemButtonPressed(_ sender: NSStatusBarButton) {
+        if NSApp.currentEvent?.type == .rightMouseUp {
+            showStatusMenu()
+        } else {
+            let event = NSApp.currentEvent
+            let eventWindow = event?.window
+            let eventLocation = event.flatMap { event in
+                eventWindow?.convertPoint(toScreen: event.locationInWindow)
+            }
+            togglePreferredShelf(
+                relativeTo: sender,
+                clickLocation: eventLocation ?? NSEvent.mouseLocation,
+                clickScreen: eventWindow?.screen
+            )
+        }
+    }
+
     @objc private func toggleShelf() {
-        shelfWindowController.toggleShelf()
+        DispatchQueue.main.async { [weak self] in
+            self?.togglePreferredShelf()
+        }
     }
 
     @objc private func addClipboardText() {
         guard store.addClipboardText(NSPasteboard.general.string(forType: .string)) else { return }
-        shelfWindowController.showShelf()
+        DispatchQueue.main.async { [weak self] in
+            self?.showPreferredShelf()
+        }
     }
 
     @objc private func frontmostApplicationDidChange(_ notification: Notification) {
@@ -208,7 +279,7 @@ final class ShelfDropApplication: NSObject, NSApplicationDelegate, NSMenuDelegat
             }
             store.addFileURLs(urls)
             finderImportLogger.info("Added \(urls.count) Finder selection item(s)")
-            shelfWindowController.showShelf()
+            showPreferredShelf()
         } catch {
             finderImportLogger.error("Finder selection failed: \(error.localizedDescription, privacy: .public)")
             let alert = NSAlert(error: error)
@@ -233,6 +304,14 @@ final class ShelfDropApplication: NSObject, NSApplicationDelegate, NSMenuDelegat
         store.clear()
     }
 
+    @objc private func useFloatingShelf() {
+        selectPresentationMode(.floating)
+    }
+
+    @objc private func useMenuBarShelf() {
+        selectPresentationMode(.menuBar)
+    }
+
     @objc private func downloadLatestVersion() {
         NSWorkspace.shared.open(Self.latestDownloadURL)
     }
@@ -243,5 +322,56 @@ final class ShelfDropApplication: NSObject, NSApplicationDelegate, NSMenuDelegat
 
     @objc private func quit() {
         NSApp.terminate(nil)
+    }
+
+    private func showPreferredShelf() {
+        switch presentationPreference.mode {
+        case .floating:
+            menuBarShelfController.hideShelf()
+            shelfWindowController.showShelf()
+        case .menuBar:
+            shelfWindowController.hideShelf()
+            guard let button = statusItem?.button else { return }
+            menuBarShelfController.showShelf(relativeTo: button)
+        }
+    }
+
+    private func togglePreferredShelf(
+        relativeTo clickedButton: NSStatusBarButton? = nil,
+        clickLocation: NSPoint? = nil,
+        clickScreen: NSScreen? = nil
+    ) {
+        switch presentationPreference.mode {
+        case .floating:
+            menuBarShelfController.hideShelf()
+            shelfWindowController.toggleShelf()
+        case .menuBar:
+            shelfWindowController.hideShelf()
+            guard let button = clickedButton ?? statusItem?.button else { return }
+            menuBarShelfController.toggleShelf(
+                relativeTo: button,
+                clickLocation: clickLocation,
+                clickScreen: clickScreen
+            )
+        }
+    }
+
+    private func selectPresentationMode(_ mode: ShelfPresentationMode) {
+        presentationPreference.mode = mode
+        shelfWindowController.hideShelf()
+        menuBarShelfController.hideShelf()
+
+        DispatchQueue.main.async { [weak self] in
+            self?.showPreferredShelf()
+        }
+    }
+
+    private func showStatusMenu() {
+        guard let statusItem, let statusMenu else { return }
+
+        menuBarShelfController.hideShelf()
+        statusItem.menu = statusMenu
+        statusItem.button?.performClick(nil)
+        statusItem.menu = nil
     }
 }

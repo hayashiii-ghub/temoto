@@ -14,12 +14,20 @@ final class ShelfWindowController: NSObject, NSWindowDelegate {
     private static let collapsedShelfSize = NSSize(width: shelfLength, height: 45)
 
     private let store: ShelfStore
+    private let onReturnToMenuBar: () -> Void
+    private let onShowMenu: () -> Void
     private let presentation = ShelfPresentationState()
     private var panel: NSPanel?
     private var localKeyDownMonitor: Any?
 
-    init(store: ShelfStore) {
+    init(
+        store: ShelfStore,
+        onReturnToMenuBar: @escaping () -> Void,
+        onShowMenu: @escaping () -> Void
+    ) {
         self.store = store
+        self.onReturnToMenuBar = onReturnToMenuBar
+        self.onShowMenu = onShowMenu
     }
 
     func showShelf() {
@@ -75,12 +83,15 @@ final class ShelfWindowController: NSObject, NSWindowDelegate {
             rootView: ContentView(
                 store: store,
                 presentation: presentation,
+                mode: .floating,
                 onCollapseChange: { [weak self] isCollapsed in
                     self?.setShelfCollapsed(isCollapsed)
                 },
                 onDismiss: { [weak self] in
                     self?.hideShelf()
-                }
+                },
+                onPresentationModeChange: onReturnToMenuBar,
+                onShowMenu: onShowMenu
             )
                 .frame(width: size.width)
         )

@@ -32,7 +32,8 @@ Apple IDやMac App Storeを使わず、GitHub Releasesから直接ダウンロ�
 | 機能 | 操作 |
 | --- | --- |
 | Finderの選択項目を追加 | Finderで選択して`Option + Tab` |
-| 棚の表示・非表示を切り替える | `Option + Shift + Tab` |
+| 棚の表示・非表示を切り替える | メニューバーアイコンをクリック、または`Option + Shift + Tab` |
+| 棚の表示場所を切り替える | 棚上部のピンボタン、またはメニューバーアイコンを右クリックして`Shelf Location`を選択 |
 | コピー中のテキストを保存 | フッターのクリップボードアイコン、またはメニューバーの`Add Clipboard Text` |
 | 複数項目をまとめて取り出す | フッター左端のスタックアイコンをドラッグ |
 | 項目を個別に取り出す | 棚の行をFinderや他のアプリへドラッグ |
@@ -41,7 +42,9 @@ Apple IDやMac App Storeを使わず、GitHub Releasesから直接ダウンロ�
 | 棚を移動 | ヘッダーをそのままドラッグ |
 | 棚を隠す | `×`ボタンまたは`Escape` |
 
-棚は表示後、閉じるまでほかのウィンドウより手前に残ります。棚内でのファイル名変更や並べ替えは行いません。
+棚は画面上にピン留めすると、閉じるまでほかのウィンドウより手前に残ります。メニューバーへ収納すると、アイコン直下に開き、外側をクリックすると閉じます。選択した表示場所は次回起動時も維持されます。
+
+メニューバーアイコンを右クリックするか、棚上部の`…`ボタンを押すと、追加・書き出し・更新・終了などのメニューを開けます。棚内でのファイル名変更や並べ替えは行いません。
 
 ## 対応する項目
 
@@ -82,7 +85,7 @@ curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/ins
 curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/install_latest.sh | bash
 ```
 
-`/Applications`または`~/Applications`にある既存の`temoto.app`を検出して更新します。旧名の`ShelfDrop.app`も自動的に移行されます。メニューバーの`Download Latest Version...`から最新版のダウンロードを開始することもできます。
+`/Applications`または`~/Applications`にある既存の`temoto.app`を検出して更新します。旧名の`ShelfDrop.app`も自動的に移行されます。メニューバーアイコンを右クリックして`Download Latest Version...`を選ぶと、最新版のダウンロードを開始することもできます。
 
 ## 権限
 
