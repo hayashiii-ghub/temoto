@@ -22,6 +22,7 @@ test("two thirds of the slider reaches 2x", () => {
 
 test("video speed shortcuts use the requested increments", () => {
   assert.equal(speedFromShortcut("g", 3), 1.5);
+  assert.equal(speedFromShortcut("G", 1.5), 1);
   assert.equal(speedFromShortcut("D", 1.5), 1.75);
   assert.equal(speedFromShortcut("s", 1.5), 1.25);
   assert.equal(speedFromShortcut("d", 5), 5);

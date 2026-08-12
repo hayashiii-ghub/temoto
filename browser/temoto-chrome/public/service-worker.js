@@ -337,9 +337,12 @@ async function handleMessage(message, sender) {
       return { ok: changed > 0, changed, error: changed ? undefined : "No video found on this page" };
     }
     case "VIDEO_SPEED_SHORTCUT": {
-      const { speed, changed } = await applyVideoSpeed(message.speed);
-      if (changed) await chrome.storage.local.set({ lastSpeed: speed });
-      return { ok: changed > 0, changed, speed };
+      const speed = Math.round(Math.min(5, Math.max(0.25, Number(message.speed) || 1)) * 100) / 100;
+      await chrome.storage.local.set({ lastSpeed: speed });
+      if (sender.tab?.id) {
+        await chrome.tabs.sendMessage(sender.tab.id, { type: "APPLY_VIDEO_SPEED", speed }).catch(() => {});
+      }
+      return { ok: true, speed };
     }
     case "CAPTURE_VISIBLE":
       await capture(null, null, message.options);

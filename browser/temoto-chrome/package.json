@@ -8,7 +8,7 @@
     "build": "vite build && node scripts/prepare-sites-build.mjs && node scripts/verify-extension-build.mjs",
     "package": "npm run build && node scripts/package-extension.mjs",
     "preview": "vite preview",
-    "test": "node --test tests/url-utils.test.mjs tests/capture-utils.test.mjs tests/capture-plan.test.mjs tests/video-speed.test.mjs",
+    "test": "node --test tests/url-utils.test.mjs tests/capture-utils.test.mjs tests/capture-plan.test.mjs tests/video-speed.test.mjs tests/video-speed-content.test.mjs",
     "test:sites": "node --test tests/sites-worker.test.mjs"
   },
   "dependencies": {

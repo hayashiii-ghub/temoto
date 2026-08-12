@@ -2,7 +2,7 @@
 
 Effective date: August 11, 2026
 
-temoto for Chrome is an on-demand toolkit for inspecting and testing the web page that the user is currently viewing. This policy explains how the extension handles data.
+temoto for Chrome is a toolkit for inspecting and testing the web page that the user is currently viewing. This policy explains how the extension handles data.
 
 ## Data the extension handles
 
@@ -18,9 +18,10 @@ Depending on the tool the user chooses, the extension may process:
 
 ## How data is used
 
-The data above is used only to provide the tool the user explicitly requests. temoto does not monitor browsing in the background.
+The data above is used only to provide temoto's user-facing tools. temoto does not collect browsing history or record keystrokes.
 
 - Current-page details are read when the popup opens so the requested tools can act on that page.
+- A local key handler listens for `G`, `D`, and `S` on HTTP(S) pages so playback speed can change without opening the popup. It ignores editable fields and modifier-key combinations, processes matching keys locally, and does not retain the key events.
 - Screenshot pixels are used to render the capture preview and allow the user to copy or save a PNG.
 - Environment origins are used to navigate between development environments while preserving the rest of the URL.
 - Site data is deleted only after the user chooses Site Reset and approves Chrome's optional permission prompt.
@@ -42,9 +43,10 @@ temoto does not transmit user data to the developer or to any external server. I
 - `storage`: save local environment settings and the user's most recently selected color and playback speed.
 - `sidePanel`: show persistent environment settings and tool details.
 - `clipboardWrite`: copy colors, screenshots, and CSS selectors after a user action.
+- Website access on HTTP(S) pages: load the local Video Speed key handler in page frames so `G`, `D`, and `S` work without opening the popup. This access is not used to transmit page content or browsing activity.
 - Optional `browsingData`: clear data only for the current origin when the user runs Site Reset. Chrome asks for this permission at that time.
 
-temoto does not request persistent host permissions or access to all websites.
+The persistent website access above is required only for the always-available Video Speed shortcuts. Other page tools remain user initiated.
 
 ## User control
 

@@ -29,7 +29,7 @@ export function sliderPositionToSpeed(position) {
 
 export function speedFromShortcut(key, currentSpeed) {
   switch (String(key).toLowerCase()) {
-    case "g": return 1.5;
+    case "g": return clampPlaybackSpeed(currentSpeed) === 1.5 ? 1 : 1.5;
     case "d": return clampPlaybackSpeed(Number(currentSpeed) + 0.25);
     case "s": return clampPlaybackSpeed(Number(currentSpeed) - 0.25);
     default: return null;

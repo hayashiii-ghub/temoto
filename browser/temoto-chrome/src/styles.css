@@ -14,7 +14,7 @@
   --line: rgba(255, 255, 255, 0.105);
   --line-strong: rgba(255, 255, 255, 0.19);
   --danger: #df8b83;
-  --brand-purple: #9674b6;
+  --brand-purple: #9974f8;
 }
 
 * { box-sizing: border-box; }
@@ -40,7 +40,7 @@ body[data-surface="capture"] { min-width: 720px; min-height: 600px; }
 .app-header { min-height: 64px; padding: 0 0 0 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: rgba(18, 18, 18, 0.34); -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); flex: 0 0 auto; }
 .brand-lockup { display: flex; align-items: center; gap: 8px; }
 .brand-name { font-size: 17px; line-height: 1; font-weight: 590; letter-spacing: -.025em; }
-.brand-for { color: #f4f4f2; }
+.brand-for { color: var(--brand-purple); }
 .brand-chrome { color: var(--brand-purple); font-weight: 540; }
 .brand-context { color: #92928f; font-weight: 520; }
 .icon-button { width: 60px; height: 64px; padding: 0; display: grid; place-items: center; border: 0; border-left: 1px solid var(--line); border-radius: 0; background: transparent; cursor: pointer; transition: background .18s ease, color .18s ease, transform .18s ease; }
@@ -141,7 +141,7 @@ body[data-surface="capture"] { min-width: 720px; min-height: 600px; }
 .capture-switch-row:hover { background: rgba(255,255,255,.035); }
 .capture-switch { width: 30px; height: 17px; padding: 2px; display: block; border: 1px solid var(--line-strong); border-radius: 999px; background: rgba(255,255,255,.06); transition: background .16s ease, border-color .16s ease; }
 .capture-switch span { width: 11px; height: 11px; display: block; border-radius: 50%; background: #a4a4a0; transition: transform .16s ease, background .16s ease; }
-.capture-switch.is-on { border-color: rgba(142,116,176,.75); background: rgba(142,116,176,.46); }
+.capture-switch.is-on { border-color: rgba(153,116,248,.75); background: rgba(153,116,248,.46); }
 .capture-switch.is-on span { background: #f1eef4; transform: translateX(13px); }
 .screenshot-actions .screenshot-options-body > p { min-height: 36px; margin: 0; padding: 0 24px; color: #5f5f5c; font-size: 7px; line-height: 1.45; text-align: left; }
 .screenshot-screen .tool-description { min-height: 48px; }
@@ -161,14 +161,14 @@ body[data-surface="capture"] { min-width: 720px; min-height: 600px; }
 .speed-presets button { border: 0; border-right: 1px solid var(--line); background: transparent; color: #c7c7c4; font: 500 11px "IBM Plex Mono", monospace; cursor: pointer; }
 .speed-presets button:last-child { border-right: 0; }
 .speed-presets button:hover { background: rgba(255,255,255,.04); color: #fff; }
-.speed-presets button.is-active { background: rgba(142,116,176,.16); color: #d1bedf; }
+.speed-presets button.is-active { background: rgba(153,116,248,.16); color: var(--brand-purple); }
 .speed-slider-row { margin-top: 15px; display: grid; grid-template-columns: 25px 1fr 25px; gap: 9px; align-items: center; }
 .speed-slider-row button { padding: 0; border: 0; background: transparent; color: #d7d7d4; font-size: 20px; cursor: pointer; }
 .speed-slider-row input { width: 100%; height: 3px; accent-color: #eeeeec; cursor: pointer; }
 .speed-shortcuts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
 .speed-shortcuts span { display: flex; align-items: center; justify-content: center; gap: 8px; border-right: 1px solid var(--line); color: #696966; font: 400 9px "IBM Plex Mono", monospace; }
 .speed-shortcuts span:last-child { border-right: 0; }
-.speed-shortcuts kbd { min-width: 18px; height: auto; display: block; border: 0; border-radius: 0; background: transparent; color: #b49bc7; font: 500 10px "IBM Plex Mono", monospace; box-shadow: none; }
+.speed-shortcuts kbd { min-width: 18px; height: auto; display: block; border: 0; border-radius: 0; background: transparent; color: var(--brand-purple); font: 500 10px "IBM Plex Mono", monospace; box-shadow: none; }
 .speed-shortcuts small { font-size: inherit; }
 
 .environment-title { min-height: 56px; margin: 0; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
@@ -219,13 +219,13 @@ body[data-surface="capture"] { min-width: 720px; min-height: 600px; }
 .settings-form label > span { grid-column: 1; grid-row: 1 / span 2; display: block; margin: 0; color: #7d7d7a; font: 500 8px "IBM Plex Mono", monospace; letter-spacing: .12em; }
 .settings-form input { grid-column: 2; grid-row: 1; width: 100%; height: 100%; min-height: 48px; padding: 0 18px; border: 0; border-left: 1px solid var(--line); border-radius: 0; outline: 0; background: rgba(255,255,255,.015); color: #e5e5e2; font: 400 11px "IBM Plex Mono", monospace; }
 .settings-form input:hover { background: rgba(255,255,255,.03); }
-.settings-form input:focus { border-left-color: rgba(142,116,176,.75); background: rgba(142,116,176,.07); }
+.settings-form input:focus { border-left-color: rgba(153,116,248,.75); background: rgba(153,116,248,.07); }
 .settings-form label.has-error input { border-left-color: rgba(223,139,131,.65); }
 .settings-form label > small { grid-column: 2; grid-row: 2; display: block; margin: -3px 0 8px; padding: 0 18px; color: var(--danger); font-size: 9px; }
-.save-button { width: 100%; height: 64px; margin: 0; display: flex; align-items: center; justify-content: center; gap: 7px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; color: #b49bc7; font-weight: 550; cursor: pointer; }
-.save-button:hover { background: rgba(142,116,176,.075); color: #d1bedf; }
+.save-button { width: 100%; height: 64px; margin: 0; display: flex; align-items: center; justify-content: center; gap: 7px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--brand-purple); font-weight: 550; cursor: pointer; }
+.save-button:hover { background: rgba(153,116,248,.075); color: var(--brand-purple); }
 .save-button:focus { outline: 0; }
-.save-button:focus-visible { box-shadow: inset 0 0 0 1px rgba(142,116,176,.72); }
+.save-button:focus-visible { box-shadow: inset 0 0 0 1px rgba(153,116,248,.72); }
 .settings-block { min-height: 80px; margin: 0; padding: 15px 24px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; }
 .settings-block strong, .settings-block small { display: block; }
 .settings-block strong { font-size: 13px; font-weight: 500; }

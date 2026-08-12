@@ -125,7 +125,7 @@ function SpeedControl({ speed, onChange, disabled }) {
       </div>
       <div className="speed-shortcuts" aria-label="Keyboard shortcuts">
         <span><kbd>S</kbd><small>−0.25</small></span>
-        <span><kbd>G</kbd><small>1.5×</small></span>
+        <span><kbd>G</kbd><small>1↔1.5×</small></span>
         <span><kbd>D</kbd><small>+0.25</small></span>
       </div>
     </div>

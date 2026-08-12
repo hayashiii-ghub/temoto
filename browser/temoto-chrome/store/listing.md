@@ -26,23 +26,24 @@ temoto for Chrome brings six common page-testing tools into one focused popup:
 
 - Pick any on-screen color and copy its hex value.
 - Capture a selected region, the visible page, or the full page, then copy or save a PNG.
-- Detect HTML5 video and set an exact playback speed.
+- Set HTML5 video speed in the popup, or use `G`, `D`, and `S` directly on the page without opening temoto.
 - Move between Local, Staging, and Production without losing the current path, query, or hash.
 - Reset cache, cookies, storage, and service workers for the current site only when requested.
 - Measure an element and copy a compact CSS selector.
 
-temoto runs on demand. It does not monitor browsing in the background, request persistent access to every site, transmit page data, or use analytics. Site Reset asks for its optional permission only when you choose that tool.
+temoto processes its tools locally, does not transmit page data, and does not use analytics. Persistent HTTP(S) page access is used only to make the documented Video Speed shortcuts available without opening the popup. Site Reset asks for its optional permission only when you choose that tool.
 
 ## Privacy practices
 
 **Single purpose description**
 
-Provide web developers with on-demand tools for inspecting and testing the current page without background monitoring or remote data collection.
+Provide web developers with local tools for inspecting and testing the current page, including always-available video speed shortcuts, without remote data collection.
 
 **Permission justifications**
 
-- `activeTab`: Grants temporary access to the current tab after the user opens temoto or selects a tool. This avoids persistent host permissions.
+- `activeTab`: Grants temporary access to the current tab after the user opens temoto or selects a tool for the remaining on-demand page utilities.
 - `scripting`: Runs the user-requested video detection/control, capture selection overlay, and Measure / Inspect tool in the current tab.
+- Website access on HTTP(S) pages: Loads the local Video Speed handler in every page frame so `G`, `D`, and `S` can change HTML5 playback speed without opening the popup. The handler ignores editable fields and modifier-key combinations and does not collect or transmit page content or keystrokes.
 - `storage`: Stores user-configured environment origins and the last selected color and playback speed locally.
 - `sidePanel`: Opens persistent settings and environment configuration without keeping the popup open.
 - `clipboardWrite`: Copies a user-selected color, screenshot, or CSS selector only after a user action.
@@ -74,7 +75,7 @@ No account or credentials are required.
 1. Open a regular web page and click the temoto toolbar icon.
 2. Color Picker opens Chrome's native eyedropper and copies the chosen hex value.
 3. Screenshot can capture a selected region, the visible viewport, or the full page and opens a local preview with Copy and Save PNG actions.
-4. On a page with an HTML5 video, Video Speed changes the playback rate. A page without video shows `No video`.
+4. On a page with an HTML5 video, press `G` to toggle 1× / 1.5×, `D` for +0.25×, or `S` for −0.25× without opening temoto. A subtle badge at the video's top-left shows the current rate. The popup Video Speed controls also change the rate. A page without video shows `No video`.
 5. Settings stores Local, Staging, and Production origins locally. Environment Switcher preserves the current path, query, and hash.
 6. Measure / Inspect highlights the element under the pointer and copies its selector when clicked.
 7. Site Reset requests the optional `browsingData` permission, clears data only for the displayed current origin, and reloads the tab.
