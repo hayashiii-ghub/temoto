@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280, initial-scale=1" />
+    <title>temoto for Chrome — Store screenshot</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 1280px; height: 800px; overflow: hidden; }
+      body {
+        color: #f5f3f0;
+        background:
+          radial-gradient(circle at 78% 34%, rgba(153, 116, 248, .18), transparent 33%),
+          linear-gradient(135deg, #070707 0%, #0d0c0e 58%, #09090a 100%);
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      main { width: 1280px; height: 800px; display: grid; grid-template-columns: 1fr 570px; align-items: center; gap: 68px; padding: 86px 90px; }
+      .copy { align-self: center; }
+      .brand { display: flex; align-items: center; gap: 14px; color: #f5f3f0; font-size: 19px; font-weight: 600; letter-spacing: -.02em; }
+      .brand img { width: 20px; height: 22px; }
+      .brand span { color: #9974f8; }
+      h1 { margin: 74px 0 24px; max-width: 520px; font-size: 64px; line-height: 1.02; letter-spacing: -.055em; font-weight: 520; }
+      p { margin: 0; max-width: 475px; color: #aaa6ad; font-size: 20px; line-height: 1.55; letter-spacing: -.015em; }
+      .tools { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 38px; max-width: 480px; }
+      .tools span { border: 1px solid rgba(255,255,255,.14); border-radius: 999px; padding: 9px 13px; color: #cbc7ce; font-size: 13px; }
+      .product {
+        width: 570px;
+        height: 570px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 34px;
+        background: rgba(255,255,255,.025);
+        box-shadow: 0 40px 100px rgba(0,0,0,.5);
+        overflow: hidden;
+      }
+      .launcher { width: 440px; height: 440px; overflow: hidden; background: #090909; }
+      .launcher img { display: block; width: 440px; height: 440px; object-fit: cover; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="copy">
+        <div class="brand"><img src="/icons/temoto-mark.svg" alt="" />temoto <span>for Chrome</span></div>
+        <h1>Developer tools, close at hand.</h1>
+        <p>Pick, capture, inspect, and test the current page from one focused toolkit.</p>
+        <div class="tools" aria-label="Included tools">
+          <span>Color Picker</span><span>Screenshot</span><span>Video Speed</span>
+          <span>Environments</span><span>Site Reset</span><span>Inspect</span>
+        </div>
+      </section>
+      <section class="product" aria-label="temoto launcher preview">
+        <div class="launcher"><img src="/store/assets/launcher-canvas.jpg" alt="temoto for Chrome launcher" /></div>
+      </section>
+    </main>
+  </body>
+</html>
