@@ -13,20 +13,20 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 - The umbrella brand is lowercase `temoto`; this package and its in-product header both read `temoto for Chrome`.
 - Use `/Users/hayashi/.codex/generated_images/019fef3f-0a29-76e1-a0f8-a4bf4df82b14/exec-98a56230-b922-4df8-bc2b-cffb65dfe8dc.png` as the latest visual source, modified by the user's explicit polish feedback below.
 - Preserve the established near-black, charcoal, off-white, muted-gray, translucent-border, softly rounded visual system.
-- Keep the Chrome popup a compact 440px square and use the same translucent, glass-like charcoal surfaces as `temoto for macOS`; avoid dense black slabs.
+- Keep the Chrome popup a compact 416px square and use the same translucent, glass-like charcoal surfaces as `temoto for macOS`; avoid dense black slabs.
 - Render the two-layer temoto mark as a tightly cropped vector with a solid upper block and outlined lower block; use no CSS color filter so it stays crisp at toolbar-popup scale.
 - The Chrome home surface includes Color Picker, Screenshot, Video Speed, Environment Switcher, Site Reset, and Measure / Inspect.
 - Screenshot includes selected-region, visible-viewport, and full-page capture with clipboard copy and PNG download.
 - Keep lazy-content preloading and animation freezing automatic; expose only Delay and Force reveal inside a collapsed Capture options section.
 - Proxy is a separate future `temoto Proxy` companion because the mandatory Chrome proxy permission is too broad for the core extension.
 - Keep everyday actions in the popup and use the Chrome side panel for persistent detail and project configuration.
-- The popup home is a 440 × 440 square English-only launcher with six equal tools in a 3 × 2 grid; use only thin dividers, with no individual card borders, backgrounds, or corner radii. Do not show the current-page/video status strip or Proxy on this surface.
-- Keep the launcher header compact: a 26px temoto mark, a single-line `temoto for Chrome` lockup with `for Chrome` in muted purple, and a borderless Settings cell separated only by a vertical divider.
-- Use the native system sans-serif stack for crisp English UI and a consistent light-weight Phosphor icon set with matched optical sizes.
+- The popup home is a 416 × 416 square English-only launcher with six equal tools in a 3 × 2 grid; use only thin dividers, with no individual card borders, backgrounds, or corner radii. Do not show the current-page/video status strip or Proxy on this surface.
+- Keep the launcher header compact: use a single-line `temoto for Chrome` wordmark with white `temoto for`, muted-purple `Chrome`, and no separate temoto mark beside it. Keep the borderless Settings cell separated by a vertical divider.
+- Use locally bundled Geist Sans Variable for the English UI and wordmark, keeping IBM Plex Mono for numbers and technical labels. Pair it with a consistent light-weight Phosphor icon set with matched optical sizes.
 - Chrome app-icon PNGs must use the enlarged temoto mark so the icon reads at the same visual scale as neighboring extensions.
-- Use the slightly higher-saturation muted purple `#9674b6` for the temoto mark and UI accents. Keep extension-list/app icons and the 16/32px toolbar action icon fully transparent; Chromium/Comet may require a full browser restart before manifest icon and version changes leave its UI cache.
+- Keep the Chrome extension mark monochrome off-white, with a solid upper block and hollow lower block, matching `temoto for macOS`; retain muted purple `#9674b6` only for UI accents and the `Chrome` wordmark. Keep extension-list/app icons and the 16/32px toolbar action icon fully transparent; Chromium/Comet may require a full browser restart before manifest icon and version changes leave its UI cache.
 - Selecting a launcher card replaces the grid with that tool's full-popup view and a clear Back action. Video availability is communicated only by the Video Speed card badge (`1.75x` or `No video`).
-- Keep every tool-detail header at the launcher's 64px height: use the full 64 × 64px area left of the divider as the Back button, then show a small Phosphor SVG beside the tool title. Tool bodies use one shared top-aligned description-and-controls rhythm with no oversized framed feature icons.
+- Keep every tool-detail header at the launcher's 60px height: use the full 60 × 60px area left of the divider as the Back button, then show a small Phosphor SVG beside the tool title. Tool bodies use one shared top-aligned description-and-controls rhythm with no oversized framed feature icons.
 - Extend the launcher's strict grid language through every tool detail: content runs edge to edge with no outer card padding, functional areas are fixed-height rows or equal grid cells separated by 1px rules, and standalone rounded cards or white floating primary buttons are avoided. Use muted purple for selection and red only for destructive actions.
 - Apply the same strict grid to Settings: the side panel fills its native width, uses label/input columns and full-width rows separated by 1px rules, and avoids rounded forms, cards, and floating save buttons. On wide previews only, cap the content grid at 640px.
 - While Inspect is active, show a compact persistent top guide for click-to-copy and Esc-to-exit, and use a crosshair cursor until cleanup.

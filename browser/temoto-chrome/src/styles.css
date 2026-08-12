@@ -1,5 +1,5 @@
 :root {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  font-family: "Geist Variable", Geist, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
   color: #f4f4f2;
   background: transparent;
   font-synthesis: none;
@@ -32,22 +32,23 @@ button, input { font: inherit; }
 button { color: inherit; }
 button:focus-visible, input:focus-visible { outline: 2px solid #f4f4f2; outline-offset: 2px; }
 
-body[data-surface="popup"] { width: 440px; min-width: 440px; height: 440px; overflow: hidden; }
+body[data-surface="popup"] { width: 416px; min-width: 416px; height: 416px; overflow: hidden; }
 body[data-surface="capture"] { min-width: 720px; min-height: 600px; }
 
 .app-shell { min-height: 100%; background: var(--black); }
-.popup-shell { width: 440px; min-width: 440px; height: 440px; display: flex; flex-direction: column; overflow: hidden; position: relative; border: 1px solid var(--line); background: rgba(10, 10, 10, 0.76); -webkit-backdrop-filter: blur(30px) saturate(118%); backdrop-filter: blur(30px) saturate(118%); }
+.popup-shell { width: 416px; min-width: 416px; height: 416px; display: flex; flex-direction: column; overflow: hidden; position: relative; border: 1px solid var(--line); background: rgba(10, 10, 10, 0.76); -webkit-backdrop-filter: blur(30px) saturate(118%); backdrop-filter: blur(30px) saturate(118%); }
 .app-header { min-height: 64px; padding: 0 0 0 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: rgba(18, 18, 18, 0.34); -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); flex: 0 0 auto; }
 .brand-lockup { display: flex; align-items: center; gap: 8px; }
-.brand-mark { width: 17px; height: 19px; object-fit: contain; image-rendering: auto; }
 .brand-name { font-size: 17px; line-height: 1; font-weight: 590; letter-spacing: -.025em; }
+.brand-for { color: #f4f4f2; }
 .brand-chrome { color: var(--brand-purple); font-weight: 540; }
 .brand-context { color: #92928f; font-weight: 520; }
 .icon-button { width: 60px; height: 64px; padding: 0; display: grid; place-items: center; border: 0; border-left: 1px solid var(--line); border-radius: 0; background: transparent; cursor: pointer; transition: background .18s ease, color .18s ease, transform .18s ease; }
 .icon-button:hover { background: rgba(255,255,255,.045); color: #fff; }
 .icon-button:active { transform: scale(.96); }
 
-.launcher-header { min-height: 64px; }
+.launcher-header { min-height: 60px; }
+.launcher-header .icon-button { height: 60px; }
 .launcher-grid { min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); flex: 1 1 auto; }
 .launcher-card { min-width: 0; min-height: 0; padding: 14px 8px 11px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; color: #ededeb; cursor: pointer; transition: background .16s ease, color .16s ease, transform .16s ease; }
 .launcher-card:nth-child(3n) { border-right: 0; }
@@ -59,8 +60,8 @@ body[data-surface="capture"] { min-width: 720px; min-height: 600px; }
 .launcher-card.is-danger:hover { color: #f0b1aa; background: rgba(223,139,131,.045); }
 .launcher-meta { position: absolute; top: 10px; right: 10px; min-height: 18px; padding: 0 6px; display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.035); color: #a7a7a4; font: 500 7px/1 "IBM Plex Mono", monospace; letter-spacing: .01em; }
 
-.tool-screen-header { min-height: 64px; padding: 0; display: grid; grid-template-columns: 64px minmax(0,1fr); gap: 0; align-items: center; border-bottom: 1px solid var(--line); background: rgba(18,18,18,.34); -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); flex: 0 0 auto; }
-.tool-screen-header .icon-button { width: 64px; height: 64px; border-left: 0; border-right: 1px solid var(--line); }
+.tool-screen-header { min-height: 60px; padding: 0; display: grid; grid-template-columns: 60px minmax(0,1fr); gap: 0; align-items: center; border-bottom: 1px solid var(--line); background: rgba(18,18,18,.34); -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); flex: 0 0 auto; }
+.tool-screen-header .icon-button { width: 60px; height: 60px; border-left: 0; border-right: 1px solid var(--line); }
 .tool-screen-header .icon-button:active { transform: none; }
 .tool-screen-identity { min-width: 0; padding: 0 18px; display: flex; align-items: center; gap: 10px; color: #e7e7e4; }
 .tool-screen-identity > svg { flex: 0 0 auto; color: #b9b9b6; }
@@ -68,7 +69,7 @@ body[data-surface="capture"] { min-width: 720px; min-height: 600px; }
 .tool-screen-body { min-height: 0; padding: 0; overflow-y: auto; flex: 1 1 auto; scrollbar-width: none; }
 .tool-screen-body::-webkit-scrollbar { width: 0; height: 0; display: none; }
 .tool-detail-body { display: flex; flex-direction: column; align-items: stretch; }
-.tool-description { min-height: 56px; margin: 0; padding: 10px 24px; display: flex; align-items: center; border-bottom: 1px solid var(--line); color: #858582; font-size: 11px; line-height: 1.65; flex: 0 0 auto; }
+.tool-description { min-height: 52px; margin: 0; padding: 10px 24px; display: flex; align-items: center; border-bottom: 1px solid var(--line); color: #858582; font-size: 11px; line-height: 1.65; flex: 0 0 auto; }
 .tool-primary-actions { width: 100%; min-height: 64px; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-bottom: 1px solid var(--line); }
 .tool-screen-body .primary-action, .tool-screen-body .secondary-action { min-height: 56px; border: 0; border-radius: 0; background: transparent; color: #d1d1ce; font-weight: 500; }
 .tool-screen-body .primary-action:hover, .tool-screen-body .secondary-action:hover { background: rgba(255,255,255,.045); color: #fff; }
@@ -81,16 +82,16 @@ body[data-surface="capture"] { min-width: 720px; min-height: 600px; }
 .color-readout strong { font: 500 21px/1 "IBM Plex Mono", monospace; letter-spacing: -.035em; }
 .solo-action { width: 100%; min-height: 64px !important; margin: 0; border-bottom: 1px solid var(--line) !important; }
 .speed-screen .speed-control { margin: 0; padding: 0; }
-.speed-screen .speed-value { height: 104px; padding: 0; border-bottom: 1px solid var(--line); font-size: 54px; }
+.speed-screen .speed-value { height: 96px; padding: 0; border-bottom: 1px solid var(--line); font-size: 54px; }
 .speed-screen .speed-value small { font-size: 26px; }
-.speed-screen .speed-presets { height: 56px; }
+.speed-screen .speed-presets { height: 52px; }
 .speed-screen .speed-presets button { font-size: 12px; }
-.speed-screen .speed-slider-row { height: 84px; margin: 0; padding: 0 24px; border-bottom: 1px solid var(--line); }
-.speed-screen .speed-shortcuts { height: 76px; margin: 0; border-bottom: 0; }
-.speed-screen:has(.empty-note) .speed-value { height: 80px; font-size: 46px; }
-.speed-screen:has(.empty-note) .speed-presets { height: 48px; }
-.speed-screen:has(.empty-note) .speed-slider-row { height: 68px; }
-.speed-screen:has(.empty-note) .speed-shortcuts { height: 60px; }
+.speed-screen .speed-slider-row { height: 80px; margin: 0; padding: 0 24px; border-bottom: 1px solid var(--line); }
+.speed-screen .speed-shortcuts { height: 72px; margin: 0; border-bottom: 0; }
+.speed-screen:has(.empty-note) .speed-value { height: 76px; font-size: 46px; }
+.speed-screen:has(.empty-note) .speed-presets { height: 44px; }
+.speed-screen:has(.empty-note) .speed-slider-row { height: 64px; }
+.speed-screen:has(.empty-note) .speed-shortcuts { height: 56px; }
 .empty-note { min-height: 48px; margin: 0; padding: 10px 24px; display: flex; align-items: center; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; color: #858582; font-size: 10px; text-align: left; flex: 0 0 auto; }
 .danger-primary { width: 100%; min-height: 64px; margin: 0; border: 0; border-bottom: 1px solid rgba(223,139,131,.25); border-radius: 0; background: transparent; color: #df9c95; cursor: pointer; }
 .danger-primary:hover { background: rgba(223,139,131,.065); color: #f0b0a9; }

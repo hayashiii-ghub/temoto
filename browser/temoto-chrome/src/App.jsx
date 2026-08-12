@@ -60,12 +60,11 @@ const TOOL_DEFINITIONS = {
 function Brand({ descriptor }) {
   return (
     <div className="brand-lockup">
-      <img src="/icons/temoto-mark.svg" alt="" className="brand-mark" />
       <div className="brand-name">
         <span>temoto</span>
         {descriptor
           ? <span className="brand-context"> {descriptor}</span>
-          : <span className="brand-chrome"> for Chrome</span>}
+          : <><span className="brand-for"> for </span><span className="brand-chrome">Chrome</span></>}
       </div>
     </div>
   );
