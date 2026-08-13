@@ -1,0 +1,44 @@
+{
+  "fill" : {
+    "solid" : "extended-srgb:0.10980,0.10980,0.11765,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "02-lower-bar.svg",
+          "name" : "02-lower-bar"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.34
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.82
+      }
+    },
+    {
+      "layers" : [
+        {
+          "image-name" : "01-upper-bar.svg",
+          "name" : "01-upper-bar"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.42
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.66
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : [
+      "macOS"
+    ]
+  }
+}
