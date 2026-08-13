@@ -24,8 +24,8 @@
     <rect x="57" y="57" width="910" height="910" rx="229" fill="none" stroke="#fff" stroke-opacity="0.08" stroke-width="3"/>
   </g>
 
-  <g transform="translate(512 512) scale(1.22) translate(-512 -512)" fill="#efefed" stroke="#efefed" stroke-width="13" stroke-linejoin="round" filter="url(#markShadow)">
-    <path d="M326 365 L451 287 Q460 281 470 287 L698 421 Q711 429 698 437 L574 515 Q564 521 554 515 L326 381 Q313 373 326 365Z"/>
-    <path d="M326 567 L451 489 Q460 483 470 489 L698 623 Q711 631 698 639 L574 717 Q564 723 554 717 L326 583 Q313 575 326 567Z"/>
+  <g transform="translate(512 512) scale(1.28) translate(-512 -512)" stroke="#efefed" stroke-linejoin="round" filter="url(#markShadow)">
+    <rect x="302" y="335" width="420" height="130" rx="65" transform="rotate(30 512 400)" fill="#efefed" stroke-width="9"/>
+    <rect x="302" y="535" width="420" height="130" rx="65" transform="rotate(30 512 600)" fill="none" stroke-width="14"/>
   </g>
 </svg>

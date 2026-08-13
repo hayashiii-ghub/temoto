@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 async function render() {
@@ -13,26 +14,47 @@ async function render() {
   );
 }
 
-test("temotoのランディングページをサーバーレンダリングする", async () => {
+function withoutBreakHints(html) {
+  return html
+    .replace(/<wbr\s*\/?\s*>/g, "")
+    .replace(/<\/?span\b[^>]*>/g, "");
+}
+
+test("temotoのブランドハブをサーバーレンダリングする", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  const htmlWithoutBreakHints = html
-    .replace(/<wbr\s*\/?\s*>/g, "")
-    .replace(/<\/?span\b[^>]*>/g, "");
+  const htmlWithoutBreakHints = withoutBreakHints(html);
   assert.match(html, /<html lang="ja">/);
-  assert.match(html, /<title>temoto — 移動する前に、置いておく。<\/title>/);
-  assert.match(html, /無料でダウンロード/);
+  assert.match(html, /<title>temoto — 手元に、置いておく。<\/title>/);
   assert.match(html, /<wbr\s*\/?/);
-  assert.match(html, /v1\.0\.0/);
+  assert.match(htmlWithoutBreakHints, /手元に、置いておく。/);
+  assert.match(htmlWithoutBreakHints, /使う場所に合わせた、2つのtemoto。/);
+  assert.match(html, /temoto for macOS/);
+  assert.match(html, /temoto for Chrome/);
+  assert.match(html, /v1\.1\.2/);
   assert.match(html, /Option \+ Tab/);
+  assert.match(html, /Option \+ Shift \+ Tab/);
   assert.match(htmlWithoutBreakHints, /好きな場所へ取り出す/);
+  assert.match(htmlWithoutBreakHints, /画面の上か、メニューバーか。/);
   assert.match(htmlWithoutBreakHints, /DMGからインストール/);
   assert.match(htmlWithoutBreakHints, /一行で導入・更新/);
   assert.match(htmlWithoutBreakHints, /クリップボードを自動で監視することはありません/);
+  assert.match(htmlWithoutBreakHints, /Chrome Web Storeへの公開は準備中です/);
+  assert.match(htmlWithoutBreakHints, /公開の準備中/);
+  assert.match(html, /temotoMark/);
+  assert.match(html, /rotate\(30 18 11\)/);
+  assert.match(html, /chromeMark/);
+  assert.match(html, /chromeToolIcon/);
+  assert.match(html, /M222,67\.34/);
+  assert.match(html, /shelfIcon/);
+  assert.match(html, /M52\.44,36/);
+  assert.match(html, /#9974f8/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
+  assert.doesNotMatch(html, /chromeGlyph|fileMark-file|actionClipboard/);
+  assert.doesNotMatch(html, /ShelfDrop|v1\.0\.0|ALWAYS ON TOP|FLOATING SHELF FOR MACOS/);
 });
 
 test("公開用メタデータと主要リンクを含む", async () => {
@@ -43,5 +65,20 @@ test("公開用メタデータと主要リンクを含む", async () => {
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
   assert.match(html, /rel="icon" href="https:\/\/shelfdrop\.haygsiiii\.chatgpt\.site\/favicon\.svg" type="image\/svg\+xml"/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/releases\/latest\/download\/temoto-macos\.dmg/);
+  assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/tree\/main\/browser\/temoto-chrome/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto/);
+});
+
+test("faviconは現行のmacOSマークを使う", () => {
+  const svg = readFileSync(new URL("../public/favicon.svg", import.meta.url), "utf8");
+  assert.match(svg, /rotate\(30 512 400\)/);
+  assert.match(svg, /fill="none" stroke-width="14"/);
+  assert.doesNotMatch(svg, /M326 365/);
+});
+
+test("OG画像は1200x630のPNGである", () => {
+  const png = readFileSync(new URL("../public/og-temoto.png", import.meta.url));
+  assert.equal(png.subarray(1, 4).toString(), "PNG");
+  assert.equal(png.readUInt32BE(16), 1200);
+  assert.equal(png.readUInt32BE(20), 630);
 });
