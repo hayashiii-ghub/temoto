@@ -122,8 +122,13 @@ Release workflowでnotarized buildを作成するには、GitHub Secretsに`APPL
 主なディレクトリ:
 
 ```text
-Sources/ShelfDrop/    アプリ本体
-Tests/ShelfDropTests/ テスト
-Assets/               アプリ・メニューバーアイコン
-script/               ビルド、配布、更新スクリプト
+Sources/ShelfDrop/          macOSアプリ本体
+Tests/ShelfDropTests/       macOSアプリのテスト
+Assets/                     macOSアプリ・メニューバーアイコン
+script/                     macOSアプリのビルド、配布、更新スクリプト
+browser/temoto-chrome/      Chrome拡張
+site/                       製品Webサイト
+.github/                    CI、リリース、Issue・PRテンプレート
 ```
+
+このリポジトリには、macOSアプリ、Chrome拡張、製品Webサイトの3つの独立したプロジェクトが含まれます。Chrome拡張とWebサイトの開発・検証コマンドは、それぞれのディレクトリにある`package.json`を参照してください。
