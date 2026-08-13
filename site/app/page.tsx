@@ -67,9 +67,11 @@ const chromeTools = [
 
 function TemotoMark({ className }: { className?: string }) {
   return (
-    <svg className={className ? `temotoMark ${className}` : "temotoMark"} viewBox="0 0 36 36" aria-hidden="true">
-      <rect x="6" y="7.5" width="24" height="7" rx="3.5" transform="rotate(30 18 11)" fill="currentColor" />
-      <rect x="6" y="21.5" width="24" height="7" rx="3.5" transform="rotate(30 18 25)" fill="none" stroke="currentColor" strokeWidth="1.8" />
+    <svg className={className ? `temotoMark ${className}` : "temotoMark"} viewBox="0 0 1024 1024" aria-hidden="true">
+      <g transform="translate(512 512) scale(1.49) translate(-512 -512)" fill="currentColor">
+        <rect x="302" y="335" width="420" height="130" rx="65" transform="rotate(30 512 400)" />
+        <rect x="302" y="535" width="420" height="130" rx="65" transform="rotate(30 512 600)" />
+      </g>
     </svg>
   );
 }

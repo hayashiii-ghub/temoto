@@ -45,7 +45,9 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(htmlWithoutBreakHints, /Chrome Web Storeへの公開は準備中です/);
   assert.match(htmlWithoutBreakHints, /公開の準備中/);
   assert.match(html, /temotoMark/);
-  assert.match(html, /rotate\(30 18 11\)/);
+  assert.match(html, /scale\(1\.49\)/);
+  assert.match(html, /rotate\(30 512 400\)/);
+  assert.match(html, /rotate\(30 512 600\)/);
   assert.match(html, /chromeMark/);
   assert.match(html, /chromeToolIcon/);
   assert.match(html, /M222,67\.34/);
@@ -72,8 +74,12 @@ test("公開用メタデータと主要リンクを含む", async () => {
 
 test("faviconは現行のmacOSマークを使う", () => {
   const svg = readFileSync(new URL("../public/favicon.svg", import.meta.url), "utf8");
+  assert.match(svg, /fill="#1c1c1e"/);
+  assert.match(svg, /scale\(1\.68\)/);
   assert.match(svg, /rotate\(30 512 400\)/);
-  assert.match(svg, /fill="none" stroke-width="14"/);
+  assert.match(svg, /rotate\(30 512 600\)/);
+  assert.match(svg, /id="frostedGlass"/);
+  assert.match(svg, /id="clearGlass"/);
   assert.doesNotMatch(svg, /M326 365/);
 });
 
