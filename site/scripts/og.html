@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>temoto OG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+JP:wght@400;500;600&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        margin: 0;
+        overflow: hidden;
+        background: #080808;
+        color: #f4f4f2;
+        font-family: "IBM Plex Sans JP", "Hiragino Sans", sans-serif;
+        font-feature-settings: "palt" 1;
+        -webkit-font-smoothing: antialiased;
+      }
+      main {
+        box-sizing: border-box;
+        width: 1200px;
+        height: 630px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(420px, 0.8fr);
+        align-items: center;
+        gap: 48px;
+        padding: 72px 80px;
+        background:
+          radial-gradient(ellipse 58% 72% at 82% 48%, rgba(153, 116, 248, 0.1), transparent 58%),
+          radial-gradient(ellipse 46% 64% at 18% 86%, rgba(255, 255, 255, 0.035), transparent 52%),
+          #080808;
+      }
+      .eyebrow {
+        margin: 0 0 28px;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        color: #bcbcb9;
+        font: 500 10px/1 "IBM Plex Mono", monospace;
+        letter-spacing: 0.14em;
+      }
+      .eyebrow span {
+        width: 26px;
+        height: 1px;
+        background: #6c6c69;
+      }
+      .brand {
+        margin: 0 0 20px;
+        font-size: 72px;
+        font-weight: 600;
+        letter-spacing: -0.045em;
+        line-height: 0.95;
+      }
+      h1 {
+        margin: 0;
+        font-size: 36px;
+        font-weight: 500;
+        letter-spacing: -0.04em;
+        line-height: 1.35;
+        word-break: keep-all;
+      }
+      .lead {
+        margin: 22px 0 0;
+        color: #a2a2a0;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 1.7;
+        word-break: keep-all;
+      }
+      .products {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .tile {
+        height: 280px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 28px;
+        background: #141414;
+      }
+      .tile svg {
+        display: block;
+      }
+      .macosMark {
+        width: 88px;
+        height: 88px;
+        color: #efefed;
+      }
+      .chromeMark {
+        width: 96px;
+        height: 96px;
+      }
+      .tile span {
+        color: #686866;
+        font: 500 11px/1 "IBM Plex Mono", monospace;
+        letter-spacing: 0.08em;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <p class="eyebrow"><span></span> KEEP IT CLOSE</p>
+        <p class="brand">temoto</p>
+        <h1>手元に、置いておく。</h1>
+        <p class="lead">Macではファイルとリンクの棚。<br />Chromeでは、ページを試す6つの道具。</p>
+      </section>
+      <section class="products" aria-hidden="true">
+        <div class="tile">
+          <svg class="macosMark" viewBox="0 0 36 36">
+            <rect x="6" y="7.5" width="24" height="7" rx="3.5" transform="rotate(30 18 11)" fill="currentColor" />
+            <rect x="6" y="21.5" width="24" height="7" rx="3.5" transform="rotate(30 18 25)" fill="none" stroke="currentColor" stroke-width="1.8" />
+          </svg>
+          <span>macOS</span>
+        </div>
+        <div class="tile">
+          <svg class="chromeMark" viewBox="0 0 1024 1024">
+            <g transform="translate(512 512) scale(1.65) translate(-512 -512)" stroke="#9974f8" stroke-linejoin="round">
+              <rect x="302" y="335" width="420" height="130" transform="rotate(30 512 400)" fill="#9974f8" stroke-width="9" />
+              <rect x="302" y="535" width="420" height="130" transform="rotate(30 512 600)" fill="#9974f8" stroke-width="9" />
+            </g>
+          </svg>
+          <span>Chrome</span>
+        </div>
+      </section>
+    </main>
+    <script>
+      document.fonts.load('600 72px "IBM Plex Sans JP"');
+      document.fonts.load('500 36px "IBM Plex Sans JP"');
+      document.fonts.load('400 18px "IBM Plex Sans JP"');
+      document.fonts.load('500 10px "IBM Plex Mono"');
+    </script>
+  </body>
+</html>

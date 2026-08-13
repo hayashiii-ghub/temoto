@@ -21,13 +21,15 @@ button { font: inherit; }
 .shell { width: min(1240px, calc(100% - 64px)); margin-inline: auto; }
 
 .nav { height: 88px; display: flex; align-items: center; position: relative; z-index: 10; border-bottom: 1px solid rgba(255,255,255,.07); }
-.brand { font-size: 17px; line-height: 1; font-weight: 600; letter-spacing: -.045em; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-size: 17px; line-height: 1; font-weight: 600; letter-spacing: -.045em; }
+.brand .temotoMark { width: 18px; height: 18px; }
 .navLinks { margin-left: auto; display: flex; gap: 32px; color: var(--muted); font-size: 12px; }
 .navLinks a, .footer a { transition: color .2s ease; }
 .navLinks a:hover, .footer a:hover { color: var(--ink); }
-.navDownload { margin-left: 38px; min-width: 118px; height: 39px; padding: 0 16px; border: 1px solid var(--line); border-radius: 999px; display: flex; align-items: center; justify-content: space-between; font: 500 11px var(--font-ibm-plex-mono); text-transform: uppercase; letter-spacing: .06em; transition: background .2s ease, border-color .2s ease; }
-.navDownload:hover { background: rgba(255,255,255,.07); border-color: var(--line-strong); }
-.navDownload i { font-style: normal; font-size: 14px; }
+.navGitHub { margin-left: 38px; min-width: 118px; height: 39px; padding: 0 16px; border: 1px solid var(--line); border-radius: 999px; display: flex; align-items: center; justify-content: space-between; font: 500 11px var(--font-ibm-plex-mono); text-transform: uppercase; letter-spacing: .06em; transition: background .2s ease, border-color .2s ease; }
+.navGitHub:hover { background: rgba(255,255,255,.07); border-color: var(--line-strong); }
+.navGitHub i { font-style: normal; font-size: 14px; }
+#macos, #chrome, #products { scroll-margin-top: 28px; }
 
 .hero { min-height: 760px; height: calc(100svh - 88px); max-height: 940px; display: grid; grid-template-columns: minmax(0, .9fr) minmax(520px, 1.1fr); align-items: center; gap: clamp(46px, 7vw, 110px); padding-block: 62px 74px; }
 .heroCopy { position: relative; z-index: 2; }
@@ -44,6 +46,8 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .button:hover { transform: translateY(-2px); }
 .button.primary { background: var(--paper); color: #0c0c0c; }
 .button.primary:hover { background: #fff; }
+.button.ghost { border: 1px solid var(--line-strong); background: transparent; color: var(--ink); }
+.button.ghost:hover { background: rgba(255,255,255,.07); }
 .button span { font-size: 16px; font-weight: 400; }
 .textLink { color: #b8b8b5; font-size: 12px; border-bottom: 1px solid #525250; padding-bottom: 4px; transition: color .2s ease, border-color .2s ease; }
 .textLink:hover { color: var(--ink); border-color: var(--ink); }
@@ -58,49 +62,20 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .appHeader { height: 28px; position: relative; z-index: 1; display: flex; align-items: center; gap: 8px; }
 .appCount { min-width: 27px; padding-left: 5px; color: #f0f0ee; font: 400 13px var(--font-ibm-plex-mono); }
 .appDrag { flex: 1; align-self: stretch; }
-.appControl { width: 31px; height: 31px; display: grid; place-items: center; color: #b8b8b6; }
-.closeMark { display: block; width: 14px; height: 14px; position: relative; }
-.closeMark::before, .closeMark::after { content: ""; position: absolute; top: 6px; left: 0; width: 14px; height: 1.35px; border-radius: 2px; background: currentColor; }
-.closeMark::before { transform: rotate(45deg); }
-.closeMark::after { transform: rotate(-45deg); }
-.chevronMark { display: block; width: 13px; height: 13px; border-top: 1.5px solid currentColor; border-left: 1.5px solid currentColor; transform: rotate(45deg) translate(2px, 2px); }
-.chevronMark.isDown { transform: rotate(225deg) translate(2px, 2px); }
+.appControl { width: 26px; height: 26px; display: grid; place-items: center; color: #b8b8b6; }
+.shelfIcon { width: 16px; height: 16px; display: block; }
+.appControl .shelfIcon { width: 14px; height: 14px; }
 .appItems { position: relative; z-index: 1; margin-top: 34px; display: grid; gap: 8px; }
 .appItem { min-height: 72px; display: grid; grid-template-columns: 37px 1fr auto; align-items: center; gap: 11px; padding: 0 15px; border-radius: 16px; background: rgba(0,0,0,.19); border: 1px solid rgba(255,255,255,.065); }
 .appItem strong, .appItem small { display: block; }
 .appItem strong { font-size: 12px; font-weight: 500; letter-spacing: -.015em; }
 .appItem small { margin-top: 4px; color: #858582; font: 400 9px var(--font-ibm-plex-mono); }
-.appItem em { color: #777775; font-style: normal; font-size: 7px; letter-spacing: 2px; }
-.fileMark { width: 26px; height: 28px; display: block; position: relative; color: #a9a9a6; }
-.fileMark-file { width: 19px; height: 24px; margin-left: 3px; border: 1.5px solid currentColor; border-radius: 3px; }
-.fileMark-file::after { content: ""; width: 7px; height: 7px; position: absolute; right: -1.5px; top: -1.5px; border-left: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; background: #292929; }
-.fileMark-folder { width: 27px; height: 18px; margin-top: 5px; border: 1.5px solid currentColor; border-radius: 3px; }
-.fileMark-folder::before { content: ""; width: 11px; height: 4px; position: absolute; left: 1px; top: -5px; border: 1.5px solid currentColor; border-bottom: 0; border-radius: 3px 3px 0 0; }
-.fileMark-link { width: 24px; height: 24px; }
-.fileMark-link::before, .fileMark-link::after { content: ""; position: absolute; width: 13px; height: 7px; border: 1.5px solid currentColor; border-radius: 999px; transform: rotate(-42deg); }
-.fileMark-link::before { left: 1px; top: 10px; }
-.fileMark-link::after { right: 0; top: 4px; }
+.appItemMore { color: #777775; }
+.appItemMore .shelfIcon { width: 16px; height: 16px; }
+.fileMark { width: 22px; height: 22px; color: #a9a9a6; }
 .appActions { position: relative; z-index: 1; height: 39px; margin-top: 22px; display: flex; align-items: center; justify-content: space-around; color: #91918e; }
-.appActions > span { width: 24px; height: 24px; position: relative; display: block; transform: scale(.74); }
-.actionDrag i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: currentColor; box-shadow: 0 6px 0 currentColor, 0 12px 0 currentColor; }
-.actionDrag i:nth-child(1) { left: 2px; top: 4px; }
-.actionDrag i:nth-child(2) { left: 9px; top: 7px; }
-.actionDrag i:nth-child(3) { left: 16px; top: 4px; }
-.actionClipboard { border: 1.7px solid currentColor; border-radius: 3px; }
-.actionClipboard::before { content: ""; position: absolute; width: 10px; height: 5px; top: -4px; left: 5px; border: 1.7px solid currentColor; border-radius: 2px; background: #2b2b2b; }
-.actionCopies, .actionCopies i { border: 1.7px solid currentColor; border-radius: 3px; }
-.actionCopies { width: 17px !important; height: 19px !important; margin: 4px 0 0 4px; }
-.actionCopies i { position: absolute; width: 17px; height: 19px; left: -6px; top: -6px; }
-.actionFolder { width: 27px !important; height: 18px !important; margin-top: 3px; border: 1.7px solid currentColor; border-radius: 3px; }
-.actionFolder::before { content: ""; position: absolute; width: 10px; height: 4px; top: -5px; left: 1px; border: 1.7px solid currentColor; border-bottom: 0; border-radius: 3px 3px 0 0; }
-.actionFolder i::before, .actionFolder i::after { content: ""; position: absolute; right: 3px; top: 8px; width: 7px; height: 1.5px; background: currentColor; }
-.actionFolder i::after { transform: rotate(90deg); }
-.actionArchive { border: 1.7px solid currentColor; border-radius: 3px; }
-.actionArchive::before { content: ""; position: absolute; top: 4px; left: -2px; width: 26px; height: 4px; border: 1.7px solid currentColor; border-radius: 2px; }
-.actionArchive i { position: absolute; width: 6px; height: 1.5px; top: 12px; left: 8px; background: currentColor; }
-.actionTrash { width: 17px !important; height: 20px !important; margin: 4px 0 0 3px; border: 1.7px solid currentColor; border-top: 0; border-radius: 0 0 3px 3px; }
-.actionTrash::before { content: ""; position: absolute; width: 23px; height: 1.7px; left: -4px; top: -4px; background: currentColor; }
-.actionTrash i { position: absolute; width: 7px; height: 3px; left: 3px; top: -8px; border: 1.7px solid currentColor; border-bottom: 0; border-radius: 2px 2px 0 0; }
+.appActions > span { width: 28px; height: 28px; display: grid; place-items: center; }
+.appActions .shelfIcon { width: 18px; height: 18px; }
 .sceneLabel { position: absolute; z-index: 3; display: flex; align-items: center; gap: 12px; color: #5d5d5b; font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .14em; }
 .sceneLabel i { display: block; width: 48px; height: 1px; background: #393937; }
 .sceneLabelTop { right: 1%; top: 15%; }
@@ -109,6 +84,81 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .shortcutTag kbd { min-width: 28px; height: 28px; display: grid; place-items: center; padding: 0 8px; border: 1px solid rgba(255,255,255,.15); border-bottom-color: rgba(255,255,255,.28); border-radius: 7px; background: rgba(255,255,255,.07); font: 500 11px var(--font-ibm-plex-mono); }
 .shortcutTag > span { color: #595957; font-size: 10px; }
 .shortcutTag small { margin-left: 6px; color: #777774; font: 400 7px var(--font-ibm-plex-mono); letter-spacing: .1em; }
+
+.hubScene { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 18px; min-width: 0; overflow: hidden; }
+.hubPane { min-width: 0; display: grid; gap: 14px; }
+.hubPane > span { color: #5d5d5b; font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .14em; }
+.shelfScene.isCompact, .chromeScene.isCompact { width: 100%; height: auto; min-height: 0; }
+.shelfScene.isCompact::before, .shelfScene.isCompact::after, .shelfScene.isCompact .sceneLabel, .shelfScene.isCompact .shortcutTag { display: none; }
+.shelfScene.isCompact .appShelf { width: 100%; max-width: none; aspect-ratio: 1; border-radius: 36px; padding: 16px 14px 12px; }
+.shelfScene.isCompact .appItem:last-child, .shelfScene.isCompact .appActions { display: none; }
+.shelfScene.isCompact .appItems { margin-top: 18px; }
+.shelfScene.isCompact .fileMark { width: 16px; height: 16px; }
+.shelfScene.isCompact .appControl .shelfIcon, .shelfScene.isCompact .appItemMore .shelfIcon { width: 12px; height: 12px; }
+.chromeScene { width: 100%; max-width: min(416px, calc(100vw - 32px)); min-width: 0; min-height: 540px; display: grid; place-items: center; margin-inline: auto; }
+.chromePopup { width: 100%; max-width: 100%; aspect-ratio: 1; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(255,255,255,.14); background: rgba(10,10,10,.78); box-shadow: inset 0 1px 1px rgba(255,255,255,.12), 0 45px 100px rgba(0,0,0,.55); backdrop-filter: blur(30px) saturate(118%); -webkit-backdrop-filter: blur(30px) saturate(118%); }
+.chromeScene.isCompact .chromePopupHeader { height: 48px; padding-left: 14px; }
+.chromeScene.isCompact .chromePopupHeader p { font-size: 13px; }
+.chromeScene.isCompact .chromeSettings { width: 48px; height: 48px; }
+.chromeScene.isCompact .chromeSettingsIcon { width: 18px; height: 18px; }
+.chromeScene.isCompact .chromeCell { gap: 8px; font-size: 8px; }
+.chromeScene.isCompact .chromeToolIcon { width: 22px; height: 22px; }
+.chromeScene.isCompact .chromeCell small { top: 6px; right: 6px; transform: scale(.9); transform-origin: top right; }
+.chromePopupHeader { height: 60px; padding-left: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.105); }
+.chromePopupHeader p { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -.03em; }
+.chromeFor { color: #9974f8; font-weight: 500; }
+.chromeSettings { width: 60px; height: 60px; display: grid; place-items: center; border-left: 1px solid rgba(255,255,255,.105); color: #b8b8b6; }
+.chromeSettingsIcon { width: 22px; height: 22px; display: block; }
+.chromeGrid { min-height: 0; flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
+.chromeCell { min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; border-right: 1px solid rgba(255,255,255,.105); border-bottom: 1px solid rgba(255,255,255,.105); color: #ededeb; font-size: 11px; letter-spacing: -.01em; }
+.chromeCell:nth-child(3n) { border-right: 0; }
+.chromeCell:nth-child(n + 4) { border-bottom: 0; }
+.chromeCell > span { max-width: 100%; padding: 0 6px; overflow: hidden; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+.chromeCell small { position: absolute; top: 10px; right: 10px; min-height: 18px; padding: 0 6px; display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,.105); border-radius: 999px; color: #a7a7a4; font: 500 7px var(--font-ibm-plex-mono); }
+.chromeToolIcon { width: 42px; height: 42px; display: block; color: #ededeb; }
+
+.productPick { margin-top: 76px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.productCard { min-height: 420px; padding: 28px; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,.09); border-radius: 28px; background: var(--panel); transition: border-color .2s ease, background .2s ease, transform .2s ease; }
+.productCard:hover { border-color: rgba(255,255,255,.2); background: #181818; transform: translateY(-2px); }
+.productMeta { display: flex; justify-content: space-between; color: #858582; font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .11em; }
+.productMeta em { font-style: normal; }
+.productVisual { flex: 1; min-height: 140px; display: grid; place-items: center; color: #d6d6d3; }
+.productVisual .temotoMark { width: 72px; height: 72px; }
+.productVisual .chromeMark { width: 88px; height: 88px; }
+.productCard h3 { margin: 0; font-size: 28px; font-weight: 500; letter-spacing: -.045em; }
+.productCard p { margin: 12px 0 0; color: #cfcfcc; font-size: 16px; }
+.productCard small { margin-top: 18px; color: #858582; font-size: 12px; line-height: 1.7; }
+
+.productBlock { border-top: 1px solid rgba(255,255,255,.075); }
+.productBlock.isChrome { background: #0b0b0b; }
+.productBlock.isChrome .installCard { min-height: 420px; }
+.productHero { display: grid; grid-template-columns: minmax(0, .9fr) minmax(520px, 1.1fr); align-items: center; gap: clamp(46px, 7vw, 110px); padding-block: 120px 40px; }
+.productBlock .section { padding-top: 88px; }
+
+.locationModes { width: min(390px, 92%); display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.locationModes figure { margin: 0; display: grid; gap: 12px; justify-items: center; }
+.locationCard { width: 100%; height: 70px; padding: 0 16px; display: flex; align-items: center; gap: 12px; border: 1px solid rgba(255,255,255,.18); border-radius: 22px; color: #b0b0ad; background: linear-gradient(145deg, rgba(255,255,255,.15), rgba(255,255,255,.055)); }
+.locationCard b { flex: 1; }
+.locationCard.isMenuBar { justify-content: flex-end; background: #121212; border-radius: 0 0 16px 16px; border-top: 0; }
+.menuBarChip { width: 36px; height: 28px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.12); border-radius: 8px; }
+.menuBarChip .temotoMark { width: 16px; height: 16px; }
+.locationModes figcaption { color: #5e5e5c; font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .12em; }
+
+.shortcutStack { margin-top: 48px; display: grid; gap: 14px; }
+.shortcutStack .bigShortcut { margin-top: 0; }
+
+.chromeToolList { margin: 76px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; border-top: 1px solid rgba(255,255,255,.11); }
+.chromeToolList li { min-height: 160px; padding: 28px 24px 28px 0; display: grid; grid-template-columns: 55px 1fr; gap: 12px; border-bottom: 1px solid rgba(255,255,255,.11); }
+.chromeToolList li:nth-child(odd) { padding-right: 36px; }
+.chromeToolList li:nth-child(even) { padding-left: 36px; border-left: 1px solid rgba(255,255,255,.11); }
+.chromeToolList > li > span { padding-top: 7px; color: #60605e; font: 400 9px var(--font-ibm-plex-mono); }
+.chromeToolList h3 { margin: 0; font-size: 22px; font-weight: 500; letter-spacing: -.04em; }
+.chromeToolList p { max-width: 420px; margin: 12px 0 0; color: #858582; font-size: 13px; line-height: 1.75; }
+
+.installCard > p { margin: 22px 0 0; max-width: 460px; color: #858582; font-size: 13px; line-height: 1.75; }
+
+.finalActions { margin-top: 46px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px; }
+.finalCta .button { margin-top: 0; min-width: 230px; }
 
 .signalStrip { border-block: 1px solid rgba(255,255,255,.075); background: #0b0b0b; }
 .signalInner { min-height: 126px; display: flex; align-items: center; justify-content: space-between; gap: 80px; }
@@ -121,7 +171,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 
 .section { padding-block: 170px; }
 .sectionHeading { max-width: 750px; }
-.sectionHeading h2, .workflowIntro h2, .installHeading h2, .finalCta h2 { margin: 0; font-size: clamp(47px, 5.35vw, 74px); line-height: 1.1; letter-spacing: -.062em; font-weight: 500; }
+.sectionHeading h2, .workflowIntro h2, .installHeading h2, .finalCta h2, .productHero h2 { margin: 0; font-size: clamp(47px, 5.35vw, 74px); line-height: 1.1; letter-spacing: -.062em; font-weight: 500; }
 .sectionHeading > p:last-child, .workflowIntro > p, .installHeading > p:last-child { max-width: 580px; margin: 28px 0 0; color: var(--muted); font-size: 15px; line-height: 1.9; }
 .capabilityGrid { margin-top: 76px; display: grid; grid-template-columns: 1.16fr .84fr; gap: 16px; }
 .capabilityCard { min-height: 540px; padding: 25px 28px 30px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(255,255,255,.09); border-radius: 28px; background: var(--panel); }
@@ -135,31 +185,22 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .transferVisual { width: min(540px, 88%); display: grid; grid-template-columns: auto 1fr auto 1fr auto; align-items: center; gap: 12px; }
 .transferNode { width: 100px; aspect-ratio: 1; display: grid; place-items: center; align-content: center; gap: 12px; border: 1px solid rgba(255,255,255,.1); border-radius: 22px; background: #181818; color: #878784; }
 .transferNode > span { font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .06em; }
-.transferNode .fileMark { transform: scale(1.12); }
-.transferNode .fileMark-file::after { background: #181818; }
+.transferNode .fileMark { width: 24px; height: 24px; }
 .transferShelf { width: 88px; aspect-ratio: 1; display: grid; place-items: center; position: relative; border-radius: 26px; border: 1px solid rgba(255,255,255,.22); background: linear-gradient(145deg, rgba(255,255,255,.17), rgba(255,255,255,.055)); color: #d0d0cd; box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 24px 48px rgba(0,0,0,.34); }
-.transferShelf .shelfMark { transform: scale(.88); }
+.transferShelf .temotoMark { width: 28px; height: 28px; }
 .transferShelf > span:last-child { position: absolute; left: 12px; top: 10px; font: 400 8px var(--font-ibm-plex-mono); color: #a0a09d; }
 .transferLine { height: 1px; position: relative; background: repeating-linear-gradient(90deg, #393937 0 4px, transparent 4px 9px); }
 .transferLine i { position: absolute; right: 0; top: -3px; width: 6px; height: 6px; border-top: 1px solid #51514f; border-right: 1px solid #51514f; transform: rotate(45deg); }
 .transferLine i:last-child { right: 5px; opacity: .45; }
-.shelfMark { width: 26px; height: 24px; display: block; position: relative; }
-.shelfMark i { position: absolute; left: 3px; width: 20px; height: 10px; background: currentColor; transform: rotate(30deg) skewX(-15deg); border-radius: 2px; }
-.shelfMark i:first-child { top: 2px; }
-.shelfMark i:last-child { top: 11px; }
+.temotoMark, .chromeMark { display: block; overflow: visible; }
+.temotoMark { width: 26px; height: 26px; }
 .typeStack { width: min(390px, 92%); display: flex; justify-content: center; }
 .typeStack > span { width: 92px; height: 106px; margin-left: -9px; display: grid; place-items: center; align-content: center; gap: 14px; border: 1px solid rgba(255,255,255,.11); border-radius: 19px; background: #191919; color: #8c8c89; transform: rotate(-5deg); box-shadow: -10px 10px 24px rgba(0,0,0,.2); }
 .typeStack > span:nth-child(2) { transform: rotate(3deg) translateY(8px); }
 .typeStack > span:nth-child(3) { transform: rotate(-2deg) translateY(-4px); }
 .typeStack > span:nth-child(4) { transform: rotate(5deg) translateY(6px); }
 .typeStack small { font: 400 7px var(--font-ibm-plex-mono); letter-spacing: .1em; color: #5e5e5c; }
-.typeStack .fileMark-file::after { background: #191919; }
 .textType { font: 400 19px var(--font-ibm-plex-mono); }
-.collapsedShelf { width: min(360px, 88%); height: 70px; padding: 0 22px; display: flex; align-items: center; gap: 20px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; color: #b0b0ad; background: linear-gradient(145deg, rgba(255,255,255,.15), rgba(255,255,255,.055)); box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 30px 55px rgba(0,0,0,.3); }
-.collapsedShelf > i { flex: 1; }
-.collapsedShelf .shelfMark { transform: scale(.74); color: #d6d6d3; }
-.collapsedShelf .closeMark, .collapsedShelf .chevronMark { transform: scale(.88); }
-.collapsedShelf .chevronMark { transform: rotate(225deg) translate(2px, 2px) scale(.88); }
 
 .workflow { padding-block: 170px; border-block: 1px solid rgba(255,255,255,.075); background: #101010; }
 .workflowGrid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(70px, 10vw, 150px); }
@@ -209,17 +250,17 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .finalCta { min-height: 600px; padding-block: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-top: 1px solid rgba(255,255,255,.075); }
 .finalCta > p { margin: 0 0 30px; color: #656563; font: 400 9px var(--font-ibm-plex-mono); letter-spacing: .15em; text-transform: uppercase; }
 .finalCta h2 { font-size: clamp(54px, 6.2vw, 86px); }
-.finalCta .button { margin-top: 46px; min-width: 230px; }
 .footer { min-height: 138px; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; border-top: 1px solid rgba(255,255,255,.075); color: #666663; font-size: 10px; }
 .footer p { text-align: center; }
 .footer > div { display: flex; justify-content: flex-end; gap: 24px; }
 
 @media (max-width: 1080px) {
-  .hero { height: auto; max-height: none; grid-template-columns: 1fr; padding-top: 110px; }
+  .hero, .productHero { height: auto; max-height: none; grid-template-columns: 1fr; padding-top: 110px; }
   .heroCopy { text-align: center; }
   .heroCopy .eyebrow, .heroActions { justify-content: center; }
   .lead { margin-inline: auto; }
-  .shelfScene { width: min(680px, 100%); height: 620px; margin-inline: auto; }
+  .shelfScene:not(.isCompact), .hubScene { width: min(680px, 100%); margin-inline: auto; }
+  .shelfScene:not(.isCompact) { height: 620px; }
   .workflowGrid { grid-template-columns: 1fr; }
   .workflowIntro { position: static; }
   .workflowIntro > p { max-width: 580px; }
@@ -229,7 +270,9 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
   .shell { width: min(100% - 40px, 1240px); }
   .signalInner { padding-block: 30px; align-items: flex-start; }
   .signalInner dl { grid-template-columns: 1fr; gap: 12px; }
-  .capabilityGrid, .installOptions { grid-template-columns: 1fr; }
+  .capabilityGrid, .installOptions, .productPick, .chromeToolList, .hubScene { grid-template-columns: 1fr; }
+  .chromeToolList li:nth-child(odd) { padding-right: 0; }
+  .chromeToolList li:nth-child(even) { padding-left: 0; border-left: 0; }
   .capabilityWide { grid-row: auto; min-height: 600px; }
   .capabilityTypes, .capabilityCompact { min-height: 390px; }
   .installCard { min-height: 540px; }
@@ -239,33 +282,37 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
   .shell { width: min(100% - 28px, 1240px); }
   .nav { height: 70px; }
   .navLinks { display: none; }
-  .navDownload { margin-left: auto; min-width: 40px; width: 40px; padding: 0; justify-content: center; }
-  .navDownload span { display: none; }
+  .navGitHub { margin-left: auto; min-width: 40px; width: 40px; padding: 0; justify-content: center; }
+  .navGitHub span { display: none; }
   .hero { min-height: 0; padding-block: 78px 58px; gap: 36px; }
   h1 { font-size: clamp(42px, 12.7vw, 57px); line-height: 1.11; }
   .lead { margin-top: 24px; font-size: 14px; line-height: 1.85; }
   .heroActions { margin-top: 32px; flex-direction: column; gap: 22px; }
   .button { width: 100%; }
   .requirements { max-width: 300px; margin: 21px auto 0; line-height: 1.8; }
-  .shelfScene { height: 430px; min-height: 0; }
+  .shelfScene:not(.isCompact) { height: 430px; min-height: 0; }
   .shelfScene::after { width: 290px; height: 290px; box-shadow: 0 0 0 50px rgba(255,255,255,.012); }
   .appShelf { width: 300px; max-width: 88%; padding: 20px 16px 15px; border-radius: 43px; }
   .appHeader { height: 22px; }
   .appControl { width: 25px; height: 25px; }
   .appItems { margin-top: 22px; gap: 6px; }
   .appItem { min-height: 51px; grid-template-columns: 28px 1fr auto; padding: 0 11px; border-radius: 12px; }
-  .appItem .fileMark { transform: scale(.72); transform-origin: left center; }
+  .appItem .fileMark { width: 16px; height: 16px; }
   .appItem strong { font-size: 9px; }
   .appItem small { font-size: 7px; }
   .appActions { margin-top: 12px; height: 28px; }
-  .appActions > span { transform: scale(.55); }
+  .appActions .shelfIcon { width: 14px; height: 14px; }
   .sceneLabel { display: none; }
   .shortcutTag { right: 0; bottom: 2%; transform: scale(.84); transform-origin: right bottom; }
   .signalInner { display: block; }
   .signalInner > p { font-size: 16px; }
   .signalInner dl { margin-top: 25px; }
   .section, .workflow { padding-block: 110px; }
-  .sectionHeading h2, .workflowIntro h2, .installHeading h2 { font-size: 40px; line-height: 1.14; }
+  .sectionHeading h2, .workflowIntro h2, .installHeading h2, .productHero h2 { font-size: 40px; line-height: 1.14; }
+  .productHero { padding-block: 72px 20px; }
+  .productCard { min-height: 0; padding: 22px; }
+  .productVisual { min-height: 88px; }
+  .hubScene { width: 100%; }
   .sectionHeading > p:last-child, .workflowIntro > p, .installHeading > p:last-child { font-size: 13px; }
   .capabilityGrid, .installOptions { margin-top: 52px; }
   .capabilityCard { min-height: 420px; padding: 21px 20px 25px; border-radius: 22px; }
@@ -276,9 +323,8 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
   .transferNode { width: 64px; border-radius: 15px; }
   .transferNode > span { display: none; }
   .transferShelf { width: 62px; border-radius: 19px; }
-  .transferNode .fileMark { transform: scale(.78); }
+  .transferNode .fileMark { width: 18px; height: 18px; }
   .typeStack > span { width: 72px; height: 90px; }
-  .collapsedShelf { width: 100%; height: 61px; }
   .workflowGrid { gap: 65px; }
   .workflowSteps li { min-height: 185px; grid-template-columns: 40px 1fr; }
   .workflowSteps h3 { font-size: 24px; }
@@ -306,5 +352,5 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .appShelf, .shortcutTag { backdrop-filter: none; -webkit-backdrop-filter: none; background: #242424; }
+  .appShelf, .shortcutTag, .chromePopup, .locationCard { backdrop-filter: none; -webkit-backdrop-filter: none; background: #242424; }
 }

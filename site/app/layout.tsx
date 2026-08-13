@@ -15,25 +15,29 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const title = "temoto — 手元に、置いておく。";
+const description =
+  "Macではファイルとリンクの棚。Chromeでは、ページを試す6つの道具。アカウントなしで、手元に置いておく。";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://shelfdrop.haygsiiii.chatgpt.site"),
-  title: "temoto — 移動する前に、置いておく。",
-  description: "ファイル、フォルダ、リンク、テキストを一時的に置ける、macOS用の小さなフローティングシェルフ。",
+  metadataBase: new URL("https://temoto.haygsiiii.chatgpt.site"),
+  title,
+  description,
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     shortcut: ["/favicon.svg"],
   },
   openGraph: {
-    title: "temoto — 移動する前に、置いておく。",
-    description: "Finderの選択項目も、リンクも、テキストも。作業の流れを止めずに手元へ置けるmacOS用フローティングシェルフ。",
+    title,
+    description,
     type: "website",
     locale: "ja_JP",
-    images: [{ url: "/og-temoto.png", width: 1200, height: 630, alt: "temoto — 移動する前に、置いておく。" }],
+    images: [{ url: "/og-temoto.png", width: 1200, height: 630, alt: title }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "temoto — 移動する前に、置いておく。",
-    description: "作業の流れを止めずに手元へ置ける、macOS用フローティングシェルフ。",
+    title,
+    description,
     images: ["/og-temoto.png"],
   },
 };
