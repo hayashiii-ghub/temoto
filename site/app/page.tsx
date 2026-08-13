@@ -292,7 +292,7 @@ export default function Home() {
           <a href="#macos">macOS</a>
           <a href="#chrome">Chrome</a>
         </div>
-        <a className="navGitHub" href={repositoryUrl}><span>GitHub</span><i aria-hidden="true">↗</i></a>
+        <a className="navGitHub" href={repositoryUrl} aria-label="GitHub"><span>GitHub</span><i aria-hidden="true">↗</i></a>
       </nav>
 
       <section className="hero shell">

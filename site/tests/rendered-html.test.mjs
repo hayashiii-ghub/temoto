@@ -67,6 +67,7 @@ test("公開用メタデータと主要リンクを含む", async () => {
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/releases\/latest\/download\/temoto-macos\.dmg/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/tree\/main\/browser\/temoto-chrome/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto/);
+  assert.match(html, /class="navGitHub"[^>]*aria-label="GitHub"/);
 });
 
 test("faviconは現行のmacOSマークを使う", () => {

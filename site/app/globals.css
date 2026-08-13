@@ -120,7 +120,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .productPick { margin-top: 76px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .productCard { min-height: 420px; padding: 28px; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,.09); border-radius: 28px; background: var(--panel); transition: border-color .2s ease, background .2s ease, transform .2s ease; }
 .productCard:hover { border-color: rgba(255,255,255,.2); background: #181818; transform: translateY(-2px); }
-.productMeta { display: flex; justify-content: space-between; color: #686866; font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .11em; }
+.productMeta { display: flex; justify-content: space-between; color: #858582; font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .11em; }
 .productMeta em { font-style: normal; }
 .productVisual { flex: 1; min-height: 140px; display: grid; place-items: center; color: #d6d6d3; }
 .productVisual .temotoMark { width: 72px; height: 72px; }
