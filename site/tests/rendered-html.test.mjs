@@ -61,9 +61,9 @@ test("公開用メタデータと主要リンクを含む", async () => {
   const response = await render();
   const html = await response.text();
 
-  assert.match(html, /property="og:image" content="https:\/\/shelfdrop\.haygsiiii\.chatgpt\.site\/og-temoto\.png"/);
+  assert.match(html, /property="og:image" content="https:\/\/temoto\.haygsiiii\.chatgpt\.site\/og-temoto\.png"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
-  assert.match(html, /rel="icon" href="https:\/\/shelfdrop\.haygsiiii\.chatgpt\.site\/favicon\.svg" type="image\/svg\+xml"/);
+  assert.match(html, /rel="icon" href="https:\/\/temoto\.haygsiiii\.chatgpt\.site\/favicon\.svg" type="image\/svg\+xml"/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/releases\/latest\/download\/temoto-macos\.dmg/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/tree\/main\/browser\/temoto-chrome/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto/);

@@ -20,7 +20,7 @@ const description =
   "Macではファイルとリンクの棚。Chromeでは、ページを試す6つの道具。アカウントなしで、手元に置いておく。";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://shelfdrop.haygsiiii.chatgpt.site"),
+  metadataBase: new URL("https://temoto.haygsiiii.chatgpt.site"),
   title,
   description,
   icons: {
