@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans_JP } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans_JP, Klee_One } from "next/font/google";
 import "./globals.css";
 
 const ibmPlexSansJP = IBM_Plex_Sans_JP({
@@ -13,6 +13,12 @@ const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   display: "swap",
+});
+const kleeOne = Klee_One({
+  variable: "--font-klee-one",
+  weight: "600",
+  display: "swap",
+  preload: false,
 });
 
 const title = "temoto — 手元に、置いておく。";
@@ -43,5 +49,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="ja"><body className={`${ibmPlexSansJP.variable} ${ibmPlexMono.variable}`}>{children}</body></html>;
+  return <html lang="ja"><body className={`${ibmPlexSansJP.variable} ${ibmPlexMono.variable} ${kleeOne.variable}`}>{children}</body></html>;
 }
