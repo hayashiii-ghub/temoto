@@ -79,9 +79,9 @@ function TemotoMark({ className }: { className?: string }) {
 function ChromeMark({ className }: { className?: string }) {
   return (
     <svg className={className ? `chromeMark ${className}` : "chromeMark"} viewBox="0 0 1024 1024" aria-hidden="true">
-      <g transform="translate(512 512) scale(1.65) translate(-512 -512)" stroke="#9974f8" strokeLinejoin="round">
-        <rect x="302" y="335" width="420" height="130" transform="rotate(30 512 400)" fill="#9974f8" strokeWidth="9" />
-        <rect x="302" y="535" width="420" height="130" transform="rotate(30 512 600)" fill="#9974f8" strokeWidth="9" />
+      <g transform="translate(512 512) scale(1.49) translate(-512 -512)" fill="#9974f8">
+        <rect x="302" y="335" width="420" height="130" transform="rotate(30 512 400)" />
+        <rect x="302" y="535" width="420" height="130" transform="rotate(30 512 600)" />
       </g>
     </svg>
   );
