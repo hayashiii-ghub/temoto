@@ -15,7 +15,7 @@ The `ShelfDrop` directory and symbol names are retained internal names; user-fac
 Run checks for the product you changed:
 
 - macOS app: `make check`
-- Chrome extension: from `browser/temoto-chrome/`, run `npm test`, `npm run test:sites`, and `npm run build`
+- Chrome extension: from `browser/temoto-chrome/`, run `npm test`, `npm run build`, and `npm run test:sites`
 - Website: from `site/`, run `npm run lint` and `npm test`
 
 The root `make check` validates only the macOS app and its scripts; it does not validate the Chrome extension or website.

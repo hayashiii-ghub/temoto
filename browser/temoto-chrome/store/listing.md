@@ -83,7 +83,7 @@ No account or credentials are required.
 ## Submission checklist
 
 - [ ] Verify all six tools in the current stable Google Chrome release, not only another Chromium browser.
-- [ ] Run `npm test`, `npm run test:sites`, and `npm run package`.
+- [ ] Run `npm test`, `npm run build`, `npm run test:sites`, and `npm run package`.
 - [ ] Upload the ZIP from `release/`; confirm `manifest.json` is at the ZIP root.
 - [ ] Upload the required screenshot and 440 × 280 small promo tile.
 - [ ] Use the single-purpose text and permission justifications above in the Privacy tab.

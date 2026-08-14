@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="https://shelfdrop.haygsiiii.chatgpt.site"><strong>Webサイト</strong></a>
+  <a href="https://temoto.haygsiiii.chatgpt.site"><strong>Webサイト</strong></a>
   ・
   <a href="https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.dmg"><strong>最新版をダウンロード</strong></a>
 </p>

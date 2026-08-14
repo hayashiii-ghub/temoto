@@ -34,7 +34,8 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(htmlWithoutBreakHints, /使う場所に合わせた、2つのtemoto。/);
   assert.match(html, /temoto for macOS/);
   assert.match(html, /temoto for Chrome/);
-  assert.match(html, /v1\.1\.2/);
+  assert.match(html, /v1\.1\.3/);
+  assert.match(html, /0\.1\.7/);
   assert.match(html, /Option \+ Tab/);
   assert.match(html, /Option \+ Shift \+ Tab/);
   assert.match(htmlWithoutBreakHints, /好きな場所へ取り出す/);

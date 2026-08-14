@@ -332,14 +332,14 @@ export default function Home() {
         </div>
         <div className="productPick">
           <a className="productCard" href="#macos">
-            <div className="productMeta"><span>FOR MACOS</span><em>v1.1.2</em></div>
+            <div className="productMeta"><span>FOR MACOS</span><em>v1.1.3</em></div>
             <div className="productVisual"><TemotoMark /></div>
             <h3>temoto for macOS</h3>
             <p><JapaneseText>移動する前に、置いておく。</JapaneseText></p>
             <small><JapaneseText>ファイル、フォルダ、URL、テキストを、画面の上かメニューバーへ。</JapaneseText></small>
           </a>
           <a className="productCard" href="#chrome">
-            <div className="productMeta"><span>FOR CHROME</span><em>0.1.6</em></div>
+            <div className="productMeta"><span>FOR CHROME</span><em>0.1.7</em></div>
             <div className="productVisual isChrome"><ChromeMark /></div>
             <h3>temoto for Chrome</h3>
             <p><JapaneseText>試す道具を、タブのそばに。</JapaneseText></p>
@@ -356,7 +356,7 @@ export default function Home() {
             <p className="lead">
               <JapaneseText>ファイルやリンクを一時的に置ける小さな棚。ウィンドウを行き来する手間を減らして、作業の流れを止めません。</JapaneseText>
             </p>
-            <p className="requirements">v1.1.2　·　macOS 26+　·　Apple Silicon / Intel　·　Open source</p>
+            <p className="requirements">v1.1.3　·　macOS 26+　·　Apple Silicon / Intel　·　Open source</p>
           </div>
           <ShelfPreview />
         </div>
@@ -441,7 +441,7 @@ export default function Home() {
             <p className="lead">
               <JapaneseText>色、キャプチャ、再生速度、環境切替、リセット、Inspect。ページを試す6つの道具を、1つのポップアップにまとめています。</JapaneseText>
             </p>
-            <p className="requirements">0.1.6　·　Chrome 116+　·　English UI　·　Processed locally</p>
+            <p className="requirements">0.1.7　·　Chrome 116+　·　English UI　·　Processed locally</p>
           </div>
           <ChromePreview />
         </div>
