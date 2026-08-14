@@ -1,4 +1,5 @@
 import { savePendingCapture } from "./capture-store.js";
+import { normalizeResetOrigin } from "./reset-origin.js";
 import {
   CAPTURE_INTERVAL_MS,
   CAPTURE_PRELOAD_SCROLL_INTERVAL_MS,
@@ -269,6 +270,9 @@ async function captureFullPage(rawOptions = {}) {
         dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
         duplicateOfPrevious = previousFrame.dataUrl === dataUrl;
       }
+      if (duplicateOfPrevious) {
+        throw new Error("Full-page capture could not capture every section. Please try again.");
+      }
       frames.push({ dataUrl, scrollY: metrics.scrollY, duplicateOfPrevious });
 
       await wait(CAPTURE_INTERVAL_MS);
@@ -376,7 +380,7 @@ async function handleMessage(message, sender) {
       return { ok: true };
     }
     case "RESET_ORIGIN":
-      await chrome.browsingData.remove({ origins: [message.origin] }, { cache: true, cacheStorage: true, cookies: true, indexedDB: true, localStorage: true, serviceWorkers: true });
+      await chrome.browsingData.remove({ origins: [normalizeResetOrigin(message.origin)] }, { cache: true, cacheStorage: true, cookies: true, indexedDB: true, localStorage: true, serviceWorkers: true });
       await chrome.tabs.reload((await activeTab()).id, { bypassCache: true });
       return { ok: true };
     case "NAVIGATE":

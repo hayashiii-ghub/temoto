@@ -15,3 +15,9 @@ export function isValidHttpOrigin(value) {
     return false;
   }
 }
+
+const PAGE_DEPENDENT_TOOLS = new Set(["screenshot", "speed", "environment", "reset", "inspect"]);
+
+export function isPageToolAvailable(tool, page) {
+  return !PAGE_DEPENDENT_TOOLS.has(tool) || isValidHttpOrigin(page?.origin);
+}

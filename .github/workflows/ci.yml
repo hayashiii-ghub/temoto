@@ -45,3 +45,32 @@ jobs:
 
       - name: Test site
         run: npm test
+
+  chrome:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: browser/temoto-chrome
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: browser/temoto-chrome/package-lock.json
+
+      - name: Install Chrome extension dependencies
+        run: npm ci
+
+      - name: Test Chrome extension
+        run: npm test
+
+      - name: Test Chrome extension Sites build
+        run: npm run test:sites
+
+      - name: Build Chrome extension
+        run: npm run build

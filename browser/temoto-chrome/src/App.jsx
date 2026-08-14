@@ -39,7 +39,7 @@ import {
   switchEnvironment,
 } from "./extension-api.js";
 import { planFullPageFrames } from "./capture-plan.js";
-import { isValidHttpOrigin } from "./url-utils.js";
+import { isPageToolAvailable, isValidHttpOrigin } from "./url-utils.js";
 import {
   clampPlaybackSpeed,
   speedFromShortcut,
@@ -83,9 +83,9 @@ function StatusToast({ message }) {
   return <div className="status-toast" role="status">{message}</div>;
 }
 
-function LauncherCard({ icon: Icon, label, meta, onClick, danger = false }) {
+function LauncherCard({ icon: Icon, label, meta, onClick, danger = false, disabled = false }) {
   return (
-    <button className={`launcher-card${danger ? " is-danger" : ""}`} type="button" onClick={onClick}>
+    <button className={`launcher-card${danger ? " is-danger" : ""}`} type="button" onClick={onClick} disabled={disabled} title={disabled ? "Unavailable on this page" : undefined}>
       {meta && <span className="launcher-meta">{meta}</span>}
       <Icon size={42} weight="light" aria-hidden="true" />
       <span>{label}</span>
@@ -233,7 +233,7 @@ function EnvironmentPanel({ page, project, onDone }) {
 }
 
 function PopupApp() {
-  const [page, setPage] = useState({ hostname: "Current page", origin: "https://example.com", videoCount: 0, playbackRate: 1 });
+  const [page, setPage] = useState({ hostname: "Current page", origin: "", url: "", videoCount: 0, playbackRate: 1 });
   const [settings, setSettings] = useState({ project: { name: "Local project", local: "http://localhost:3000", staging: "https://staging.example.com", production: "https://example.com" }, lastColor: "#7C5CFC", lastSpeed: 1.5, screenshot: { delayMs: 0, forceReveal: false } });
   const [activeTool, setActiveTool] = useState(null);
   const [speed, setSpeed] = useState(1.5);
@@ -242,12 +242,16 @@ function PopupApp() {
   const [resetBusy, setResetBusy] = useState(false);
 
   useEffect(() => {
-    Promise.all([detectPage(), getSettings()]).then(([nextPage, nextSettings]) => {
-      setPage(nextPage);
-      setSettings(nextSettings);
-      const initialSpeed = nextPage.videoCount ? nextPage.playbackRate : nextSettings.lastSpeed;
+    Promise.allSettled([detectPage(), getSettings()]).then(([pageResult, settingsResult]) => {
+      const nextPage = pageResult.status === "fulfilled" ? pageResult.value : null;
+      const nextSettings = settingsResult.status === "fulfilled" ? settingsResult.value : null;
+      if (nextPage) setPage(nextPage);
+      if (nextSettings) setSettings(nextSettings);
+      const initialSpeed = nextPage?.videoCount ? nextPage.playbackRate : nextSettings?.lastSpeed;
       setSpeed(initialSpeed || 1);
-    }).catch((error) => setToast(error.message));
+      const failure = pageResult.status === "rejected" ? pageResult.reason : settingsResult.status === "rejected" ? settingsResult.reason : null;
+      if (failure) setToast(failure.message || "Could not initialize temoto");
+    });
   }, []);
 
   useEffect(() => {
@@ -389,11 +393,11 @@ function PopupApp() {
           </header>
           <section className="launcher-grid" aria-label="Developer tools">
             <LauncherCard icon={EyedropperSample} label="Color Picker" onClick={() => setActiveTool("color")} />
-            <LauncherCard icon={Selection} label="Screenshot" onClick={() => setActiveTool("screenshot")} />
-            <LauncherCard icon={Speedometer} label="Video Speed" meta={page.videoCount ? `${speed}x` : "No video"} onClick={() => setActiveTool("speed")} />
-            <LauncherCard icon={ArrowsLeftRight} label="Environments" onClick={() => setActiveTool("environment")} />
-            <LauncherCard icon={ArrowCounterClockwise} label="Site Reset" onClick={() => setActiveTool("reset")} danger />
-            <LauncherCard icon={BoundingBox} label="Inspect" onClick={() => setActiveTool("inspect")} />
+            <LauncherCard icon={Selection} label="Screenshot" onClick={() => setActiveTool("screenshot")} disabled={!isPageToolAvailable("screenshot", page)} />
+            <LauncherCard icon={Speedometer} label="Video Speed" meta={isPageToolAvailable("speed", page) ? (page.videoCount ? `${speed}x` : "No video") : "Unavailable"} onClick={() => setActiveTool("speed")} disabled={!isPageToolAvailable("speed", page)} />
+            <LauncherCard icon={ArrowsLeftRight} label="Environments" onClick={() => setActiveTool("environment")} disabled={!isPageToolAvailable("environment", page)} />
+            <LauncherCard icon={ArrowCounterClockwise} label="Site Reset" onClick={() => setActiveTool("reset")} danger disabled={!isPageToolAvailable("reset", page)} />
+            <LauncherCard icon={BoundingBox} label="Inspect" onClick={() => setActiveTool("inspect")} disabled={!isPageToolAvailable("inspect", page)} />
           </section>
         </>
       )}
@@ -533,8 +537,8 @@ function CaptureApp() {
               || captureImagesAreEquivalent(images[index - 1], images[index])
             )
           ));
-          const { renderFrames, removedHeight } = planFullPageFrames(pendingCapture.frames, duplicateFlags);
-          const outputHeight = Math.round((pendingCapture.document.height - removedHeight) * scaleY);
+          const { renderFrames } = planFullPageFrames(pendingCapture.frames, duplicateFlags);
+          const outputHeight = Math.round(pendingCapture.document.height * scaleY);
           if (outputHeight > 32000) throw new Error("This page is too tall to export as one PNG.");
           canvas.width = images[0].naturalWidth;
           canvas.height = outputHeight;

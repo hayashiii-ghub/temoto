@@ -1,4 +1,4 @@
-import { replaceOrigin } from "./url-utils.js";
+import { isValidHttpOrigin, replaceOrigin } from "./url-utils.js";
 
 const hasChromeApi = () => typeof chrome !== "undefined" && Boolean(chrome.runtime?.id);
 
@@ -55,6 +55,7 @@ export async function startMeasure() {
 }
 
 export async function resetOrigin(origin) {
+  if (!isValidHttpOrigin(origin)) return { ok: false, error: "Site Reset is unavailable on this page" };
   if (!hasChromeApi()) {
     await new Promise((resolve) => window.setTimeout(resolve, 900));
     return { ok: true, preview: true };

@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "temoto for Chrome",
   "short_name": "temoto",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "minimum_chrome_version": "116",
   "description": "Color, capture, video speed and developer utilities close at hand.",
   "permissions": [
