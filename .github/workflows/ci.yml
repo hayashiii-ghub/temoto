@@ -69,8 +69,8 @@ jobs:
       - name: Test Chrome extension
         run: npm test
 
-      - name: Test Chrome extension Sites build
-        run: npm run test:sites
-
       - name: Build Chrome extension
         run: npm run build
+
+      - name: Test Chrome extension Sites build
+        run: npm run test:sites
