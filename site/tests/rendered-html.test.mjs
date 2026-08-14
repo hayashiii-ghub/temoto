@@ -65,22 +65,17 @@ test("公開用メタデータと主要リンクを含む", async () => {
 
   assert.match(html, /property="og:image" content="https:\/\/temoto\.haygsiiii\.chatgpt\.site\/og-temoto\.png"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
-  assert.match(html, /rel="icon" href="https:\/\/temoto\.haygsiiii\.chatgpt\.site\/favicon\.svg" type="image\/svg\+xml"/);
+  assert.match(html, /rel="icon" href="https:\/\/temoto\.haygsiiii\.chatgpt\.site\/favicon\.png" type="image\/png"/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/releases\/latest\/download\/temoto-macos\.dmg/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/tree\/main\/browser\/temoto-chrome/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto/);
   assert.match(html, /class="navGitHub"[^>]*aria-label="GitHub"/);
 });
 
-test("faviconは現行のmacOSマークを使う", () => {
-  const svg = readFileSync(new URL("../public/favicon.svg", import.meta.url), "utf8");
-  assert.match(svg, /fill="#1c1c1e"/);
-  assert.match(svg, /scale\(1\.68\)/);
-  assert.match(svg, /rotate\(30 512 400\)/);
-  assert.match(svg, /rotate\(30 512 600\)/);
-  assert.match(svg, /id="frostedGlass"/);
-  assert.match(svg, /id="clearGlass"/);
-  assert.doesNotMatch(svg, /M326 365/);
+test("faviconは完成済みのmacOSアプリアイコンを使う", () => {
+  const favicon = readFileSync(new URL("../public/favicon.png", import.meta.url));
+  const appIcon = readFileSync(new URL("../../Assets/ShelfDrop.png", import.meta.url));
+  assert.deepEqual(favicon, appIcon);
 });
 
 test("OG画像は1200x630のPNGである", () => {
