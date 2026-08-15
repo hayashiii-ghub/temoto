@@ -85,6 +85,7 @@ No account or credentials are required.
 
 ## Submission checklist
 
+- [ ] For a new store item, run `npm run package:store-bootstrap` and upload the generated `0.0.0.1` ZIP first. Copy the Item ID and Package → View public key without submitting it for review.
 - [ ] Verify all six tools in the current stable Google Chrome release, not only another Chromium browser.
 - [ ] Run `npm test`, `npm run build`, `npm run test:sites`, and `npm run package`.
 - [ ] Upload the ZIP from `release/`; confirm `manifest.json` is at the ZIP root.

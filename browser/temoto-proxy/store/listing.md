@@ -55,6 +55,7 @@ No account or temoto-operated server is required.
 
 ## Release checklist
 
+- [ ] For a new store item, run `npm run package:store-bootstrap` and upload the generated `0.0.0.1` ZIP first. Copy the Item ID and Package → View public key without submitting it for review.
 - [ ] Run `npm run check`.
 - [ ] Run `npm run package` and confirm `manifest.json` is at the ZIP root.
 - [ ] Load `dist/client` in the current stable Google Chrome release.
