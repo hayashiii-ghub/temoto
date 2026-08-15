@@ -21,6 +21,8 @@ See [PRIVACY.md](./PRIVACY.md) for the complete policy and permission details.
 
 ## Development
 
+The page-safety, playback-speed, capture-planning, and Proxy companion contracts live in `src/` as strict TypeScript. Vite bundles them into the same browser-ready JavaScript extension package.
+
 ```sh
 npm install
 npm run dev

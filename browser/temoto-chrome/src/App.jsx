@@ -40,20 +40,20 @@ import {
   startMeasure,
   switchEnvironment,
 } from "./extension-api.js";
-import { planFullPageFrames } from "./capture-plan.js";
-import { isPageToolAvailable, isValidHttpOrigin } from "./url-utils.js";
+import { planFullPageFrames } from "./capture-plan.ts";
+import { isPageToolAvailable, isValidHttpOrigin } from "./url-utils.ts";
 import {
   clampPlaybackSpeed,
   speedFromShortcut,
   SPEED_PRESETS,
   speedToSliderPosition,
   sliderPositionToSpeed,
-} from "./video-speed.js";
+} from "./video-speed.ts";
 import {
   getProxyCompanion,
   runProxyCompanionAction,
   TEMOTO_PROXY_INSTALL_URL,
-} from "./proxy-companion.js";
+} from "./proxy-companion.ts";
 
 const TOOL_DEFINITIONS = {
   color: { title: "Color Picker", icon: EyedropperSample },

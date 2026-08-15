@@ -1,4 +1,4 @@
-import { isValidHttpOrigin, replaceOrigin } from "./url-utils.js";
+import { isValidHttpOrigin, replaceOrigin } from "./url-utils.ts";
 
 const hasChromeApi = () => typeof chrome !== "undefined" && Boolean(chrome.runtime?.id);
 
