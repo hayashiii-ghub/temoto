@@ -35,8 +35,22 @@ export function createTemotoIcon(size) {
   const scale = 4;
   const highSize = size * scale;
   const rgba = Buffer.alloc(size * size * 4);
-  const angle = -Math.PI / 6;
+  const angle = Math.PI / 6;
   const purple = [153, 116, 248];
+  // Match temoto for Chrome's canonical 1024px mark and its larger 48/128px optical treatment.
+  const markScale = 1.68;
+  const opticalScale = size >= 48 ? 1.08 : 1;
+  const downwardOffset = size >= 48 ? 0.02 : 0;
+  // Preserve the outer antialiased row produced by the canonical SVG rasterization.
+  const rasterSeparation = size >= 32 ? 0.125 / size : 0;
+  const barWidth = (420 / 1024) * markScale * opticalScale;
+  const barHeight = (130 / 1024) * markScale * opticalScale;
+  const centerY = (sourceY) => (
+    0.5
+    + (sourceY / 1024 - 0.5) * markScale * opticalScale
+    + downwardOffset
+    + (sourceY < 512 ? -rasterSeparation : rasterSeparation)
+  );
   for (let y = 0; y < size; y += 1) {
     for (let x = 0; x < size; x += 1) {
       let coverage = 0;
@@ -44,8 +58,8 @@ export function createTemotoIcon(size) {
         for (let sx = 0; sx < scale; sx += 1) {
           const px = (x * scale + sx + 0.5) / highSize;
           const py = (y * scale + sy + 0.5) / highSize;
-          const top = insideRotatedBar(px, py, 0.55, 0.36, 0.42, 0.15, angle);
-          const bottom = insideRotatedBar(px, py, 0.45, 0.64, 0.42, 0.15, angle);
+          const top = insideRotatedBar(px, py, 0.5, centerY(400), barWidth, barHeight, angle);
+          const bottom = insideRotatedBar(px, py, 0.5, centerY(600), barWidth, barHeight, angle);
           if (top || bottom) coverage += 1;
         }
       }
