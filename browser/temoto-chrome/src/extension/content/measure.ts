@@ -1,5 +1,6 @@
-(() => {
-  window.__temotoMeasureCleanup?.();
+((): void => {
+  const temotoWindow = window as typeof window & { __temotoMeasureCleanup?: () => void };
+  temotoWindow.__temotoMeasureCleanup?.();
   const outline = document.createElement("div");
   const tooltip = document.createElement("div");
   const guide = document.createElement("div");
@@ -24,15 +25,16 @@
   cursorStyle.textContent = "html, html * { cursor: crosshair !important; }";
   document.documentElement.append(cursorStyle, outline, tooltip, guide);
 
-  const selectorFor = (element) => {
+  const selectorFor = (element: Element): string => {
     if (element.id) return `#${CSS.escape(element.id)}`;
-    const parts = [];
-    let node = element;
+    const parts: string[] = [];
+    let node: Element | null = element;
     while (node && node.nodeType === 1 && parts.length < 4) {
       let part = node.localName;
       const classes = Array.from(node.classList).slice(0, 2);
       if (classes.length) part += `.${classes.map(CSS.escape).join(".")}`;
-      const siblings = node.parentElement ? Array.from(node.parentElement.children).filter((child) => child.localName === node.localName) : [];
+      const nodeName = node.localName;
+      const siblings = node.parentElement ? Array.from(node.parentElement.children).filter((child) => child.localName === nodeName) : [];
       if (siblings.length > 1) part += `:nth-of-type(${siblings.indexOf(node) + 1})`;
       parts.unshift(part);
       node = node.parentElement;
@@ -40,8 +42,8 @@
     return parts.join(" > ");
   };
 
-  let current = null;
-  const move = (event) => {
+  let current: Element | null = null;
+  const move = (event: MouseEvent) => {
     const target = event.target;
     if (!(target instanceof Element) || target === outline || target === tooltip) return;
     current = target;
@@ -53,14 +55,14 @@
     const top = rect.top > 80 ? rect.top - 72 : Math.min(window.innerHeight - 72, rect.bottom + 8);
     Object.assign(tooltip.style, { display: "block", left: `${left}px`, top: `${top}px` });
   };
-  const showToast = (text) => {
+  const showToast = (text: string) => {
     const toast = document.createElement("div");
     toast.textContent = text;
     Object.assign(toast.style, { position: "fixed", left: "50%", bottom: "24px", zIndex: "2147483647", transform: "translateX(-50%)", padding: "10px 13px", border: "1px solid rgba(255,255,255,.2)", borderRadius: "10px", background: "#161616", color: "#f4f4f2", font: "12px -apple-system, sans-serif", boxShadow: "0 14px 36px rgba(0,0,0,.42)" });
     document.documentElement.appendChild(toast);
     setTimeout(() => toast.remove(), 1800);
   };
-  const copy = async (event) => {
+  const copy = async (event: MouseEvent) => {
     event.preventDefault(); event.stopPropagation();
     if (!current) return;
     const selector = selectorFor(current);
@@ -70,11 +72,11 @@
     showToast(`Copied ${selector}`);
     cleanup();
   };
-  const key = (event) => { if (event.key === "Escape") cleanup(); };
+  const key = (event: KeyboardEvent) => { if (event.key === "Escape") cleanup(); };
   const cleanup = () => {
-    document.removeEventListener("mousemove", move, true); document.removeEventListener("click", copy, true); window.removeEventListener("keydown", key, true); cursorStyle.remove(); outline.remove(); tooltip.remove(); guide.remove(); delete window.__temotoMeasureCleanup;
+    document.removeEventListener("mousemove", move, true); document.removeEventListener("click", copy, true); window.removeEventListener("keydown", key, true); cursorStyle.remove(); outline.remove(); tooltip.remove(); guide.remove(); delete temotoWindow.__temotoMeasureCleanup;
   };
-  window.__temotoMeasureCleanup = cleanup;
+  temotoWindow.__temotoMeasureCleanup = cleanup;
   document.addEventListener("mousemove", move, true);
   document.addEventListener("click", copy, true);
   window.addEventListener("keydown", key, true);

@@ -6,7 +6,7 @@ import {
   nextFullPageCaptureY,
   normalizeCaptureMetrics,
   normalizeScreenshotOptions,
-} from "../public/capture-utils.js";
+} from "../src/extension/capture-utils.ts";
 
 test("full-page capture advances by one viewport and aligns the final frame to the bottom", () => {
   assert.equal(nextFullPageCaptureY(0, 2500, 800), 800);

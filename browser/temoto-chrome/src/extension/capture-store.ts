@@ -2,15 +2,15 @@ const DATABASE_NAME = "temoto-captures";
 const STORE_NAME = "captures";
 const PENDING_CAPTURE_ID = "pending";
 
-function requestResult(request) {
+function requestResult<T>(request: IDBRequest<T>): Promise<T> {
   return new Promise((resolve, reject) => {
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error || new Error("Capture storage request failed"));
   });
 }
 
-function transactionDone(transaction) {
-  return new Promise((resolve, reject) => {
+function transactionDone(transaction: IDBTransaction): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
     transaction.oncomplete = () => resolve();
     transaction.onerror = () => reject(transaction.error || new Error("Capture storage transaction failed"));
     transaction.onabort = () => reject(transaction.error || new Error("Capture storage transaction was aborted"));
@@ -28,7 +28,7 @@ async function openCaptureDatabase() {
   return requestResult(request);
 }
 
-export async function savePendingCapture(capture) {
+export async function savePendingCapture(capture: Record<string, unknown>): Promise<void> {
   const database = await openCaptureDatabase();
   try {
     const transaction = database.transaction(STORE_NAME, "readwrite");
@@ -39,7 +39,7 @@ export async function savePendingCapture(capture) {
   }
 }
 
-export async function readPendingCapture() {
+export async function readPendingCapture(): Promise<Record<string, unknown> | null> {
   const database = await openCaptureDatabase();
   try {
     const transaction = database.transaction(STORE_NAME, "readonly");
@@ -51,7 +51,7 @@ export async function readPendingCapture() {
   }
 }
 
-export async function removePendingCapture() {
+export async function removePendingCapture(): Promise<void> {
   const database = await openCaptureDatabase();
   try {
     const transaction = database.transaction(STORE_NAME, "readwrite");

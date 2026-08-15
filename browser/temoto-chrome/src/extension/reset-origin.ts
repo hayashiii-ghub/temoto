@@ -1,4 +1,4 @@
-export function normalizeResetOrigin(value) {
+export function normalizeResetOrigin(value: string): string {
   try {
     const url = new URL(value);
     const isHttp = url.protocol === "http:" || url.protocol === "https:";

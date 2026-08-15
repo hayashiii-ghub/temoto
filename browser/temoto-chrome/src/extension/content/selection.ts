@@ -1,5 +1,6 @@
-(() => {
-  window.__temotoSelectionCleanup?.();
+((): void => {
+  const temotoWindow = window as typeof window & { __temotoSelectionCleanup?: () => void };
+  temotoWindow.__temotoSelectionCleanup?.();
   const root = document.createElement("div");
   const shade = document.createElement("div");
   const box = document.createElement("div");
@@ -12,10 +13,10 @@
   root.append(shade, box, hint);
   document.documentElement.appendChild(root);
 
-  let start = null;
-  const cleanup = () => { root.remove(); window.removeEventListener("keydown", onKey, true); delete window.__temotoSelectionCleanup; };
-  const onKey = (event) => { if (event.key === "Escape") cleanup(); };
-  window.__temotoSelectionCleanup = cleanup;
+  let start: { x: number; y: number } | null = null;
+  const cleanup = () => { root.remove(); window.removeEventListener("keydown", onKey, true); delete temotoWindow.__temotoSelectionCleanup; };
+  const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") cleanup(); };
+  temotoWindow.__temotoSelectionCleanup = cleanup;
   window.addEventListener("keydown", onKey, true);
 
   root.addEventListener("mousedown", (event) => {
