@@ -7,8 +7,50 @@ import {
   profileToProxyConfig,
   statusFromEffectiveState,
 } from "./proxy-core.js";
+import type { ChromeProxyConfig, ProxyProfile, ProxyStatus } from "./proxy-core.js";
 
-export const LOCAL_DEFAULTS = {
+export interface LocalState {
+  profiles: ProxyProfile[];
+  activeProfileId: string | null;
+  activeFingerprint: string | null;
+  incognitoEnabled: boolean;
+  incognitoSessionOnly: boolean;
+  selectedProfileId: string | null;
+}
+
+export interface SessionCredentials {
+  username: string;
+  password: string;
+}
+
+interface SessionState {
+  proxyCredentials: Record<string, SessionCredentials>;
+}
+
+export interface ProxySetting {
+  levelOfControl?: chrome.types.LevelOfControl;
+  value?: unknown;
+}
+
+export interface EffectiveState extends LocalState {
+  profiles: Array<ProxyProfile & { auth: ProxyProfile["auth"] & { passwordReady: boolean } }>;
+  regular: ProxySetting;
+  incognito: ProxySetting | null;
+  incognitoAllowed: boolean;
+  status: ProxyStatus;
+}
+
+export interface DiagnosticResult {
+  ok: boolean;
+  reachable: boolean;
+  status?: number;
+  statusText?: string;
+  latencyMs: number;
+  url: string;
+  error?: string;
+}
+
+export const LOCAL_DEFAULTS: LocalState = {
   profiles: [],
   activeProfileId: null,
   activeFingerprint: null,
@@ -17,32 +59,36 @@ export const LOCAL_DEFAULTS = {
   selectedProfileId: null,
 };
 
-const SESSION_DEFAULTS = { proxyCredentials: {} };
+const SESSION_DEFAULTS: SessionState = { proxyCredentials: {} };
 
-function errorMessage(error) {
+function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error || "Unknown error");
 }
 
-function assertControllable(setting) {
+function assertControllable(setting: ProxySetting): void {
   const level = setting?.levelOfControl;
   if (level === "controlled_by_other_extensions") throw new Error("Proxy settings are controlled by another extension");
   if (level === "not_controllable") throw new Error("Proxy settings are controlled by Chrome or an administrator policy");
 }
 
-export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now = () => Date.now()) {
-  const local = () => chromeApi.storage.local.get(LOCAL_DEFAULTS);
-  const session = () => chromeApi.storage.session.get(SESSION_DEFAULTS);
-  const profileFor = (state, id) => state.profiles.find((profile) => profile.id === id);
+export function createProxyRuntime(
+  chromeApi: typeof chrome,
+  fetchImpl: typeof globalThis.fetch = globalThis.fetch,
+  now: () => number = () => Date.now(),
+) {
+  const local = async (): Promise<LocalState> => await chromeApi.storage.local.get(LOCAL_DEFAULTS) as LocalState;
+  const session = async (): Promise<SessionState> => await chromeApi.storage.session.get(SESSION_DEFAULTS) as SessionState;
+  const profileFor = (state: LocalState, id: string | null): ProxyProfile | undefined => state.profiles.find((profile) => profile.id === id);
 
-  async function incognitoAllowed() {
+  async function incognitoAllowed(): Promise<boolean> {
     return Boolean(await chromeApi.extension.isAllowedIncognitoAccess());
   }
 
-  async function effectiveState() {
+  async function effectiveState(): Promise<EffectiveState> {
     const state = await local();
-    const regular = await chromeApi.proxy.settings.get({ incognito: false });
+    const regular = await chromeApi.proxy.settings.get({ incognito: false }) as ProxySetting;
     const allowed = await incognitoAllowed();
-    const incognito = allowed ? await chromeApi.proxy.settings.get({ incognito: true }) : null;
+    const incognito = allowed ? await chromeApi.proxy.settings.get({ incognito: true }) as ProxySetting : null;
     const credentials = await session();
     const profiles = state.profiles.map((profile) => ({
       ...profile,
@@ -59,11 +105,11 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     return { ...state, profiles, regular, incognito, incognitoAllowed: allowed, status };
   }
 
-  async function restoreIncognito(setting, sessionOnly) {
+  async function restoreIncognito(setting: ProxySetting, sessionOnly: boolean): Promise<void> {
     const scope = sessionOnly ? "incognito_session_only" : "incognito_persistent";
     const alternateScope = sessionOnly ? "incognito_persistent" : "incognito_session_only";
     if (setting?.levelOfControl === "controlled_by_this_extension" && setting.value) {
-      await chromeApi.proxy.settings.set({ value: setting.value, scope });
+      await chromeApi.proxy.settings.set({ value: setting.value as chrome.proxy.ProxyConfig, scope });
       await chromeApi.proxy.settings.clear({ scope: alternateScope });
       return;
     }
@@ -73,12 +119,12 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     ]);
   }
 
-  async function clearIncognito() {
+  async function clearIncognito(): Promise<ProxySetting> {
     const results = await Promise.allSettled([
       chromeApi.proxy.settings.clear({ scope: "incognito_session_only" }),
       chromeApi.proxy.settings.clear({ scope: "incognito_persistent" }),
     ]);
-    const effective = await chromeApi.proxy.settings.get({ incognito: true });
+    const effective = await chromeApi.proxy.settings.get({ incognito: true }) as ProxySetting;
     if (effective.levelOfControl === "controlled_by_this_extension") {
       const rejected = results.find((result) => result.status === "rejected");
       throw new Error(rejected ? `Chrome could not clear the incognito proxy setting: ${errorMessage(rejected.reason)}` : "Chrome did not clear the incognito proxy setting");
@@ -86,22 +132,22 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     return effective;
   }
 
-  async function applyIncognito(config, state, previousSessionOnly = state.incognitoSessionOnly) {
+  async function applyIncognito(config: ChromeProxyConfig, state: LocalState, previousSessionOnly = state.incognitoSessionOnly) {
     if (!state.incognitoEnabled) return { applied: false };
     if (!(await incognitoAllowed())) throw new Error("Enable temoto Proxy in Chrome's incognito extension settings first");
     const scope = state.incognitoSessionOnly ? "incognito_session_only" : "incognito_persistent";
     const previousScope = previousSessionOnly ? "incognito_session_only" : "incognito_persistent";
     const alternateScope = state.incognitoSessionOnly ? "incognito_persistent" : "incognito_session_only";
-    const current = await chromeApi.proxy.settings.get({ incognito: true });
+    const current = await chromeApi.proxy.settings.get({ incognito: true }) as ProxySetting;
     assertControllable(current);
     try {
       await chromeApi.proxy.settings.set({ value: config, scope });
-      const verified = await chromeApi.proxy.settings.get({ incognito: true });
+      const verified = await chromeApi.proxy.settings.get({ incognito: true }) as ProxySetting;
       if (verified.levelOfControl !== "controlled_by_this_extension") throw new Error("Chrome did not apply the incognito proxy setting");
       if (alternateScope !== scope) await chromeApi.proxy.settings.clear({ scope: alternateScope });
     } catch (error) {
       if (current.levelOfControl === "controlled_by_this_extension" && current.value) {
-        await chromeApi.proxy.settings.set({ value: current.value, scope: previousScope }).catch(() => {});
+        await chromeApi.proxy.settings.set({ value: current.value as chrome.proxy.ProxyConfig, scope: previousScope }).catch(() => {});
       } else {
         await chromeApi.proxy.settings.clear({ scope }).catch(() => {});
       }
@@ -110,22 +156,22 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     return { applied: true, scope };
   }
 
-  async function activate(profileId) {
+  async function activate(profileId: string): Promise<EffectiveState> {
     const state = await local();
     const profile = profileFor(state, profileId);
     if (!profile) throw new Error("Profile not found");
     const normalized = normalizeProfile(profile);
     const config = profileToProxyConfig(normalized);
-    const current = await chromeApi.proxy.settings.get({ incognito: false });
+    const current = await chromeApi.proxy.settings.get({ incognito: false }) as ProxySetting;
     assertControllable(current);
-    let currentIncognito = null;
+    let currentIncognito: ProxySetting | null = null;
     if (state.incognitoEnabled) {
       if (!(await incognitoAllowed())) throw new Error("Enable temoto Proxy in Chrome's incognito extension settings first");
-      currentIncognito = await chromeApi.proxy.settings.get({ incognito: true });
+      currentIncognito = await chromeApi.proxy.settings.get({ incognito: true }) as ProxySetting;
     }
     try {
       await chromeApi.proxy.settings.set({ value: config, scope: "regular_only" });
-      const verified = await chromeApi.proxy.settings.get({ incognito: false });
+      const verified = await chromeApi.proxy.settings.get({ incognito: false }) as ProxySetting;
       if (verified.levelOfControl !== "controlled_by_this_extension") throw new Error("Chrome did not apply the proxy setting");
       await applyIncognito(config, state);
       const fingerprint = configFingerprint(verified.value);
@@ -133,7 +179,7 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     } catch (error) {
       if (currentIncognito) await restoreIncognito(currentIncognito, state.incognitoSessionOnly).catch(() => {});
       if (current.levelOfControl === "controlled_by_this_extension" && current.value) {
-        await chromeApi.proxy.settings.set({ value: current.value, scope: "regular_only" }).catch(() => {});
+        await chromeApi.proxy.settings.set({ value: current.value as chrome.proxy.ProxyConfig, scope: "regular_only" }).catch(() => {});
       } else {
         await chromeApi.proxy.settings.clear({ scope: "regular_only" }).catch(() => {});
       }
@@ -142,19 +188,19 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     return effectiveState();
   }
 
-  async function deactivate() {
+  async function deactivate(): Promise<EffectiveState> {
     const state = await local();
-    const previousRegular = await chromeApi.proxy.settings.get({ incognito: false });
+    const previousRegular = await chromeApi.proxy.settings.get({ incognito: false }) as ProxySetting;
     const allowed = await incognitoAllowed();
-    const previousIncognito = allowed ? await chromeApi.proxy.settings.get({ incognito: true }) : null;
+    const previousIncognito = allowed ? await chromeApi.proxy.settings.get({ incognito: true }) as ProxySetting : null;
     try {
       await chromeApi.proxy.settings.clear({ scope: "regular_only" });
-      const regular = await chromeApi.proxy.settings.get({ incognito: false });
+      const regular = await chromeApi.proxy.settings.get({ incognito: false }) as ProxySetting;
       if (regular.levelOfControl === "controlled_by_this_extension") throw new Error("Chrome did not clear the regular proxy setting");
       if (allowed) await clearIncognito();
     } catch (error) {
       if (previousRegular.levelOfControl === "controlled_by_this_extension" && previousRegular.value) {
-        await chromeApi.proxy.settings.set({ value: previousRegular.value, scope: "regular_only" }).catch(() => {});
+        await chromeApi.proxy.settings.set({ value: previousRegular.value as chrome.proxy.ProxyConfig, scope: "regular_only" }).catch(() => {});
       }
       if (previousIncognito) await restoreIncognito(previousIncognito, state.incognitoSessionOnly).catch(() => {});
       throw error;
@@ -163,7 +209,7 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     return effectiveState();
   }
 
-  async function saveProfile(rawProfile, password = "") {
+  async function saveProfile(rawProfile: ProxyProfile | Record<string, unknown>, password = ""): Promise<EffectiveState> {
     const profile = normalizeProfile(rawProfile);
     const state = await local();
     const exists = profileFor(state, profile.id);
@@ -187,7 +233,7 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     return effectiveState();
   }
 
-  async function deleteProfile(profileId) {
+  async function deleteProfile(profileId: string): Promise<EffectiveState> {
     const state = await local();
     if (!profileFor(state, profileId)) return effectiveState();
     if (state.activeProfileId === profileId) await deactivate();
@@ -197,7 +243,7 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     return effectiveState();
   }
 
-  async function duplicateProfile(profileId) {
+  async function duplicateProfile(profileId: string): Promise<EffectiveState> {
     const state = await local();
     const source = profileFor(state, profileId);
     if (!source) throw new Error("Profile not found");
@@ -206,7 +252,7 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     return effectiveState();
   }
 
-  async function setCredentials(profileId, username, password) {
+  async function setCredentials(profileId: string, username: string, password: string): Promise<EffectiveState> {
     const state = await local();
     const profile = profileFor(state, profileId);
     if (!profile?.auth?.enabled) throw new Error("Authentication is not enabled for this profile");
@@ -222,14 +268,14 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     return effectiveState();
   }
 
-  async function clearCredentials(profileId) {
+  async function clearCredentials(profileId: string): Promise<void> {
     const stored = await session();
     const next = { ...stored.proxyCredentials };
     delete next[profileId];
     await chromeApi.storage.session.set({ proxyCredentials: next });
   }
 
-  async function setIncognito(enabled, sessionOnly = true) {
+  async function setIncognito(enabled: boolean, sessionOnly = true): Promise<EffectiveState> {
     const state = await local();
     if (enabled && !(await incognitoAllowed())) throw new Error("Enable temoto Proxy in Chrome's incognito extension settings first");
     if (!enabled) {
@@ -240,7 +286,8 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     const nextState = { ...state, incognitoEnabled: true, incognitoSessionOnly: Boolean(sessionOnly) };
     if (state.activeProfileId) {
       const profile = profileFor(state, state.activeProfileId);
-      const previous = await chromeApi.proxy.settings.get({ incognito: true });
+      if (!profile) throw new Error("Active profile not found");
+      const previous = await chromeApi.proxy.settings.get({ incognito: true }) as ProxySetting;
       try {
         await applyIncognito(profileToProxyConfig(profile), nextState, state.incognitoSessionOnly);
         await chromeApi.storage.local.set({ incognitoEnabled: true, incognitoSessionOnly: Boolean(sessionOnly) });
@@ -254,7 +301,7 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     return effectiveState();
   }
 
-  async function diagnose(profileId) {
+  async function diagnose(profileId: string): Promise<DiagnosticResult> {
     const state = await local();
     if (state.activeProfileId !== profileId) throw new Error("Activate this profile before running a connection test");
     const storedProfile = profileFor(state, profileId);
@@ -273,22 +320,23 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
       });
       return { ok: response.ok, reachable: true, status: response.status, statusText: response.statusText, latencyMs: Math.max(0, now() - startedAt), url: response.url || profile.diagnosticUrl };
     } catch (error) {
-      return { ok: false, reachable: false, latencyMs: Math.max(0, now() - startedAt), error: error.name === "AbortError" ? "Connection test timed out after 10 seconds" : errorMessage(error), url: profile.diagnosticUrl };
+      const aborted = error instanceof Error && error.name === "AbortError";
+      return { ok: false, reachable: false, latencyMs: Math.max(0, now() - startedAt), error: aborted ? "Connection test timed out after 10 seconds" : errorMessage(error), url: profile.diagnosticUrl };
     } finally {
       clearTimeout(timeout);
     }
   }
 
-  async function exportProfiles() {
+  async function exportProfiles(): Promise<string> {
     const state = await local();
     return JSON.stringify(createExportBundle(state.profiles), null, 2);
   }
 
-  async function importProfiles(input, mode = "merge") {
+  async function importProfiles(input: string, mode: "merge" | "replace" = "merge"): Promise<EffectiveState> {
     const incoming = parseImportBundle(input);
     const state = await local();
     if (mode === "replace" && state.activeProfileId) await deactivate();
-    let profiles;
+    let profiles: ProxyProfile[];
     if (mode === "replace") {
       await chromeApi.storage.session.set({ proxyCredentials: {} });
       profiles = incoming;
@@ -308,7 +356,7 @@ export function createProxyRuntime(chromeApi, fetchImpl = globalThis.fetch, now 
     return effectiveState();
   }
 
-  async function selectProfile(profileId) {
+  async function selectProfile(profileId: string | null): Promise<EffectiveState> {
     const state = await local();
     if (profileId && !profileFor(state, profileId)) throw new Error("Profile not found");
     await chromeApi.storage.local.set({ selectedProfileId: profileId || null });

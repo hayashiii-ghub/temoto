@@ -12,6 +12,7 @@
     "check": "npm test"
   },
   "devDependencies": {
+    "@types/chrome": "^0.2.6",
     "typescript": "^7.0.2"
   }
 }

@@ -1,40 +1,48 @@
 import { el, endpointLabel, profileKindLabel, sendMessage } from "./extension-api.js";
+import type { ProxyProfile, ProxyStatus } from "./proxy-core.js";
+import type { EffectiveState } from "./proxy-runtime.js";
+
+function query<T extends Element = HTMLElement>(selector: string): T {
+  const node = document.querySelector<T>(selector);
+  if (!node) throw new Error(`Missing required element: ${selector}`);
+  return node;
+}
 
 const nodes = {
-  statusDot: document.querySelector("#status-dot"),
-  statusLabel: document.querySelector("#status-label"),
-  activeName: document.querySelector("#active-name"),
-  activeDetail: document.querySelector("#active-detail"),
-  toggle: document.querySelector("#toggle-active"),
-  test: document.querySelector("#test-active"),
-  notice: document.querySelector("#status-notice"),
-  list: document.querySelector("#profile-list"),
-  count: document.querySelector("#profile-count"),
-  toast: document.querySelector("#toast"),
+  statusDot: query("#status-dot"),
+  statusLabel: query("#status-label"),
+  activeName: query("#active-name"),
+  activeDetail: query("#active-detail"),
+  toggle: query<HTMLButtonElement>("#toggle-active"),
+  test: query<HTMLButtonElement>("#test-active"),
+  notice: query("#status-notice"),
+  list: query("#profile-list"),
+  count: query("#profile-count"),
+  toast: query("#toast"),
 };
 
-let currentState = null;
+let currentState: EffectiveState | null = null;
 let busy = false;
 
-function showToast(message, tone = "neutral") {
+function showToast(message: string, tone = "neutral"): void {
   nodes.toast.textContent = message;
   nodes.toast.dataset.tone = tone;
   nodes.toast.hidden = false;
   setTimeout(() => { nodes.toast.hidden = true; }, 2600);
 }
 
-async function run(action) {
+async function run<T>(action: () => Promise<T>): Promise<void> {
   if (busy) return;
   busy = true;
   document.body.dataset.busy = "true";
   try {
     const response = await action();
-    if (response?.state) {
-      currentState = response.state;
+    if (response && typeof response === "object" && "state" in response && response.state) {
+      currentState = response.state as EffectiveState;
       render();
     }
   } catch (error) {
-    showToast(error.message, "error");
+    showToast(error instanceof Error ? error.message : String(error), "error");
   } finally {
     busy = false;
     document.body.dataset.busy = "false";
@@ -42,17 +50,19 @@ async function run(action) {
   }
 }
 
-function statusMessage(status) {
-  return {
+function statusMessage(status: ProxyStatus): string {
+  const messages: Partial<Record<ProxyStatus["code"], string>> = {
     conflict: "Another extension currently has higher priority. Disable it before activating a temoto profile.",
     policy: "Chrome or an administrator policy controls this setting. temoto will not overwrite it.",
     changed: "Chrome's effective proxy no longer matches this profile. Reapply it or turn temoto off.",
     inactive: "The selected profile is saved but is not currently applied.",
     orphaned: "Chrome reports a temoto-controlled setting that is not linked to a saved profile.",
-  }[status.code] || "";
+  };
+  return messages[status.code] || "";
 }
 
-function renderProfile(profile) {
+function renderProfile(profile: ProxyProfile): HTMLButtonElement {
+  if (!currentState) throw new Error("Proxy state is not loaded");
   const active = profile.id === currentState.activeProfileId && currentState.status.code === "active";
   const button = el("button", {
     className: `popup-profile${active ? " is-active" : ""}`,
@@ -74,8 +84,10 @@ function renderProfile(profile) {
   return button;
 }
 
-function render() {
-  const { status, profiles, activeProfileId } = currentState;
+function render(): void {
+  if (!currentState) return;
+  const snapshot = currentState;
+  const { status, profiles, activeProfileId } = snapshot;
   const active = profiles.find((profile) => profile.id === activeProfileId);
   nodes.statusDot.dataset.tone = status.tone;
   nodes.statusLabel.textContent = status.label;
@@ -88,10 +100,10 @@ function render() {
     ? () => run(async () => { const response = await sendMessage("DEACTIVATE"); showToast("temoto control cleared", "success"); return response; })
     : () => sendMessage("OPEN_MANAGER").then(() => window.close());
   nodes.test.hidden = !active || status.code !== "active";
-  nodes.test.onclick = () => run(async () => {
+  nodes.test.onclick = active ? () => run(async () => {
     const response = await sendMessage("DIAGNOSE", { profileId: active.id });
-    showToast(response.result.reachable ? `${response.result.status} · ${response.result.latencyMs} ms` : response.result.error, response.result.ok ? "success" : "error");
-  });
+    showToast(response.result.reachable ? `${response.result.status} · ${response.result.latencyMs} ms` : response.result.error || "Connection test failed", response.result.ok ? "success" : "error");
+  }) : null;
   const message = statusMessage(status);
   nodes.notice.hidden = !message;
   nodes.notice.textContent = message;
@@ -102,8 +114,8 @@ function render() {
 }
 
 const openManager = () => sendMessage("OPEN_MANAGER").then(() => window.close());
-document.querySelector("#open-manager").addEventListener("click", openManager);
-document.querySelector("#manage-footer").addEventListener("click", openManager);
+query("#open-manager").addEventListener("click", openManager);
+query("#manage-footer").addEventListener("click", openManager);
 
 run(async () => {
   const response = await sendMessage("GET_STATE");

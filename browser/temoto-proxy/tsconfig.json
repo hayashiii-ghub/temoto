@@ -7,7 +7,9 @@
     "outDir": "dist/client",
     "strict": true,
     "noEmitOnError": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["chrome"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
   "include": ["src/**/*.ts"]
 }
