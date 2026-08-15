@@ -373,7 +373,7 @@ export default function Home() {
         </div>
         <div className="productPick">
           <a className="productCard" href="#macos">
-            <div className="productMeta"><span>FOR MACOS</span><em>v1.1.3</em></div>
+            <div className="productMeta"><span>FOR MACOS</span><em>v1.1.4</em></div>
             <div className="productVisual"><TemotoMark /></div>
             <h3>temoto for macOS</h3>
             <p><JapaneseText>移動する前に、置いておく。</JapaneseText></p>
@@ -404,7 +404,7 @@ export default function Home() {
             <p className="lead">
               <JapaneseText>ファイルやリンクを一時的に置ける小さな棚。ウィンドウを行き来する手間を減らして、作業の流れを止めません。</JapaneseText>
             </p>
-            <p className="requirements">v1.1.3　·　macOS 26+　·　Apple Silicon / Intel　·　Open source</p>
+            <p className="requirements">v1.1.4　·　macOS 26+　·　Apple Silicon / Intel　·　Open source</p>
           </div>
           <ShelfPreview />
         </div>
