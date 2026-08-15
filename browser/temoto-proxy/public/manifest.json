@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "temoto Proxy",
+  "short_name": "temoto Proxy",
+  "version": "1.0.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzUpKDhDf04fSzt4sNuDUDCZ0bmXeEuJK4Jpm7Oiq9fMGwXhlZZV+lcRXBQIqdgw/YZIZs6myqLipoGwZaQbE/3f1OXTCpSqJMTrk+6omwbuRGDq4/mk8VpJ8nQ6lSPPDKqUSGiUuDZzb8kT+ik5khCDhuXJ9bLGN6iDs9ash65RluALRKHXxcpuTGJhItP9tXvJRWTTwjOiQ9m3CTFm6uprUjZvCK8I0T6ASKIqZHs6sQsQUGRD7NMRXx0A+f80YaLM1W1z4xKXx/AkXOaHnnX+8omjvPVw0NPo8OhvKp8dNIzskPcVxT8zm28wQMGglDZAnY+DMFZ8K5knAsj8cVQIDAQAB",
+  "minimum_chrome_version": "116",
+  "description": "Safe, visible and reversible proxy profiles for web development.",
+  "permissions": [
+    "proxy",
+    "storage",
+    "webRequest",
+    "webRequestAuthProvider"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "externally_connectable": {
+    "ids": ["mdjfkcbimjbbjnnfiphoipdccnjfifpa"]
+  },
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "temoto Proxy",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/action-16.png",
+      "32": "icons/action-32.png"
+    }
+  },
+  "options_ui": {
+    "page": "manager.html",
+    "open_in_tab": true
+  },
+  "incognito": "spanning",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}

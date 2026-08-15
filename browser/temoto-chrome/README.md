@@ -11,7 +11,7 @@
 - Clear cache, cookies, storage, and service workers for the current origin after an explicit permission prompt.
 - Measure an element and copy a compact CSS selector.
 
-Proxy functionality is intentionally not included. It will be developed as a separate companion because Chrome proxy access is broader than the core extension needs.
+Proxy settings remain in the separately installed `temoto Proxy` companion because Chrome proxy access is broader than the core extension needs. When the companion is installed, the `temoto for Chrome` side panel shows its effective state and supports profile switching, safe Off, and opening the full proxy manager without receiving credentials or full proxy configuration.
 
 ## Privacy
 
@@ -35,6 +35,8 @@ npm run build
 ```
 
 Load `dist/client` as an unpacked extension from `chrome://extensions` after running the build.
+
+To test the Proxy integration locally, also build and load `../temoto-proxy/dist/client`, then reload both extensions after manifest changes.
 
 ## Chrome Web Store package
 

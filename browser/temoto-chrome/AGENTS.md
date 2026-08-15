@@ -18,7 +18,7 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 - The Chrome home surface includes Color Picker, Screenshot, Video Speed, Environment Switcher, Site Reset, and Measure / Inspect.
 - Screenshot includes selected-region, visible-viewport, and full-page capture with clipboard copy and PNG download.
 - Keep lazy-content preloading and animation freezing automatic; expose only Delay and Force reveal inside a collapsed Capture options section.
-- Proxy is a separate future `temoto Proxy` companion because the mandatory Chrome proxy permission is too broad for the core extension.
+- Proxy remains a separately installed `temoto Proxy` companion because the mandatory Chrome proxy permission is too broad for the core extension. Integrate its safe status, profile switching, Off action, and manager entry point into the `temoto for Chrome` side panel through an extension-ID-allowlisted companion API; never move proxy credentials or full configuration into the core extension.
 - Keep everyday actions in the popup and use the Chrome side panel for persistent detail and project configuration.
 - The popup home is a 416 × 416 square English-only launcher with six equal tools in a 3 × 2 grid; use only thin dividers, with no individual card borders, backgrounds, or corner radii. Do not show the current-page/video status strip or Proxy on this surface.
 - Keep the launcher header compact: use a single-line `temoto for Chrome` wordmark with white `temoto`, purple `for Chrome`, and no separate temoto mark beside it. Keep the borderless Settings cell separated by a vertical divider.
