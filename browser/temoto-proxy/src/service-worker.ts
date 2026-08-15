@@ -1,4 +1,6 @@
 import { createProxyRuntime } from "./proxy-runtime.js";
+import type { ProxyProfile, ProxyStatus } from "./proxy-core.js";
+import type { SessionCredentials } from "./proxy-runtime.js";
 import { credentialsForProxyChallenge, proxyControlMatches } from "./proxy-core.js";
 import {
   handleCompanionMessage,
@@ -6,12 +8,28 @@ import {
 } from "./companion-api.js";
 
 const runtime = createProxyRuntime(chrome);
-const authAttempts = new Map();
+const authAttempts = new Map<string, number>();
 
-async function refreshAction() {
+interface RuntimeMessage {
+  type?: string;
+  profileId: string;
+  profile: ProxyProfile;
+  password: string;
+  username: string;
+  enabled: boolean;
+  sessionOnly: boolean;
+  json: string;
+  mode: "merge" | "replace";
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+async function refreshAction(): Promise<void> {
   const state = await runtime.effectiveState();
   const active = state.profiles.find((profile) => profile.id === state.activeProfileId);
-  const presentation = {
+  const presentations: Record<ProxyStatus["code"], { text: string; color: string; title: string }> = {
     active: { text: "ON", color: "#7651D6", title: active ? `temoto Proxy — ${active.name}` : "temoto Proxy — active" },
     conflict: { text: "!", color: "#D85C62", title: "temoto Proxy — controlled by another extension" },
     policy: { text: "!", color: "#D85C62", title: "temoto Proxy — controlled by policy" },
@@ -20,7 +38,8 @@ async function refreshAction() {
     inactive: { text: "?", color: "#C38C39", title: "temoto Proxy — profile not applied" },
     off: { text: "", color: "#7651D6", title: "temoto Proxy — off" },
     unknown: { text: "?", color: "#C38C39", title: "temoto Proxy — unknown state" },
-  }[state.status.code];
+  };
+  const presentation = presentations[state.status.code];
   await Promise.all([
     chrome.action.setBadgeText({ text: presentation.text }),
     chrome.action.setBadgeBackgroundColor({ color: presentation.color }),
@@ -28,7 +47,7 @@ async function refreshAction() {
   ]);
 }
 
-async function handleMessage(message) {
+async function handleMessage(message: RuntimeMessage) {
   switch (message?.type) {
     case "GET_STATE": return { ok: true, state: await runtime.effectiveState() };
     case "ACTIVATE_PROFILE": return { ok: true, state: await runtime.activate(message.profileId) };
@@ -51,7 +70,7 @@ async function handleMessage(message) {
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   handleMessage(message)
     .then(async (response) => { await refreshAction().catch(() => {}); sendResponse(response); })
-    .catch((error) => sendResponse({ ok: false, error: error?.message || String(error) }));
+    .catch((error: unknown) => sendResponse({ ok: false, error: errorMessage(error) }));
   return true;
 });
 
@@ -59,13 +78,13 @@ chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => 
   if (!isTrustedCompanionSender(sender)) return false;
   handleCompanionMessage(message, {
     runtime,
-    openManager: () => chrome.tabs.create({ url: chrome.runtime.getURL("manager.html") }),
+    openManager: async () => { await chrome.tabs.create({ url: chrome.runtime.getURL("manager.html") }); },
   })
     .then(async (response) => { await refreshAction().catch(() => {}); sendResponse(response); })
-    .catch((error) => sendResponse({
+    .catch((error: unknown) => sendResponse({
       ok: false,
       protocolVersion: 1,
-      error: error?.message || String(error),
+      error: errorMessage(error),
     }));
   return true;
 });
@@ -75,16 +94,19 @@ chrome.storage.onChanged.addListener((_changes, area) => { if (area === "local")
 
 chrome.webRequest.onAuthRequired.addListener(
   (details, callback) => {
+    if (!callback) return {};
     if (!details.isProxy) { callback({}); return; }
+    const requestDetails = details as chrome.webRequest.OnAuthRequiredDetails & { incognito?: boolean };
     Promise.all([
       runtime.local(),
       chrome.storage.session.get({ proxyCredentials: {} }),
-      chrome.proxy.settings.get({ incognito: Boolean(details.incognito) }),
+      chrome.proxy.settings.get({ incognito: Boolean(requestDetails.incognito) }),
     ])
       .then(([state, session, effective]) => {
         const profile = state.profiles.find((item) => item.id === state.activeProfileId);
         if (!profile || !proxyControlMatches(effective, state.activeFingerprint)) { callback({}); return; }
-        const credentials = profile && session.proxyCredentials?.[profile.id];
+        const stored = session as { proxyCredentials: Record<string, SessionCredentials> };
+        const credentials = stored.proxyCredentials?.[profile.id];
         const attemptKey = `${details.requestId}:${profile?.id || "none"}`;
         const attempts = authAttempts.get(attemptKey) || 0;
         const authCredentials = credentialsForProxyChallenge(details, profile, credentials, attempts);
@@ -98,7 +120,7 @@ chrome.webRequest.onAuthRequired.addListener(
   ["asyncBlocking"],
 );
 
-const clearAuthAttempt = (details) => {
+const clearAuthAttempt = (details: chrome.webRequest.OnCompletedDetails | chrome.webRequest.OnErrorOccurredDetails): void => {
   for (const key of authAttempts.keys()) if (key.startsWith(`${details.requestId}:`)) authAttempts.delete(key);
 };
 chrome.webRequest.onCompleted.addListener(clearAuthAttempt, { urls: ["<all_urls>"] });
@@ -114,7 +136,7 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   await refreshAction();
 });
 
-function createDefaultProfile() {
+function createDefaultProfile(): ProxyProfile {
   return {
     id: crypto.randomUUID(),
     name: "Local proxy",
