@@ -33,7 +33,8 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(htmlWithoutBreakHints, /手元に、置いておく。/);
   assert.match(htmlWithoutBreakHints, /使う場所に合わせた、3つのtemoto。/);
   assert.match(html, /temoto for macOS/);
-  assert.equal(html.match(/class="macAppIcon" aria-hidden="true"/g)?.length, 3);
+  assert.equal(html.match(/class="macAppIcon" aria-hidden="true"/g)?.length, 2);
+  assert.match(html, /class="menuBarIcon" aria-hidden="true"/);
   assert.match(html, /temoto for Chrome/);
   assert.match(html, /temoto Proxy/);
   assert.match(html, /v1\.1\.4/);
@@ -80,6 +81,12 @@ test("faviconは完成済みのmacOSアプリアイコンを使う", () => {
   const favicon = readFileSync(new URL("../public/favicon.png", import.meta.url));
   const appIcon = readFileSync(new URL("../../Assets/ShelfDrop.png", import.meta.url));
   assert.deepEqual(favicon, appIcon);
+});
+
+test("メニューバー表示は完成済みのテンプレートアイコンを使う", () => {
+  const siteIcon = readFileSync(new URL("../public/menu-bar-template.svg", import.meta.url));
+  const appIcon = readFileSync(new URL("../../Assets/MenuBarTemplate.svg", import.meta.url));
+  assert.deepEqual(siteIcon, appIcon);
 });
 
 test("OG画像は1200x630のPNGである", () => {
