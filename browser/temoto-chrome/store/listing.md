@@ -85,7 +85,7 @@ No account or credentials are required.
 
 ## Submission checklist
 
-- [x] Reserve the store item with the `0.0.0.1` bootstrap ZIP and record Item ID `ogimdkhanpjiiaeoofecaolkcadjdoao` and its public key.
+- [x] Retain the existing published store item and record Item ID `gcncgknjklghkoeiapcbdghodepnllid` and its public key.
 - [ ] Verify all six tools in the current stable Google Chrome release, not only another Chromium browser.
 - [ ] Run `npm test`, `npm run build`, `npm run test:sites`, and `npm run package`.
 - [ ] Upload the ZIP from `release/`; confirm `manifest.json` is at the ZIP root.

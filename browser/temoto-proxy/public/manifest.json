@@ -14,7 +14,7 @@
   ],
   "host_permissions": ["<all_urls>"],
   "externally_connectable": {
-    "ids": ["ogimdkhanpjiiaeoofecaolkcadjdoao"]
+    "ids": ["gcncgknjklghkoeiapcbdghodepnllid"]
   },
   "background": {
     "service_worker": "service-worker.js",

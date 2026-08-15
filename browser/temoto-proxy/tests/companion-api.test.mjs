@@ -26,7 +26,7 @@ const state = {
 };
 
 test("the companion allowlist uses the reserved temoto for Chrome store identity", () => {
-  assert.equal(TEMOTO_FOR_CHROME_EXTENSION_ID, "ogimdkhanpjiiaeoofecaolkcadjdoao");
+  assert.equal(TEMOTO_FOR_CHROME_EXTENSION_ID, "gcncgknjklghkoeiapcbdghodepnllid");
 });
 
 test("companion summaries expose status and profile identity without configuration or secrets", () => {
