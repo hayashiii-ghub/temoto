@@ -31,9 +31,10 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(html, /<title>temoto — 手元に、置いておく。<\/title>/);
   assert.match(html, /<wbr\s*\/?/);
   assert.match(htmlWithoutBreakHints, /手元に、置いておく。/);
-  assert.match(htmlWithoutBreakHints, /使う場所に合わせた、2つのtemoto。/);
+  assert.match(htmlWithoutBreakHints, /使う場所に合わせた、3つのtemoto。/);
   assert.match(html, /temoto for macOS/);
   assert.match(html, /temoto for Chrome/);
+  assert.match(html, /temoto Proxy/);
   assert.match(html, /v1\.1\.3/);
   assert.match(html, /0\.1\.7/);
   assert.match(html, /Option \+ Tab/);
@@ -43,10 +44,12 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(htmlWithoutBreakHints, /DMGからインストール/);
   assert.match(htmlWithoutBreakHints, /一行で導入・更新/);
   assert.match(htmlWithoutBreakHints, /クリップボードを自動で監視することはありません/);
-  assert.match(htmlWithoutBreakHints, /Chrome Web Storeへの公開は準備中です/);
-  assert.match(htmlWithoutBreakHints, /公開の準備中/);
+  assert.match(htmlWithoutBreakHints, /Chrome Web Storeへ提出済みで、現在審査中です/);
+  assert.match(htmlWithoutBreakHints, /ストアで審査中/);
+  assert.match(htmlWithoutBreakHints, /接続先を、見えるプロファイルに。/);
+  assert.match(htmlWithoutBreakHints, /認証パスワードはブラウザのセッション中だけ保持します/);
   assert.match(html, /temotoMark/);
-  assert.match(html, /scale\(1\.49\)/);
+  assert.match(html, /scale\(1\.68\)/);
   assert.match(html, /rotate\(30 512 400\)/);
   assert.match(html, /rotate\(30 512 600\)/);
   assert.match(html, /chromeMark/);
@@ -69,6 +72,7 @@ test("公開用メタデータと主要リンクを含む", async () => {
   assert.match(html, /rel="icon" href="https:\/\/temoto\.haygsiiii\.chatgpt\.site\/favicon\.png" type="image\/png"/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/releases\/latest\/download\/temoto-macos\.dmg/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/tree\/main\/browser\/temoto-chrome/);
+  assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/tree\/main\/browser\/temoto-proxy/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto/);
   assert.match(html, /class="navGitHub"[^>]*aria-label="GitHub"/);
 });

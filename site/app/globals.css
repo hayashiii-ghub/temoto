@@ -29,7 +29,7 @@ button { font: inherit; }
 .navGitHub { margin-left: 38px; min-width: 118px; height: 39px; padding: 0 16px; border: 1px solid var(--line); border-radius: 999px; display: flex; align-items: center; justify-content: space-between; font: 500 11px var(--font-ibm-plex-mono); text-transform: uppercase; letter-spacing: .06em; transition: background .2s ease, border-color .2s ease; }
 .navGitHub:hover { background: rgba(255,255,255,.07); border-color: var(--line-strong); }
 .navGitHub i { font-style: normal; font-size: 14px; }
-#macos, #chrome, #products { scroll-margin-top: 28px; }
+#macos, #chrome, #proxy, #products { scroll-margin-top: 28px; }
 
 .hero { min-height: 760px; height: calc(100svh - 88px); max-height: 940px; display: grid; grid-template-columns: minmax(0, .9fr) minmax(520px, 1.1fr); align-items: center; gap: clamp(46px, 7vw, 110px); padding-block: 62px 74px; }
 .heroCopy { position: relative; z-index: 2; }
@@ -117,7 +117,39 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .chromeCell small { position: absolute; top: 10px; right: 10px; min-height: 18px; padding: 0 6px; display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,.105); border-radius: 999px; color: #a7a7a4; font: 500 7px var(--font-ibm-plex-mono); }
 .chromeToolIcon { width: 42px; height: 42px; display: block; color: #ededeb; }
 
-.productPick { margin-top: 76px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.proxyScene { width: 100%; max-width: min(620px, calc(100vw - 32px)); min-width: 0; margin-inline: auto; }
+.proxyWindow { overflow: hidden; border: 1px solid rgba(255,255,255,.14); border-radius: 18px; background: #0d0d0d; box-shadow: 0 45px 100px rgba(0,0,0,.55); }
+.proxyTopbar { min-height: 54px; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.1); }
+.proxyTopbar strong { font-size: 14px; font-weight: 600; }
+.proxyTopbar strong span { color: #9974f8; font-weight: 500; }
+.proxyTopbar small { color: #777774; font: 500 7px var(--font-ibm-plex-mono); letter-spacing: .12em; }
+.proxyBody { min-height: 390px; display: grid; grid-template-columns: 164px 1fr; }
+.proxyBody aside { padding: 18px 10px; border-right: 1px solid rgba(255,255,255,.1); background: #111; }
+.proxyBody aside > span { padding: 0 10px; color: #666663; font: 500 7px var(--font-ibm-plex-mono); letter-spacing: .14em; }
+.proxyProfile { margin-top: 14px; padding: 13px 10px 13px 24px; position: relative; display: grid; gap: 4px; border: 1px solid transparent; border-radius: 9px; color: #a2a29f; }
+.proxyProfile i { position: absolute; left: 10px; top: 17px; width: 6px; height: 6px; border-radius: 50%; background: #555; }
+.proxyProfile strong { font-size: 10px; font-weight: 600; }
+.proxyProfile small { font: 400 7px var(--font-ibm-plex-mono); }
+.proxyProfile.isActive { border-color: rgba(153,116,248,.28); background: rgba(153,116,248,.09); color: #eee; }
+.proxyProfile.isActive i { background: #9974f8; box-shadow: 0 0 0 3px rgba(153,116,248,.15); }
+.proxySettings { min-width: 0; padding: 28px; position: relative; }
+.proxySettings > p, .proxyBypass > span { margin: 0; color: #9974f8; font: 500 7px var(--font-ibm-plex-mono); letter-spacing: .14em; }
+.proxySettings h3 { margin: 10px 0 24px; font-size: 24px; font-weight: 500; letter-spacing: -.05em; }
+.proxyTabs { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid rgba(255,255,255,.1); }
+.proxyTabs > * { min-width: 0; padding: 12px 10px; border-right: 1px solid rgba(255,255,255,.1); color: #777774; font-size: 8px; font-weight: 500; }
+.proxyTabs > *:last-child { border-right: 0; }
+.proxyTabs strong { background: rgba(153,116,248,.16); color: #d8ccff; }
+.proxySettings dl { margin: 16px 0 0; display: grid; grid-template-columns: .7fr 2fr .7fr; border-block: 1px solid rgba(255,255,255,.1); }
+.proxySettings dl div { padding: 10px; border-right: 1px solid rgba(255,255,255,.1); }
+.proxySettings dl div:last-child { border-right: 0; }
+.proxySettings dt { color: #666663; font: 500 6px var(--font-ibm-plex-mono); letter-spacing: .12em; }
+.proxySettings dd { margin: 8px 0 0; color: #ddd; font: 500 9px var(--font-ibm-plex-mono); }
+.proxyBypass { margin-top: 18px; display: grid; gap: 9px; }
+.proxyBypass > span { color: #666663; }
+.proxyBypass code { color: #aaa; font: 400 8px/1.65 var(--font-ibm-plex-mono); }
+.proxySettings button { position: absolute; right: 28px; bottom: 24px; min-height: 32px; padding: 0 14px; border: 0; border-radius: 8px; background: #9974f8; color: #0d0d0d; font: 600 8px var(--font-ibm-plex-mono); pointer-events: none; }
+
+.productPick { margin-top: 76px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .productCard { min-height: 420px; padding: 28px; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,.09); border-radius: 28px; background: var(--panel); transition: border-color .2s ease, background .2s ease, transform .2s ease; }
 .productCard:hover { border-color: rgba(255,255,255,.2); background: #181818; transform: translateY(-2px); }
 .productMeta { display: flex; justify-content: space-between; color: #858582; font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .11em; }
@@ -131,7 +163,9 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 
 .productBlock { border-top: 1px solid rgba(255,255,255,.075); }
 .productBlock.isChrome { background: #0b0b0b; }
+.productBlock.isProxy { background: #0e0e0e; }
 .productBlock.isChrome .installCard { min-height: 420px; }
+.productBlock.isProxy .installCard { min-height: 420px; }
 .productHero { display: grid; grid-template-columns: minmax(0, .9fr) minmax(520px, 1.1fr); align-items: center; gap: clamp(46px, 7vw, 110px); padding-block: 120px 40px; }
 .productBlock .section { padding-top: 88px; }
 
@@ -313,6 +347,9 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
   .productCard { min-height: 0; padding: 22px; }
   .productVisual { min-height: 88px; }
   .hubScene { width: 100%; }
+  .proxyBody { grid-template-columns: 112px 1fr; }
+  .proxySettings { padding: 20px; }
+  .proxySettings button { right: 20px; bottom: 18px; }
   .sectionHeading > p:last-child, .workflowIntro > p, .installHeading > p:last-child { font-size: 13px; }
   .capabilityGrid, .installOptions { margin-top: 52px; }
   .capabilityCard { min-height: 420px; padding: 21px 20px 25px; border-radius: 22px; }
@@ -352,5 +389,5 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .appShelf, .shortcutTag, .chromePopup, .locationCard { backdrop-filter: none; -webkit-backdrop-filter: none; background: #242424; }
+  .appShelf, .shortcutTag, .chromePopup, .proxyWindow, .locationCard { backdrop-filter: none; -webkit-backdrop-filter: none; background: #242424; }
 }
