@@ -21,25 +21,19 @@ const filename = storeBootstrap
   : `temoto-for-chrome-v${archiveVersion}.zip`;
 const archivePath = resolve(releaseRoot, filename);
 rmSync(archivePath, { force: true });
-let temporaryRoot = null;
-let archiveRoot = buildRoot;
-
-if (storeBootstrap) {
-  temporaryRoot = mkdtempSync(resolve(tmpdir(), "temoto-chrome-store-bootstrap-"));
-  archiveRoot = resolve(temporaryRoot, "client");
-  cpSync(buildRoot, archiveRoot, { recursive: true });
-  writeFileSync(
-    resolve(archiveRoot, "manifest.json"),
-    `${JSON.stringify({ ...manifest, version: archiveVersion }, null, 2)}\n`,
-  );
-}
+const temporaryRoot = mkdtempSync(resolve(tmpdir(), "temoto-chrome-package-"));
+const archiveRoot = resolve(temporaryRoot, "client");
+const archiveManifest = { ...manifest, version: archiveVersion };
+delete archiveManifest.key;
+cpSync(buildRoot, archiveRoot, { recursive: true });
+writeFileSync(resolve(archiveRoot, "manifest.json"), `${JSON.stringify(archiveManifest, null, 2)}\n`);
 
 const zip = spawnSync("zip", ["-qr", archivePath, "."], {
   cwd: archiveRoot,
   encoding: "utf8",
 });
 
-if (temporaryRoot) rmSync(temporaryRoot, { recursive: true, force: true });
+rmSync(temporaryRoot, { recursive: true, force: true });
 
 if (zip.status !== 0) {
   throw new Error(zip.stderr || "Could not create the extension ZIP");
@@ -50,8 +44,9 @@ if (entries.status !== 0 || !entries.stdout.split("\n").includes("manifest.json"
   throw new Error("Packaged ZIP does not contain manifest.json at its root");
 }
 const packagedManifest = spawnSync("unzip", ["-p", archivePath, "manifest.json"], { encoding: "utf8" });
-if (packagedManifest.status !== 0 || JSON.parse(packagedManifest.stdout).version !== archiveVersion) {
-  throw new Error(`Packaged ZIP does not contain manifest version ${archiveVersion}`);
+const packagedManifestJson = packagedManifest.status === 0 ? JSON.parse(packagedManifest.stdout) : null;
+if (!packagedManifestJson || packagedManifestJson.version !== archiveVersion || "key" in packagedManifestJson) {
+  throw new Error(`Packaged ZIP must contain manifest version ${archiveVersion} without a key field`);
 }
 
 console.log(`Created release/${filename}`);

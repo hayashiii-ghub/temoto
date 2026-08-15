@@ -50,3 +50,5 @@ Create the Chrome Web Store ZIP:
 ```sh
 npm run package
 ```
+
+The Web Store ZIP omits the development-only manifest `key`; unpacked builds retain it for a stable local ID.
