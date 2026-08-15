@@ -282,7 +282,7 @@ function TransferVisual() {
     <div className="transferVisual" aria-hidden="true">
       <div className="transferNode"><FileMark kind="file" /><span>Finder</span></div>
       <div className="transferLine"><i /><i /></div>
-      <div className="transferShelf"><MacAppIcon /><span>3</span></div>
+      <div className="transferAppIcon"><MacAppIcon /></div>
       <div className="transferLine"><i /><i /></div>
       <div className="transferNode destination"><FileMark kind="folder" /><span>Destination</span></div>
     </div>
