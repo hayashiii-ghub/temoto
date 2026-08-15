@@ -2,24 +2,18 @@ import AppKit
 
 enum ShelfIcon {
     static func templateImage() -> NSImage {
-        loadTemplateImage(withExtension: "png", pointSize: 18)
+        loadTemplateImage(pointSize: 20)
     }
 
     static func vectorTemplateImage() -> NSImage {
-        loadTemplateImage(withExtension: "svg", pointSize: 16)
+        loadTemplateImage(pointSize: 16)
     }
 
-    private static func loadTemplateImage(
-        withExtension fileExtension: String,
-        pointSize: CGFloat
-    ) -> NSImage {
+    private static func loadTemplateImage(pointSize: CGFloat) -> NSImage {
         guard
-            let url = Bundle.main.url(forResource: "MenuBarTemplate", withExtension: fileExtension),
+            let url = Bundle.main.url(forResource: "MenuBarTemplate", withExtension: "svg"),
             let image = NSImage(contentsOf: url)
         else {
-            if fileExtension != "png" {
-                return loadTemplateImage(withExtension: "png", pointSize: pointSize)
-            }
             return NSImage(systemSymbolName: "tray", accessibilityDescription: "temoto") ?? NSImage()
         }
 
