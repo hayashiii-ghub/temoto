@@ -33,7 +33,7 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(htmlWithoutBreakHints, /手元に、置いておく。/);
   assert.match(htmlWithoutBreakHints, /使う場所に合わせた、3つのtemoto。/);
   assert.match(html, /temoto for macOS/);
-  assert.match(html, /class="macAppIcon" aria-hidden="true"/);
+  assert.equal(html.match(/class="macAppIcon" aria-hidden="true"/g)?.length, 3);
   assert.match(html, /temoto for Chrome/);
   assert.match(html, /temoto Proxy/);
   assert.match(html, /v1\.1\.4/);
@@ -49,10 +49,7 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(htmlWithoutBreakHints, /ストアで審査中/);
   assert.match(htmlWithoutBreakHints, /接続先を、見えるプロファイルに。/);
   assert.match(htmlWithoutBreakHints, /認証パスワードはブラウザのセッション中だけ保持します/);
-  assert.match(html, /temotoMark/);
-  assert.match(html, /scale\(1\.68\)/);
-  assert.match(html, /rotate\(30 512 400\)/);
-  assert.match(html, /rotate\(30 512 600\)/);
+  assert.doesNotMatch(html, /temotoMark/);
   assert.match(html, /chromeMark/);
   assert.match(html, /chromeToolIcon/);
   assert.match(html, /M222,67\.34/);
