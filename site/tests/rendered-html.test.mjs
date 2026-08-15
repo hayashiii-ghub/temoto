@@ -34,6 +34,8 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(htmlWithoutBreakHints, /使う場所に合わせた、3つのtemoto。/);
   assert.match(html, /temoto for macOS/);
   assert.equal(html.match(/class="macAppIcon" aria-hidden="true"/g)?.length, 2);
+  assert.match(html, /class="transferAppIcon"/);
+  assert.doesNotMatch(html, /transferShelf/);
   assert.match(html, /class="menuBarIcon" aria-hidden="true"/);
   assert.match(html, /temoto for Chrome/);
   assert.match(html, /temoto Proxy/);
