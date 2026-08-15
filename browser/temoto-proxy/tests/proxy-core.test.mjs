@@ -12,7 +12,7 @@ import {
   profileToProxyConfig,
   proxyControlMatches,
   statusFromEffectiveState,
-} from "../public/proxy-core.js";
+} from "../dist/client/proxy-core.js";
 
 test("fixed profiles compile to a single Chrome proxy without mutating input", () => {
   const profile = createProfile({ name: "Charles", bypassList: ["<local>", "*.internal.test"] });

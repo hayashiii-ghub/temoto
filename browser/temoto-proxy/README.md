@@ -32,9 +32,10 @@ See [PRIVACY.md](./PRIVACY.md) for the complete policy.
 
 ## Development
 
+The proxy domain model and companion message contract live in `src/` as TypeScript. The build emits browser-ready ES modules into `dist/client` alongside the static extension files from `public/`.
+
 ```sh
-npm test
-npm run build
+npm run check
 ```
 
 Load `dist/client` from `chrome://extensions` as an unpacked extension.

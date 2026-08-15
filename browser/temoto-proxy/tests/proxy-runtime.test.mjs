@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createProfile, profileToProxyConfig } from "../public/proxy-core.js";
-import { createProxyRuntime } from "../public/proxy-runtime.js";
+import { createProfile, profileToProxyConfig } from "../dist/client/proxy-core.js";
+import { createProxyRuntime } from "../dist/client/proxy-runtime.js";
 
 function storageArea(initial = {}) {
   const data = structuredClone(initial);
