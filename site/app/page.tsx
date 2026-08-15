@@ -5,6 +5,7 @@ const downloadUrl =
   "https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.dmg";
 const repositoryUrl = "https://github.com/hayashiii-ghub/temoto";
 const chromeSourceUrl = `${repositoryUrl}/tree/main/browser/temoto-chrome`;
+const proxySourceUrl = `${repositoryUrl}/tree/main/browser/temoto-proxy`;
 const updateCommand =
   "curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/install_latest.sh | bash";
 
@@ -68,9 +69,9 @@ const chromeTools = [
 function TemotoMark({ className }: { className?: string }) {
   return (
     <svg className={className ? `temotoMark ${className}` : "temotoMark"} viewBox="0 0 1024 1024" aria-hidden="true">
-      <g transform="translate(512 512) scale(1.49) translate(-512 -512)" fill="currentColor">
-        <rect x="302" y="335" width="420" height="130" rx="65" transform="rotate(30 512 400)" />
-        <rect x="302" y="535" width="420" height="130" rx="65" transform="rotate(30 512 600)" />
+      <g transform="translate(512 512) scale(1.68) translate(-512 -512)" fill="currentColor">
+        <rect x="302" y="335" width="420" height="130" transform="rotate(30 512 400)" />
+        <rect x="302" y="535" width="420" height="130" transform="rotate(30 512 600)" />
       </g>
     </svg>
   );
@@ -79,7 +80,7 @@ function TemotoMark({ className }: { className?: string }) {
 function ChromeMark({ className }: { className?: string }) {
   return (
     <svg className={className ? `chromeMark ${className}` : "chromeMark"} viewBox="0 0 1024 1024" aria-hidden="true">
-      <g transform="translate(512 512) scale(1.49) translate(-512 -512)" fill="#9974f8">
+      <g transform="translate(512 512) scale(1.68) translate(-512 -512)" fill="#9974f8">
         <rect x="302" y="335" width="420" height="130" transform="rotate(30 512 400)" />
         <rect x="302" y="535" width="420" height="130" transform="rotate(30 512 600)" />
       </g>
@@ -241,6 +242,44 @@ function HubScene() {
   );
 }
 
+const proxyFeatures = [
+  { name: "Named profiles", text: "HTTP、HTTPS、SOCKS4、SOCKS5の接続先を、名前付きプロファイルとして保存します。" },
+  { name: "Domain routing", text: "選んだドメインだけをプロキシへ通すか、直接接続へ切り替えます。" },
+  { name: "PAC support", text: "固定プロキシ、生成ルール、既存PACスクリプトを用途に合わせて使い分けます。" },
+  { name: "Safe switching", text: "適用前に競合を検知し、終了時にはtemotoの設定だけを安全に解除します。" },
+  { name: "Session credentials", text: "認証パスワードはブラウザのセッション中だけ保持し、書き出しには含めません。" },
+  { name: "Team profiles", text: "認証情報を除いたプロファイルをJSONで読み込み・書き出しできます。" },
+] as const;
+
+function ProxyPreview() {
+  return (
+    <div className="proxyScene" aria-label="temoto Proxyのプロファイル設定画面イメージ">
+      <div className="proxyWindow">
+        <div className="proxyTopbar"><strong>temoto <span>Proxy</span></strong><small>PROXY OFF</small></div>
+        <div className="proxyBody">
+          <aside>
+            <span>PROFILES</span>
+            <div className="proxyProfile isActive"><i /><strong>Local proxy</strong><small>HTTP · 127.0.0.1:8080</small></div>
+            <div className="proxyProfile"><i /><strong>Staging</strong><small>HTTPS · proxy.dev:443</small></div>
+          </aside>
+          <div className="proxySettings">
+            <p>PROFILE</p>
+            <h3>Local proxy</h3>
+            <div className="proxyTabs"><strong>Fixed proxy</strong><span>Domain routing</span><span>PAC</span></div>
+            <dl>
+              <div><dt>TYPE</dt><dd>HTTP</dd></div>
+              <div><dt>HOST</dt><dd>127.0.0.1</dd></div>
+              <div><dt>PORT</dt><dd>8080</dd></div>
+            </dl>
+            <div className="proxyBypass"><span>DIRECT CONNECTIONS</span><code>&lt;local&gt;<br />localhost<br />127.0.0.1</code></div>
+            <button type="button" tabIndex={-1}>Save &amp; activate</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function TransferVisual() {
   return (
     <div className="transferVisual" aria-hidden="true">
@@ -293,6 +332,7 @@ export default function Home() {
         <div className="navLinks">
           <a href="#macos">macOS</a>
           <a href="#chrome">Chrome</a>
+          <a href="#proxy">Proxy</a>
         </div>
         <a className="navGitHub" href={repositoryUrl} aria-label="GitHub"><span>GitHub</span><i aria-hidden="true">↗</i></a>
       </nav>
@@ -302,11 +342,12 @@ export default function Home() {
           <p className="eyebrow"><span /> KEEP IT CLOSE</p>
           <h1><JapaneseText>手元に、置いておく。</JapaneseText></h1>
           <p className="lead">
-            <JapaneseText>temotoは、作業の途中にあるものを近くに残すための小さな道具。Macではファイルとリンクの棚。Chromeでは、ページを試す6つの道具。</JapaneseText>
+            <JapaneseText>temotoは、作業の途中にあるものを近くに残すための小さな道具。Macではファイルとリンクの棚。Chromeでは、ページを試す道具と開発用プロキシ。</JapaneseText>
           </p>
           <div className="heroActions">
             <a className="button primary" href="#macos">macOS を見る <span aria-hidden="true">↓</span></a>
             <a className="button ghost" href="#chrome">Chrome を見る <span aria-hidden="true">↓</span></a>
+            <a className="button ghost" href="#proxy">Proxy を見る <span aria-hidden="true">↓</span></a>
           </div>
           <p className="requirements">Open source　·　No account　·　macOS / Chrome</p>
         </div>
@@ -319,7 +360,7 @@ export default function Home() {
           <dl>
             <div><dt>01</dt><dd>MACOS SHELF</dd></div>
             <div><dt>02</dt><dd>CHROME TOOLS</dd></div>
-            <div><dt>03</dt><dd>ZERO ACCOUNT</dd></div>
+            <div><dt>03</dt><dd>PROXY PROFILES</dd></div>
           </dl>
         </div>
       </section>
@@ -327,7 +368,7 @@ export default function Home() {
       <section className="section shell" id="products">
         <div className="sectionHeading">
           <p className="eyebrow"><span /> CHOOSE A TOOL</p>
-          <h2><JapaneseText>使う場所に合わせた、2つのtemoto。</JapaneseText></h2>
+          <h2><JapaneseText>使う場所に合わせた、3つのtemoto。</JapaneseText></h2>
           <p><JapaneseText>データも設定も共有しません。手元に残したいものが違うだけです。</JapaneseText></p>
         </div>
         <div className="productPick">
@@ -344,6 +385,13 @@ export default function Home() {
             <h3>temoto for Chrome</h3>
             <p><JapaneseText>試す道具を、タブのそばに。</JapaneseText></p>
             <small>Color Picker, Screenshot, Video Speed, Environments, Site Reset, Inspect</small>
+          </a>
+          <a className="productCard" href="#proxy">
+            <div className="productMeta"><span>PROXY FOR CHROME</span><em>1.0.0</em></div>
+            <div className="productVisual isChrome"><ChromeMark /></div>
+            <h3>temoto Proxy</h3>
+            <p><JapaneseText>接続先を、見えるプロファイルに。</JapaneseText></p>
+            <small>HTTP, HTTPS, SOCKS4, SOCKS5, Domain routing, PAC, Authentication</small>
           </a>
         </div>
       </section>
@@ -469,13 +517,13 @@ export default function Home() {
           <div className="installHeading">
             <p className="eyebrow"><span /> GET CHROME</p>
             <h2><JapaneseText>タブのそばに、6つの道具を。</JapaneseText></h2>
-            <p><JapaneseText>Chrome Web Storeへの公開は準備中です。いまはソースから中身を確認できます。</JapaneseText></p>
+            <p><JapaneseText>Chrome Web Storeへ提出済みで、現在審査中です。公開まではソースから中身を確認できます。</JapaneseText></p>
           </div>
           <div className="installOptions">
             <article className="installCard">
               <div className="installMeta"><span>CHROME WEB STORE</span><em>01</em></div>
-              <h3><JapaneseText>公開の準備中</JapaneseText></h3>
-              <p><JapaneseText>ストアへの提出はまだ完了していません。公開までのあいだ、インストール用のストアリンクは置きません。</JapaneseText></p>
+              <h3><JapaneseText>ストアで審査中</JapaneseText></h3>
+              <p><JapaneseText>バージョン0.1.7を提出済みです。公開が確認できたら、ここにインストール用リンクを追加します。</JapaneseText></p>
             </article>
             <article className="installCard">
               <div className="installMeta"><span>GITHUB</span><em>02</em></div>
@@ -491,12 +539,68 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="productBlock isProxy" id="proxy">
+        <div className="productHero shell">
+          <div className="heroCopy">
+            <p className="eyebrow"><span /> TEMOTO PROXY</p>
+            <h2><JapaneseText>接続先を、見えるプロファイルに。</JapaneseText></h2>
+            <p className="lead">
+              <JapaneseText>開発用プロキシの設定、切り替え、解除を名前付きプロファイルにまとめます。いまどの接続が有効かを常に見える状態にします。</JapaneseText>
+            </p>
+            <p className="requirements">1.0.0　·　Chrome 116+　·　English UI　·　No analytics</p>
+          </div>
+          <ProxyPreview />
+        </div>
+
+        <div className="section shell">
+          <div className="sectionHeading">
+            <p className="eyebrow"><span /> PROXY WORKSPACES</p>
+            <h2><JapaneseText>切り替える。確かめる。安全に戻す。</JapaneseText></h2>
+            <p><JapaneseText>プロキシ設定をブラウザの奥に隠さず、接続先、対象ドメイン、認証状態をひとつの画面で管理します。</JapaneseText></p>
+          </div>
+          <ol className="chromeToolList proxyFeatureList">
+            {proxyFeatures.map((feature, index) => (
+              <li key={feature.name}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <div><h3>{feature.name}</h3><p><JapaneseText>{feature.text}</JapaneseText></p></div>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="section installSection shell">
+          <div className="installHeading">
+            <p className="eyebrow"><span /> GET PROXY</p>
+            <h2><JapaneseText>プロキシ設定を、手元へ。</JapaneseText></h2>
+            <p><JapaneseText>Chrome Web Storeへ提出済みで、現在審査中です。公開までは実装とプライバシー方針をGitHubで確認できます。</JapaneseText></p>
+          </div>
+          <div className="installOptions">
+            <article className="installCard">
+              <div className="installMeta"><span>CHROME WEB STORE</span><em>01</em></div>
+              <h3><JapaneseText>ストアで審査中</JapaneseText></h3>
+              <p><JapaneseText>バージョン1.0.0を提出済みです。公開が確認できたら、ここにインストール用リンクを追加します。</JapaneseText></p>
+            </article>
+            <article className="installCard">
+              <div className="installMeta"><span>GITHUB</span><em>02</em></div>
+              <h3><JapaneseText>ソースを見る</JapaneseText></h3>
+              <p><JapaneseText>拡張の実装、権限の用途、プライバシー方針は、リポジトリの browser/temoto-proxy にあります。</JapaneseText></p>
+              <a className="button ghost full" href={proxySourceUrl}>GitHubでソースを見る <span aria-hidden="true">↗</span></a>
+            </article>
+          </div>
+          <div className="permissionNote">
+            <span>P</span>
+            <div><strong><JapaneseText>適用中のプロファイルと競合を、切り替える前に表示します。</JapaneseText></strong><p><JapaneseText>ページ内容を検査・送信せず、認証パスワードはブラウザのセッション中だけ保持します。</JapaneseText></p></div>
+          </div>
+        </div>
+      </section>
+
       <section className="finalCta shell">
         <p>Keep it close.</p>
         <h2><JapaneseText>手元の道具を、選ぶ。</JapaneseText></h2>
         <div className="finalActions">
           <a className="button primary" href={downloadUrl}>temoto for macOS <span aria-hidden="true">↘</span></a>
           <a className="button ghost" href={chromeSourceUrl}>temoto for Chrome <span aria-hidden="true">↗</span></a>
+          <a className="button ghost" href={proxySourceUrl}>temoto Proxy <span aria-hidden="true">↗</span></a>
         </div>
       </section>
 
@@ -508,6 +612,7 @@ export default function Home() {
           <a href={`${repositoryUrl}/issues`}>Issues</a>
           <a href="#macos">macOS</a>
           <a href="#chrome">Chrome</a>
+          <a href="#proxy">Proxy</a>
         </div>
       </footer>
     </main>
