@@ -77,6 +77,10 @@ function TemotoMark({ className }: { className?: string }) {
   );
 }
 
+function MacAppIcon() {
+  return <span className="macAppIcon" aria-hidden="true" />;
+}
+
 function ChromeMark({ className }: { className?: string }) {
   return (
     <svg className={className ? `chromeMark ${className}` : "chromeMark"} viewBox="0 0 1024 1024" aria-hidden="true">
@@ -339,7 +343,6 @@ export default function Home() {
 
       <section className="hero shell">
         <div className="heroCopy">
-          <p className="eyebrow"><span /> KEEP IT CLOSE</p>
           <h1><JapaneseText>手元に、置いておく。</JapaneseText></h1>
           <p className="lead">
             <JapaneseText>temotoは、作業の途中にあるものを近くに残すための小さな道具。Macではファイルとリンクの棚。Chromeでは、ページを試す道具と開発用プロキシ。</JapaneseText>
@@ -374,7 +377,7 @@ export default function Home() {
         <div className="productPick">
           <a className="productCard" href="#macos">
             <div className="productMeta"><span>FOR MACOS</span><em>v1.1.4</em></div>
-            <div className="productVisual"><TemotoMark /></div>
+            <div className="productVisual"><MacAppIcon /></div>
             <h3>temoto for macOS</h3>
             <p><JapaneseText>移動する前に、置いておく。</JapaneseText></p>
             <small><JapaneseText>ファイル、フォルダ、URL、テキストを、画面の上かメニューバーへ。</JapaneseText></small>

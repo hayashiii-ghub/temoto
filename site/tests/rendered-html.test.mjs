@@ -33,6 +33,7 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(htmlWithoutBreakHints, /手元に、置いておく。/);
   assert.match(htmlWithoutBreakHints, /使う場所に合わせた、3つのtemoto。/);
   assert.match(html, /temoto for macOS/);
+  assert.match(html, /class="macAppIcon" aria-hidden="true"/);
   assert.match(html, /temoto for Chrome/);
   assert.match(html, /temoto Proxy/);
   assert.match(html, /v1\.1\.4/);
@@ -59,6 +60,7 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(html, /M52\.44,36/);
   assert.match(html, /#9974f8/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
+  assert.doesNotMatch(html, /KEEP IT CLOSE/);
   assert.doesNotMatch(html, /chromeGlyph|fileMark-file|actionClipboard/);
   assert.doesNotMatch(html, /ShelfDrop|v1\.0\.0|ALWAYS ON TOP|FLOATING SHELF FOR MACOS/);
 });

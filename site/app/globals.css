@@ -155,6 +155,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .productMeta { display: flex; justify-content: space-between; color: #858582; font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .11em; }
 .productMeta em { font-style: normal; }
 .productVisual { flex: 1; min-height: 140px; display: grid; place-items: center; color: #d6d6d3; }
+.productVisual .macAppIcon { width: 112px; height: 112px; display: block; background: url("/favicon.png") center / contain no-repeat; }
 .productVisual .temotoMark { width: 98px; height: 98px; }
 .productVisual .chromeMark { width: 98px; height: 98px; }
 .productCard h3 { margin: 0; font-size: 28px; font-weight: 400; letter-spacing: -.045em; }
@@ -346,6 +347,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
   .productHero { padding-block: 72px 20px; }
   .productCard { min-height: 0; padding: 22px; }
   .productVisual { min-height: 88px; }
+  .productVisual .macAppIcon { width: 80px; height: 80px; }
   .hubScene { width: 100%; }
   .proxyBody { grid-template-columns: 112px 1fr; }
   .proxySettings { padding: 20px; }
