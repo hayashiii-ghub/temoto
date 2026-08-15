@@ -35,7 +35,7 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(html, /temoto for macOS/);
   assert.match(html, /temoto for Chrome/);
   assert.match(html, /temoto Proxy/);
-  assert.match(html, /v1\.1\.3/);
+  assert.match(html, /v1\.1\.4/);
   assert.match(html, /0\.1\.7/);
   assert.match(html, /Option \+ Tab/);
   assert.match(html, /Option \+ Shift \+ Tab/);

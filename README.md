@@ -1,135 +1,166 @@
 <p align="center">
-  <img src="Assets/ShelfDrop.png" width="160" alt="temoto app icon">
+  <img src="Assets/ShelfDrop.png" width="144" alt="temoto">
 </p>
 
 <h1 align="center">temoto</h1>
 
 <p align="center">
-  ファイル、フォルダ、リンク、テキストを一時的に置いておける、小さなmacOS用フローティングシェルフ。
+  作業の途中にあるものを、手元に残すための小さな道具。
+</p>
+
+<p align="center">
+  <a href="https://temoto.haygsiiii.chatgpt.site"><strong>Webサイト</strong></a>
+  ・
+  <a href="https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.dmg"><strong>Mac版をダウンロード</strong></a>
+  ・
+  <a href="https://github.com/hayashiii-ghub/temoto/releases/latest"><strong>リリースを見る</strong></a>
 </p>
 
 <p align="center">
   <a href="https://github.com/hayashiii-ghub/temoto/releases/latest"><img src="https://img.shields.io/github/v/release/hayashiii-ghub/temoto?display_name=tag&sort=semver" alt="Latest release"></a>
   <a href="https://github.com/hayashiii-ghub/temoto/actions/workflows/ci.yml"><img src="https://github.com/hayashiii-ghub/temoto/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
   <img src="https://img.shields.io/badge/macOS-26%2B-black" alt="macOS 26 or later">
-  <img src="https://img.shields.io/badge/Swift-5.9%2B-F05138" alt="Swift 5.9 or later">
+  <img src="https://img.shields.io/badge/Chrome-116%2B-4285F4" alt="Chrome 116 or later">
 </p>
 
-<p align="center">
-  <a href="https://temoto.haygsiiii.chatgpt.site"><strong>Webサイト</strong></a>
-  ・
-  <a href="https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.dmg"><strong>最新版をダウンロード</strong></a>
-</p>
+## 製品
 
-## temotoとは
+temotoは、macOSとChromeで使える3つの製品で構成されています。アカウントや分析サービスは使用せず、データと設定は各端末内で処理します。
 
-temotoは、作業中のファイルを一時的にまとめて置くためのmacOSアプリです。Finderから別のアプリへ複数のファイルを移す時や、離れたフォルダ間でファイルを整理する時に、常に手前に表示される小さな棚として使えます。
+| 製品 | 用途 | 公開状況 |
+| --- | --- | --- |
+| **temoto for macOS** | ファイル、フォルダ、URL、テキストを一時的に置く棚 | [v1.1.4](https://github.com/hayashiii-ghub/temoto/releases/tag/v1.1.4) |
+| **temoto for Chrome** | ページを調べる6つの開発ツール | Chrome Web Storeで審査中（0.1.7） |
+| **temoto Proxy** | Chromeのプロキシ設定をプロファイルとして管理 | Chrome Web Storeで審査中（1.0.0） |
 
-Apple IDやMac App Storeを使わず、GitHub Releasesから直接ダウンロードできます。Apple Silicon MacとIntel Macの両方に対応しています。
+Chrome拡張は審査通過後にWeb Storeへのリンクを追加します。現在は、このリポジトリからソースとプライバシー方針を確認できます。
 
-## 主な機能
+## temoto for macOS
 
-| 機能 | 操作 |
+ファイルやリンクを移動する前に、一時的に置いておけるフローティングシェルフです。画面上にピン留めするか、メニューバーへ収納して使います。Apple Silicon MacとIntel Macの両方に対応しています。
+
+### 主な操作
+
+| 操作 | 方法 |
 | --- | --- |
-| Finderの選択項目を追加 | Finderで選択して`Option + Tab` |
-| 棚の表示・非表示を切り替える | メニューバーアイコンをクリック、または`Option + Shift + Tab` |
-| 棚の表示場所を切り替える | 棚上部のピンボタン、またはメニューバーアイコンを右クリックして`Shelf Location`を選択 |
-| コピー中のテキストを保存 | フッターのクリップボードアイコン、またはメニューバーの`Add Clipboard Text` |
-| 複数項目をまとめて取り出す | フッター左端のスタックアイコンをドラッグ |
-| 項目を個別に取り出す | 棚の行をFinderや他のアプリへドラッグ |
-| コピー・移動・ZIP化 | フッターの各アイコンから実行 |
-| 開く・Finderで表示・コピー | 各行のボタンまたはコンテキストメニュー |
-| 棚を移動 | ヘッダーをそのままドラッグ |
-| 棚を隠す | `×`ボタンまたは`Escape` |
+| Finderの選択項目を棚へ追加 | `Option + Tab` |
+| 棚の表示・非表示を切り替え | `Option + Shift + Tab`またはメニューバーアイコン |
+| ファイルを取り出す | 棚の項目をFinderや別のアプリへドラッグ |
+| 複数項目をまとめて取り出す | フッター左端のスタックをドラッグ |
+| コピー・移動・ZIP化 | フッターの各アクションを選択 |
+| コピーしたテキストを追加 | クリップボードアクションを明示的に実行 |
+| 棚の表示場所を変更 | ピンボタンまたは`Shelf Location`メニュー |
 
-棚は画面上にピン留めすると、閉じるまでほかのウィンドウより手前に残ります。メニューバーへ収納すると、アイコン直下に開き、外側をクリックすると閉じます。選択した表示場所は次回起動時も維持されます。
+ファイル拡張子による制限はありません。クリップボードは自動監視せず、利用者が追加操作を行った時だけテキストを取り込みます。
 
-メニューバーアイコンを右クリックするか、棚上部の`…`ボタンを押すと、追加・書き出し・更新・終了などのメニューを開けます。棚内でのファイル名変更や並べ替えは行いません。
+### インストール
 
-## 対応する項目
+1. [最新のDMGをダウンロード](https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.dmg)します。
+2. `temoto.app`を`Applications`へドラッグします。
+3. `Applications`から`temoto.app`を開きます。
 
-- 通常のファイルとフォルダ
-- CSV、TXT、Markdown、HTML、JSON、PDF、SVG
-- PNG、JPEGなどの画像
-- 独自拡張子や拡張子のないファイル
-- URLとプレーンテキスト
-
-クリップボードは自動監視しません。保存したいテキストをコピーした後、棚下部のクリップボードアイコンまたはメニューバーの`Add Clipboard Text`を明示的に実行した時だけ追加します。
-
-ファイル拡張子による制限は設けていません。アプリからファイル本体のデータだけが渡された場合も、元のファイル名と拡張子を保って一時保存します。
-
-## インストール
-
-### DMGからインストール
-
-1. [最新の`temoto-macos.dmg`をダウンロード](https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.dmg)します。
-2. DMGを開き、`temoto.app`を`Applications`へドラッグします。
-3. `Applications`フォルダから`temoto.app`を開きます。
-
-### ターミナルからインストール/更新
+ターミナルからインストールまたは更新する場合は、同じコマンドを使用します。
 
 ```sh
 curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/install_latest.sh | bash
 ```
 
-既存の`temoto.app`を最新版に入れ替えます。旧名の`ShelfDrop.app`がある場合も同じ場所へ`temoto.app`として移行します。まだ入っていない場合は、書き込み可能なら`/Applications`、そうでなければ`~/Applications`にインストールします。
+既存の`temoto.app`を検出して最新版へ入れ替えます。旧名の`ShelfDrop.app`がある場合も`temoto.app`へ移行します。
 
 > [!NOTE]
-> Apple Developer Program未登録のため、現在の配布版はad hoc署名です。初回起動時にmacOSの警告が表示される場合があります。
+> 現在の配布版はad hoc署名です。初回起動時にmacOSの警告が表示される場合があります。
 
-## 更新
+### macOSの権限
 
-ターミナルから最新版へ入れ替える場合は、インストールと同じコマンドを使います。
+`Option + Tab`でFinderの選択項目を取得するため、初回利用時にFinderの操作許可を求めます。ファイル、リンク、画像、テキストはドラッグ＆ドロップでも追加できます。
 
-```sh
-curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/install_latest.sh | bash
-```
+## temoto for Chrome
 
-`/Applications`または`~/Applications`にある既存の`temoto.app`を検出して更新します。旧名の`ShelfDrop.app`も自動的に移行されます。メニューバーアイコンを右クリックして`Download Latest Version...`を選ぶと、最新版のダウンロードを開始することもできます。
+開いているページで使う6つの開発ツールを、1つのポップアップにまとめたChrome拡張です。
 
-## 権限
+- 画面上の色を取得してHEX値をコピー
+- 選択範囲、表示領域、ページ全体をPNGでキャプチャ
+- HTML5動画の再生速度を変更
+- Local、Staging、Production間を同じパスのまま移動
+- 現在のサイトのキャッシュ、Cookie、ストレージ、Service Workerを明示操作で消去
+- 要素の寸法を確認し、CSSセレクタをコピー
 
-`Option + Tab`でFinderの選択項目を取得するため、初回利用時にmacOSからFinderの操作許可を求められます。Finderのファイルとフォルダは`Option + Tab`で追加し、リンク・画像・テキストはドラッグ＆ドロップでも追加できます。
+Video SpeedのショートカットはHTTP(S)ページ上で動作しますが、入力欄と修飾キーの組み合わせを無視し、キー入力を記録しません。ページデータを外部サーバーへ送信せず、設定はChromeの拡張ストレージへ保存します。
+
+詳細は[Chrome版README](browser/temoto-chrome/README.md)と[プライバシー方針](browser/temoto-chrome/PRIVACY.md)を参照してください。
+
+## temoto Proxy
+
+Chromeのプロキシ設定を、名前付きの開発用プロファイルとして管理する拡張です。ブラウザ全体へ影響する`proxy`権限を分離するため、temoto for Chromeとは別の拡張として提供します。
+
+- HTTP、HTTPS、SOCKS4、SOCKS5プロファイル
+- ドメインごとのプロキシ・直接接続ルール
+- 固定プロキシ、生成ルール、PAC設定
+- 競合するポリシーや拡張機能の検出
+- セッション内だけに保持するプロキシ認証情報
+- 認証情報を含めないプロファイルのインポート・エクスポート
+- temotoの設定だけを解除する安全な`Off`
+
+閲覧履歴、ページURL、通信内容、分析データを収集しません。プロファイルは`chrome.storage.local`へ、パスワードはブラウザセッション中だけ`chrome.storage.session`へ保存します。
+
+詳細は[Proxy版README](browser/temoto-proxy/README.md)と[プライバシー方針](browser/temoto-proxy/PRIVACY.md)を参照してください。
 
 ## 開発
 
-必要な環境:
+各製品は独立してビルドします。生成物と依存関係のディレクトリはGitで管理しません。
 
-- macOS 26以降
-- Xcode Command Line Tools
-- Swift 5.9以降
+### macOS
 
-ビルドして起動:
+必要な環境はmacOS 26以降、Xcode Command Line Tools、Swift 5.9以降です。
 
 ```sh
 ./script/build_and_run.sh
-```
-
-テストとスクリプト検証:
-
-```sh
 make check
+make package VERSION=v1.1.4
 ```
 
-配布用DMGとZIPを作成:
+### temoto for Chrome
 
 ```sh
-make package VERSION=v1.0.0
+cd browser/temoto-chrome
+npm install
+npm test
+npm run build
+npm run test:sites
 ```
 
-Release workflowでnotarized buildを作成するには、GitHub Secretsに`APPLE_DEVELOPER_ID_CERTIFICATE_BASE64`、`APPLE_DEVELOPER_ID_CERTIFICATE_PASSWORD`、`APPLE_NOTARY_KEY_BASE64`、`APPLE_NOTARY_KEY_ID`、`APPLE_NOTARY_ISSUER_ID`を設定します。
+ローカルで確認する場合は、ビルド後に`browser/temoto-chrome/dist/client`を`chrome://extensions`から読み込みます。
 
-主なディレクトリ:
+### temoto Proxy
+
+```sh
+cd browser/temoto-proxy
+npm install
+npm run check
+```
+
+ローカルで確認する場合は、ビルド後に`browser/temoto-proxy/dist/client`を`chrome://extensions`から読み込みます。
+
+### Webサイト
+
+```sh
+cd site
+npm install
+npm run lint
+npm test
+```
+
+## リポジトリ構成
 
 ```text
-Sources/ShelfDrop/          macOSアプリ本体
+Sources/ShelfDrop/          macOSアプリ
 Tests/ShelfDropTests/       macOSアプリのテスト
-Assets/                     macOSアプリ・メニューバーアイコン
-script/                     macOSアプリのビルド、配布、更新スクリプト
-browser/temoto-chrome/      Chrome拡張
-browser/temoto-proxy/       Chrome用プロキシ拡張
+Assets/                     macOSアプリとブランドアセット
+script/                     macOSアプリのビルド・配布スクリプト
+browser/temoto-chrome/      temoto for Chrome
+browser/temoto-proxy/       temoto Proxy
 site/                       製品Webサイト
-.github/                    CI、リリース、Issue・PRテンプレート
+.github/                    CI・リリースワークフロー
 ```
 
-このリポジトリには、macOSアプリ、Chrome拡張、プロキシ拡張、製品Webサイトの4つの独立したプロジェクトが含まれます。各ブラウザ拡張とWebサイトの開発・検証コマンドは、それぞれのディレクトリにある`package.json`を参照してください。
+`ShelfDrop`というディレクトリ名とシンボル名は、macOSアプリの内部名として残しています。利用者向けの製品名は`temoto`です。
