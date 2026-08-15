@@ -127,8 +127,9 @@ Tests/ShelfDropTests/       macOSアプリのテスト
 Assets/                     macOSアプリ・メニューバーアイコン
 script/                     macOSアプリのビルド、配布、更新スクリプト
 browser/temoto-chrome/      Chrome拡張
+browser/temoto-proxy/       Chrome用プロキシ拡張
 site/                       製品Webサイト
 .github/                    CI、リリース、Issue・PRテンプレート
 ```
 
-このリポジトリには、macOSアプリ、Chrome拡張、製品Webサイトの3つの独立したプロジェクトが含まれます。Chrome拡張とWebサイトの開発・検証コマンドは、それぞれのディレクトリにある`package.json`を参照してください。
+このリポジトリには、macOSアプリ、Chrome拡張、プロキシ拡張、製品Webサイトの4つの独立したプロジェクトが含まれます。各ブラウザ拡張とWebサイトの開発・検証コマンドは、それぞれのディレクトリにある`package.json`を参照してください。

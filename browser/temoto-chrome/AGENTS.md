@@ -11,10 +11,8 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 ## Product decisions
 
 - The umbrella brand is lowercase `temoto`; this package and its in-product header both read `temoto for Chrome`.
-- Use `/Users/hayashi/.codex/generated_images/019fef3f-0a29-76e1-a0f8-a4bf4df82b14/exec-98a56230-b922-4df8-bc2b-cffb65dfe8dc.png` as the latest visual source, modified by the user's explicit polish feedback below.
 - Preserve the established near-black, charcoal, off-white, muted-gray, translucent-border, softly rounded visual system.
 - Keep the Chrome popup a compact 416px square and use the same translucent, glass-like charcoal surfaces as `temoto for macOS`; avoid dense black slabs.
-- Render the two-layer temoto mark as a tightly cropped vector with a solid upper block and outlined lower block; use no CSS color filter so it stays crisp at toolbar-popup scale.
 - The Chrome home surface includes Color Picker, Screenshot, Video Speed, Environment Switcher, Site Reset, and Measure / Inspect.
 - Screenshot includes selected-region, visible-viewport, and full-page capture with clipboard copy and PNG download.
 - Keep lazy-content preloading and animation freezing automatic; expose only Delay and Force reveal inside a collapsed Capture options section.
@@ -23,7 +21,7 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 - The popup home is a 416 × 416 square English-only launcher with six equal tools in a 3 × 2 grid; use only thin dividers, with no individual card borders, backgrounds, or corner radii. Do not show the current-page/video status strip or Proxy on this surface.
 - Keep the launcher header compact: use a single-line `temoto for Chrome` wordmark with white `temoto`, purple `for Chrome`, and no separate temoto mark beside it. Keep the borderless Settings cell separated by a vertical divider.
 - Use locally bundled Geist Sans Variable for the English UI and wordmark, keeping IBM Plex Mono for numbers and technical labels. Pair it with a consistent light-weight Phosphor icon set with matched optical sizes.
-- Chrome app-icon PNGs use optical sizing: rasterize the 48/128px extension-list icons at 108% of `temoto-mark.svg` with a 2% downward offset to balance their margins, while keeping the 16/32px manifest and toolbar action icons at the SVG's 100% scale so small sizes do not clip.
+- Chrome app-icon PNGs use optical sizing: rasterize the 48/128px extension-list icons at 108% of `assets/temoto-mark.svg` with a 2% downward offset to balance their margins, while keeping the 16/32px manifest and toolbar action icons at the SVG's 100% scale so small sizes do not clip.
 - Keep the Chrome extension mark purple `#9974F8` and use the macOS mark's slender proportions, 30-degree angle, and two-block spacing, but square off both ends and fill both blocks for Chrome. Compensate only its visual scale for the transparent Chrome icon surface; use the same purple for UI accents and the full `for Chrome` descriptor. Keep extension-list/app icons and the 16/32px toolbar action icon fully transparent; Chromium/Comet may require a full browser restart before manifest icon and version changes leave its UI cache.
 - Selecting a launcher card replaces the grid with that tool's full-popup view and a clear Back action. Video availability is communicated only by the Video Speed card badge (`1.75x` or `No video`).
 - Keep every tool-detail header at the launcher's 60px height: use the full 60 × 60px area left of the divider as the Back button, then show a small Phosphor SVG beside the tool title. Tool bodies use one shared top-aligned description-and-controls rhythm with no oversized framed feature icons.

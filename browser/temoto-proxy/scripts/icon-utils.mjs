@@ -37,7 +37,7 @@ export function createTemotoIcon(size) {
   const rgba = Buffer.alloc(size * size * 4);
   const angle = Math.PI / 6;
   const purple = [153, 116, 248];
-  // Match temoto for Chrome's canonical 1024px mark and its larger 48/128px optical treatment.
+  // Match temoto-chrome/assets/temoto-mark.svg and its larger 48/128px optical treatment.
   const markScale = 1.68;
   const opticalScale = size >= 48 ? 1.08 : 1;
   const downwardOffset = size >= 48 ? 0.02 : 0;

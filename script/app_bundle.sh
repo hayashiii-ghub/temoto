@@ -9,7 +9,6 @@ shelfdrop_copy_bundle_resources() {
   local resources_dir="$2"
 
   cp "$root_dir/Assets/ShelfDrop.icns" "$resources_dir/temoto.icns"
-  cp "$root_dir/Assets/MenuBarTemplate.png" "$resources_dir/MenuBarTemplate.png"
   cp "$root_dir/Assets/MenuBarTemplate.svg" "$resources_dir/MenuBarTemplate.svg"
 }
 
