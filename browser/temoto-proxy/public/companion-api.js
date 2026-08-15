@@ -1,6 +1,6 @@
 export const COMPANION_PROTOCOL_VERSION = 1;
 export const COMPANION_NAMESPACE = "temoto-proxy";
-export const TEMOTO_FOR_CHROME_EXTENSION_ID = "mdjfkcbimjbbjnnfiphoipdccnjfifpa";
+export const TEMOTO_FOR_CHROME_EXTENSION_ID = "ogimdkhanpjiiaeoofecaolkcadjdoao";
 
 const ALLOWED_ACTIONS = new Set(["GET_SUMMARY", "ACTIVATE_PROFILE", "DEACTIVATE", "OPEN_MANAGER"]);
 

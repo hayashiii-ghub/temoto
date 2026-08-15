@@ -5,6 +5,7 @@ import {
   handleCompanionMessage,
   isTrustedCompanionSender,
   summarizeProxyState,
+  TEMOTO_FOR_CHROME_EXTENSION_ID,
 } from "../public/companion-api.js";
 
 const state = {
@@ -23,6 +24,10 @@ const state = {
     },
   ],
 };
+
+test("the companion allowlist uses the reserved temoto for Chrome store identity", () => {
+  assert.equal(TEMOTO_FOR_CHROME_EXTENSION_ID, "ogimdkhanpjiiaeoofecaolkcadjdoao");
+});
 
 test("companion summaries expose status and profile identity without configuration or secrets", () => {
   assert.deepEqual(summarizeProxyState(state), {

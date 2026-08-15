@@ -3,7 +3,7 @@
   "name": "temoto Proxy",
   "short_name": "temoto Proxy",
   "version": "1.0.0",
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzUpKDhDf04fSzt4sNuDUDCZ0bmXeEuJK4Jpm7Oiq9fMGwXhlZZV+lcRXBQIqdgw/YZIZs6myqLipoGwZaQbE/3f1OXTCpSqJMTrk+6omwbuRGDq4/mk8VpJ8nQ6lSPPDKqUSGiUuDZzb8kT+ik5khCDhuXJ9bLGN6iDs9ash65RluALRKHXxcpuTGJhItP9tXvJRWTTwjOiQ9m3CTFm6uprUjZvCK8I0T6ASKIqZHs6sQsQUGRD7NMRXx0A+f80YaLM1W1z4xKXx/AkXOaHnnX+8omjvPVw0NPo8OhvKp8dNIzskPcVxT8zm28wQMGglDZAnY+DMFZ8K5knAsj8cVQIDAQAB",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1ZuOP4a2Pk08CmKbpH8S5OI86cPw6y6Sa2VSjJeORG4UuoosxdGkejA2TLYIfcpVcf9gGD4yMbdAN+cW02/XYGcytx/LO9QzqemhWf20wjPzLP6e21+r+vonvCQOvx4/xWHeUf2e+EIZOLHSxdla/HK4qiW5NjWHBUxdnyRpkpebNeSpx7GwnXKCCvvq5XiXw+PzrAzoFFDJ1fxyF/czMkbNjfAvfc9cNTyTKqTfvdu6x/G6/KCIYMNP0ZmRMqZJE6PlrUBFC03i5DNPAR/kSj4hASpM1+LZ860orYuXXc7gynJxdpRe8+mU7cXJ3mRDnyyLOt1bWx1A61OHHYJztQIDAQAB",
   "minimum_chrome_version": "116",
   "description": "Safe, visible and reversible proxy profiles for web development.",
   "permissions": [
@@ -14,7 +14,7 @@
   ],
   "host_permissions": ["<all_urls>"],
   "externally_connectable": {
-    "ids": ["mdjfkcbimjbbjnnfiphoipdccnjfifpa"]
+    "ids": ["ogimdkhanpjiiaeoofecaolkcadjdoao"]
   },
   "background": {
     "service_worker": "service-worker.js",

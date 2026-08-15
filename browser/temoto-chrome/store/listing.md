@@ -85,7 +85,7 @@ No account or credentials are required.
 
 ## Submission checklist
 
-- [ ] For a new store item, run `npm run package:store-bootstrap` and upload the generated `0.0.0.1` ZIP first. Copy the Item ID and Package → View public key without submitting it for review.
+- [x] Reserve the store item with the `0.0.0.1` bootstrap ZIP and record Item ID `ogimdkhanpjiiaeoofecaolkcadjdoao` and its public key.
 - [ ] Verify all six tools in the current stable Google Chrome release, not only another Chromium browser.
 - [ ] Run `npm test`, `npm run build`, `npm run test:sites`, and `npm run package`.
 - [ ] Upload the ZIP from `release/`; confirm `manifest.json` is at the ZIP root.
@@ -95,4 +95,4 @@ No account or credentials are required.
 - [ ] Select the intended regions and visibility in Distribution.
 - [ ] Enable deferred publishing if manual control after review is preferred.
 - [ ] Recheck the manifest name, description, version, icons, and minimum Chrome version before upload.
-- [ ] Reserve both Chrome Web Store items, replace the development keys/IDs with the store-issued identities, then rebuild and test the two packages together.
+- [x] Reserve both Chrome Web Store items and replace the development keys/IDs with the store-issued identities.

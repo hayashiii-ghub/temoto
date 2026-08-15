@@ -43,7 +43,7 @@ Load `dist/client` from `chrome://extensions` as an unpacked extension.
 
 The extension exposes a versioned, extension-ID-allowlisted API to `temoto for Chrome`. It returns only profile identity and effective status; endpoints, PAC contents, bypass rules, authentication data, and complete profiles never cross the extension boundary.
 
-Both unpacked extensions use public manifest keys so their development IDs remain stable. Before a Chrome Web Store handoff, reserve both store items, replace the two manifest keys with the public keys issued by the Developer Dashboard, and update the companion IDs in `public/manifest.json`, `public/companion-api.js`, and `../temoto-chrome/src/proxy-companion.js`. Then rebuild and test both store-keyed packages together.
+Both unpacked extensions use the public keys issued by the Developer Dashboard, so their local IDs match the reserved store items. The companion allowlist connects temoto Proxy `hohabmdadcdkifcmbclkgnomhhlllnbb` only to temoto for Chrome `ogimdkhanpjiiaeoofecaolkcadjdoao`.
 
 Create the Chrome Web Store ZIP:
 
@@ -51,4 +51,4 @@ Create the Chrome Web Store ZIP:
 npm run package
 ```
 
-The Web Store ZIP omits the development-only manifest `key`; unpacked builds retain it for a stable local ID.
+The Web Store ZIP omits the manifest `key` because the dashboard rejects that field; unpacked builds retain the store-issued public key so their ID matches the reserved store item.

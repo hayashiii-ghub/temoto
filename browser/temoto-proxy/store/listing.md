@@ -55,7 +55,7 @@ No account or temoto-operated server is required.
 
 ## Release checklist
 
-- [ ] For a new store item, run `npm run package:store-bootstrap` and upload the generated `0.0.0.1` ZIP first. Copy the Item ID and Package → View public key without submitting it for review.
+- [x] Reserve the store item with the `0.0.0.1` bootstrap ZIP and record Item ID `hohabmdadcdkifcmbclkgnomhhlllnbb` and its public key.
 - [ ] Run `npm run check`.
 - [ ] Run `npm run package` and confirm `manifest.json` is at the ZIP root.
 - [ ] Load `dist/client` in the current stable Google Chrome release.
@@ -65,4 +65,4 @@ No account or temoto-operated server is required.
 - [ ] Capture store screenshots from the actual extension.
 - [ ] Publish `PRIVACY.md` at a stable public URL.
 - [ ] Complete Chrome Web Store Limited Use disclosures truthfully.
-- [ ] Reserve both Chrome Web Store items, replace the development keys/IDs with the store-issued identities, then rebuild and test both packages together.
+- [x] Reserve both Chrome Web Store items and replace the development keys/IDs with the store-issued identities.

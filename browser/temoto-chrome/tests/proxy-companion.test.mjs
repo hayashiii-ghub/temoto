@@ -14,6 +14,10 @@ const summary = {
   profiles: [{ id: "local", name: "Local proxy", color: "#9974F8", kind: "fixed" }],
 };
 
+test("the companion target uses the reserved temoto Proxy store identity", () => {
+  assert.equal(TEMOTO_PROXY_EXTENSION_ID, "hohabmdadcdkifcmbclkgnomhhlllnbb");
+});
+
 test("for Chrome discovers the companion and validates its response", async () => {
   const calls = [];
   const runtimeApi = {

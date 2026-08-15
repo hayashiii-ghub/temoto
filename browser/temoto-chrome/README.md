@@ -44,4 +44,4 @@ To test the Proxy integration locally, also build and load `../temoto-proxy/dist
 npm run package
 ```
 
-The command validates the extension build and creates `release/temoto-for-chrome-v<version>.zip` with `manifest.json` at the archive root. The Web Store ZIP omits the development-only manifest `key`; unpacked builds retain it for a stable local ID. Store copy, privacy declarations, permission justifications, and submission steps are in [store/listing.md](./store/listing.md).
+The command validates the extension build and creates `release/temoto-for-chrome-v<version>.zip` with `manifest.json` at the archive root. The Web Store ZIP omits the manifest `key` because the dashboard rejects that field; unpacked builds retain the store-issued public key so their ID matches the reserved store item. Store copy, privacy declarations, permission justifications, and submission steps are in [store/listing.md](./store/listing.md).

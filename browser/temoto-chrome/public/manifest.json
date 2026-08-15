@@ -3,7 +3,7 @@
   "name": "temoto for Chrome",
   "short_name": "temoto",
   "version": "0.1.7",
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy3yQ3IfSy7klb+PUtuImKqZ0sjmRThrFlsKaDjuYHEvEsnu0z5JccteEW/tv5W3MFIaHjyflqWnrnbcUl6b3qCqpqgu1bEIOyI+Ky/asvjyRc5yT1n1GP1QqEzzU3wDfbONDsfXDGOKQMbOjpq/GSTUrAt/SskZFpI3uSVhxhg26hvjc8aPKGUga2ChJQxDz362enUNs8l1ejGrSE2M9FvssZ8OwHemqbC+W2ngA0x5uSmlMWXhb8RliJyyZfynsHYwrbvVfj1j66VCyIFYnqQxrjCMA9cLKYlvMb+40wqpDXjb7gGPqcHCp+6qvKknQ5OEiAPrvW/48E73mNnNubQIDAQAB",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr2R2jDpaDuNzuZB8N36mq2PPyNZeCEgmEMi1iolFZxy76nKRsw06UuElUjNOBgr2Lx8We2m8guC5v/qtG/7TvYLDvuD2a0z/Wc+uxffgqwBU3GhhOa5GKFtvp8LyK9cNg3XfbcU9ZkAjFc6gMNxSKX5JP4s8tJwUd1SNYQNGrpVFTJg9+DrEwZ1AwfufrzLPtaJ2xj/Y27cxYarRTfPr8jEkqu9m52JxHn4UFpJThs5qLAYxTamRwRFpklZIU1Bv8D2HDRyaNYC69jWsQQacg6pN8GekAN74HzJQP63x32riZAMVjkj1ax8SrGDVqvgZIDnNEAojGprnmDEogii7xwIDAQAB",
   "minimum_chrome_version": "116",
   "description": "Color, capture, video speed and developer utilities close at hand.",
   "permissions": [

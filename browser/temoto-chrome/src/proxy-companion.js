@@ -1,5 +1,5 @@
 export const COMPANION_PROTOCOL_VERSION = 1;
-export const TEMOTO_PROXY_EXTENSION_ID = "einfookhmkjdeknjellhcamojihehcpj";
+export const TEMOTO_PROXY_EXTENSION_ID = "hohabmdadcdkifcmbclkgnomhhlllnbb";
 export const TEMOTO_PROXY_INSTALL_URL = `https://chromewebstore.google.com/detail/${TEMOTO_PROXY_EXTENSION_ID}`;
 
 const ALLOWED_ACTIONS = new Set(["ACTIVATE_PROFILE", "DEACTIVATE", "OPEN_MANAGER"]);
