@@ -1,13 +1,85 @@
 export const PROFILE_SCHEMA_VERSION = 1;
 export const PRODUCT_ID = "temoto-proxy";
-export const PROXY_SCHEMES = ["http", "https", "socks4", "socks5"];
+export const PROXY_SCHEMES = ["http", "https", "socks4", "socks5"] as const;
 export const DEFAULT_DIAGNOSTIC_URL = "https://example.com/";
 export const CONTROL_LEVELS = [
   "not_controllable",
   "controlled_by_other_extensions",
   "controllable_by_this_extension",
   "controlled_by_this_extension",
-];
+] as const;
+
+export type ProxyScheme = typeof PROXY_SCHEMES[number];
+export type ProfileKind = "fixed" | "rules" | "pac";
+export type EndpointMode = "single" | "perProtocol";
+export type RoutingAction = "proxy" | "direct";
+
+export interface ProxyEndpoint {
+  scheme: ProxyScheme;
+  host: string;
+  port: number;
+}
+
+export interface ProxyEndpoints {
+  single?: ProxyEndpoint;
+  http?: ProxyEndpoint;
+  https?: ProxyEndpoint;
+  fallback?: ProxyEndpoint;
+}
+
+export interface RoutingRule {
+  id: string;
+  pattern: string;
+  action: RoutingAction;
+}
+
+export interface PacConfiguration {
+  source: "inline" | "url";
+  value: string;
+  mandatory: boolean;
+}
+
+export interface ProxyAuthentication {
+  enabled: boolean;
+  username: string;
+  allowedHosts: string[];
+}
+
+export interface ProxyProfile {
+  id: string;
+  name: string;
+  color: string;
+  kind: ProfileKind;
+  endpointMode: EndpointMode;
+  endpoints: ProxyEndpoints;
+  bypassList: string[];
+  routingRules: RoutingRule[];
+  defaultAction: RoutingAction;
+  pac: PacConfiguration;
+  auth: ProxyAuthentication;
+  diagnosticUrl: string;
+}
+
+export type ChromeProxyConfig =
+  | { mode: "pac_script"; pacScript: { data?: string; url?: string; mandatory: boolean } }
+  | {
+    mode: "fixed_servers";
+    rules: {
+      bypassList: string[];
+      singleProxy?: ProxyEndpoint;
+      proxyForHttp?: ProxyEndpoint;
+      proxyForHttps?: ProxyEndpoint;
+      fallbackProxy?: ProxyEndpoint;
+    };
+  };
+
+export interface ProxyStatus {
+  tone: "active" | "neutral" | "warning" | "error";
+  code: "active" | "off" | "conflict" | "policy" | "orphaned" | "inactive" | "changed" | "unknown";
+  label: string;
+}
+
+type LooseRecord = Record<string, any>;
 
 const DEFAULT_PORTS = { http: 8080, https: 443, socks4: 1080, socks5: 1080 };
 const MAX_NAME_LENGTH = 80;
@@ -17,19 +89,19 @@ const MAX_PAC_LENGTH = 200_000;
 const MAX_URL_LENGTH = 4_096;
 const MAX_IMPORT_LENGTH = 50_000_000;
 
-function parseIPv4(hostname) {
+function parseIPv4(hostname: string): number[] | null {
   const parts = hostname.split(".");
   if (parts.length !== 4 || parts.some((part) => !/^\d{1,3}$/.test(part))) return null;
   const bytes = parts.map(Number);
   return bytes.every((byte) => byte >= 0 && byte <= 255) ? bytes : null;
 }
 
-function parseIPv6(hostname) {
+function parseIPv6(hostname: string): number[] | null {
   const host = hostname.replace(/^\[|\]$/g, "").toLowerCase();
   if (!host.includes(":")) return null;
   const halves = host.split("::");
   if (halves.length > 2) return null;
-  const parseHalf = (value) => {
+  const parseHalf = (value: string): number[] | null => {
     if (!value) return [];
     const groups = [];
     for (const part of value.split(":")) {
@@ -48,7 +120,7 @@ function parseIPv6(hostname) {
   return groups.flatMap((group) => [group >>> 8, group & 0xff]);
 }
 
-function isPrivateIPv4(bytes) {
+function isPrivateIPv4(bytes: number[] | null): boolean {
   if (!bytes) return false;
   const [a, b] = bytes;
   return a === 0
@@ -62,7 +134,7 @@ function isPrivateIPv4(bytes) {
     || a >= 224;
 }
 
-function isPrivateIPv6(bytes) {
+function isPrivateIPv6(bytes: number[] | null): boolean {
   if (!bytes) return false;
   const allZero = bytes.every((byte) => byte === 0);
   const loopback = bytes.slice(0, 15).every((byte) => byte === 0) && bytes[15] === 1;
@@ -73,7 +145,7 @@ function isPrivateIPv6(bytes) {
   return allZero || loopback || uniqueLocal || linkOrSiteLocal || multicast || (ipv4Mapped && isPrivateIPv4(bytes.slice(12)));
 }
 
-function assertPublicDiagnosticDestination(url) {
+function assertPublicDiagnosticDestination(url: URL): void {
   const hostname = url.hostname.toLowerCase().replace(/\.+$/, "");
   const localName = hostname === "localhost"
     || hostname.endsWith(".localhost")
@@ -88,17 +160,17 @@ function assertPublicDiagnosticDestination(url) {
   );
 }
 
-function assertion(condition, message) {
+function assertion(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
 }
 
-function cleanString(value) {
+function cleanString(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
 }
 
-export function createProfile(overrides = {}) {
+export function createProfile(overrides: LooseRecord = {}): ProxyProfile {
   const id = overrides.id || globalThis.crypto?.randomUUID?.() || `profile-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  return {
+  const base: ProxyProfile = {
     id,
     name: "Local proxy",
     color: "#9974F8",
@@ -116,27 +188,25 @@ export function createProfile(overrides = {}) {
     pac: { source: "inline", value: "function FindProxyForURL(url, host) { return 'DIRECT'; }", mandatory: false },
     auth: { enabled: false, username: "", allowedHosts: [] },
     diagnosticUrl: DEFAULT_DIAGNOSTIC_URL,
+  };
+  return {
+    ...base,
     ...overrides,
     endpoints: {
-      single: { scheme: "http", host: "127.0.0.1", port: 8080 },
-      http: { scheme: "http", host: "127.0.0.1", port: 8080 },
-      https: { scheme: "http", host: "127.0.0.1", port: 8080 },
-      fallback: { scheme: "socks5", host: "127.0.0.1", port: 1080 },
+      ...base.endpoints,
       ...(overrides.endpoints || {}),
     },
     pac: {
-      source: "inline",
-      value: "function FindProxyForURL(url, host) { return 'DIRECT'; }",
-      mandatory: false,
+      ...base.pac,
       ...(overrides.pac || {}),
     },
-    auth: { enabled: false, username: "", allowedHosts: [], ...(overrides.auth || {}) },
-  };
+    auth: { ...base.auth, ...(overrides.auth || {}) },
+  } as ProxyProfile;
 }
 
-export function normalizeEndpoint(raw, label = "Proxy") {
+export function normalizeEndpoint(raw: LooseRecord, label = "Proxy"): ProxyEndpoint {
   assertion(raw && typeof raw === "object", `${label} is required`);
-  const scheme = cleanString(raw.scheme).toLowerCase();
+  const scheme = cleanString(raw.scheme).toLowerCase() as ProxyScheme;
   assertion(PROXY_SCHEMES.includes(scheme), `${label} scheme is unsupported`);
   const host = cleanString(raw.host).toLowerCase();
   assertion(host, `${label} host is required`);
@@ -148,7 +218,7 @@ export function normalizeEndpoint(raw, label = "Proxy") {
   return { scheme, host, port: numericPort };
 }
 
-function normalizeBypassList(raw) {
+function normalizeBypassList(raw: unknown): string[] {
   const values = Array.isArray(raw) ? raw : [];
   assertion(values.length <= MAX_BYPASS_ENTRIES, `Bypass list supports up to ${MAX_BYPASS_ENTRIES} entries`);
   return [...new Set(values.map(cleanString).filter(Boolean))].map((entry) => {
@@ -157,17 +227,17 @@ function normalizeBypassList(raw) {
   });
 }
 
-function normalizeRule(raw, index) {
+function normalizeRule(raw: LooseRecord, index: number): RoutingRule {
   const pattern = cleanString(raw?.pattern);
   assertion(pattern && pattern.length <= 500 && !/[\n\r]/.test(pattern), `Routing rule ${index + 1} needs a valid pattern`);
-  const action = cleanString(raw?.action).toLowerCase();
+  const action = cleanString(raw?.action).toLowerCase() as RoutingAction;
   assertion(["proxy", "direct"].includes(action), `Routing rule ${index + 1} action must be proxy or direct`);
   const id = cleanString(raw.id) || `rule-${index + 1}`;
   assertion(id.length <= 120, `Routing rule ${index + 1} id is too long`);
   return { id, pattern, action };
 }
 
-function normalizePac(raw) {
+function normalizePac(raw: LooseRecord | null | undefined): PacConfiguration {
   const source = raw?.source === "url" ? "url" : "inline";
   const value = cleanString(raw?.value);
   assertion(value, "PAC source is required");
@@ -183,20 +253,20 @@ function normalizePac(raw) {
   return { source, value, mandatory: Boolean(raw?.mandatory) };
 }
 
-export function normalizeProfile(raw) {
+export function normalizeProfile(raw: LooseRecord): ProxyProfile {
   assertion(raw && typeof raw === "object", "Profile must be an object");
   const id = cleanString(raw.id);
   const name = cleanString(raw.name);
   assertion(id && id.length <= 120, "Profile id is required");
   assertion(name && name.length <= MAX_NAME_LENGTH, `Profile name must be 1-${MAX_NAME_LENGTH} characters`);
-  const kind = ["fixed", "rules", "pac"].includes(raw.kind) ? raw.kind : "fixed";
-  const endpointMode = raw.endpointMode === "perProtocol" ? "perProtocol" : "single";
-  const endpoints = {};
+  const kind: ProfileKind = ["fixed", "rules", "pac"].includes(raw.kind) ? raw.kind : "fixed";
+  const endpointMode: EndpointMode = raw.endpointMode === "perProtocol" ? "perProtocol" : "single";
+  const endpoints: ProxyEndpoints = {};
   if (kind !== "pac") {
     if (endpointMode === "single" || kind === "rules") {
       endpoints.single = normalizeEndpoint(raw.endpoints?.single, "Default proxy");
     } else {
-      for (const key of ["http", "https", "fallback"]) {
+      for (const key of ["http", "https", "fallback"] as const) {
         const endpoint = raw.endpoints?.[key];
         if (endpoint?.host) endpoints[key] = normalizeEndpoint(endpoint, `${key.toUpperCase()} proxy`);
       }
@@ -207,12 +277,13 @@ export function normalizeProfile(raw) {
   const rules = Array.isArray(raw.routingRules) ? raw.routingRules : [];
   assertion(rules.length <= MAX_RULES, `Routing profiles support up to ${MAX_RULES} rules`);
   const routingRules = kind === "rules" ? rules.map(normalizeRule) : [];
-  const defaultAction = raw.defaultAction === "direct" ? "direct" : "proxy";
-  const pac = kind === "pac" ? normalizePac(raw.pac) : { source: "inline", value: "", mandatory: false };
-  const auth = {
+  const defaultAction: RoutingAction = raw.defaultAction === "direct" ? "direct" : "proxy";
+  const pac: PacConfiguration = kind === "pac" ? normalizePac(raw.pac) : { source: "inline", value: "", mandatory: false };
+  const allowedHostsSource: unknown[] = Array.isArray(raw.auth?.allowedHosts) ? raw.auth.allowedHosts : [];
+  const auth: ProxyAuthentication = {
     enabled: Boolean(raw.auth?.enabled),
     username: cleanString(raw.auth?.username),
-    allowedHosts: [...new Set((Array.isArray(raw.auth?.allowedHosts) ? raw.auth.allowedHosts : [])
+    allowedHosts: [...new Set(allowedHostsSource
       .map(cleanString)
       .map((host) => host.toLowerCase())
       .filter(Boolean))],
@@ -246,7 +317,7 @@ export function normalizeProfile(raw) {
   };
 }
 
-function pacProxyToken(endpoint) {
+function pacProxyToken(endpoint: ProxyEndpoint | LooseRecord): string {
   const normalized = normalizeEndpoint(endpoint);
   const keyword = {
     http: "PROXY",
@@ -257,7 +328,7 @@ function pacProxyToken(endpoint) {
   return `${keyword} ${normalized.host}:${normalized.port}`;
 }
 
-function pacMatcher(pattern) {
+function pacMatcher(pattern: unknown): string {
   const normalized = cleanString(pattern);
   if (normalized === "<local>") return "isPlainHostName(host)";
   if (/^https?:\/\//i.test(normalized)) {
@@ -277,15 +348,15 @@ function pacMatcher(pattern) {
   return `host === ${JSON.stringify(normalized)}`;
 }
 
-function cidrMask(bits) {
+function cidrMask(bits: number): string {
   assertion(Number.isInteger(bits) && bits >= 0 && bits <= 32, "CIDR rules must use an IPv4 prefix between 0 and 32");
   const value = bits === 0 ? 0 : (0xffffffff << (32 - bits)) >>> 0;
   return [24, 16, 8, 0].map((shift) => (value >>> shift) & 255).join(".");
 }
 
-export function generatePacScript(profile) {
+export function generatePacScript(profile: LooseRecord): string {
   const normalized = normalizeProfile({ ...profile, kind: "rules" });
-  const proxy = pacProxyToken(normalized.endpoints.single);
+  const proxy = pacProxyToken(normalized.endpoints.single!);
   const lines = ["function FindProxyForURL(url, host) {"];
   for (const bypass of normalized.bypassList) {
     lines.push(`  if (${pacMatcher(bypass)}) return \"DIRECT\";`);
@@ -298,7 +369,7 @@ export function generatePacScript(profile) {
   return lines.join("\n");
 }
 
-export function profileToProxyConfig(profile) {
+export function profileToProxyConfig(profile: LooseRecord): ChromeProxyConfig {
   const normalized = normalizeProfile(profile);
   if (normalized.kind === "pac") {
     return {
@@ -311,7 +382,7 @@ export function profileToProxyConfig(profile) {
   if (normalized.kind === "rules") {
     return { mode: "pac_script", pacScript: { data: generatePacScript(normalized), mandatory: false } };
   }
-  const rules = { bypassList: normalized.bypassList };
+  const rules: Extract<ChromeProxyConfig, { mode: "fixed_servers" }>["rules"] = { bypassList: normalized.bypassList };
   if (normalized.endpointMode === "single") {
     rules.singleProxy = normalized.endpoints.single;
   } else {
@@ -322,15 +393,16 @@ export function profileToProxyConfig(profile) {
   return { mode: "fixed_servers", rules };
 }
 
-export function stableStringify(value) {
+export function stableStringify(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(stableStringify).join(",")}]`;
   if (value && typeof value === "object") {
-    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(",")}}`;
+    const record = value as Record<string, unknown>;
+    return `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${stableStringify(record[key])}`).join(",")}}`;
   }
   return JSON.stringify(value);
 }
 
-export function configFingerprint(config) {
+export function configFingerprint(config: unknown): string {
   let hash = 2166136261;
   const text = stableStringify(config);
   for (let index = 0; index < text.length; index += 1) {
@@ -340,7 +412,7 @@ export function configFingerprint(config) {
   return (hash >>> 0).toString(16).padStart(8, "0");
 }
 
-export function proxyControlMatches(setting, expectedFingerprint) {
+export function proxyControlMatches(setting: LooseRecord | null | undefined, expectedFingerprint: string | null | undefined): boolean {
   return Boolean(
     expectedFingerprint
     && setting?.levelOfControl === "controlled_by_this_extension"
@@ -349,7 +421,7 @@ export function proxyControlMatches(setting, expectedFingerprint) {
   );
 }
 
-export function sanitizeProfileForSharing(profile) {
+export function sanitizeProfileForSharing(profile: LooseRecord): ProxyProfile {
   const normalized = normalizeProfile(profile);
   return {
     ...normalized,
@@ -357,7 +429,12 @@ export function sanitizeProfileForSharing(profile) {
   };
 }
 
-export function createExportBundle(profiles, exportedAt = new Date().toISOString()) {
+export function createExportBundle(profiles: LooseRecord[], exportedAt = new Date().toISOString()): {
+  product: typeof PRODUCT_ID;
+  schemaVersion: typeof PROFILE_SCHEMA_VERSION;
+  exportedAt: string;
+  profiles: ProxyProfile[];
+} {
   assertion(Array.isArray(profiles), "Profiles must be an array");
   return {
     product: PRODUCT_ID,
@@ -367,16 +444,20 @@ export function createExportBundle(profiles, exportedAt = new Date().toISOString
   };
 }
 
-export function parseImportBundle(input) {
+export function parseImportBundle(input: string | LooseRecord): ProxyProfile[] {
   if (typeof input === "string") assertion(input.length <= MAX_IMPORT_LENGTH, "Profile export is too large");
   const bundle = typeof input === "string" ? JSON.parse(input) : input;
   assertion(bundle?.product === PRODUCT_ID, "This is not a temoto Proxy export");
   assertion(bundle.schemaVersion === PROFILE_SCHEMA_VERSION, "This profile export uses an unsupported schema version");
   assertion(Array.isArray(bundle.profiles) && bundle.profiles.length <= 200, "Export must contain up to 200 profiles");
-  return bundle.profiles.map((profile) => normalizeProfile({ ...profile, diagnosticUrl: DEFAULT_DIAGNOSTIC_URL }));
+  return bundle.profiles.map((profile: LooseRecord) => normalizeProfile({ ...profile, diagnosticUrl: DEFAULT_DIAGNOSTIC_URL }));
 }
 
-export function statusFromEffectiveState({ activeProfileId, regular, expectedFingerprint }) {
+export function statusFromEffectiveState({ activeProfileId, regular, expectedFingerprint }: {
+  activeProfileId: string | null;
+  regular: LooseRecord | null | undefined;
+  expectedFingerprint?: string | null;
+}): ProxyStatus {
   const level = regular?.levelOfControl || "not_controllable";
   if (!CONTROL_LEVELS.includes(level)) return { tone: "error", code: "unknown", label: "Unknown state" };
   if (level === "controlled_by_other_extensions") return { tone: "error", code: "conflict", label: "Controlled by another extension" };
@@ -386,17 +467,22 @@ export function statusFromEffectiveState({ activeProfileId, regular, expectedFin
     return { tone: "neutral", code: "off", label: "Proxy off" };
   }
   if (level !== "controlled_by_this_extension") return { tone: "warning", code: "inactive", label: "Profile not applied" };
-  if (expectedFingerprint && configFingerprint(regular.value) !== expectedFingerprint) {
+  if (expectedFingerprint && configFingerprint(regular?.value) !== expectedFingerprint) {
     return { tone: "warning", code: "changed", label: "Proxy settings changed" };
   }
   return { tone: "active", code: "active", label: "Proxy active" };
 }
 
-export function credentialsForProxyChallenge(details, profile, credentials, attempts = 0) {
+export function credentialsForProxyChallenge(
+  details: LooseRecord | null | undefined,
+  profile: LooseRecord | null | undefined,
+  credentials: { username?: string; password?: string } | null | undefined,
+  attempts = 0,
+): { username: string; password: string } | null {
   if (!details?.isProxy || !profile?.auth?.enabled || attempts >= 2) return null;
   if (!credentials || typeof credentials.password !== "string" || !credentials.password) return null;
   const challengerHost = cleanString(details.challenger?.host).toLowerCase();
-  const allowedHosts = Array.isArray(profile.auth.allowedHosts) ? profile.auth.allowedHosts.map((host) => cleanString(host).toLowerCase()) : [];
+  const allowedHosts = Array.isArray(profile.auth.allowedHosts) ? profile.auth.allowedHosts.map((host: unknown) => cleanString(host).toLowerCase()) : [];
   if (!challengerHost || !allowedHosts.includes(challengerHost)) return null;
   return { username: String(credentials.username || ""), password: credentials.password };
 }

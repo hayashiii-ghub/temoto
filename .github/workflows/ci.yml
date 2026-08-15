@@ -74,3 +74,26 @@ jobs:
 
       - name: Test Chrome extension Sites build
         run: npm run test:sites
+
+  proxy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: browser/temoto-proxy
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: browser/temoto-proxy/package-lock.json
+
+      - name: Install Proxy extension dependencies
+        run: npm ci
+
+      - name: Check Proxy extension
+        run: npm run check

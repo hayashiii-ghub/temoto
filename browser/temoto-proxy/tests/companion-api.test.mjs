@@ -6,7 +6,7 @@ import {
   isTrustedCompanionSender,
   summarizeProxyState,
   TEMOTO_FOR_CHROME_EXTENSION_ID,
-} from "../public/companion-api.js";
+} from "../dist/client/companion-api.js";
 
 const state = {
   activeProfileId: "local",
