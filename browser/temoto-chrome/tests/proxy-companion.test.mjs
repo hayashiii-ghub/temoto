@@ -5,7 +5,7 @@ import {
   getProxyCompanion,
   runProxyCompanionAction,
   TEMOTO_PROXY_EXTENSION_ID,
-} from "../src/proxy-companion.js";
+} from "../src/proxy-companion.ts";
 
 const summary = {
   activeProfileId: "local",
@@ -42,6 +42,13 @@ test("for Chrome treats a missing receiver as an uninstalled companion", async (
 test("for Chrome rejects malformed companion responses", async () => {
   const runtimeApi = { async sendMessage() { return { ok: true, protocolVersion: 99, summary }; } };
   assert.deepEqual(await getProxyCompanion(runtimeApi), { availability: "error", summary: null });
+
+  const malformedRuntime = {
+    async sendMessage() {
+      return { ok: true, protocolVersion: COMPANION_PROTOCOL_VERSION, summary: { ...summary, activeProfileId: 42 } };
+    },
+  };
+  assert.deepEqual(await getProxyCompanion(malformedRuntime), { availability: "error", summary: null });
 });
 
 test("for Chrome sends only the bounded companion actions", async () => {

@@ -6,7 +6,7 @@ import {
   speedFromShortcut,
   speedToSliderPosition,
   sliderPositionToSpeed,
-} from "../src/video-speed.js";
+} from "../src/video-speed.ts";
 
 test("playback speed is capped between 0.25x and 5x", () => {
   assert.equal(clampPlaybackSpeed(0), 0.25);

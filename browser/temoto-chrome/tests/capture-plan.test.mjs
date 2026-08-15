@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { planFullPageFrames } from "../src/capture-plan.js";
+import { planFullPageFrames } from "../src/capture-plan.ts";
 
 test("a persistent duplicate viewport fails instead of dropping page content", () => {
   const frames = [

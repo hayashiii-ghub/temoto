@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { isValidHttpOrigin, replaceOrigin } from "../src/url-utils.js";
+import { isValidHttpOrigin, replaceOrigin } from "../src/url-utils.ts";
 
 test("replaceOrigin preserves path, query and hash", () => {
   assert.equal(
