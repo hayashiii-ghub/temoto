@@ -27,6 +27,12 @@ temoto Proxy has no analytics service and does not inspect or transmit page traf
 
 https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-proxy/PRIVACY.md
 
+## Graphic assets
+
+- Store icon: `dist/client/icons/icon-128.png` after running `npm run build` (128 × 128 PNG).
+- Required screenshot: `store/assets/screenshot-manager-1280x800.png` (1280 × 800 PNG).
+- Optional promotion video and promotional tiles may be omitted for the initial submission.
+
 ## Single purpose
 
 Allow web developers to configure, switch, verify and safely clear Chrome proxy routes as local named profiles.
