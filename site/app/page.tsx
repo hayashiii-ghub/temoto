@@ -66,17 +66,6 @@ const chromeTools = [
   },
 ];
 
-function TemotoMark({ className }: { className?: string }) {
-  return (
-    <svg className={className ? `temotoMark ${className}` : "temotoMark"} viewBox="0 0 1024 1024" aria-hidden="true">
-      <g transform="translate(512 512) scale(1.68) translate(-512 -512)" fill="currentColor">
-        <rect x="302" y="335" width="420" height="130" transform="rotate(30 512 400)" />
-        <rect x="302" y="535" width="420" height="130" transform="rotate(30 512 600)" />
-      </g>
-    </svg>
-  );
-}
-
 function MacAppIcon() {
   return <span className="macAppIcon" aria-hidden="true" />;
 }
@@ -289,7 +278,7 @@ function TransferVisual() {
     <div className="transferVisual" aria-hidden="true">
       <div className="transferNode"><FileMark kind="file" /><span>Finder</span></div>
       <div className="transferLine"><i /><i /></div>
-      <div className="transferShelf"><TemotoMark /><span>3</span></div>
+      <div className="transferShelf"><MacAppIcon /><span>3</span></div>
       <div className="transferLine"><i /><i /></div>
       <div className="transferNode destination"><FileMark kind="folder" /><span>Destination</span></div>
     </div>
@@ -320,7 +309,7 @@ function LocationModes() {
       </figure>
       <figure>
         <div className="locationCard isMenuBar">
-          <span className="menuBarChip"><TemotoMark /></span>
+          <span className="menuBarChip"><MacAppIcon /></span>
         </div>
         <figcaption>MENU BAR</figcaption>
       </figure>
@@ -332,7 +321,7 @@ export default function Home() {
   return (
     <main id="top">
       <nav className="nav shell" aria-label="メインナビゲーション">
-        <a className="brand" href="#top" aria-label="temoto トップへ"><TemotoMark />temoto</a>
+        <a className="brand" href="#top" aria-label="temoto トップへ">temoto</a>
         <div className="navLinks">
           <a href="#macos">macOS</a>
           <a href="#chrome">Chrome</a>
@@ -608,7 +597,7 @@ export default function Home() {
       </section>
 
       <footer className="footer shell">
-        <a className="brand" href="#top"><TemotoMark />temoto</a>
+        <a className="brand" href="#top">temoto</a>
         <p>© 2026 temoto</p>
         <div>
           <a href={repositoryUrl}>GitHub</a>

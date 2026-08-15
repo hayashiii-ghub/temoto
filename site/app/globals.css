@@ -155,8 +155,8 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .productMeta { display: flex; justify-content: space-between; color: #858582; font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .11em; }
 .productMeta em { font-style: normal; }
 .productVisual { flex: 1; min-height: 140px; display: grid; place-items: center; color: #d6d6d3; }
-.productVisual .macAppIcon { width: 112px; height: 112px; display: block; background: url("/favicon.png") center / contain no-repeat; }
-.productVisual .temotoMark { width: 98px; height: 98px; }
+.macAppIcon { display: block; background: url("/favicon.png") center / contain no-repeat; }
+.productVisual .macAppIcon { width: 112px; height: 112px; }
 .productVisual .chromeMark { width: 98px; height: 98px; }
 .productCard h3 { margin: 0; font-size: 28px; font-weight: 400; letter-spacing: -.045em; }
 .productCard p { margin: 12px 0 0; color: #cfcfcc; font-size: 16px; }
@@ -176,7 +176,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .locationCard b { flex: 1; }
 .locationCard.isMenuBar { justify-content: flex-end; background: #121212; border-radius: 0 0 16px 16px; border-top: 0; }
 .menuBarChip { width: 36px; height: 28px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.12); border-radius: 8px; }
-.menuBarChip .temotoMark { width: 16px; height: 16px; }
+.menuBarChip .macAppIcon { width: 20px; height: 20px; }
 .locationModes figcaption { color: #5e5e5c; font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .12em; }
 
 .shortcutStack { margin-top: 48px; display: grid; gap: 14px; }
@@ -222,7 +222,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .transferNode > span { font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .06em; }
 .transferNode .fileMark { width: 24px; height: 24px; }
 .transferShelf { width: 88px; aspect-ratio: 1; display: grid; place-items: center; position: relative; border-radius: 26px; border: 1px solid rgba(255,255,255,.22); background: linear-gradient(145deg, rgba(255,255,255,.17), rgba(255,255,255,.055)); color: #d0d0cd; box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 24px 48px rgba(0,0,0,.34); }
-.transferShelf .temotoMark { width: 28px; height: 28px; }
+.transferShelf .macAppIcon { width: 56px; height: 56px; }
 .transferShelf > span:last-child { position: absolute; left: 12px; top: 10px; font: 400 8px var(--font-ibm-plex-mono); color: #a0a09d; }
 .transferLine { height: 1px; position: relative; background: repeating-linear-gradient(90deg, #393937 0 4px, transparent 4px 9px); }
 .transferLine i { position: absolute; right: 0; top: -3px; width: 6px; height: 6px; border-top: 1px solid #51514f; border-right: 1px solid #51514f; transform: rotate(45deg); }
