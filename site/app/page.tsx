@@ -70,6 +70,10 @@ function MacAppIcon() {
   return <span className="macAppIcon" aria-hidden="true" />;
 }
 
+function MenuBarIcon() {
+  return <span className="menuBarIcon" aria-hidden="true" />;
+}
+
 function ChromeMark({ className }: { className?: string }) {
   return (
     <svg className={className ? `chromeMark ${className}` : "chromeMark"} viewBox="0 0 1024 1024" aria-hidden="true">
@@ -309,7 +313,7 @@ function LocationModes() {
       </figure>
       <figure>
         <div className="locationCard isMenuBar">
-          <span className="menuBarChip"><MacAppIcon /></span>
+          <span className="menuBarChip"><MenuBarIcon /></span>
         </div>
         <figcaption>MENU BAR</figcaption>
       </figure>

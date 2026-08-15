@@ -176,7 +176,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .locationCard b { flex: 1; }
 .locationCard.isMenuBar { justify-content: flex-end; background: #121212; border-radius: 0 0 16px 16px; border-top: 0; }
 .menuBarChip { width: 36px; height: 28px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.12); border-radius: 8px; }
-.menuBarChip .macAppIcon { width: 20px; height: 20px; }
+.menuBarIcon { width: 20px; height: 20px; display: block; background: #b7b7b4; -webkit-mask: url("/menu-bar-template.svg") center / contain no-repeat; mask: url("/menu-bar-template.svg") center / contain no-repeat; }
 .locationModes figcaption { color: #5e5e5c; font: 400 8px var(--font-ibm-plex-mono); letter-spacing: .12em; }
 
 .shortcutStack { margin-top: 48px; display: grid; gap: 14px; }
