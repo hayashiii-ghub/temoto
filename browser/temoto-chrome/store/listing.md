@@ -30,8 +30,9 @@ temoto for Chrome brings six common page-testing tools into one focused popup:
 - Move between Local, Staging, and Production without losing the current path, query, or hash.
 - Reset cache, cookies, storage, and service workers for the current site only when requested.
 - Measure an element and copy a compact CSS selector.
+- When the separately installed temoto Proxy companion is available, view its effective state, switch named profiles, turn its setting off safely, and open its full manager from the side panel.
 
-temoto processes its tools locally, does not transmit page data, and does not use analytics. Persistent HTTP(S) page access is used only to make the documented Video Speed shortcuts available without opening the popup. Site Reset asks for its optional permission only when you choose that tool.
+temoto processes its tools locally, does not transmit page data, and does not use analytics. Persistent HTTP(S) page access is used only to make the documented Video Speed shortcuts available without opening the popup. Site Reset asks for its optional permission only when you choose that tool. The optional Proxy integration uses an extension-ID-allowlisted local API and never receives proxy endpoints, PAC contents, bypass rules, usernames, or passwords.
 
 ## Privacy practices
 
@@ -54,6 +55,7 @@ Provide web developers with local tools for inspecting and testing the current p
 - Disclose website content because screenshot pixels and selected element details are processed locally.
 - Disclose web browsing activity/current-page information because the active URL, origin, hostname, and title are read for user-facing tools.
 - State that this data is processed locally, is not transmitted to the developer or third parties, and is not used for advertising, analytics, or unrelated purposes.
+- Disclose that the optional, separately installed temoto Proxy companion shares only installation state, effective status, and profile identity through local extension messaging.
 - Complete every Limited Use certification checkbox truthfully.
 
 **Privacy policy URL after this branch is merged**
@@ -79,9 +81,11 @@ No account or credentials are required.
 5. Settings stores Local, Staging, and Production origins locally. Environment Switcher preserves the current path, query, and hash.
 6. Measure / Inspect highlights the element under the pointer and copies its selector when clicked.
 7. Site Reset requests the optional `browsingData` permission, clears data only for the displayed current origin, and reloads the tab.
+8. Optional companion test: install temoto Proxy, open the temoto for Chrome side panel, switch a named profile, choose Turn off, and open Manage profiles. Confirm no proxy configuration or credentials appear in temoto for Chrome.
 
 ## Submission checklist
 
+- [x] Retain the existing published store item and record Item ID `gcncgknjklghkoeiapcbdghodepnllid` and its public key.
 - [ ] Verify all six tools in the current stable Google Chrome release, not only another Chromium browser.
 - [ ] Run `npm test`, `npm run build`, `npm run test:sites`, and `npm run package`.
 - [ ] Upload the ZIP from `release/`; confirm `manifest.json` is at the ZIP root.
@@ -91,3 +95,4 @@ No account or credentials are required.
 - [ ] Select the intended regions and visibility in Distribution.
 - [ ] Enable deferred publishing if manual control after review is preferred.
 - [ ] Recheck the manifest name, description, version, icons, and minimum Chrome version before upload.
+- [x] Reserve both Chrome Web Store items and replace the development keys/IDs with the store-issued identities.

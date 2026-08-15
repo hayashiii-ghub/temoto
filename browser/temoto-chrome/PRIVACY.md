@@ -13,6 +13,7 @@ Depending on the tool the user chooses, the extension may process:
 - Pixels from a user-requested selected-region, visible-page, or full-page screenshot.
 - Element dimensions, computed visual properties, and a generated CSS selector when Measure / Inspect is active.
 - User-provided Local, Staging, and Production origins.
+- temoto Proxy installation state, effective status, and profile identity when the separately installed companion is available.
 - The user's most recently selected color and playback speed.
 - Cache, cookies, local storage, IndexedDB, Cache Storage, and service-worker registrations for the current origin when the user explicitly runs Site Reset.
 
@@ -25,6 +26,7 @@ The data above is used only to provide temoto's user-facing tools. temoto does n
 - Screenshot pixels are used to render the capture preview and allow the user to copy or save a PNG.
 - Environment origins are used to navigate between development environments while preserving the rest of the URL.
 - Site data is deleted only after the user chooses Site Reset and approves Chrome's optional permission prompt.
+- Proxy status and profile identity are used only to show and operate the locally installed temoto Proxy companion. Proxy endpoints, rules, PAC contents, bypass entries, usernames, and passwords are not received by temoto for Chrome.
 
 ## Storage and retention
 
@@ -34,7 +36,7 @@ The data above is used only to provide temoto's user-facing tools. temoto does n
 
 ## Data sharing and transmission
 
-temoto does not transmit user data to the developer or to any external server. It does not sell data, share data with third parties, use analytics, or use data for advertising, creditworthiness, or lending purposes. No remotely hosted code is executed.
+temoto does not transmit user data to the developer or to any external server. When both temoto extensions are installed, temoto for Chrome exchanges bounded local messages with temoto Proxy for effective status, profile activation, safe Off, and opening the manager. It does not sell data, share data with third parties, use analytics, or use data for advertising, creditworthiness, or lending purposes. No remotely hosted code is executed.
 
 ## Permissions
 

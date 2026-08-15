@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>temoto Proxy</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="popup-page">
+    <main class="popup-shell">
+      <header class="product-header">
+        <div class="brand">temoto <span>Proxy</span></div>
+        <button class="icon-button" id="open-manager" type="button" aria-label="Open profile manager" title="Open profile manager">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10M14 4v6M10 14v6" /></svg>
+        </button>
+      </header>
+
+      <section class="popup-status" aria-live="polite">
+        <div class="status-line"><i id="status-dot"></i><span id="status-label">Reading Chrome settings…</span></div>
+        <h1 id="active-name">Proxy state</h1>
+        <p id="active-detail">Checking the effective browser configuration.</p>
+        <div class="popup-primary-actions">
+          <button class="button primary" id="toggle-active" type="button" disabled>Loading…</button>
+          <button class="button secondary" id="test-active" type="button" hidden>Test</button>
+        </div>
+      </section>
+
+      <div class="notice" id="status-notice" role="status" hidden></div>
+
+      <section class="popup-profiles" aria-labelledby="profiles-title">
+        <div class="section-heading"><h2 id="profiles-title">Profiles</h2><span id="profile-count"></span></div>
+        <div class="profile-list" id="profile-list"></div>
+      </section>
+
+      <footer class="popup-footer">
+        <span>Regular windows only unless explicitly enabled</span>
+        <button type="button" id="manage-footer">Manage</button>
+      </footer>
+      <div class="toast" id="toast" role="status" hidden></div>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

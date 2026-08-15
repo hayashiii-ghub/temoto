@@ -11,7 +11,7 @@
 - Clear cache, cookies, storage, and service workers for the current origin after an explicit permission prompt.
 - Measure an element and copy a compact CSS selector.
 
-Proxy functionality is intentionally not included. It will be developed as a separate companion because Chrome proxy access is broader than the core extension needs.
+Proxy settings remain in the separately installed `temoto Proxy` companion because Chrome proxy access is broader than the core extension needs. When the companion is installed, the `temoto for Chrome` side panel shows its effective state and supports profile switching, safe Off, and opening the full proxy manager without receiving credentials or full proxy configuration.
 
 ## Privacy
 
@@ -36,10 +36,12 @@ npm run build
 
 Load `dist/client` as an unpacked extension from `chrome://extensions` after running the build.
 
+To test the Proxy integration locally, also build and load `../temoto-proxy/dist/client`, then reload both extensions after manifest changes.
+
 ## Chrome Web Store package
 
 ```sh
 npm run package
 ```
 
-The command validates the extension build and creates `release/temoto-for-chrome-v<version>.zip` with `manifest.json` at the archive root. Store copy, privacy declarations, permission justifications, and submission steps are in [store/listing.md](./store/listing.md).
+The command validates the extension build and creates `release/temoto-for-chrome-v<version>.zip` with `manifest.json` at the archive root. The Web Store ZIP omits the manifest `key` because the dashboard rejects that field; unpacked builds retain the store-issued public key so their ID matches the reserved store item. Store copy, privacy declarations, permission justifications, and submission steps are in [store/listing.md](./store/listing.md).

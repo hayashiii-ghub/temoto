@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowCounterClockwise,
+  ArrowSquareOut,
   ArrowsLeftRight,
   ArrowsOutLineVertical,
   BoundingBox,
@@ -15,6 +16,7 @@ import {
   EyedropperSample,
   LockSimple,
   Play,
+  Power,
   Ruler,
   Selection,
   ShieldCheck,
@@ -47,6 +49,11 @@ import {
   speedToSliderPosition,
   sliderPositionToSpeed,
 } from "./video-speed.js";
+import {
+  getProxyCompanion,
+  runProxyCompanionAction,
+  TEMOTO_PROXY_INSTALL_URL,
+} from "./proxy-companion.js";
 
 const TOOL_DEFINITIONS = {
   color: { title: "Color Picker", icon: EyedropperSample },
@@ -463,16 +470,119 @@ function SidePanelApp() {
           ))}
           <button className="save-button" type="submit">{saved ? <><Check size={18} /> Saved</> : "Save environments"}</button>
         </form>
-        <section className="settings-block">
-          <div><strong>temoto Proxy</strong><small>Development proxy profiles will ship as a separate companion.</small></div>
-          <span className="module-pill">COMING NEXT</span>
-        </section>
+        <ProxyCompanionSettings />
         <section className="settings-block compact">
           <div><strong>Privacy</strong><small>Video shortcuts run locally on HTTP(S) pages. Other tools access a page only when selected. Data is never sent outside the browser.</small></div>
           <LockSimple size={20} />
         </section>
       </div>
     </main>
+  );
+}
+
+const PROXY_KIND_LABELS = {
+  fixed: "Fixed proxy",
+  rules: "Domain routing",
+  pac: "PAC",
+};
+
+function ProxyCompanionSettings() {
+  const [companion, setCompanion] = useState({ availability: "loading", summary: null });
+  const [busyAction, setBusyAction] = useState("");
+  const [error, setError] = useState("");
+
+  const refresh = useCallback(async () => {
+    const next = await getProxyCompanion();
+    setCompanion(next);
+    setError(next.availability === "error" ? "Update or reload temoto Proxy, then try again." : "");
+  }, []);
+
+  useEffect(() => {
+    refresh();
+    const refreshWhenVisible = () => { if (document.visibilityState === "visible") refresh(); };
+    window.addEventListener("focus", refresh);
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+    return () => {
+      window.removeEventListener("focus", refresh);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+    };
+  }, [refresh]);
+
+  const run = async (action, payload = {}) => {
+    setBusyAction(action === "ACTIVATE_PROFILE" ? payload.profileId : action);
+    setError("");
+    try {
+      const summary = await runProxyCompanionAction(action, payload);
+      if (summary) setCompanion((current) => ({ availability: current.availability, summary }));
+    } catch (nextError) {
+      const message = nextError?.message || "temoto Proxy could not complete the action.";
+      setCompanion(await getProxyCompanion());
+      setError(message);
+    } finally {
+      setBusyAction("");
+    }
+  };
+
+  const availability = companion.availability;
+  const summary = companion.summary;
+  const active = summary?.profiles.find((profile) => profile.id === summary.activeProfileId);
+  const statusCode = summary?.status?.code || availability;
+  const installed = availability === "installed" || availability === "preview";
+
+  return (
+    <section className={`proxy-settings is-${statusCode}`} aria-busy={Boolean(busyAction)}>
+      <div className="proxy-settings-header">
+        <div>
+          <strong>temoto Proxy</strong>
+          <small>{installed ? (active ? `${active.name} is routing Chrome traffic.` : summary.status.label) : "Browser-wide proxy control stays in a separate companion."}</small>
+        </div>
+        <span className="proxy-state"><i />{installed ? summary.status.label : availability === "loading" ? "Checking" : availability === "error" ? "Unavailable" : "Not installed"}</span>
+      </div>
+
+      {availability === "missing" && (
+        <button className="proxy-wide-action" type="button" onClick={() => window.open(TEMOTO_PROXY_INSTALL_URL, "_blank", "noopener,noreferrer")}>
+          Install temoto Proxy <ArrowSquareOut size={15} />
+        </button>
+      )}
+
+      {(availability === "loading" || availability === "error") && (
+        <button className="proxy-wide-action" type="button" onClick={refresh} disabled={availability === "loading"}>
+          {availability === "loading" ? "Checking companion…" : "Retry connection"}
+        </button>
+      )}
+
+      {installed && (
+        <>
+          <div className="proxy-profile-list" aria-label="Proxy profiles">
+            {summary.profiles.length ? summary.profiles.map((profile) => (
+              <button
+                key={profile.id}
+                className={profile.id === summary.activeProfileId ? "is-active" : ""}
+                type="button"
+                disabled={Boolean(busyAction)}
+                onClick={() => run("ACTIVATE_PROFILE", { profileId: profile.id })}
+              >
+                <i style={{ background: profile.color }} />
+                <span><strong>{profile.name}</strong><small>{PROXY_KIND_LABELS[profile.kind] || profile.kind}</small></span>
+                <span>{busyAction === profile.id ? "Applying…" : profile.id === summary.activeProfileId ? "Active" : "Use"}</span>
+              </button>
+            )) : <p className="proxy-empty">Create a profile in temoto Proxy to get started.</p>}
+          </div>
+          <div className="proxy-actions">
+            <button type="button" disabled={Boolean(busyAction)} onClick={() => run("OPEN_MANAGER")}>
+              Manage profiles <ArrowSquareOut size={15} />
+            </button>
+            {summary.activeProfileId && (
+              <button className="proxy-off-action" type="button" disabled={Boolean(busyAction)} onClick={() => run("DEACTIVATE")}>
+                <Power size={15} /> {busyAction === "DEACTIVATE" ? "Turning off…" : "Turn off"}
+              </button>
+            )}
+          </div>
+        </>
+      )}
+
+      {error && <p className="proxy-error" role="status">{error}</p>}
+    </section>
   );
 }
 

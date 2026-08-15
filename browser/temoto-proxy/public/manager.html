@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>temoto Proxy — Profiles</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="manager-page">
+    <main class="manager-shell">
+      <header class="manager-header product-header">
+        <div class="brand">temoto <span>Proxy</span></div>
+        <div class="manager-global-state" aria-live="polite"><i id="manager-status-dot"></i><span id="manager-status">Reading Chrome settings…</span></div>
+        <button class="button ghost" id="global-toggle" type="button" disabled>Loading…</button>
+      </header>
+
+      <aside class="manager-sidebar">
+        <div class="sidebar-heading"><span>PROFILES</span><button id="new-profile" type="button" aria-label="New profile">＋</button></div>
+        <nav id="manager-profile-list" aria-label="Proxy profiles"></nav>
+        <div class="sidebar-tools">
+          <button id="import-profiles" type="button">Import</button>
+          <button id="export-profiles" type="button">Export</button>
+          <input id="import-file" type="file" accept="application/json,.json" hidden />
+        </div>
+      </aside>
+
+      <section class="manager-content">
+        <div class="manager-notice" id="manager-notice" role="status" hidden></div>
+        <div class="empty-manager" id="empty-manager" hidden>
+          <span class="eyebrow">NETWORK WORKSPACES</span>
+          <h1>Make browser routing visible and reversible.</h1>
+          <p>Create a profile for a local debugging proxy, staging gateway, PAC configuration or domain-specific route.</p>
+          <button class="button primary" id="empty-create" type="button">Create a profile</button>
+        </div>
+
+        <form id="profile-form" novalidate hidden>
+          <div class="editor-titlebar">
+            <div><span class="eyebrow">PROFILE</span><h1 id="editor-title">Proxy profile</h1></div>
+            <div class="editor-title-actions">
+              <button class="button ghost" id="duplicate-profile" type="button">Duplicate</button>
+              <button class="button ghost danger-text" id="delete-profile" type="button">Delete</button>
+            </div>
+          </div>
+
+          <section class="form-section">
+            <div class="section-intro"><span>01</span><div><h2>Identity</h2><p>Name this network workspace so its impact is obvious.</p></div></div>
+            <div class="form-grid two-columns">
+              <label class="field"><span>Profile name</span><input name="name" maxlength="80" required /></label>
+              <label class="field"><span>Accent</span><input name="color" type="color" value="#9974F8" /></label>
+            </div>
+            <div class="segmented" role="group" aria-label="Profile type">
+              <label><input type="radio" name="kind" value="fixed" checked /><span>Fixed proxy<small>One or per protocol</small></span></label>
+              <label><input type="radio" name="kind" value="rules" /><span>Domain routing<small>Generated PAC rules</small></span></label>
+              <label><input type="radio" name="kind" value="pac" /><span>PAC<small>Script or URL</small></span></label>
+            </div>
+          </section>
+
+          <section class="form-section" id="fixed-section">
+            <div class="section-intro"><span>02</span><div><h2>Proxy servers</h2><p>Route all traffic through one endpoint, or define protocol-specific endpoints.</p></div></div>
+            <label class="inline-choice"><input type="checkbox" name="perProtocol" /><span><strong>Use protocol-specific proxies</strong><small>HTTP, HTTPS and fallback can use different servers.</small></span></label>
+            <div id="single-endpoint" class="endpoint-block">
+              <h3>Default proxy</h3>
+              <div class="endpoint-grid" data-endpoint="single"></div>
+            </div>
+            <div id="protocol-endpoints" class="protocol-endpoints" hidden>
+              <div class="endpoint-block"><h3>HTTP requests</h3><div class="endpoint-grid" data-endpoint="http"></div></div>
+              <div class="endpoint-block"><h3>HTTPS requests</h3><div class="endpoint-grid" data-endpoint="https"></div></div>
+              <div class="endpoint-block"><h3>Fallback</h3><div class="endpoint-grid" data-endpoint="fallback"></div></div>
+            </div>
+          </section>
+
+          <section class="form-section" id="routing-section" hidden>
+            <div class="section-intro"><span>03</span><div><h2>Routing rules</h2><p>Rules are evaluated from top to bottom. Generated PAC stays inside this extension.</p></div></div>
+            <div class="routing-default">
+              <span>When no rule matches</span>
+              <select name="defaultAction"><option value="proxy">Use proxy</option><option value="direct">Connect directly</option></select>
+            </div>
+            <div class="rule-list" id="rule-list"></div>
+            <button class="row-add" id="add-rule" type="button">＋ Add domain rule</button>
+          </section>
+
+          <section class="form-section" id="pac-section" hidden>
+            <div class="section-intro"><span>02</span><div><h2>PAC configuration</h2><p>Use an inline FindProxyForURL function or an explicit HTTP(S) PAC URL.</p></div></div>
+            <div class="form-grid two-columns">
+              <label class="field"><span>Source</span><select name="pacSource"><option value="inline">Inline script</option><option value="url">PAC URL</option></select></label>
+              <label class="inline-choice compact"><input type="checkbox" name="pacMandatory" /><span><strong>Mandatory</strong><small>Block fallback to direct if PAC fails.</small></span></label>
+            </div>
+            <label class="field"><span id="pac-value-label">PAC script</span><textarea name="pacValue" rows="9" spellcheck="false"></textarea></label>
+            <div class="warning-strip">A mandatory or remote PAC can interrupt browsing. temoto validates the format but cannot prove remote PAC behavior.</div>
+          </section>
+
+          <section class="form-section" id="bypass-section">
+            <div class="section-intro"><span>04</span><div><h2>Direct connections</h2><p>One Chrome host pattern per line. These destinations bypass the proxy.</p></div></div>
+            <label class="field"><span>Bypass list</span><textarea name="bypassList" rows="5" spellcheck="false" placeholder="&lt;local&gt;&#10;localhost&#10;*.internal.test"></textarea></label>
+          </section>
+
+          <section class="form-section">
+            <div class="section-intro"><span>05</span><div><h2>Authentication</h2><p>Passwords live only in Chrome session storage and disappear when the browser session ends.</p></div></div>
+            <label class="inline-choice"><input type="checkbox" name="authEnabled" /><span><strong>Proxy authentication</strong><small>Credentials are sent only to the explicitly allowed proxy hosts below.</small></span></label>
+            <div id="auth-fields" class="form-grid auth-grid" hidden>
+              <label class="field"><span>Username</span><input name="username" autocomplete="username" /></label>
+              <label class="field"><span>Session password</span><input name="password" type="password" autocomplete="current-password" placeholder="Not stored on disk" /></label>
+              <label class="field full-span"><span>Allowed proxy hosts · one per line</span><textarea name="authHosts" rows="3" spellcheck="false" placeholder="proxy.example.com"></textarea></label>
+              <div class="credential-state full-span" id="credential-state"></div>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-intro"><span>06</span><div><h2>Connection test</h2><p>Send a credential-free HEAD request to a public destination without following redirects.</p></div></div>
+            <div class="diagnostic-row">
+              <label class="field"><span>Test URL</span><input name="diagnosticUrl" type="url" placeholder="https://example.com/" /></label>
+              <button class="button secondary" id="run-diagnostic" type="button">Run test</button>
+            </div>
+            <div class="diagnostic-result" id="diagnostic-result" hidden></div>
+          </section>
+
+          <section class="form-section global-settings">
+            <div class="section-intro"><span>07</span><div><h2>Incognito scope</h2><p>Regular windows always use an isolated regular-only setting.</p></div></div>
+            <label class="inline-choice"><input type="checkbox" id="incognito-enabled" /><span><strong>Apply the active profile in incognito</strong><small id="incognito-help">Requires explicit access in Chrome's extension settings.</small></span></label>
+            <label class="inline-choice compact" id="incognito-session-row" hidden><input type="checkbox" id="incognito-session" checked /><span><strong>Session only</strong><small>Clear the incognito setting when the incognito session ends.</small></span></label>
+          </section>
+
+          <footer class="editor-footer">
+            <div><strong id="footer-profile-name">Proxy profile</strong><small>Saving an active profile reapplies and verifies it.</small></div>
+            <div>
+              <button class="button secondary" id="activate-profile" type="button">Save & activate</button>
+              <button class="button primary" type="submit">Save profile</button>
+            </div>
+          </footer>
+        </form>
+      </section>
+      <div class="toast" id="manager-toast" role="status" hidden></div>
+    </main>
+    <script type="module" src="manager.js"></script>
+  </body>
+</html>
