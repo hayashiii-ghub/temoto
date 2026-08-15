@@ -1,18 +1,19 @@
-(() => {
+((): void => {
   const cleanupKey = "__temotoVideoSpeedShortcutCleanup";
-  window[cleanupKey]?.();
+  const temotoWindow = window as typeof window & { __temotoVideoSpeedShortcutCleanup?: () => void };
+  temotoWindow.__temotoVideoSpeedShortcutCleanup?.();
 
-  const trackedVideos = new Map();
-  let positionFrame = null;
+  const trackedVideos = new Map<HTMLVideoElement, { badge: HTMLDivElement; onRateChange: () => void }>();
+  let positionFrame: number | null = null;
 
-  const videos = () => Array.from(document.querySelectorAll("video"));
-  const clamp = (value) => {
+  const videos = (): HTMLVideoElement[] => Array.from(document.querySelectorAll("video"));
+  const clamp = (value: unknown): number => {
     const numericValue = Number(value);
     const speed = Number.isFinite(numericValue) ? numericValue : 1;
     return Math.round(Math.min(5, Math.max(0.25, speed)) * 100) / 100;
   };
-  const formatSpeed = (speed) => `${Number(clamp(speed).toFixed(2))}×`;
-  const positionBadge = (video, badge) => {
+  const formatSpeed = (speed: unknown): string => `${Number(clamp(speed).toFixed(2))}×`;
+  const positionBadge = (video: HTMLVideoElement, badge: HTMLDivElement) => {
     const rect = video.getBoundingClientRect();
     const visible = rect.width >= 72
       && rect.height >= 40
@@ -36,7 +37,7 @@
       positionBadges();
     });
   };
-  const addVideo = (video) => {
+  const addVideo = (video: HTMLVideoElement) => {
     const badge = document.createElement("div");
     badge.dataset.temotoVideoSpeed = "";
     badge.setAttribute("aria-hidden", "true");
@@ -69,7 +70,7 @@
     trackedVideos.set(video, { badge, onRateChange });
     positionBadge(video, badge);
   };
-  const removeVideo = (video) => {
+  const removeVideo = (video: HTMLVideoElement) => {
     const tracked = trackedVideos.get(video);
     if (!tracked) return;
     video.removeEventListener("ratechange", tracked.onRateChange);
@@ -86,7 +87,7 @@
     });
     positionBadges();
   };
-  const applySpeed = (rawSpeed) => {
+  const applySpeed = (rawSpeed: unknown): number => {
     const nextSpeed = clamp(Number(rawSpeed) || 1);
     const pageVideos = videos();
     pageVideos.forEach((video) => {
@@ -96,16 +97,16 @@
     });
     return pageVideos.length;
   };
-  const isEditable = (event) => event.composedPath().some((node) => (
+  const isEditable = (event: Event): boolean => event.composedPath().some((node) => (
     node instanceof HTMLElement
     && (node.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(node.tagName))
   ));
 
-  const onMessage = (message) => {
+  const onMessage = (message: { type?: string; speed?: unknown }) => {
     if (message?.type === "APPLY_VIDEO_SPEED") applySpeed(message.speed);
   };
 
-  const onKeyDown = (event) => {
+  const onKeyDown = (event: KeyboardEvent) => {
     const key = event.key.toLowerCase();
     if (!['g', 'd', 's'].includes(key) || event.metaKey || event.ctrlKey || event.altKey || isEditable(event)) return;
 
@@ -131,7 +132,7 @@
   document.addEventListener("fullscreenchange", schedulePosition);
   syncVideos();
 
-  window[cleanupKey] = () => {
+  temotoWindow.__temotoVideoSpeedShortcutCleanup = () => {
     observer.disconnect();
     if (positionFrame !== null) window.cancelAnimationFrame(positionFrame);
     trackedVideos.forEach((_, video) => removeVideo(video));
@@ -140,6 +141,6 @@
     window.removeEventListener("scroll", schedulePosition, true);
     window.removeEventListener("resize", schedulePosition);
     document.removeEventListener("fullscreenchange", schedulePosition);
-    delete window[cleanupKey];
+    delete temotoWindow.__temotoVideoSpeedShortcutCleanup;
   };
 })();

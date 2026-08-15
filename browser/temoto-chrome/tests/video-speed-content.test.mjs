@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import vm from "node:vm";
 
-const source = await readFile(new URL("../public/content/video-speed.js", import.meta.url), "utf8");
+const source = await readFile(new URL("../dist/client/content/video-speed.js", import.meta.url), "utf8");
 
 function loadContentScript(initialSpeed = 1.5) {
   class HTMLElement {

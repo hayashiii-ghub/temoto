@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { FormEvent, MouseEventHandler, ReactNode } from "react";
 import {
   ArrowLeft,
   ArrowCounterClockwise,
@@ -25,6 +26,7 @@ import {
   Trash,
   X,
 } from "@phosphor-icons/react";
+import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 import {
   captureFullPage,
   captureRegion,
@@ -39,7 +41,13 @@ import {
   setVideoSpeed,
   startMeasure,
   switchEnvironment,
-} from "./extension-api.js";
+} from "./extension-api.ts";
+import type {
+  ExtensionSettings,
+  PageInfo,
+  ProjectSettings,
+  ScreenshotOptions,
+} from "./extension-api.ts";
 import { planFullPageFrames } from "./capture-plan.ts";
 import { isPageToolAvailable, isValidHttpOrigin } from "./url-utils.ts";
 import {
@@ -54,6 +62,10 @@ import {
   runProxyCompanionAction,
   TEMOTO_PROXY_INSTALL_URL,
 } from "./proxy-companion.ts";
+import type {
+  ProxyCompanionAction,
+  ProxyCompanionConnection,
+} from "./proxy-companion.ts";
 
 const TOOL_DEFINITIONS = {
   color: { title: "Color Picker", icon: EyedropperSample },
@@ -62,9 +74,17 @@ const TOOL_DEFINITIONS = {
   environment: { title: "Environments", icon: ArrowsLeftRight },
   reset: { title: "Site Reset", icon: ArrowCounterClockwise },
   inspect: { title: "Inspect", icon: BoundingBox },
-};
+} satisfies Record<string, { title: string; icon: PhosphorIcon }>;
 
-function Brand({ descriptor }) {
+type ToolId = keyof typeof TOOL_DEFINITIONS;
+type CaptureKind = "region" | "visible" | "full";
+type EnvironmentKey = "local" | "staging" | "production";
+
+function errorMessage(error: unknown, fallback: string): string {
+  return error instanceof Error ? error.message : fallback;
+}
+
+function Brand({ descriptor }: { descriptor?: string }) {
   return (
     <div className="brand-lockup">
       <div className="brand-name">
@@ -77,7 +97,11 @@ function Brand({ descriptor }) {
   );
 }
 
-function IconButton({ label, children, onClick }) {
+function IconButton({ label, children, onClick }: {
+  label: string;
+  children: ReactNode;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+}) {
   return (
     <button className="icon-button" type="button" aria-label={label} title={label} onClick={onClick}>
       {children}
@@ -85,12 +109,19 @@ function IconButton({ label, children, onClick }) {
   );
 }
 
-function StatusToast({ message }) {
+function StatusToast({ message }: { message: string }) {
   if (!message) return null;
   return <div className="status-toast" role="status">{message}</div>;
 }
 
-function LauncherCard({ icon: Icon, label, meta, onClick, danger = false, disabled = false }) {
+function LauncherCard({ icon: Icon, label, meta, onClick, danger = false, disabled = false }: {
+  icon: PhosphorIcon;
+  label: string;
+  meta?: ReactNode;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+  danger?: boolean;
+  disabled?: boolean;
+}) {
   return (
     <button className={`launcher-card${danger ? " is-danger" : ""}`} type="button" onClick={onClick} disabled={disabled} title={disabled ? "Unavailable on this page" : undefined}>
       {meta && <span className="launcher-meta">{meta}</span>}
@@ -100,7 +131,10 @@ function LauncherCard({ icon: Icon, label, meta, onClick, danger = false, disabl
   );
 }
 
-function ToolScreenHeader({ tool, onBack }) {
+function ToolScreenHeader({ tool, onBack }: {
+  tool: (typeof TOOL_DEFINITIONS)[ToolId];
+  onBack: MouseEventHandler<HTMLButtonElement>;
+}) {
   const Icon = tool.icon;
   return (
     <header className="tool-screen-header">
@@ -113,8 +147,12 @@ function ToolScreenHeader({ tool, onBack }) {
   );
 }
 
-function SpeedControl({ speed, onChange, disabled }) {
-  const update = (value) => onChange(clampPlaybackSpeed(value));
+function SpeedControl({ speed, onChange, disabled }: {
+  speed: number;
+  onChange: (speed: number) => void | Promise<void>;
+  disabled: boolean;
+}) {
+  const update = (value: number) => onChange(clampPlaybackSpeed(value));
   return (
     <div className="speed-control">
       <div className="speed-value"><span>{speed}</span><small>×</small></div>
@@ -139,7 +177,7 @@ function SpeedControl({ speed, onChange, disabled }) {
   );
 }
 
-function ScreenshotPanel({ onDone }) {
+function ScreenshotPanel({ onDone }: { onDone: (message: string) => void }) {
   const [busy, setBusy] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [captureOptions, setCaptureOptions] = useState({ delayMs: 0, forceReveal: false });
@@ -150,13 +188,13 @@ function ScreenshotPanel({ onDone }) {
     }).catch((error) => onDone(error.message));
   }, [onDone]);
 
-  const updateOption = (key, value) => {
+  const updateOption = <Key extends keyof ScreenshotOptions>(key: Key, value: ScreenshotOptions[Key]) => {
     const nextOptions = { ...captureOptions, [key]: value };
     setCaptureOptions(nextOptions);
     saveSettings({ screenshot: nextOptions }).catch((error) => onDone(error.message));
   };
 
-  const run = async (kind) => {
+  const run = async (kind: CaptureKind) => {
     setBusy(true);
     try {
       const result = kind === "region"
@@ -167,7 +205,7 @@ function ScreenshotPanel({ onDone }) {
       if (!result?.ok) throw new Error(result?.error || "Could not capture this page");
       onDone(result?.preview ? "Capture starts in the installed extension" : "Capture started");
     } catch (error) {
-      onDone(error.message);
+      onDone(errorMessage(error, "Could not capture this page"));
     } finally {
       setBusy(false);
     }
@@ -214,8 +252,12 @@ function ScreenshotPanel({ onDone }) {
   );
 }
 
-function EnvironmentPanel({ page, project, onDone }) {
-  const targets = [
+function EnvironmentPanel({ page, project, onDone }: {
+  page: PageInfo;
+  project: ProjectSettings;
+  onDone: (message: string) => void;
+}) {
+  const targets: Array<[string, string]> = [
     ["LOCAL", project.local],
     ["STAGING", project.staging],
     ["PRODUCTION", project.production],
@@ -240,9 +282,9 @@ function EnvironmentPanel({ page, project, onDone }) {
 }
 
 function PopupApp() {
-  const [page, setPage] = useState({ hostname: "Current page", origin: "", url: "", videoCount: 0, playbackRate: 1 });
-  const [settings, setSettings] = useState({ project: { name: "Local project", local: "http://localhost:3000", staging: "https://staging.example.com", production: "https://example.com" }, lastColor: "#7C5CFC", lastSpeed: 1.5, screenshot: { delayMs: 0, forceReveal: false } });
-  const [activeTool, setActiveTool] = useState(null);
+  const [page, setPage] = useState<PageInfo>({ hostname: "Current page", origin: "", url: "", videoCount: 0, playbackRate: 1 });
+  const [settings, setSettings] = useState<ExtensionSettings>({ project: { name: "Local project", local: "http://localhost:3000", staging: "https://staging.example.com", production: "https://example.com" }, lastColor: "#7C5CFC", lastSpeed: 1.5, screenshot: { delayMs: 0, forceReveal: false } });
+  const [activeTool, setActiveTool] = useState<ToolId | null>(null);
   const [speed, setSpeed] = useState(1.5);
   const [toast, setToast] = useState("");
   const [resetOpen, setResetOpen] = useState(false);
@@ -267,7 +309,7 @@ function PopupApp() {
     return () => window.clearTimeout(timer);
   }, [toast]);
 
-  const updateSpeed = async (value) => {
+  const updateSpeed = async (value: number) => {
     setSpeed(value);
     setSettings((current) => ({ ...current, lastSpeed: value }));
     await saveSettings({ lastSpeed: value });
@@ -277,8 +319,8 @@ function PopupApp() {
 
   useEffect(() => {
     if (activeTool !== "speed") return undefined;
-    const onKeyDown = (event) => {
-      const target = event.target;
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target instanceof HTMLElement ? event.target : null;
       if (event.metaKey || event.ctrlKey || event.altKey || target?.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target?.tagName || "")) return;
       const nextSpeed = speedFromShortcut(event.key, speed);
       if (nextSpeed === null) return;
@@ -296,7 +338,9 @@ function PopupApp() {
       setToast(`${color} copied`);
       await navigator.clipboard?.writeText(color);
     } catch (error) {
-      if (error.name !== "AbortError") setToast(error.message);
+      if (!(error instanceof DOMException && error.name === "AbortError")) {
+        setToast(errorMessage(error, "Could not pick a color"));
+      }
     }
   };
 
@@ -312,9 +356,9 @@ function PopupApp() {
     try {
       const result = await resetOrigin(page.origin);
       setResetOpen(false);
-      setToast(result?.ok ? `Cleared site data for ${page.hostname}` : result?.error);
+      setToast(result?.ok ? `Cleared site data for ${page.hostname}` : result?.error || "Could not reset this site");
     } catch (error) {
-      setToast(error.message || "Could not reset this site");
+      setToast(errorMessage(error, "Could not reset this site"));
     } finally {
       setResetBusy(false);
     }
@@ -430,17 +474,17 @@ function PopupApp() {
 }
 
 function SidePanelApp() {
-  const [project, setProject] = useState({ name: "Local project", local: "http://localhost:3000", staging: "https://staging.example.com", production: "https://example.com" });
+  const [project, setProject] = useState<ProjectSettings>({ name: "Local project", local: "http://localhost:3000", staging: "https://staging.example.com", production: "https://example.com" });
   const [saved, setSaved] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Partial<Record<EnvironmentKey, string>>>({});
 
   useEffect(() => { getSettings().then((settings) => setProject(settings.project)); }, []);
 
-  const update = (key, value) => setProject((current) => ({ ...current, [key]: value }));
-  const submit = async (event) => {
+  const update = (key: keyof ProjectSettings, value: string) => setProject((current) => ({ ...current, [key]: value }));
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const nextErrors = {};
-    ["local", "staging", "production"].forEach((key) => {
+    const nextErrors: Partial<Record<EnvironmentKey, string>> = {};
+    (["local", "staging", "production"] as const).forEach((key) => {
       if (!isValidHttpOrigin(project[key])) nextErrors[key] = "Enter an origin beginning with http(s)://";
     });
     setErrors(nextErrors);
@@ -461,7 +505,7 @@ function SidePanelApp() {
         </section>
         <form className="settings-form" onSubmit={submit}>
           <label><span>PROJECT NAME</span><input value={project.name} onChange={(event) => update("name", event.target.value)} /></label>
-          {[["local", "LOCAL"], ["staging", "STAGING"], ["production", "PRODUCTION"]].map(([key, label]) => (
+          {([["local", "LOCAL"], ["staging", "STAGING"], ["production", "PRODUCTION"]] as const).map(([key, label]) => (
             <label key={key} className={errors[key] ? "has-error" : ""}>
               <span>{label}</span>
               <input value={project[key]} onChange={(event) => update(key, event.target.value)} spellCheck="false" />
@@ -480,14 +524,14 @@ function SidePanelApp() {
   );
 }
 
-const PROXY_KIND_LABELS = {
+const PROXY_KIND_LABELS: Record<string, string> = {
   fixed: "Fixed proxy",
   rules: "Domain routing",
   pac: "PAC",
 };
 
 function ProxyCompanionSettings() {
-  const [companion, setCompanion] = useState({ availability: "loading", summary: null });
+  const [companion, setCompanion] = useState<ProxyCompanionConnection | { availability: "loading"; summary: null }>({ availability: "loading", summary: null });
   const [busyAction, setBusyAction] = useState("");
   const [error, setError] = useState("");
 
@@ -508,14 +552,19 @@ function ProxyCompanionSettings() {
     };
   }, [refresh]);
 
-  const run = async (action, payload = {}) => {
-    setBusyAction(action === "ACTIVATE_PROFILE" ? payload.profileId : action);
+  const run = async (action: ProxyCompanionAction, payload: { profileId?: string } = {}) => {
+    setBusyAction(action === "ACTIVATE_PROFILE" ? payload.profileId || action : action);
     setError("");
     try {
       const summary = await runProxyCompanionAction(action, payload);
-      if (summary) setCompanion((current) => ({ availability: current.availability, summary }));
+      if (summary) {
+        setCompanion((current) => ({
+          availability: current.availability === "loading" ? "preview" : current.availability,
+          summary,
+        }));
+      }
     } catch (nextError) {
-      const message = nextError?.message || "temoto Proxy could not complete the action.";
+      const message = errorMessage(nextError, "temoto Proxy could not complete the action.");
       setCompanion(await getProxyCompanion());
       setError(message);
     } finally {
@@ -527,16 +576,16 @@ function ProxyCompanionSettings() {
   const summary = companion.summary;
   const active = summary?.profiles.find((profile) => profile.id === summary.activeProfileId);
   const statusCode = summary?.status?.code || availability;
-  const installed = availability === "installed" || availability === "preview";
+  const installed = Boolean(summary) && (availability === "installed" || availability === "preview");
 
   return (
     <section className={`proxy-settings is-${statusCode}`} aria-busy={Boolean(busyAction)}>
       <div className="proxy-settings-header">
         <div>
           <strong>temoto Proxy</strong>
-          <small>{installed ? (active ? `${active.name} is routing Chrome traffic.` : summary.status.label) : "Browser-wide proxy control stays in a separate companion."}</small>
+          <small>{summary ? (active ? `${active.name} is routing Chrome traffic.` : summary.status.label) : "Browser-wide proxy control stays in a separate companion."}</small>
         </div>
-        <span className="proxy-state"><i />{installed ? summary.status.label : availability === "loading" ? "Checking" : availability === "error" ? "Unavailable" : "Not installed"}</span>
+        <span className="proxy-state"><i />{summary ? summary.status.label : availability === "loading" ? "Checking" : availability === "error" ? "Unavailable" : "Not installed"}</span>
       </div>
 
       {availability === "missing" && (
@@ -551,7 +600,7 @@ function ProxyCompanionSettings() {
         </button>
       )}
 
-      {installed && (
+      {installed && summary && (
         <>
           <div className="proxy-profile-list" aria-label="Proxy profiles">
             {summary.profiles.length ? summary.profiles.map((profile) => (
@@ -586,8 +635,41 @@ function ProxyCompanionSettings() {
   );
 }
 
-function loadCaptureImage(dataUrl) {
-  return new Promise((resolve, reject) => {
+interface CaptureRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+interface CaptureViewport {
+  width: number;
+  height: number;
+}
+
+interface FullPageCapture {
+  type: "fullPage";
+  frames: Array<{ dataUrl: string; scrollY: number; duplicateOfPrevious?: boolean }>;
+  viewport: CaptureViewport;
+  document: { height: number };
+}
+
+interface SingleCapture {
+  type: "single";
+  dataUrl: string;
+  viewport: CaptureViewport;
+  rect?: CaptureRect;
+}
+
+type PendingCapture = FullPageCapture | SingleCapture;
+
+interface CaptureStoreModule {
+  readPendingCapture(): Promise<PendingCapture | null>;
+  removePendingCapture(): Promise<void>;
+}
+
+function loadCaptureImage(dataUrl: string): Promise<HTMLImageElement> {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image();
     image.onload = () => resolve(image);
     image.onerror = () => reject(new Error("Could not load the capture."));
@@ -595,11 +677,12 @@ function loadCaptureImage(dataUrl) {
   });
 }
 
-function captureImagesAreEquivalent(first, second) {
+function captureImagesAreEquivalent(first: CanvasImageSource, second: CanvasImageSource): boolean {
   const sample = document.createElement("canvas");
   sample.width = 64;
   sample.height = 64;
   const context = sample.getContext("2d", { willReadFrequently: true });
+  if (!context) return false;
   context.drawImage(first, 0, 0, sample.width, sample.height);
   const firstPixels = context.getImageData(0, 0, sample.width, sample.height).data;
   context.clearRect(0, 0, sample.width, sample.height);
@@ -615,7 +698,7 @@ function captureImagesAreEquivalent(first, second) {
 }
 
 function CaptureApp() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [status, setStatus] = useState("Loading capture…");
   const [ready, setReady] = useState(false);
 
@@ -626,9 +709,11 @@ function CaptureApp() {
     }
     let cancelled = false;
     const renderCapture = async () => {
-      const captureStore = await import(/* @vite-ignore */ chrome.runtime.getURL("capture-store.js"));
+      const captureStore = await import(/* @vite-ignore */ chrome.runtime.getURL("capture-store.js")) as CaptureStoreModule;
       const storedCapture = await captureStore.readPendingCapture();
-      const legacyCapture = storedCapture ? null : (await chrome.storage.session.get("pendingCapture")).pendingCapture;
+      const legacyCapture = storedCapture
+        ? null
+        : (await chrome.storage.session.get("pendingCapture")).pendingCapture as PendingCapture | undefined;
       const pendingCapture = storedCapture || legacyCapture;
       if (!pendingCapture) {
         setStatus("No capture found.");
@@ -653,6 +738,7 @@ function CaptureApp() {
           canvas.width = images[0].naturalWidth;
           canvas.height = outputHeight;
           const context = canvas.getContext("2d");
+          if (!context) throw new Error("Could not prepare the capture canvas.");
           renderFrames.forEach(({ index, outputY }) => {
             context.drawImage(images[index], 0, Math.round(outputY * scaleY));
           });
@@ -665,11 +751,15 @@ function CaptureApp() {
             const scaleY = image.naturalHeight / pendingCapture.viewport.height;
             canvas.width = Math.round(rect.width * scaleX);
             canvas.height = Math.round(rect.height * scaleY);
-            canvas.getContext("2d").drawImage(image, rect.x * scaleX, rect.y * scaleY, rect.width * scaleX, rect.height * scaleY, 0, 0, canvas.width, canvas.height);
+            const context = canvas.getContext("2d");
+            if (!context) throw new Error("Could not prepare the capture canvas.");
+            context.drawImage(image, rect.x * scaleX, rect.y * scaleY, rect.width * scaleX, rect.height * scaleY, 0, 0, canvas.width, canvas.height);
           } else {
             canvas.width = image.naturalWidth;
             canvas.height = image.naturalHeight;
-            canvas.getContext("2d").drawImage(image, 0, 0);
+            const context = canvas.getContext("2d");
+            if (!context) throw new Error("Could not prepare the capture canvas.");
+            context.drawImage(image, 0, 0);
           }
         }
         if (!cancelled) {
@@ -677,7 +767,7 @@ function CaptureApp() {
           setStatus("");
         }
       } catch (error) {
-        if (!cancelled) setStatus(error.message || "Could not load the capture.");
+        if (!cancelled) setStatus(errorMessage(error, "Could not load the capture."));
       } finally {
         await Promise.allSettled([
           captureStore.removePendingCapture(),
@@ -687,12 +777,19 @@ function CaptureApp() {
     };
 
     renderCapture().catch((error) => {
-      if (!cancelled) setStatus(error.message || "Could not load the capture.");
+      if (!cancelled) setStatus(errorMessage(error, "Could not load the capture."));
     });
     return () => { cancelled = true; };
   }, []);
 
-  const toBlob = () => new Promise((resolve) => canvasRef.current.toBlob(resolve, "image/png"));
+  const toBlob = () => new Promise<Blob>((resolve, reject) => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      reject(new Error("Capture canvas is unavailable"));
+      return;
+    }
+    canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("Could not create a PNG")), "image/png");
+  });
   const copy = async () => {
     const blob = await toBlob();
     await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
@@ -724,7 +821,7 @@ function CaptureApp() {
   );
 }
 
-export function App({ surface = "popup" }) {
+export function App({ surface = "popup" }: { surface?: string }) {
   const content = useMemo(() => {
     if (surface === "sidepanel") return <SidePanelApp />;
     if (surface === "capture") return <CaptureApp />;

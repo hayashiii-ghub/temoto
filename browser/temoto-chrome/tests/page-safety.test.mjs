@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { normalizeResetOrigin } from "../public/reset-origin.js";
-import { resetOrigin } from "../src/extension-api.js";
+import { normalizeResetOrigin } from "../src/extension/reset-origin.ts";
+import { resetOrigin } from "../src/extension-api.ts";
 import { isPageToolAvailable } from "../src/url-utils.ts";
 
 test("page-dependent tools are unavailable until an HTTP(S) page is detected", () => {

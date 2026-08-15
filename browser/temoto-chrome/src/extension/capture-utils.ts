@@ -8,7 +8,7 @@ export const MAX_FULL_PAGE_HEIGHT = 32000;
 export const CAPTURE_SCROLL_TOLERANCE = 1;
 export const SCREENSHOT_DELAY_OPTIONS = [0, 1000, 3000, 5000];
 
-export function normalizeScreenshotOptions(options = {}) {
+export function normalizeScreenshotOptions(options: { delayMs?: unknown; forceReveal?: unknown } = {}) {
   const delayMs = Number(options.delayMs);
   return {
     delayMs: SCREENSHOT_DELAY_OPTIONS.includes(delayMs) ? delayMs : 0,
@@ -16,7 +16,7 @@ export function normalizeScreenshotOptions(options = {}) {
   };
 }
 
-export function normalizeCaptureMetrics(documentHeight, viewportHeight, outputScale = 1) {
+export function normalizeCaptureMetrics(documentHeight: unknown, viewportHeight: unknown, outputScale: unknown = 1) {
   const pageHeight = Math.max(1, Math.ceil(Number(documentHeight) || 0));
   const frameHeight = Math.max(1, Math.ceil(Number(viewportHeight) || 0));
   const scale = Math.max(1, Number(outputScale) || 1);
@@ -26,7 +26,7 @@ export function normalizeCaptureMetrics(documentHeight, viewportHeight, outputSc
   return { pageHeight, frameHeight };
 }
 
-export function nextFullPageCaptureY(currentY, documentHeight, viewportHeight, outputScale = 1) {
+export function nextFullPageCaptureY(currentY: unknown, documentHeight: unknown, viewportHeight: unknown, outputScale: unknown = 1): number | null {
   const { pageHeight, frameHeight } = normalizeCaptureMetrics(documentHeight, viewportHeight, outputScale);
   const maxScrollY = Math.max(0, pageHeight - frameHeight);
   const currentPosition = Math.max(0, Number(currentY) || 0);
@@ -34,7 +34,7 @@ export function nextFullPageCaptureY(currentY, documentHeight, viewportHeight, o
   return Math.min(currentPosition + frameHeight, maxScrollY);
 }
 
-export function didFullPageCaptureAdvance(previousY, currentY) {
+export function didFullPageCaptureAdvance(previousY: unknown, currentY: unknown): boolean {
   if (previousY === null || previousY === undefined) return true;
   return Number(currentY) > Number(previousY) + CAPTURE_SCROLL_TOLERANCE;
 }
