@@ -14,9 +14,9 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
   display: "swap",
 });
-const title = "temoto — 手元に、置いておく。";
+const title = "temoto — 作業の途中を、手元に。";
 const description =
-  "Macではファイルとリンクの棚。Chromeではページを試す6つの道具と、開発用プロキシの切り替え。アカウントなしで、手元に置いておく。";
+  "Macではファイルとリンクの棚。Chromeではページを試す6つの道具と、開発用プロキシの切り替え。作業の途中を、手元に残すためのtemoto。";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://temoto.haygsiiii.chatgpt.site"),

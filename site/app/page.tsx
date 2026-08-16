@@ -1,11 +1,14 @@
 import { CopyCommandButton } from "./CopyCommandButton";
 import { JapaneseText } from "./JapaneseText";
+import { ProductNavigation } from "./ProductNavigation";
 
 const downloadUrl =
   "https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.dmg";
 const repositoryUrl = "https://github.com/hayashiii-ghub/temoto";
 const chromeSourceUrl = `${repositoryUrl}/tree/main/browser/temoto-chrome`;
 const proxySourceUrl = `${repositoryUrl}/tree/main/browser/temoto-proxy`;
+const installScriptSourceUrl = `${repositoryUrl}/blob/main/script/install_latest.sh`;
+const releasesUrl = `${repositoryUrl}/releases/latest`;
 const updateCommand =
   "curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/install_latest.sh | bash";
 
@@ -142,7 +145,7 @@ function FileMark({ kind }: { kind: "file" | "folder" | "link" }) {
 
 function ShelfPreview({ compact = false }: { compact?: boolean }) {
   return (
-    <div className={`shelfScene${compact ? " isCompact" : ""}`} aria-label="3つの項目が入ったtemoto for macOSの画面イメージ">
+    <div className={`shelfScene${compact ? " isCompact" : ""}`} role="img" aria-label="3つの項目が入ったtemoto for macOSの画面イメージ">
       <div className="sceneLabel sceneLabelTop"><span>ON SCREEN</span><i /></div>
       <div className="appShelf">
         <div className="appShelfHighlight" />
@@ -204,7 +207,7 @@ function ChromeToolIcon({ path }: { path: string }) {
 
 function ChromePreview({ compact = false }: { compact?: boolean }) {
   return (
-    <div className={`chromeScene${compact ? " isCompact" : ""}`} aria-label="temoto for Chromeのランチャー画面イメージ">
+    <div className={`chromeScene${compact ? " isCompact" : ""}`} role="img" aria-label="temoto for Chromeのランチャー画面イメージ">
       <div className="chromePopup">
         <div className="chromePopupHeader">
           <p>temoto <span className="chromeFor">for Chrome</span></p>
@@ -250,7 +253,7 @@ const proxyFeatures = [
 
 function ProxyPreview() {
   return (
-    <div className="proxyScene" aria-label="temoto Proxyのプロファイル設定画面イメージ">
+    <div className="proxyScene" role="img" aria-label="temoto Proxyのプロファイル設定画面イメージ">
       <div className="proxyWindow">
         <div className="proxyTopbar"><strong>temoto <span>Proxy</span></strong><small>PROXY OFF</small></div>
         <div className="proxyBody">
@@ -323,20 +326,21 @@ function LocationModes() {
 
 export default function Home() {
   return (
-    <main id="top">
-      <nav className="nav shell" aria-label="メインナビゲーション">
-        <a className="brand" href="#top" aria-label="temoto トップへ">temoto</a>
-        <div className="navLinks">
-          <a href="#macos">macOS</a>
-          <a href="#chrome">Chrome</a>
-          <a href="#proxy">Proxy</a>
+    <>
+      <a className="skipLink" href="#content">本文へ移動</a>
+      <header className="siteHeader" id="top">
+        <div className="nav shell">
+          <a className="brand" href="#top" aria-label="temoto トップへ">temoto</a>
+          <ProductNavigation />
+          <a className="navGitHub" href={repositoryUrl} aria-label="GitHub"><span>GitHub</span><i aria-hidden="true">↗</i></a>
         </div>
-        <a className="navGitHub" href={repositoryUrl} aria-label="GitHub"><span>GitHub</span><i aria-hidden="true">↗</i></a>
-      </nav>
+      </header>
+
+      <main id="content">
 
       <section className="hero shell">
         <div className="heroCopy">
-          <h1><JapaneseText>手元に、置いておく。</JapaneseText></h1>
+          <h1><JapaneseText>作業の途中を、手元に。</JapaneseText></h1>
           <p className="lead">
             <JapaneseText>temotoは、作業の途中にあるものを近くに残すための小さな道具。Macではファイルとリンクの棚。Chromeでは、ページを試す道具と開発用プロキシ。</JapaneseText>
           </p>
@@ -352,7 +356,7 @@ export default function Home() {
 
       <section className="signalStrip" aria-label="temotoの製品">
         <div className="shell signalInner">
-          <p>Keep it close.<br /><span>Keep moving.</span></p>
+          <p><JapaneseText>作業の途中を、手元に。</JapaneseText><br /><span><JapaneseText>使う場所に合わせて。</JapaneseText></span></p>
           <dl>
             <div><dt>01</dt><dd>MACOS SHELF</dd></div>
             <div><dt>02</dt><dd>CHROME TOOLS</dd></div>
@@ -467,7 +471,11 @@ export default function Home() {
                 <div className="terminalBar"><span /><span /><span /><small>zsh</small></div>
                 <div className="commandRow"><code>{updateCommand}</code><CopyCommandButton command={updateCommand} /></div>
               </div>
-              <small><JapaneseText>同じコマンドをもう一度実行すれば、いつでも最新版へ更新できます。</JapaneseText></small>
+              <div className="terminalTrust">
+                <a href={installScriptSourceUrl}>実行前にスクリプトを確認 <span aria-hidden="true">↗</span></a>
+                <a href={releasesUrl}>GitHub Releaseの配布物を見る <span aria-hidden="true">↗</span></a>
+              </div>
+              <small><JapaneseText>GitHub Releasesから取得します。同じコマンドをもう一度実行すれば、いつでも最新版へ更新できます。</JapaneseText></small>
             </article>
           </div>
           <div className="permissionNote">
@@ -591,15 +599,15 @@ export default function Home() {
       </section>
 
       <section className="finalCta shell">
-        <p>Keep it close.</p>
+        <p>CHOOSE A TEMOTO</p>
         <h2><JapaneseText>手元の道具を、選ぶ。</JapaneseText></h2>
         <div className="finalActions">
-          <a className="button primary" href={downloadUrl}>temoto for macOS <span aria-hidden="true">↘</span></a>
-          <a className="button ghost" href={chromeSourceUrl}>temoto for Chrome <span aria-hidden="true">↗</span></a>
-          <a className="button ghost" href={proxySourceUrl}>temoto Proxy <span aria-hidden="true">↗</span></a>
+          <a className="button primary" href={downloadUrl}>macOS版をダウンロード <span aria-hidden="true">↘</span></a>
+          <a className="button ghost" href={chromeSourceUrl}>Chrome版のソースを見る（審査中） <span aria-hidden="true">↗</span></a>
+          <a className="button ghost" href={proxySourceUrl}>Proxy版のソースを見る（審査中） <span aria-hidden="true">↗</span></a>
         </div>
       </section>
-
+      </main>
       <footer className="footer shell">
         <a className="brand" href="#top">temoto</a>
         <p>© 2026 temoto</p>
@@ -611,6 +619,6 @@ export default function Home() {
           <a href="#proxy">Proxy</a>
         </div>
       </footer>
-    </main>
+    </>
   );
 }
