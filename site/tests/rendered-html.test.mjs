@@ -28,9 +28,9 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   const html = await response.text();
   const htmlWithoutBreakHints = withoutBreakHints(html);
   assert.match(html, /<html lang="ja">/);
-  assert.match(html, /<title>temoto — 手元に、置いておく。<\/title>/);
+  assert.match(html, /<title>temoto — 作業の途中を、手元に。<\/title>/);
   assert.match(html, /<wbr\s*\/?/);
-  assert.match(htmlWithoutBreakHints, /手元に、置いておく。/);
+  assert.match(htmlWithoutBreakHints, /作業の途中を、手元に。/);
   assert.match(htmlWithoutBreakHints, /使う場所に合わせた、3つのtemoto。/);
   assert.match(html, /temoto for macOS/);
   assert.equal(html.match(/class="macAppIcon" aria-hidden="true"/g)?.length, 2);
@@ -61,6 +61,7 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(html, /#9974f8/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
   assert.doesNotMatch(html, /KEEP IT CLOSE/);
+  assert.doesNotMatch(html, /Keep it close/);
   assert.doesNotMatch(html, /chromeGlyph|fileMark-file|actionClipboard/);
   assert.doesNotMatch(html, /ShelfDrop|v1\.0\.0|ALWAYS ON TOP|FLOATING SHELF FOR MACOS/);
 });
@@ -77,6 +78,13 @@ test("公開用メタデータと主要リンクを含む", async () => {
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/tree\/main\/browser\/temoto-proxy/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto/);
   assert.match(html, /class="navGitHub"[^>]*aria-label="GitHub"/);
+  assert.match(html, /class="skipLink" href="#content"/);
+  assert.match(html, /<header class="siteHeader" id="top">/);
+  assert.match(html, /<main id="content">/);
+  assert.match(html, /class="mobileProductNav"/);
+  assert.match(html, /Chrome版のソースを見る（審査中）/);
+  assert.match(html, /Proxy版のソースを見る（審査中）/);
+  assert.match(html, /blob\/main\/script\/install_latest\.sh/);
 });
 
 test("faviconは完成済みのmacOSアプリアイコンを使う", () => {
