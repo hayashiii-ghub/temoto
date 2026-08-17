@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
+import { createTemotoIcon } from "../../browser/temoto-proxy/scripts/icon-utils.mjs";
+
 async function render() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
@@ -55,12 +57,11 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.doesNotMatch(html, /temotoMark/);
   assert.match(html, /chromeMark/);
   assert.match(html, /proxyMark/);
-  assert.match(html, /stroke-width="56"/);
+  assert.doesNotMatch(html, /<svg[^>]+(?:chromeMark|proxyMark)/);
   assert.match(html, /chromeToolIcon/);
   assert.match(html, /M222,67\.34/);
   assert.match(html, /shelfIcon/);
   assert.match(html, /M52\.44,36/);
-  assert.match(html, /#9974f8/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
   assert.doesNotMatch(html, /KEEP IT CLOSE/);
   assert.doesNotMatch(html, /Keep it close/);
@@ -111,6 +112,26 @@ test("OG画像は1200x630のPNGである", () => {
 test("ChromeとProxyの商品アイコンは同じ表示寸法を使う", () => {
   const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(css, /\.productVisual \.chromeMark,\s*\.productVisual \.proxyMark \{ width: 98px; height: 98px; \}/);
+  assert.match(css, /\.chromeMark \{ background: url\("\/product-chrome-icon\.png"\) center \/ contain no-repeat; \}/);
+  assert.match(css, /\.proxyMark \{ background: url\("\/product-proxy-icon\.png"\) center \/ contain no-repeat; \}/);
+});
+
+test("商品アイコンは各Chrome拡張の正規128px素材を使う", () => {
+  const siteChromeIcon = readFileSync(new URL("../public/product-chrome-icon.png", import.meta.url));
+  const extensionChromeIcon = readFileSync(
+    new URL("../../browser/temoto-chrome/public/icons/icon-128.png", import.meta.url),
+  );
+  const siteProxyIcon = readFileSync(new URL("../public/product-proxy-icon.png", import.meta.url));
+
+  assert.deepEqual(siteChromeIcon, extensionChromeIcon);
+  assert.deepEqual(siteProxyIcon, createTemotoIcon(128));
+});
+
+test("OG画像のソースも3製品の正規素材を参照する", () => {
+  const source = readFileSync(new URL("../scripts/og.html", import.meta.url), "utf8");
+  assert.match(source, /\.\.\/public\/favicon\.png/);
+  assert.match(source, /\.\.\/public\/product-chrome-icon\.png/);
+  assert.match(source, /\.\.\/public\/product-proxy-icon\.png/);
 });
 
 test("ページ上部ではモバイルナビのトップ項目を優先する", () => {

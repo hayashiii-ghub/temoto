@@ -78,30 +78,11 @@ function MenuBarIcon() {
 }
 
 function ChromeMark({ className }: { className?: string }) {
-  return (
-    <svg className={className ? `chromeMark ${className}` : "chromeMark"} viewBox="0 0 1024 1024" aria-hidden="true">
-      <g transform="translate(512 512) scale(1.68) translate(-512 -512)" fill="#9974f8">
-        <rect x="302" y="335" width="420" height="130" transform="rotate(30 512 400)" />
-        <rect x="302" y="535" width="420" height="130" transform="rotate(30 512 600)" />
-      </g>
-    </svg>
-  );
+  return <span className={className ? `chromeMark ${className}` : "chromeMark"} aria-hidden="true" />;
 }
 
 function ProxyMark({ className }: { className?: string }) {
-  return (
-    <svg className={className ? `proxyMark ${className}` : "proxyMark"} viewBox="0 0 1024 1024" aria-hidden="true">
-      <g
-        transform="translate(512 512) scale(1.68) translate(-512 -512)"
-        fill="none"
-        stroke="#9974f8"
-        strokeWidth="56"
-      >
-        <rect x="330" y="363" width="364" height="74" transform="rotate(30 512 400)" />
-        <rect x="330" y="563" width="364" height="74" transform="rotate(30 512 600)" />
-      </g>
-    </svg>
-  );
+  return <span className={className ? `proxyMark ${className}` : "proxyMark"} aria-hidden="true" />;
 }
 
 const shelfIcons = {

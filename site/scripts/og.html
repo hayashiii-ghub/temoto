@@ -27,7 +27,7 @@
         width: 1200px;
         height: 630px;
         display: grid;
-        grid-template-columns: minmax(0, 1.2fr) minmax(420px, 0.8fr);
+        grid-template-columns: minmax(0, 0.95fr) minmax(560px, 1.05fr);
         align-items: center;
         gap: 48px;
         padding: 72px 80px;
@@ -75,31 +75,25 @@
       }
       .products {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
       }
       .tile {
-        height: 280px;
+        height: 238px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 22px;
+        gap: 18px;
         border: 1px solid rgba(255, 255, 255, 0.09);
-        border-radius: 28px;
+        border-radius: 24px;
         background: #141414;
       }
-      .tile svg {
+      .tile img {
         display: block;
-      }
-      .macosMark {
-        width: 88px;
-        height: 88px;
-        color: #efefed;
-      }
-      .chromeMark {
-        width: 88px;
-        height: 88px;
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
       }
       .tile span {
         color: #686866;
@@ -114,26 +108,20 @@
         <p class="eyebrow"><span></span> THREE TOOLS, CLOSE AT HAND</p>
         <p class="brand">temoto</p>
         <h1>作業の途中を、手元に。</h1>
-        <p class="lead">Macではファイルとリンクの棚。<br />Chromeでは、ページを試す6つの道具。</p>
+        <p class="lead">Macではファイルとリンクの棚。<br />Chromeでは、ページを試す道具と開発用プロキシ。</p>
       </section>
       <section class="products" aria-hidden="true">
         <div class="tile">
-          <svg class="macosMark" viewBox="0 0 1024 1024">
-            <g transform="translate(512 512) scale(1.49) translate(-512 -512)" fill="currentColor">
-              <rect x="302" y="335" width="420" height="130" rx="65" transform="rotate(30 512 400)" />
-              <rect x="302" y="535" width="420" height="130" rx="65" transform="rotate(30 512 600)" />
-            </g>
-          </svg>
+          <img src="../public/favicon.png" alt="" />
           <span>macOS</span>
         </div>
         <div class="tile">
-          <svg class="chromeMark" viewBox="0 0 1024 1024">
-            <g transform="translate(512 512) scale(1.49) translate(-512 -512)" fill="#9974f8">
-              <rect x="302" y="335" width="420" height="130" transform="rotate(30 512 400)" />
-              <rect x="302" y="535" width="420" height="130" transform="rotate(30 512 600)" />
-            </g>
-          </svg>
+          <img src="../public/product-chrome-icon.png" alt="" />
           <span>Chrome</span>
+        </div>
+        <div class="tile">
+          <img src="../public/product-proxy-icon.png" alt="" />
+          <span>Proxy</span>
         </div>
       </section>
     </main>
