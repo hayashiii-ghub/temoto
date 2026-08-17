@@ -112,3 +112,10 @@ test("ChromeとProxyの商品アイコンは同じ表示寸法を使う", () => 
   const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(css, /\.productVisual \.chromeMark,\s*\.productVisual \.proxyMark \{ width: 98px; height: 98px; \}/);
 });
+
+test("ページ上部ではモバイルナビのトップ項目を優先する", () => {
+  const source = readFileSync(new URL("../app/ProductNavigation.tsx", import.meta.url), "utf8");
+  assert.match(source, /window\.scrollY < \(topSection\?\.offsetHeight \?\? 1\)/);
+  assert.match(source, /if \(isAtPageTop\(\)\) \{\s*setActiveId\("top"\);\s*return;/);
+  assert.match(source, /window\.addEventListener\("scroll", syncTopState, \{ passive: true \}\)/);
+});

@@ -18,9 +18,22 @@ export function ProductNavigation() {
     const sections = destinations
       .map(({ id }) => document.getElementById(id))
       .filter((section): section is HTMLElement => section !== null);
+    const topSection = document.getElementById("top");
+
+    const isAtPageTop = () => window.scrollY < (topSection?.offsetHeight ?? 1);
+    const syncTopState = () => {
+      if (isAtPageTop()) {
+        setActiveId("top");
+      }
+    };
 
     const observer = new IntersectionObserver(
       (entries) => {
+        if (isAtPageTop()) {
+          setActiveId("top");
+          return;
+        }
+
         const visible = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
@@ -33,7 +46,13 @@ export function ProductNavigation() {
     );
 
     sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+    syncTopState();
+    window.addEventListener("scroll", syncTopState, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", syncTopState);
+    };
   }, []);
 
   return (
