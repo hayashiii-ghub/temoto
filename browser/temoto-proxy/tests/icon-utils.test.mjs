@@ -72,7 +72,7 @@ function alphaWeightedMeanY(image, fromX, toX) {
   return weightedY / totalAlpha;
 }
 
-test("proxy icons follow the temoto for Chrome optical bounds", () => {
+test("proxy icons keep the temoto optical bounds", () => {
   const expectedBounds = new Map([
     [16, { x: 2, y: 0, width: 12, height: 15 }],
     [32, { x: 4, y: 1, width: 24, height: 29 }],
@@ -93,6 +93,14 @@ test("proxy icons keep a transparent background and temoto purple", () => {
     if (image.pixels[offset + 3] === 0) continue;
     assert.deepEqual([...image.pixels.subarray(offset, offset + 3)], [153, 116, 248]);
   }
+});
+
+test("proxy bars are hollow", () => {
+  const image = decodeGeneratedPng(createTemotoIcon(128));
+  const alphaAt = (x, y) => image.pixels[(y * image.width + x) * 4 + 3];
+
+  assert.equal(alphaAt(64, 38), 0, "the center of the upper bar should be transparent");
+  assert.equal(alphaAt(64, 89), 0, "the center of the lower bar should be transparent");
 });
 
 test("proxy bars descend from left to right like the temoto mark", () => {

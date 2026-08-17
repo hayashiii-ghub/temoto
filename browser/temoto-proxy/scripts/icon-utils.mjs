@@ -45,6 +45,9 @@ export function createTemotoIcon(size) {
   const rasterSeparation = size >= 32 ? 0.125 / size : 0;
   const barWidth = (420 / 1024) * markScale * opticalScale;
   const barHeight = (130 / 1024) * markScale * opticalScale;
+  const outlineWidth = barHeight * 0.22;
+  const innerBarWidth = barWidth - outlineWidth * 2;
+  const innerBarHeight = barHeight - outlineWidth * 2;
   const centerY = (sourceY) => (
     0.5
     + (sourceY / 1024 - 0.5) * markScale * opticalScale
@@ -58,9 +61,11 @@ export function createTemotoIcon(size) {
         for (let sx = 0; sx < scale; sx += 1) {
           const px = (x * scale + sx + 0.5) / highSize;
           const py = (y * scale + sy + 0.5) / highSize;
-          const top = insideRotatedBar(px, py, 0.5, centerY(400), barWidth, barHeight, angle);
-          const bottom = insideRotatedBar(px, py, 0.5, centerY(600), barWidth, barHeight, angle);
-          if (top || bottom) coverage += 1;
+          const topOuter = insideRotatedBar(px, py, 0.5, centerY(400), barWidth, barHeight, angle);
+          const topInner = insideRotatedBar(px, py, 0.5, centerY(400), innerBarWidth, innerBarHeight, angle);
+          const bottomOuter = insideRotatedBar(px, py, 0.5, centerY(600), barWidth, barHeight, angle);
+          const bottomInner = insideRotatedBar(px, py, 0.5, centerY(600), innerBarWidth, innerBarHeight, angle);
+          if ((topOuter && !topInner) || (bottomOuter && !bottomInner)) coverage += 1;
         }
       }
       const offset = (y * size + x) * 4;

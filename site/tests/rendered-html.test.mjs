@@ -54,6 +54,8 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(htmlWithoutBreakHints, /認証パスワードはブラウザのセッション中だけ保持します/);
   assert.doesNotMatch(html, /temotoMark/);
   assert.match(html, /chromeMark/);
+  assert.match(html, /proxyMark/);
+  assert.match(html, /stroke-width="56"/);
   assert.match(html, /chromeToolIcon/);
   assert.match(html, /M222,67\.34/);
   assert.match(html, /shelfIcon/);
