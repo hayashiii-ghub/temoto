@@ -162,7 +162,8 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .productVisual { flex: 1; min-height: 140px; display: grid; place-items: center; color: #d6d6d3; }
 .macAppIcon { display: block; background: url("/favicon.png") center / contain no-repeat; }
 .productVisual .macAppIcon { width: 112px; height: 112px; }
-.productVisual .chromeMark { width: 98px; height: 98px; }
+.productVisual .chromeMark,
+.productVisual .proxyMark { width: 98px; height: 98px; }
 .productCard h3 { margin: 0; font-size: 28px; font-weight: 400; letter-spacing: -.045em; }
 .productCard p { margin: 12px 0 0; color: #cfcfcc; font-size: 16px; }
 .productCard small { margin-top: 18px; color: #858582; font-size: 12px; line-height: 1.7; }

@@ -107,3 +107,8 @@ test("OG画像は1200x630のPNGである", () => {
   assert.equal(png.readUInt32BE(16), 1200);
   assert.equal(png.readUInt32BE(20), 630);
 });
+
+test("ChromeとProxyの商品アイコンは同じ表示寸法を使う", () => {
+  const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /\.productVisual \.chromeMark,\s*\.productVisual \.proxyMark \{ width: 98px; height: 98px; \}/);
+});
