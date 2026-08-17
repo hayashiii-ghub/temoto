@@ -116,6 +116,14 @@ test("ChromeとProxyの商品アイコンは同じ表示寸法を使う", () => 
   assert.match(css, /\.proxyMark \{ background: url\("\/product-proxy-icon\.png"\) center \/ contain no-repeat; \}/);
 });
 
+test("商品カードは折り返し数に関係なくコピーの開始位置を揃える", () => {
+  const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /\.productCard h3 \{ min-height: 2\.32em;/);
+  assert.match(css, /\.productCard p \{ min-height: 3\.1em;/);
+  assert.match(css, /\.productCard small \{ min-height: 5\.1em;/);
+  assert.match(css, /@media \(max-width: 960px\) \{\s*\.productPick \{ grid-template-columns: 1fr; \}\s*\.productCard h3, \.productCard p, \.productCard small \{ min-height: 0; \}/);
+});
+
 test("商品アイコンは各Chrome拡張の正規128px素材を使う", () => {
   const siteChromeIcon = readFileSync(new URL("../public/product-chrome-icon.png", import.meta.url));
   const extensionChromeIcon = readFileSync(
