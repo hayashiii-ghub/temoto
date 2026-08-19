@@ -2,7 +2,7 @@ export const COMPANION_PROTOCOL_VERSION = 1;
 export const COMPANION_NAMESPACE = "temoto-proxy";
 export const TEMOTO_FOR_CHROME_EXTENSION_ID = "gcncgknjklghkoeiapcbdghodepnllid";
 
-export type CompanionAction = "GET_SUMMARY" | "ACTIVATE_PROFILE" | "DEACTIVATE" | "OPEN_MANAGER";
+export type CompanionAction = "GET_SUMMARY" | "OPEN_MANAGER";
 
 export interface CompanionProfileSummary {
   id: string;
@@ -20,8 +20,6 @@ export interface CompanionSummary {
 
 export type CompanionRequest =
   | { namespace: typeof COMPANION_NAMESPACE; protocolVersion: typeof COMPANION_PROTOCOL_VERSION; action: "GET_SUMMARY" }
-  | { namespace: typeof COMPANION_NAMESPACE; protocolVersion: typeof COMPANION_PROTOCOL_VERSION; action: "ACTIVATE_PROFILE"; profileId: string }
-  | { namespace: typeof COMPANION_NAMESPACE; protocolVersion: typeof COMPANION_PROTOCOL_VERSION; action: "DEACTIVATE" }
   | { namespace: typeof COMPANION_NAMESPACE; protocolVersion: typeof COMPANION_PROTOCOL_VERSION; action: "OPEN_MANAGER" };
 
 export type CompanionResponse =
@@ -30,13 +28,11 @@ export type CompanionResponse =
 
 interface CompanionRuntime {
   effectiveState(): Promise<unknown>;
-  activate(profileId: string): Promise<unknown>;
-  deactivate(): Promise<unknown>;
 }
 
 type LooseRecord = Record<string, any>;
 
-const ALLOWED_ACTIONS = new Set<CompanionAction>(["GET_SUMMARY", "ACTIVATE_PROFILE", "DEACTIVATE", "OPEN_MANAGER"]);
+const ALLOWED_ACTIONS = new Set<CompanionAction>(["GET_SUMMARY", "OPEN_MANAGER"]);
 
 export function isTrustedCompanionSender(
   sender: { id?: string } | null | undefined,
@@ -86,13 +82,6 @@ export async function handleCompanionMessage(
   switch (request.action) {
     case "GET_SUMMARY":
       return responseWithSummary(await runtime.effectiveState());
-    case "ACTIVATE_PROFILE":
-      if (typeof request.profileId !== "string" || !request.profileId || request.profileId.length > 120) {
-        throw new Error("Invalid profile ID");
-      }
-      return responseWithSummary(await runtime.activate(request.profileId));
-    case "DEACTIVATE":
-      return responseWithSummary(await runtime.deactivate());
     case "OPEN_MANAGER":
       await openManager();
       return { ok: true, protocolVersion: COMPANION_PROTOCOL_VERSION };

@@ -9,7 +9,6 @@ import {
   BoundingBox,
   Camera,
   CaretDown,
-  CaretRight,
   CaretUp,
   Check,
   Copy,
@@ -17,7 +16,6 @@ import {
   EyedropperSample,
   LockSimple,
   Play,
-  Power,
   Ruler,
   Selection,
   ShieldCheck,
@@ -62,16 +60,13 @@ import {
   runProxyCompanionAction,
   TEMOTO_PROXY_INSTALL_URL,
 } from "./proxy-companion.ts";
-import type {
-  ProxyCompanionAction,
-  ProxyCompanionConnection,
-} from "./proxy-companion.ts";
+import type { ProxyCompanionConnection } from "./proxy-companion.ts";
 
 const TOOL_DEFINITIONS = {
   color: { title: "Color Picker", icon: EyedropperSample },
   screenshot: { title: "Screenshot", icon: Selection },
   speed: { title: "Video Speed", icon: Speedometer },
-  environment: { title: "Environments", icon: ArrowsLeftRight },
+  environment: { title: "Switch Origin", icon: ArrowsLeftRight },
   reset: { title: "Site Reset", icon: ArrowCounterClockwise },
   inspect: { title: "Inspect", icon: BoundingBox },
 } satisfies Record<string, { title: string; icon: PhosphorIcon }>;
@@ -110,23 +105,33 @@ function IconButton({ label, children, onClick }: {
 }
 
 function StatusToast({ message }: { message: string }) {
-  if (!message) return null;
-  return <div className="status-toast" role="status">{message}</div>;
+  return (
+    <div className={`status-toast${message ? " is-visible" : ""}`} role="status" aria-live="polite" aria-atomic="true">
+      {message}
+    </div>
+  );
 }
 
-function LauncherCard({ icon: Icon, label, meta, onClick, danger = false, disabled = false }: {
+function LauncherCard({ icon: Icon, label, description, meta, metaAccent = false, onClick, danger = false, disabled = false }: {
   icon: PhosphorIcon;
   label: string;
+  description: string;
   meta?: ReactNode;
+  metaAccent?: boolean;
   onClick: MouseEventHandler<HTMLButtonElement>;
   danger?: boolean;
   disabled?: boolean;
 }) {
   return (
     <button className={`launcher-card${danger ? " is-danger" : ""}`} type="button" onClick={onClick} disabled={disabled} title={disabled ? "Unavailable on this page" : undefined}>
-      {meta && <span className="launcher-meta">{meta}</span>}
-      <Icon size={42} weight="light" aria-hidden="true" />
-      <span>{label}</span>
+      <span className="launcher-card-head">
+        <Icon size={28} weight="light" aria-hidden="true" />
+        {meta && <span className={`launcher-meta${metaAccent ? " is-accent" : ""}`}>{meta}</span>}
+      </span>
+      <span className="launcher-copy">
+        <strong>{label}</strong>
+        <small>{description}</small>
+      </span>
     </button>
   );
 }
@@ -276,7 +281,7 @@ function EnvironmentPanel({ page, project, onDone }: {
           </button>
         ))}
       </div>
-      <button className="text-action" type="button" onClick={openSidePanel}>Edit environments</button>
+      <button className="text-action" type="button" onClick={openSidePanel}>Manage project settings</button>
     </div>
   );
 }
@@ -443,12 +448,12 @@ function PopupApp() {
             <IconButton label="Open settings" onClick={openSidePanel}><SlidersHorizontal size={22} weight="light" /></IconButton>
           </header>
           <section className="launcher-grid" aria-label="Developer tools">
-            <LauncherCard icon={EyedropperSample} label="Color Picker" onClick={() => setActiveTool("color")} />
-            <LauncherCard icon={Selection} label="Screenshot" onClick={() => setActiveTool("screenshot")} disabled={!isPageToolAvailable("screenshot", page)} />
-            <LauncherCard icon={Speedometer} label="Video Speed" meta={isPageToolAvailable("speed", page) ? (page.videoCount ? `${speed}x` : "No video") : "Unavailable"} onClick={() => setActiveTool("speed")} disabled={!isPageToolAvailable("speed", page)} />
-            <LauncherCard icon={ArrowsLeftRight} label="Environments" onClick={() => setActiveTool("environment")} disabled={!isPageToolAvailable("environment", page)} />
-            <LauncherCard icon={ArrowCounterClockwise} label="Site Reset" onClick={() => setActiveTool("reset")} danger disabled={!isPageToolAvailable("reset", page)} />
-            <LauncherCard icon={BoundingBox} label="Inspect" onClick={() => setActiveTool("inspect")} disabled={!isPageToolAvailable("inspect", page)} />
+            <LauncherCard icon={EyedropperSample} label="Color Picker" description="Pick from the page" onClick={() => setActiveTool("color")} />
+            <LauncherCard icon={Selection} label="Screenshot" description="Region, viewport, or full" onClick={() => setActiveTool("screenshot")} disabled={!isPageToolAvailable("screenshot", page)} />
+            <LauncherCard icon={Speedometer} label="Video Speed" description="Control page playback" meta={isPageToolAvailable("speed", page) ? (page.videoCount ? `${speed}x` : "No video") : "Unavailable"} metaAccent={Boolean(page.videoCount)} onClick={() => setActiveTool("speed")} disabled={!isPageToolAvailable("speed", page)} />
+            <LauncherCard icon={ArrowsLeftRight} label="Switch Origin" description="Local, staging, or production" onClick={() => setActiveTool("environment")} disabled={!isPageToolAvailable("environment", page)} />
+            <LauncherCard icon={ArrowCounterClockwise} label="Site Reset" description="Clear the current site" onClick={() => setActiveTool("reset")} danger disabled={!isPageToolAvailable("reset", page)} />
+            <LauncherCard icon={BoundingBox} label="Inspect" description="Measure and copy CSS" onClick={() => setActiveTool("inspect")} disabled={!isPageToolAvailable("inspect", page)} />
           </section>
         </>
       )}
@@ -499,9 +504,9 @@ function SidePanelApp() {
       <header className="app-header"><Brand /><span className="panel-status"><i /> PROJECT SETTINGS</span></header>
       <div className="sidepanel-content">
         <section className="settings-intro">
-          <p className="eyebrow">ENVIRONMENT SWITCHER</p>
-          <h1>Switch origins. Keep your place.</h1>
-          <p>Save Local, Staging and Production origins, then move between them without losing the current path, query or hash.</p>
+          <p className="eyebrow">ORIGIN CONFIGURATION</p>
+          <h1>Set project origins.</h1>
+          <p>Choose the Local, Staging and Production origins used by Switch Origin in the popup.</p>
         </section>
         <form className="settings-form" onSubmit={submit}>
           <label><span>PROJECT NAME</span><input value={project.name} onChange={(event) => update("name", event.target.value)} /></label>
@@ -512,9 +517,9 @@ function SidePanelApp() {
               {errors[key] && <small>{errors[key]}</small>}
             </label>
           ))}
-          <button className="save-button" type="submit">{saved ? <><Check size={18} /> Saved</> : "Save environments"}</button>
+          <button className="save-button" type="submit">{saved ? <><Check size={18} /> Saved</> : "Save origins"}</button>
         </form>
-        <ProxyCompanionSettings />
+        <ProxyCompanionSummary />
         <section className="settings-block compact">
           <div><strong>Privacy</strong><small>Video shortcuts run locally on HTTP(S) pages. Other tools access a page only when selected. Data is never sent outside the browser.</small></div>
           <LockSimple size={20} />
@@ -524,15 +529,8 @@ function SidePanelApp() {
   );
 }
 
-const PROXY_KIND_LABELS: Record<string, string> = {
-  fixed: "Fixed proxy",
-  rules: "Domain routing",
-  pac: "PAC",
-};
-
-function ProxyCompanionSettings() {
+function ProxyCompanionSummary() {
   const [companion, setCompanion] = useState<ProxyCompanionConnection | { availability: "loading"; summary: null }>({ availability: "loading", summary: null });
-  const [busyAction, setBusyAction] = useState("");
   const [error, setError] = useState("");
 
   const refresh = useCallback(async () => {
@@ -552,84 +550,41 @@ function ProxyCompanionSettings() {
     };
   }, [refresh]);
 
-  const run = async (action: ProxyCompanionAction, payload: { profileId?: string } = {}) => {
-    setBusyAction(action === "ACTIVATE_PROFILE" ? payload.profileId || action : action);
+  const openProxy = async () => {
     setError("");
     try {
-      const summary = await runProxyCompanionAction(action, payload);
-      if (summary) {
-        setCompanion((current) => ({
-          availability: current.availability === "loading" ? "preview" : current.availability,
-          summary,
-        }));
-      }
+      await runProxyCompanionAction("OPEN_MANAGER");
     } catch (nextError) {
-      const message = errorMessage(nextError, "temoto Proxy could not complete the action.");
-      setCompanion(await getProxyCompanion());
-      setError(message);
-    } finally {
-      setBusyAction("");
+      setError(errorMessage(nextError, "temoto Proxy could not open."));
     }
   };
 
-  const availability = companion.availability;
   const summary = companion.summary;
   const active = summary?.profiles.find((profile) => profile.id === summary.activeProfileId);
-  const statusCode = summary?.status?.code || availability;
-  const installed = Boolean(summary) && (availability === "installed" || availability === "preview");
+  const statusCode = summary?.status.code || companion.availability;
+  const description = summary
+    ? active ? `${active.name} · ${summary.status.label}` : summary.status.label
+    : companion.availability === "loading" ? "Checking companion…"
+      : companion.availability === "missing" ? "Not installed"
+        : "Companion unavailable";
 
   return (
-    <section className={`proxy-settings is-${statusCode}`} aria-busy={Boolean(busyAction)}>
-      <div className="proxy-settings-header">
-        <div>
-          <strong>temoto Proxy</strong>
-          <small>{summary ? (active ? `${active.name} is routing Chrome traffic.` : summary.status.label) : "Browser-wide proxy control stays in a separate companion."}</small>
-        </div>
-        <span className="proxy-state"><i />{summary ? summary.status.label : availability === "loading" ? "Checking" : availability === "error" ? "Unavailable" : "Not installed"}</span>
+    <section className={`proxy-summary is-${statusCode}`}>
+      <div>
+        <strong>temoto Proxy</strong>
+        <small>{description}</small>
       </div>
-
-      {availability === "missing" && (
-        <button className="proxy-wide-action" type="button" onClick={() => window.open(TEMOTO_PROXY_INSTALL_URL, "_blank", "noopener,noreferrer")}>
-          Install temoto Proxy <ArrowSquareOut size={15} />
+      {companion.availability === "missing" && (
+        <button type="button" onClick={() => window.open(TEMOTO_PROXY_INSTALL_URL, "_blank", "noopener,noreferrer")}>
+          Install <ArrowSquareOut size={15} />
         </button>
       )}
-
-      {(availability === "loading" || availability === "error") && (
-        <button className="proxy-wide-action" type="button" onClick={refresh} disabled={availability === "loading"}>
-          {availability === "loading" ? "Checking companion…" : "Retry connection"}
-        </button>
+      {companion.availability === "error" && (
+        <button type="button" onClick={refresh}>Retry <ArrowCounterClockwise size={15} /></button>
       )}
-
-      {installed && summary && (
-        <>
-          <div className="proxy-profile-list" aria-label="Proxy profiles">
-            {summary.profiles.length ? summary.profiles.map((profile) => (
-              <button
-                key={profile.id}
-                className={profile.id === summary.activeProfileId ? "is-active" : ""}
-                type="button"
-                disabled={Boolean(busyAction)}
-                onClick={() => run("ACTIVATE_PROFILE", { profileId: profile.id })}
-              >
-                <i style={{ background: profile.color }} />
-                <span><strong>{profile.name}</strong><small>{PROXY_KIND_LABELS[profile.kind] || profile.kind}</small></span>
-                <span>{busyAction === profile.id ? "Applying…" : profile.id === summary.activeProfileId ? "Active" : "Use"}</span>
-              </button>
-            )) : <p className="proxy-empty">Create a profile in temoto Proxy to get started.</p>}
-          </div>
-          <div className="proxy-actions">
-            <button type="button" disabled={Boolean(busyAction)} onClick={() => run("OPEN_MANAGER")}>
-              Manage profiles <ArrowSquareOut size={15} />
-            </button>
-            {summary.activeProfileId && (
-              <button className="proxy-off-action" type="button" disabled={Boolean(busyAction)} onClick={() => run("DEACTIVATE")}>
-                <Power size={15} /> {busyAction === "DEACTIVATE" ? "Turning off…" : "Turn off"}
-              </button>
-            )}
-          </div>
-        </>
+      {summary && (
+        <button type="button" onClick={openProxy}>Open Proxy <ArrowSquareOut size={15} /></button>
       )}
-
       {error && <p className="proxy-error" role="status">{error}</p>}
     </section>
   );

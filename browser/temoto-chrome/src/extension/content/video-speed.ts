@@ -106,7 +106,8 @@
     if (message?.type === "APPLY_VIDEO_SPEED") applySpeed(message.speed);
   };
 
-  const onKeyDown = (event: KeyboardEvent) => {
+  const onKeyDown = (event?: KeyboardEvent) => {
+    if (!event || typeof event.key !== "string") return;
     const key = event.key.toLowerCase();
     if (!['g', 'd', 's'].includes(key) || event.metaKey || event.ctrlKey || event.altKey || isEditable(event)) return;
 

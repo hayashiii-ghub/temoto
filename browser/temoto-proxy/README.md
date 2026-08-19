@@ -20,7 +20,7 @@ Web developers can switch browser network routes without proxy expertise or fear
 - Secret-free JSON import, export and team sharing; imported test URLs reset to the public default, and replace imports clear session passwords.
 - Explicit, isolated incognito control with session-only or persistent scope.
 - Persistent toolbar state and recovery across Manifest V3 service-worker restarts.
-- Allowlisted companion controls in the `temoto for Chrome` side panel for effective status, profile activation, safe Off, and opening the manager.
+- An allowlisted companion summary in the `temoto for Chrome` side panel for effective status and opening the manager.
 
 ## Privacy and permissions
 

@@ -51,15 +51,17 @@ test("for Chrome rejects malformed companion responses", async () => {
   assert.deepEqual(await getProxyCompanion(malformedRuntime), { availability: "error", summary: null });
 });
 
-test("for Chrome sends only the bounded companion actions", async () => {
+test("for Chrome exposes only manager opening as a companion action", async () => {
   const calls = [];
   const runtimeApi = {
     async sendMessage(extensionId, message) {
       calls.push([extensionId, message]);
-      return { ok: true, protocolVersion: COMPANION_PROTOCOL_VERSION, summary };
+      return { ok: true, protocolVersion: COMPANION_PROTOCOL_VERSION };
     },
   };
-  assert.deepEqual(await runProxyCompanionAction("ACTIVATE_PROFILE", { profileId: "local" }, runtimeApi), summary);
+  assert.equal(await runProxyCompanionAction("OPEN_MANAGER", runtimeApi), null);
+  await assert.rejects(runProxyCompanionAction("ACTIVATE_PROFILE", { profileId: "local" }, runtimeApi), /Unsupported companion action/);
+  await assert.rejects(runProxyCompanionAction("DEACTIVATE", {}, runtimeApi), /Unsupported companion action/);
   await assert.rejects(runProxyCompanionAction("SAVE_PROFILE", {}, runtimeApi), /Unsupported companion action/);
   assert.equal(calls.length, 1);
 });

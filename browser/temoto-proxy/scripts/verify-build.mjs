@@ -12,9 +12,14 @@ const required = [
   "extension-api.js",
   "popup.html",
   "popup.js",
+  "popup-tokens.css",
   "manager.html",
   "manager.js",
   "styles.css",
+  "fonts/geist-latin-wght-normal.woff2",
+  "fonts/ibm-plex-mono-latin-400-normal.woff2",
+  "fonts/ibm-plex-mono-latin-500-normal.woff2",
+  "icons/sliders-horizontal-light.svg",
   "icons/icon-16.png",
   "icons/icon-32.png",
   "icons/icon-48.png",
@@ -29,10 +34,12 @@ const requiredPermissions = ["proxy", "storage", "webRequest", "webRequestAuthPr
 if (
   manifest.manifest_version !== 3
   || manifest.action?.default_popup !== "popup.html"
+  || manifest.side_panel
   || manifest.background?.service_worker !== "service-worker.js"
   || !manifest.host_permissions?.includes("<all_urls>")
   || manifest.externally_connectable?.ids?.length !== 1
   || requiredPermissions.some((permission) => !manifest.permissions?.includes(permission))
+  || manifest.permissions?.includes("sidePanel")
   || manifest.incognito !== "spanning"
 ) throw new Error("Extension manifest verification failed");
 

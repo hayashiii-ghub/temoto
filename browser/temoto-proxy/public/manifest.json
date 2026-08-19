@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "temoto Proxy",
   "short_name": "temoto Proxy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1ZuOP4a2Pk08CmKbpH8S5OI86cPw6y6Sa2VSjJeORG4UuoosxdGkejA2TLYIfcpVcf9gGD4yMbdAN+cW02/XYGcytx/LO9QzqemhWf20wjPzLP6e21+r+vonvCQOvx4/xWHeUf2e+EIZOLHSxdla/HK4qiW5NjWHBUxdnyRpkpebNeSpx7GwnXKCCvvq5XiXw+PzrAzoFFDJ1fxyF/czMkbNjfAvfc9cNTyTKqTfvdu6x/G6/KCIYMNP0ZmRMqZJE6PlrUBFC03i5DNPAR/kSj4hASpM1+LZ860orYuXXc7gynJxdpRe8+mU7cXJ3mRDnyyLOt1bWx1A61OHHYJztQIDAQAB",
   "minimum_chrome_version": "116",
   "description": "Safe, visible and reversible proxy profiles for web development.",

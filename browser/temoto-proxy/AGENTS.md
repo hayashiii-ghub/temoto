@@ -13,8 +13,9 @@
 - Shared and exported profiles never contain secrets.
 - Replace imports clear every session password, and all imports reset diagnostic URLs to the public default before profiles can be used.
 - Diagnostics accept public HTTP(S) destinations only, omit credentials and response bodies, and never follow redirects.
-- Keep popup actions compact; use the manager surface for profile editing, routing, PAC, authentication, diagnostics, and import/export.
-- Expose only the allowlisted `temoto for Chrome` companion API for summary, activation, Off, and manager opening. Companion summaries may contain profile identity and effective status, but never credentials, PAC contents, endpoints, bypass rules, or full configuration.
+- Keep popup actions compact and use the manager dashboard for diagnostics, profile editing, routing, PAC, authentication, and import/export. temoto Proxy does not own a Chrome side panel.
+- Share the popup's 416 × 500px outer frame, header and brand treatment, settings-button states, and feedback tones with `temoto for Chrome` through `browser/shared/temoto-popup-tokens.css`, while keeping each popup's layout and product-specific job separate.
+- Expose only the allowlisted `temoto for Chrome` companion API for effective-state summary and manager opening. Companion summaries may contain profile identity and effective status, but never credentials, PAC contents, endpoints, bypass rules, or full configuration.
 
 ## Validation
 
