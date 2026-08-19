@@ -165,6 +165,14 @@ test("page shortcuts ignore editable fields and modifier combinations", () => {
   assert.deepEqual(page.sentMessages, []);
 });
 
+test("page shortcuts ignore synthetic keydown events without event data", () => {
+  const page = loadContentScript();
+  assert.doesNotThrow(() => page.keydown(keyEvent(undefined, [page.element()])));
+  assert.doesNotThrow(() => page.keydown(undefined));
+  assert.deepEqual(page.videos.map((video) => video.playbackRate), [1.5, 1.5]);
+  assert.deepEqual(page.sentMessages, []);
+});
+
 test("background shortcut messages synchronize videos in the frame", () => {
   const page = loadContentScript();
   page.message({ type: "APPLY_VIDEO_SPEED", speed: 2.25 });

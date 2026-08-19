@@ -16,7 +16,7 @@ temoto Proxy turns Chrome's proxy configuration into named development workspace
 - Detect policy and extension conflicts before changing Chrome.
 - Clear temoto's setting safely without forcing another connection mode.
 - Keep authenticated proxy passwords in session memory only.
-- View status, switch profiles, turn Off, and open the manager from the separately installed temoto for Chrome companion through an extension-ID-allowlisted local API.
+- Share effective status and active profile identity with the separately installed temoto for Chrome companion, and let it open this extension's manager through an extension-ID-allowlisted local API.
 - Diagnose a route with a credential-free request to a validated public URL without following redirects.
 - Import and export team profiles without credentials; imported test URLs reset to the public default, and replacement clears session passwords.
 - Opt into isolated incognito behavior explicitly.
@@ -31,6 +31,7 @@ https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-proxy/PRIVACY.
 
 - Store icon: `dist/client/icons/icon-128.png` after running `npm run build` (128 × 128 PNG).
 - Required screenshot: `store/assets/screenshot-manager-1280x800.png` (1280 × 800 PNG).
+- Popup screenshot: `store/assets/screenshot-popup-1280x800.jpg` (1280 × 800 JPEG).
 - Optional promotion video and promotional tiles may be omitted for the initial submission.
 
 ## Single purpose

@@ -16,7 +16,7 @@ Choose the closest current dashboard category for developer productivity/tools.
 
 **Summary**
 
-Color, capture, video speed, environment switching, site reset, and page inspection for web developers.
+Color, capture, video speed, origin switching, site reset, and page inspection for web developers.
 
 **Detailed description**
 
@@ -30,7 +30,7 @@ temoto for Chrome brings six common page-testing tools into one focused popup:
 - Move between Local, Staging, and Production without losing the current path, query, or hash.
 - Reset cache, cookies, storage, and service workers for the current site only when requested.
 - Measure an element and copy a compact CSS selector.
-- When the separately installed temoto Proxy companion is available, view its effective state, switch named profiles, turn its setting off safely, and open its full manager from the side panel.
+- When the separately installed temoto Proxy companion is available, view its effective state and active profile identity, then open its full manager from the side panel.
 
 temoto processes its tools locally, does not transmit page data, and does not use analytics. Persistent HTTP(S) page access is used only to make the documented Video Speed shortcuts available without opening the popup. Site Reset asks for its optional permission only when you choose that tool. The optional Proxy integration uses an extension-ID-allowlisted local API and never receives proxy endpoints, PAC contents, bypass rules, usernames, or passwords.
 
@@ -78,10 +78,10 @@ No account or credentials are required.
 2. Color Picker opens Chrome's native eyedropper and copies the chosen hex value.
 3. Screenshot can capture a selected region, the visible viewport, or the full page and opens a local preview with Copy and Save PNG actions.
 4. On a page with an HTML5 video, press `G` to toggle 1× / 1.5×, `D` for +0.25×, or `S` for −0.25× without opening temoto. A subtle badge at the video's top-left shows the current rate. The popup Video Speed controls also change the rate. A page without video shows `No video`.
-5. Settings stores Local, Staging, and Production origins locally. Environment Switcher preserves the current path, query, and hash.
+5. Project Settings stores Local, Staging, and Production origins locally. Switch Origin preserves the current path, query, and hash.
 6. Measure / Inspect highlights the element under the pointer and copies its selector when clicked.
 7. Site Reset requests the optional `browsingData` permission, clears data only for the displayed current origin, and reloads the tab.
-8. Optional companion test: install temoto Proxy, open the temoto for Chrome side panel, switch a named profile, choose Turn off, and open Manage profiles. Confirm no proxy configuration or credentials appear in temoto for Chrome.
+8. Optional companion test: install temoto Proxy and open the temoto for Chrome side panel. Confirm the effective Proxy status and active profile identity appear, then choose Open Proxy and verify that the temoto Proxy manager opens. Confirm no proxy configuration or credentials appear in temoto for Chrome.
 
 ## Submission checklist
 

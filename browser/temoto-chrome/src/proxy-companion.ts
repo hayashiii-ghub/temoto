@@ -2,7 +2,7 @@ export const COMPANION_PROTOCOL_VERSION = 1;
 export const TEMOTO_PROXY_EXTENSION_ID = "hohabmdadcdkifcmbclkgnomhhlllnbb";
 export const TEMOTO_PROXY_INSTALL_URL = `https://chromewebstore.google.com/detail/${TEMOTO_PROXY_EXTENSION_ID}`;
 
-export type ProxyCompanionAction = "ACTIVATE_PROFILE" | "DEACTIVATE" | "OPEN_MANAGER";
+export type ProxyCompanionAction = "OPEN_MANAGER";
 
 export interface ProxyProfileSummary {
   id: string;
@@ -31,12 +31,11 @@ type CompanionRequest = {
   namespace: "temoto-proxy";
   protocolVersion: typeof COMPANION_PROTOCOL_VERSION;
   action: "GET_SUMMARY" | ProxyCompanionAction;
-  profileId?: string;
 };
 
 type LooseRecord = Record<string, unknown>;
 
-const ALLOWED_ACTIONS = new Set<ProxyCompanionAction>(["ACTIVATE_PROFILE", "DEACTIVATE", "OPEN_MANAGER"]);
+const ALLOWED_ACTIONS = new Set<ProxyCompanionAction>(["OPEN_MANAGER"]);
 
 const previewSummary: ProxySummary = {
   activeProfileId: null,
@@ -54,12 +53,11 @@ function defaultRuntimeApi(): CompanionRuntimeApi | undefined {
   return host.chrome?.runtime;
 }
 
-function request(action: CompanionRequest["action"], payload: { profileId?: string } = {}): CompanionRequest {
+function request(action: CompanionRequest["action"]): CompanionRequest {
   return {
     namespace: "temoto-proxy",
     protocolVersion: COMPANION_PROTOCOL_VERSION,
     action,
-    ...payload,
   };
 }
 
@@ -115,30 +113,14 @@ export async function getProxyCompanion(
 
 export async function runProxyCompanionAction(
   action: ProxyCompanionAction,
-  payload: { profileId?: string } = {},
   runtimeApi = defaultRuntimeApi(),
-): Promise<ProxySummary | null> {
+): Promise<null> {
   if (!ALLOWED_ACTIONS.has(action)) throw new Error("Unsupported companion action");
-  if (!runtimeApi?.sendMessage) {
-    if (action === "OPEN_MANAGER") return null;
-    if (action === "ACTIVATE_PROFILE") {
-      return {
-        ...previewSummary,
-        activeProfileId: payload.profileId || null,
-        status: { code: "active", tone: "active", label: "Proxy active" },
-      };
-    }
-    return {
-      ...previewSummary,
-      status: { ...previewSummary.status },
-      profiles: previewSummary.profiles.map((profile) => ({ ...profile })),
-    };
-  }
-  const response = await runtimeApi.sendMessage(TEMOTO_PROXY_EXTENSION_ID, request(action, payload));
+  if (!runtimeApi?.sendMessage) return null;
+  const response = await runtimeApi.sendMessage(TEMOTO_PROXY_EXTENSION_ID, request(action));
   const responseRecord = record(response);
   if (!responseRecord?.ok || responseRecord.protocolVersion !== COMPANION_PROTOCOL_VERSION) {
     throw new Error(typeof responseRecord?.error === "string" ? responseRecord.error : "temoto Proxy could not complete the action");
   }
-  if (action === "OPEN_MANAGER") return null;
-  return summaryFromResponse(response);
+  return null;
 }
