@@ -6,14 +6,12 @@
   type TrackedVideo = {
     badge: HTMLDivElement;
     onRateChange: () => void;
-    onMediaReset: () => void;
+    onMediaChange: () => void;
   };
 
-  const mediaResetEvents = ["loadstart", "emptied", "loadedmetadata", "play"] as const;
+  const mediaChangeEvents = ["loadstart", "emptied", "loadedmetadata", "play"] as const;
   const trackedVideos = new Map<HTMLVideoElement, TrackedVideo>();
   let positionFrame: number | null = null;
-  let preferredSpeed: number | null = null;
-  let restoringSpeed = false;
 
   const videos = (): HTMLVideoElement[] => Array.from(document.querySelectorAll("video"));
   const clamp = (value: unknown): number => {
@@ -50,16 +48,9 @@
     const tracked = trackedVideos.get(video);
     if (tracked) tracked.badge.textContent = formatSpeed(video.playbackRate);
   };
-  const restoreVideo = (video: HTMLVideoElement) => {
-    if (!restoringSpeed && preferredSpeed != null && clamp(video.playbackRate) !== preferredSpeed) {
-      restoringSpeed = true;
-      video.playbackRate = preferredSpeed;
-      restoringSpeed = false;
-    }
+  const syncVideo = (video: HTMLVideoElement) => {
     syncBadge(video);
-  };
-  const restoreVideos = () => {
-    videos().forEach((video) => restoreVideo(video));
+    schedulePosition();
   };
   const addVideo = (video: HTMLVideoElement) => {
     const badge = document.createElement("div");
@@ -85,23 +76,19 @@
     });
     badge.textContent = formatSpeed(video.playbackRate);
 
-    const onRateChange = () => {
-      restoreVideo(video);
-      schedulePosition();
-    };
-    const onMediaReset = () => restoreVideo(video);
+    const onRateChange = () => syncVideo(video);
+    const onMediaChange = () => syncVideo(video);
     video.addEventListener("ratechange", onRateChange);
-    mediaResetEvents.forEach((eventName) => video.addEventListener(eventName, onMediaReset));
+    mediaChangeEvents.forEach((eventName) => video.addEventListener(eventName, onMediaChange));
     (document.body || document.documentElement).append(badge);
-    trackedVideos.set(video, { badge, onRateChange, onMediaReset });
-    restoreVideo(video);
+    trackedVideos.set(video, { badge, onRateChange, onMediaChange });
     positionBadge(video, badge);
   };
   const removeVideo = (video: HTMLVideoElement) => {
     const tracked = trackedVideos.get(video);
     if (!tracked) return;
     video.removeEventListener("ratechange", tracked.onRateChange);
-    mediaResetEvents.forEach((eventName) => video.removeEventListener(eventName, tracked.onMediaReset));
+    mediaChangeEvents.forEach((eventName) => video.removeEventListener(eventName, tracked.onMediaChange));
     tracked.badge.remove();
     trackedVideos.delete(video);
   };
@@ -113,19 +100,16 @@
     pageVideos.forEach((video) => {
       if (!trackedVideos.has(video)) addVideo(video);
     });
-    restoreVideos();
     positionBadges();
   };
   const applySpeed = (rawSpeed: unknown): number => {
-    preferredSpeed = clamp(Number(rawSpeed) || 1);
+    const nextSpeed = clamp(Number(rawSpeed) || 1);
     const pageVideos = videos();
-    pageVideos.forEach((video) => restoreVideo(video));
+    pageVideos.forEach((video) => {
+      video.playbackRate = nextSpeed;
+      syncBadge(video);
+    });
     return pageVideos.length;
-  };
-  const adoptStoredSpeed = (value: unknown) => {
-    if (value == null || value === "") return;
-    preferredSpeed = clamp(value);
-    restoreVideos();
   };
   const isEditable = (event: Event): boolean => event.composedPath().some((node) => (
     node instanceof HTMLElement
@@ -135,11 +119,6 @@
   const onMessage = (message: { type?: string; speed?: unknown }) => {
     if (message?.type === "APPLY_VIDEO_SPEED") applySpeed(message.speed);
   };
-  const onStorageChanged = (changes: { [key: string]: chrome.storage.StorageChange }, areaName: string) => {
-    if (areaName !== "local" || !changes.lastSpeed) return;
-    adoptStoredSpeed(changes.lastSpeed.newValue);
-  };
-
   const onKeyDown = (event?: KeyboardEvent) => {
     if (!event || typeof event.key !== "string") return;
     const key = event.key.toLowerCase();
@@ -159,18 +138,8 @@
   };
 
   const observer = new MutationObserver(syncVideos);
-  observer.observe(document.documentElement, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ["src"],
-  });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
   chrome.runtime.onMessage.addListener(onMessage);
-  chrome.storage?.onChanged?.addListener(onStorageChanged);
-  void chrome.storage?.local?.get("lastSpeed")?.then(
-    (result) => adoptStoredSpeed(result.lastSpeed),
-    () => {},
-  );
   window.addEventListener("keydown", onKeyDown, true);
   window.addEventListener("scroll", schedulePosition, true);
   window.addEventListener("resize", schedulePosition);
@@ -182,7 +151,6 @@
     if (positionFrame !== null) window.cancelAnimationFrame(positionFrame);
     trackedVideos.forEach((_, video) => removeVideo(video));
     chrome.runtime.onMessage.removeListener(onMessage);
-    chrome.storage?.onChanged?.removeListener(onStorageChanged);
     window.removeEventListener("keydown", onKeyDown, true);
     window.removeEventListener("scroll", schedulePosition, true);
     window.removeEventListener("resize", schedulePosition);
