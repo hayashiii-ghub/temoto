@@ -101,26 +101,34 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .shelfScene.isCompact .fileMark { width: 16px; height: 16px; }
 .shelfScene.isCompact .appControl .shelfIcon, .shelfScene.isCompact .appItemMore .shelfIcon { width: 12px; height: 12px; }
 .chromeScene { width: 100%; max-width: min(416px, calc(100vw - 32px)); min-width: 0; min-height: 540px; display: grid; place-items: center; margin-inline: auto; }
-.chromePopup { width: 100%; max-width: 100%; aspect-ratio: 1; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(255,255,255,.14); background: rgba(10,10,10,.78); box-shadow: inset 0 1px 1px rgba(255,255,255,.12), 0 45px 100px rgba(0,0,0,.55); backdrop-filter: blur(30px) saturate(118%); -webkit-backdrop-filter: blur(30px) saturate(118%); }
+.chromePopup { width: 100%; max-width: 100%; aspect-ratio: 416 / 500; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(255,255,255,.14); background: rgba(10,10,10,.78); box-shadow: inset 0 1px 1px rgba(255,255,255,.12), 0 45px 100px rgba(0,0,0,.55); backdrop-filter: blur(30px) saturate(118%); -webkit-backdrop-filter: blur(30px) saturate(118%); }
 .chromeScene.isCompact .chromePopupHeader { height: 48px; padding-left: 14px; }
 .chromeScene.isCompact .chromePopupHeader p { font-size: 13px; }
 .chromeScene.isCompact .chromeSettings { width: 48px; height: 48px; }
 .chromeScene.isCompact .chromeSettingsIcon { width: 18px; height: 18px; }
-.chromeScene.isCompact .chromeCell { gap: 8px; font-size: 8px; }
-.chromeScene.isCompact .chromeToolIcon { width: 22px; height: 22px; }
-.chromeScene.isCompact .chromeCell small { top: 6px; right: 6px; transform: scale(.9); transform-origin: top right; }
+.chromeScene.isCompact .chromeCell { padding: 8px 10px; gap: 7px; }
+.chromeScene.isCompact .chromeToolIcon { width: 18px; height: 18px; }
+.chromeScene.isCompact .chromeCellCopy strong { font-size: 8px; }
+.chromeScene.isCompact .chromeCellCopy > small { font-size: 6px; }
+.chromeScene.isCompact .chromeCellHead > small { font-size: 5px; }
+.chromeScene.isCompact .chromeFeedback { flex-basis: 48px; }
 .chromePopupHeader { height: 60px; padding-left: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.105); }
 .chromePopupHeader p { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -.03em; }
 .chromeFor { color: #9974f8; font-weight: 500; }
 .chromeSettings { width: 60px; height: 60px; display: grid; place-items: center; border-left: 1px solid rgba(255,255,255,.105); color: #b8b8b6; }
 .chromeSettingsIcon { width: 22px; height: 22px; display: block; }
-.chromeGrid { min-height: 0; flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
-.chromeCell { min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; border-right: 1px solid rgba(255,255,255,.105); border-bottom: 1px solid rgba(255,255,255,.105); color: #ededeb; font-size: 11px; letter-spacing: -.01em; }
-.chromeCell:nth-child(3n) { border-right: 0; }
-.chromeCell:nth-child(n + 4) { border-bottom: 0; }
-.chromeCell > span { max-width: 100%; padding: 0 6px; overflow: hidden; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
-.chromeCell small { position: absolute; top: 10px; right: 10px; min-height: 18px; padding: 0 6px; display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,.105); border-radius: 999px; color: #a7a7a4; font: 500 7px var(--font-ibm-plex-mono); }
-.chromeToolIcon { width: 42px; height: 42px; display: block; color: #ededeb; }
+.chromeGrid { min-height: 0; flex: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); }
+.chromeCell { min-width: 0; min-height: 0; padding: 18px 20px; display: flex; flex-direction: column; align-items: stretch; justify-content: center; gap: 12px; overflow: hidden; border-right: 1px solid rgba(255,255,255,.105); border-bottom: 1px solid rgba(255,255,255,.105); color: #ededeb; text-align: left; }
+.chromeCell:nth-child(2n) { border-right: 0; }
+.chromeCell:nth-child(n + 5) { border-bottom: 0; }
+.chromeCellHead { min-width: 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.chromeCellHead > small { color: #bca6fa; font: 500 8px/1 var(--font-ibm-plex-mono); letter-spacing: .01em; white-space: nowrap; }
+.chromeCellCopy { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.chromeCellCopy strong, .chromeCellCopy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chromeCellCopy strong { font-size: 13px; font-weight: 560; letter-spacing: -.012em; }
+.chromeCellCopy > small { color: #858582; font-size: 10px; line-height: 1.25; }
+.chromeToolIcon { width: 28px; height: 28px; display: block; flex: 0 0 auto; color: #d8d8d5; }
+.chromeFeedback { min-height: 60px; border-top: 1px solid rgba(255,255,255,.105); flex: 0 0 60px; }
 
 .proxyScene { width: 100%; max-width: min(620px, calc(100vw - 32px)); min-width: 0; margin-inline: auto; }
 .proxyWindow { overflow: hidden; border: 1px solid rgba(255,255,255,.14); border-radius: 18px; background: #0d0d0d; box-shadow: 0 45px 100px rgba(0,0,0,.55); }

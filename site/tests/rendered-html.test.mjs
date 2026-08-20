@@ -63,6 +63,15 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.doesNotMatch(html, /<svg[^>]+(?:chromeMark|proxyMark)/);
   assert.match(html, /chromeToolIcon/);
   assert.match(html, /M222,67\.34/);
+  assert.match(html, /class="chromeFeedback" aria-hidden="true"/);
+  assert.match(html, /Switch Origin/);
+  assert.match(html, /Pick from the page/);
+  assert.match(html, /Region, viewport, or full/);
+  assert.match(html, /Control page playback/);
+  assert.match(html, /Local, staging, or production/);
+  assert.match(html, /Clear the current site/);
+  assert.match(html, /Measure and copy CSS/);
+  assert.doesNotMatch(html, /Environments/);
   assert.match(html, /shelfIcon/);
   assert.match(html, /M52\.44,36/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
@@ -119,6 +128,16 @@ test("ChromeとProxyの商品アイコンは同じ表示寸法を使う", () => 
   assert.match(css, /\.productVisual \.chromeMark,\s*\.productVisual \.proxyMark \{ width: 98px; height: 98px; \}/);
   assert.match(css, /\.chromeMark \{ background: url\("\/product-chrome-icon\.png"\) center \/ contain no-repeat; \}/);
   assert.match(css, /\.proxyMark \{ background: url\("\/product-proxy-icon\.png"\) center \/ contain no-repeat; \}/);
+});
+
+test("Chromeの画面イメージは現行popupの骨格を保つ", () => {
+  const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /\.chromePopup \{[^}]*aspect-ratio: 416 \/ 500;/);
+  assert.match(css, /\.chromeGrid \{[^}]*grid-template-columns: repeat\(2,[^}]*grid-template-rows: repeat\(3,/);
+  assert.match(css, /\.chromeCell \{[^}]*align-items: stretch;[^}]*text-align: left;/);
+  assert.match(css, /\.chromeToolIcon \{ width: 28px; height: 28px;/);
+  assert.match(css, /\.chromeFeedback \{[^}]*border-top:[^}]*flex: 0 0 60px;/);
+  assert.doesNotMatch(css, /\.chromeGrid \{[^}]*grid-template-columns: repeat\(3,/);
 });
 
 test("商品カードは自然な文字組みと揃った構造を両立する", () => {
