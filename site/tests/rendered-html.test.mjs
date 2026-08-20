@@ -42,7 +42,8 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(html, /temoto for Chrome/);
   assert.match(html, /temoto Proxy/);
   assert.match(html, /v1\.1\.4/);
-  assert.match(html, /0\.1\.7/);
+  assert.match(html, /0\.1\.8/);
+  assert.match(html, /1\.0\.1/);
   assert.match(html, /Option \+ Tab/);
   assert.match(html, /Option \+ Shift \+ Tab/);
   assert.match(htmlWithoutBreakHints, /好きな場所へ取り出す/);
@@ -50,10 +51,12 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(htmlWithoutBreakHints, /DMGからインストール/);
   assert.match(htmlWithoutBreakHints, /一行で導入・更新/);
   assert.match(htmlWithoutBreakHints, /クリップボードを自動で監視することはありません/);
-  assert.match(htmlWithoutBreakHints, /Chrome Web Storeへ提出済みで、現在審査中です/);
-  assert.match(htmlWithoutBreakHints, /ストアで審査中/);
+  assert.match(htmlWithoutBreakHints, /Chrome Web Storeで公開中です/);
+  assert.match(htmlWithoutBreakHints, /Chromeに追加/);
+  assert.doesNotMatch(htmlWithoutBreakHints, /審査中/);
+  assert.match(htmlWithoutBreakHints, /実際の速度をバッジに表示します/);
   assert.match(htmlWithoutBreakHints, /接続先を、見えるプロファイルに。/);
-  assert.match(htmlWithoutBreakHints, /認証パスワードはブラウザのセッション中だけ保持します/);
+  assert.match(htmlWithoutBreakHints, /temoto for Chromeには有効状態だけを共有し、詳細操作はProxy側で行います/);
   assert.doesNotMatch(html, /temotoMark/);
   assert.match(html, /chromeMark/);
   assert.match(html, /proxyMark/);
@@ -79,14 +82,16 @@ test("公開用メタデータと主要リンクを含む", async () => {
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/releases\/latest\/download\/temoto-macos\.dmg/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/tree\/main\/browser\/temoto-chrome/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/tree\/main\/browser\/temoto-proxy/);
+  assert.match(html, /chromewebstore\.google\.com\/detail\/temoto-for-chrome\/gcncgknjklghkoeiapcbdghodepnllid/);
+  assert.match(html, /chromewebstore\.google\.com\/detail\/temoto-proxy\/hohabmdadcdkifcmbclkgnomhhlllnbb/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto/);
   assert.match(html, /class="navGitHub"[^>]*aria-label="GitHub"/);
   assert.match(html, /class="skipLink" href="#content"/);
   assert.match(html, /<header class="siteHeader" id="top">/);
   assert.match(html, /<main id="content">/);
   assert.match(html, /class="mobileProductNav"/);
-  assert.match(html, /Chrome版のソースを見る（審査中）/);
-  assert.match(html, /Proxy版のソースを見る（審査中）/);
+  assert.match(html, /Chrome版をインストール/);
+  assert.match(html, /Proxy版をインストール/);
   assert.match(html, /blob\/main\/script\/install_latest\.sh/);
 });
 

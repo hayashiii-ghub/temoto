@@ -7,8 +7,15 @@ const downloadUrl =
 const repositoryUrl = "https://github.com/hayashiii-ghub/temoto";
 const chromeSourceUrl = `${repositoryUrl}/tree/main/browser/temoto-chrome`;
 const proxySourceUrl = `${repositoryUrl}/tree/main/browser/temoto-proxy`;
+const chromeStoreUrl =
+  "https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid";
+const proxyStoreUrl =
+  "https://chromewebstore.google.com/detail/temoto-proxy/hohabmdadcdkifcmbclkgnomhhlllnbb";
 const installScriptSourceUrl = `${repositoryUrl}/blob/main/script/install_latest.sh`;
 const releasesUrl = `${repositoryUrl}/releases/latest`;
+const macosVersion = "v1.1.4";
+const chromeVersion = "0.1.8";
+const proxyVersion = "1.0.1";
 const updateCommand =
   "curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/install_latest.sh | bash";
 
@@ -50,7 +57,7 @@ const chromeTools = [
   {
     name: "Video Speed",
     path: "M115.76,155.76l96-96a6,6,0,0,1,8.48,8.48l-96,96a6,6,0,0,1-8.48-8.48ZM128,86a65.9,65.9,0,0,1,21.08,3.44,6,6,0,0,0,3.83-11.38,78,78,0,0,0-102.43,82.6,6,6,0,0,0,6,5.34,5.12,5.12,0,0,0,.67,0,6,6,0,0,0,5.3-6.62A69,69,0,0,1,62,152,66.08,66.08,0,0,1,128,86Zm98,15.9a6,6,0,1,0-10.68,5.48,98.35,98.35,0,0,1,5.16,77.25,2,2,0,0,1-1.91,1.37H37.46a2.07,2.07,0,0,1-1.91-1.41A98.23,98.23,0,0,1,128,54h.9a97,97,0,0,1,43.71,10.72A6,6,0,1,0,178.1,54,108.92,108.92,0,0,0,129,42h-1A110.06,110.06,0,0,0,24.23,188.58,14.08,14.08,0,0,0,37.46,198H218.53a14.06,14.06,0,0,0,13.22-9.37A110.34,110.34,0,0,0,226,101.9Z",
-    text: "再生速度を変え、G・D・Sでも操作できます。",
+    text: "再生速度を変え、G・D・Sで操作。動画が切り替わっても、実際の速度をバッジに表示します。",
   },
   {
     name: "Environments",
@@ -370,21 +377,21 @@ export default function Home() {
         </div>
         <div className="productPick">
           <a className="productCard" href="#macos">
-            <div className="productMeta"><span>FOR MACOS</span><em>v1.1.4</em></div>
+            <div className="productMeta"><span>FOR MACOS</span><em>{macosVersion}</em></div>
             <div className="productVisual"><MacAppIcon /></div>
             <h3>temoto for macOS</h3>
             <p><JapaneseText>移動する前に、置いておく。</JapaneseText></p>
             <small><JapaneseText>ファイル、フォルダ、URL、テキストを、画面の上かメニューバーへ。</JapaneseText></small>
           </a>
           <a className="productCard" href="#chrome">
-            <div className="productMeta"><span>FOR CHROME</span><em>0.1.7</em></div>
+            <div className="productMeta"><span>FOR CHROME</span><em>{chromeVersion}</em></div>
             <div className="productVisual isChrome"><ChromeMark /></div>
             <h3>temoto for Chrome</h3>
             <p><JapaneseText>試す道具を、タブのそばに。</JapaneseText></p>
             <small>Color Picker, Screenshot, Video Speed, Environments, Site Reset, Inspect</small>
           </a>
           <a className="productCard" href="#proxy">
-            <div className="productMeta"><span>PROXY FOR CHROME</span><em>1.0.0</em></div>
+            <div className="productMeta"><span>PROXY FOR CHROME</span><em>{proxyVersion}</em></div>
             <div className="productVisual isChrome"><ProxyMark /></div>
             <h3>temoto Proxy</h3>
             <p><JapaneseText>接続先を、見えるプロファイルに。</JapaneseText></p>
@@ -401,7 +408,7 @@ export default function Home() {
             <p className="lead">
               <JapaneseText>ファイルやリンクを一時的に置ける小さな棚。ウィンドウを行き来する手間を減らして、作業の流れを止めません。</JapaneseText>
             </p>
-            <p className="requirements">v1.1.4　·　macOS 26+　·　Apple Silicon / Intel　·　Open source</p>
+            <p className="requirements">{macosVersion}　·　macOS 26+　·　Apple Silicon / Intel　·　Open source</p>
           </div>
           <ShelfPreview />
         </div>
@@ -490,7 +497,7 @@ export default function Home() {
             <p className="lead">
               <JapaneseText>色、キャプチャ、再生速度、環境切替、リセット、Inspect。ページを試す6つの道具を、1つのポップアップにまとめています。</JapaneseText>
             </p>
-            <p className="requirements">0.1.7　·　Chrome 116+　·　English UI　·　Processed locally</p>
+            <p className="requirements">{chromeVersion}　·　Chrome 116+　·　English UI　·　Processed locally</p>
           </div>
           <ChromePreview />
         </div>
@@ -518,13 +525,14 @@ export default function Home() {
           <div className="installHeading">
             <p className="eyebrow"><span /> GET CHROME</p>
             <h2><JapaneseText>タブのそばに、6つの道具を。</JapaneseText></h2>
-            <p><JapaneseText>Chrome Web Storeへ提出済みで、現在審査中です。公開まではソースから中身を確認できます。</JapaneseText></p>
+            <p><JapaneseText>Chrome Web Storeで公開中です。ストアからインストールでき、ソースとプライバシー方針もGitHubで確認できます。</JapaneseText></p>
           </div>
           <div className="installOptions">
             <article className="installCard">
               <div className="installMeta"><span>CHROME WEB STORE</span><em>01</em></div>
-              <h3><JapaneseText>ストアで審査中</JapaneseText></h3>
-              <p><JapaneseText>バージョン0.1.7を提出済みです。公開が確認できたら、ここにインストール用リンクを追加します。</JapaneseText></p>
+              <h3><JapaneseText>Chromeに追加</JapaneseText></h3>
+              <p><JapaneseText>{`バージョン${chromeVersion}をChrome Web Storeで公開しています。`}</JapaneseText></p>
+              <a className="button primary full" href={chromeStoreUrl}>Chrome Web Storeで入手 <span aria-hidden="true">↗</span></a>
             </article>
             <article className="installCard">
               <div className="installMeta"><span>GITHUB</span><em>02</em></div>
@@ -548,7 +556,7 @@ export default function Home() {
             <p className="lead">
               <JapaneseText>開発用プロキシの設定、切り替え、解除を名前付きプロファイルにまとめます。いまどの接続が有効かを常に見える状態にします。</JapaneseText>
             </p>
-            <p className="requirements">1.0.0　·　Chrome 116+　·　English UI　·　No analytics</p>
+            <p className="requirements">{proxyVersion}　·　Chrome 116+　·　English UI　·　No analytics</p>
           </div>
           <ProxyPreview />
         </div>
@@ -573,13 +581,14 @@ export default function Home() {
           <div className="installHeading">
             <p className="eyebrow"><span /> GET PROXY</p>
             <h2><JapaneseText>プロキシ設定を、手元へ。</JapaneseText></h2>
-            <p><JapaneseText>Chrome Web Storeへ提出済みで、現在審査中です。公開までは実装とプライバシー方針をGitHubで確認できます。</JapaneseText></p>
+            <p><JapaneseText>Chrome Web Storeで公開中です。ストアからインストールでき、実装とプライバシー方針もGitHubで確認できます。</JapaneseText></p>
           </div>
           <div className="installOptions">
             <article className="installCard">
               <div className="installMeta"><span>CHROME WEB STORE</span><em>01</em></div>
-              <h3><JapaneseText>ストアで審査中</JapaneseText></h3>
-              <p><JapaneseText>バージョン1.0.0を提出済みです。公開が確認できたら、ここにインストール用リンクを追加します。</JapaneseText></p>
+              <h3><JapaneseText>Chromeに追加</JapaneseText></h3>
+              <p><JapaneseText>{`バージョン${proxyVersion}をChrome Web Storeで公開しています。`}</JapaneseText></p>
+              <a className="button primary full" href={proxyStoreUrl}>Chrome Web Storeで入手 <span aria-hidden="true">↗</span></a>
             </article>
             <article className="installCard">
               <div className="installMeta"><span>GITHUB</span><em>02</em></div>
@@ -590,7 +599,7 @@ export default function Home() {
           </div>
           <div className="permissionNote">
             <span>P</span>
-            <div><strong><JapaneseText>適用中のプロファイルと競合を、切り替える前に表示します。</JapaneseText></strong><p><JapaneseText>ページ内容を検査・送信せず、認証パスワードはブラウザのセッション中だけ保持します。</JapaneseText></p></div>
+            <div><strong><JapaneseText>適用中のプロファイルと競合を、切り替える前に表示します。</JapaneseText></strong><p><JapaneseText>temoto for Chromeには有効状態だけを共有し、詳細操作はProxy側で行います。ページ内容は検査・送信しません。</JapaneseText></p></div>
           </div>
         </div>
       </section>
@@ -600,8 +609,8 @@ export default function Home() {
         <h2><JapaneseText>手元の道具を、選ぶ。</JapaneseText></h2>
         <div className="finalActions">
           <a className="button primary" href={downloadUrl}>macOS版をダウンロード <span aria-hidden="true">↘</span></a>
-          <a className="button ghost" href={chromeSourceUrl}>Chrome版のソースを見る（審査中） <span aria-hidden="true">↗</span></a>
-          <a className="button ghost" href={proxySourceUrl}>Proxy版のソースを見る（審査中） <span aria-hidden="true">↗</span></a>
+          <a className="button ghost" href={chromeStoreUrl}>Chrome版をインストール <span aria-hidden="true">↗</span></a>
+          <a className="button ghost" href={proxyStoreUrl}>Proxy版をインストール <span aria-hidden="true">↗</span></a>
         </div>
       </section>
       </main>

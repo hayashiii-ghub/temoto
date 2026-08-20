@@ -30,10 +30,10 @@ temotoは、macOSとChromeで使える3つの製品で構成されています�
 | 製品 | 用途 | 公開状況 |
 | --- | --- | --- |
 | **temoto for macOS** | ファイル、フォルダ、URL、テキストを一時的に置く棚 | [v1.1.4](https://github.com/hayashiii-ghub/temoto/releases/tag/v1.1.4) |
-| **temoto for Chrome** | ページを調べる6つの開発ツール | Chrome Web Storeで審査中（0.1.7） |
-| **temoto Proxy** | Chromeのプロキシ設定をプロファイルとして管理 | Chrome Web Storeで審査中（1.0.0） |
+| **temoto for Chrome** | ページを調べる6つの開発ツール | [Chrome Web Store（0.1.8）](https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid) |
+| **temoto Proxy** | Chromeのプロキシ設定をプロファイルとして管理 | [Chrome Web Store（1.0.1）](https://chromewebstore.google.com/detail/temoto-proxy/hohabmdadcdkifcmbclkgnomhhlllnbb) |
 
-Chrome拡張は審査通過後にWeb Storeへのリンクを追加します。現在は、このリポジトリからソースとプライバシー方針を確認できます。
+Chrome拡張はそれぞれChrome Web Storeからインストールできます。実装とプライバシー方針は、このリポジトリでも確認できます。
 
 ## temoto for macOS
 
@@ -80,14 +80,14 @@ curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/ins
 
 - 画面上の色を取得してHEX値をコピー
 - 選択範囲、表示領域、ページ全体をPNGでキャプチャ
-- HTML5動画の再生速度を変更
+- HTML5動画の再生速度を変更し、動画上のバッジを実際の速度に同期
 - Local、Staging、Production間を同じパスのまま移動
 - 現在のサイトのキャッシュ、Cookie、ストレージ、Service Workerを明示操作で消去
 - 要素の寸法を確認し、CSSセレクタをコピー
 
-Video SpeedのショートカットはHTTP(S)ページ上で動作しますが、入力欄と修飾キーの組み合わせを無視し、キー入力を記録しません。ページデータを外部サーバーへ送信せず、設定はChromeの拡張ストレージへ保存します。
+Video SpeedのショートカットはHTTP(S)ページ上で動作しますが、入力欄と修飾キーの組み合わせを無視し、キー入力を記録しません。ページデータを外部サーバーへ送信せず、設定はChromeの拡張ストレージへ保存します。temoto Proxyを併用すると、Chrome版のサイドパネルから有効状態を確認してProxyのマネージャーを開けます。プロファイルの切り替えや解除などの詳細操作はProxy側で行います。
 
-詳細は[Chrome版README](browser/temoto-chrome/README.md)と[プライバシー方針](browser/temoto-chrome/PRIVACY.md)を参照してください。
+[Chrome Web Storeからtemoto for Chromeをインストール](https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid)できます。詳細は[Chrome版README](browser/temoto-chrome/README.md)と[プライバシー方針](browser/temoto-chrome/PRIVACY.md)を参照してください。
 
 ## temoto Proxy
 
@@ -103,7 +103,7 @@ Chromeのプロキシ設定を、名前付きの開発用プロファイルと�
 
 閲覧履歴、ページURL、通信内容、分析データを収集しません。プロファイルは`chrome.storage.local`へ、パスワードはブラウザセッション中だけ`chrome.storage.session`へ保存します。
 
-詳細は[Proxy版README](browser/temoto-proxy/README.md)と[プライバシー方針](browser/temoto-proxy/PRIVACY.md)を参照してください。
+[Chrome Web Storeからtemoto Proxyをインストール](https://chromewebstore.google.com/detail/temoto-proxy/hohabmdadcdkifcmbclkgnomhhlllnbb)できます。詳細は[Proxy版README](browser/temoto-proxy/README.md)と[プライバシー方針](browser/temoto-proxy/PRIVACY.md)を参照してください。
 
 ## 開発
 

@@ -11,7 +11,7 @@
 - Clear cache, cookies, storage, and service workers for the current origin after an explicit permission prompt.
 - Measure an element and copy a compact CSS selector.
 
-Proxy settings remain in the separately installed `temoto Proxy` companion because Chrome proxy access is broader than the core extension needs. When the companion is installed, the `temoto for Chrome` side panel shows its effective state and supports profile switching, safe Off, and opening the full proxy manager without receiving credentials or full proxy configuration.
+Proxy settings remain in the separately installed `temoto Proxy` companion because Chrome proxy access is broader than the core extension needs. When the companion is installed, the `temoto for Chrome` side panel shows its effective state and opens the full proxy manager without receiving credentials or full proxy configuration. Profile switching, safe Off, diagnostics, credentials, and configuration stay in `temoto Proxy`.
 
 ## Privacy
 
