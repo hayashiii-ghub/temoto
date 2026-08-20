@@ -421,7 +421,10 @@ async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.M
       return { ok: true, page };
     }
     case "SET_VIDEO_SPEED": {
-      const { changed } = await applyVideoSpeed(message.speed);
+      const { speed, changed } = await applyVideoSpeed(message.speed);
+      await chrome.storage.local.set({ lastSpeed: speed });
+      const tab = await activeTab();
+      await chrome.tabs.sendMessage(tab.id, { type: "APPLY_VIDEO_SPEED", speed }).catch(() => {});
       return { ok: changed > 0, changed, error: changed ? undefined : "No video found on this page" };
     }
     case "VIDEO_SPEED_SHORTCUT": {
