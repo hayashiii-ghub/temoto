@@ -5,7 +5,7 @@ import vm from "node:vm";
 
 const source = await readFile(new URL("../dist/client/content/video-speed.js", import.meta.url), "utf8");
 
-function loadContentScript(initialSpeed = 1.5, options = {}) {
+function loadContentScript(initialSpeed = 1.5) {
   class HTMLElement {
     constructor(tagName = "DIV", isContentEditable = false) {
       this.tagName = tagName;
@@ -55,10 +55,8 @@ function loadContentScript(initialSpeed = 1.5, options = {}) {
   const windowListeners = new Map();
   const documentListeners = new Map();
   const messageListeners = new Set();
-  const storageListeners = new Set();
   const sentMessages = [];
   let observerCallback = () => {};
-  const storedLastSpeed = options.lastSpeed;
   const window = {
     innerWidth: 1024,
     innerHeight: 768,
@@ -97,17 +95,6 @@ function loadContentScript(initialSpeed = 1.5, options = {}) {
         return Promise.resolve();
       },
     },
-    storage: {
-      local: {
-        get() {
-          return Promise.resolve(storedLastSpeed == null ? {} : { lastSpeed: storedLastSpeed });
-        },
-      },
-      onChanged: {
-        addListener(listener) { storageListeners.add(listener); },
-        removeListener(listener) { storageListeners.delete(listener); },
-      },
-    },
   };
 
   vm.runInNewContext(source, {
@@ -121,7 +108,6 @@ function loadContentScript(initialSpeed = 1.5, options = {}) {
   return {
     videos,
     sentMessages,
-    storageReady: Promise.resolve(),
     badges: () => root.children.filter((element) => Object.hasOwn(element.dataset, "temotoVideoSpeed")),
     keydown(event) {
       for (const listener of windowListeners.get("keydown") || []) listener(event);
@@ -143,11 +129,6 @@ function loadContentScript(initialSpeed = 1.5, options = {}) {
       videos.forEach((video) => {
         video.listeners.get(type)?.forEach((listener) => listener());
       });
-    },
-    storageChanged(lastSpeed) {
-      for (const listener of storageListeners) {
-        listener({ lastSpeed: { newValue: lastSpeed } }, "local");
-      }
     },
     element: (tagName = "DIV", isContentEditable = false) => new HTMLElement(tagName, isContentEditable),
   };
@@ -214,44 +195,20 @@ test("background shortcut messages synchronize videos in the frame", () => {
   assert.deepEqual(page.videos.map((video) => video.playbackRate), [2.25, 2.25]);
 });
 
-test("remembered speed is restored when a reused video resets without ratechange", () => {
+test("a reused video's badge follows its actual speed after a silent reset", () => {
   const page = loadContentScript();
   page.keydown(keyEvent("d", [page.element()]));
   page.silentReset(1);
   page.dispatch("loadstart");
-  assert.deepEqual(page.videos.map((video) => video.playbackRate), [1.75, 1.75]);
-  assert.deepEqual(page.badges().map((badge) => badge.textContent), ["1.75×", "1.75×"]);
-});
-
-test("remembered speed is applied to a newly inserted video", () => {
-  const page = loadContentScript();
-  page.keydown(keyEvent("d", [page.element()]));
-  page.replaceVideo(0, 1);
-  assert.equal(page.videos[0].playbackRate, 1.75);
-  assert.equal(page.videos[1].playbackRate, 1.75);
-  assert.deepEqual(page.badges().map((badge) => badge.textContent), ["1.75×", "1.75×"]);
-});
-
-test("badges resync when a video resets and no speed has been chosen", () => {
-  const page = loadContentScript();
-  page.silentReset(1);
-  page.syncVideos();
   assert.deepEqual(page.videos.map((video) => video.playbackRate), [1, 1]);
   assert.deepEqual(page.badges().map((badge) => badge.textContent), ["1×", "1×"]);
 });
 
-test("stored lastSpeed is applied when the content script starts", async () => {
-  const page = loadContentScript(1, { lastSpeed: 2 });
-  await page.storageReady;
-  assert.deepEqual(page.videos.map((video) => video.playbackRate), [2, 2]);
-  assert.deepEqual(page.badges().map((badge) => badge.textContent), ["2×", "2×"]);
-});
-
-test("stored lastSpeed updates keep later videos in sync", () => {
+test("a newly inserted video keeps its own speed", () => {
   const page = loadContentScript();
-  page.storageChanged(1.25);
-  assert.deepEqual(page.videos.map((video) => video.playbackRate), [1.25, 1.25]);
-  page.replaceVideo(1, 1);
-  assert.equal(page.videos[1].playbackRate, 1.25);
-  assert.deepEqual(page.badges().map((badge) => badge.textContent), ["1.25×", "1.25×"]);
+  page.keydown(keyEvent("d", [page.element()]));
+  page.replaceVideo(0, 1);
+  assert.equal(page.videos[0].playbackRate, 1);
+  assert.equal(page.videos[1].playbackRate, 1.75);
+  assert.deepEqual(page.badges().map((badge) => badge.textContent).sort(), ["1.75×", "1×"]);
 });
