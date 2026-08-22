@@ -16,7 +16,7 @@ const proxyStoreUrl =
 const installScriptSourceUrl = `${repositoryUrl}/blob/main/script/install_latest.sh`;
 const releasesUrl = `${repositoryUrl}/releases/latest`;
 const macosVersion = "v1.1.4";
-const chromeVersion = "0.1.8";
+const chromeVersion = "0.1.9";
 const proxyVersion = "1.0.1";
 const updateCommand =
   "curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/install_latest.sh | bash";
