@@ -1,4 +1,5 @@
 ((): void => {
+  const message = (key: string, fallback: string) => chrome.i18n?.getMessage(key) || fallback;
   const temotoWindow = window as typeof window & { __temotoSelectionCleanup?: () => void };
   temotoWindow.__temotoSelectionCleanup?.();
   const root = document.createElement("div");
@@ -9,7 +10,7 @@
   Object.assign(shade.style, { position: "absolute", inset: "0", background: "rgba(0,0,0,.34)", backdropFilter: "saturate(.65)" });
   Object.assign(box.style, { position: "absolute", display: "none", border: "1px solid #fff", boxShadow: "0 0 0 9999px rgba(0,0,0,.18)" });
   Object.assign(hint.style, { position: "absolute", top: "18px", left: "50%", transform: "translateX(-50%)", padding: "9px 12px", border: "1px solid rgba(255,255,255,.22)", borderRadius: "10px", background: "#171717", color: "#f4f4f2", font: "12px -apple-system, sans-serif", boxShadow: "0 12px 30px rgba(0,0,0,.35)" });
-  hint.textContent = "Drag to select a capture area · Esc to cancel";
+  hint.textContent = message("captureSelectionHint", "Drag to select a capture area · Esc to cancel");
   root.append(shade, box, hint);
   document.documentElement.appendChild(root);
 

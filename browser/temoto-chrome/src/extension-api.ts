@@ -1,4 +1,5 @@
 import { isValidHttpOrigin, replaceOrigin } from "./url-utils.ts";
+import { t } from "./i18n.ts";
 
 declare global {
   interface Window {
@@ -50,14 +51,14 @@ const previewPage: PageInfo = {
   hostname: "localhost",
   origin: "http://localhost:3000",
   url: "http://localhost:3000/products/123?preview=1",
-  title: "Local development",
+  title: t("Local development"),
   videoCount: 1,
   playbackRate: 1.5,
 };
 
 const defaultSettings: ExtensionSettings = {
   project: {
-    name: "Local project",
+    name: t("Local project"),
     local: "http://localhost:3000",
     staging: "https://staging.example.com",
     production: "https://example.com",
@@ -78,7 +79,7 @@ export async function sendExtensionMessage<T = ExtensionResponse>(
 export async function detectPage(): Promise<PageInfo> {
   if (!hasChromeApi()) return previewPage;
   const response = await sendExtensionMessage<ExtensionResponse & { page?: PageInfo }>("DETECT_PAGE");
-  if (!response.ok || !response.page) throw new Error(response.error || "Could not read the current page");
+  if (!response.ok || !response.page) throw new Error(t(response.error || "Could not read the current page"));
   return response.page;
 }
 
@@ -105,7 +106,7 @@ export async function startMeasure(): Promise<ExtensionResponse> {
       const script = document.createElement("script");
       script.src = `/src/extension/content/measure.ts?preview=${Date.now()}`;
       script.onload = () => { script.remove(); resolve(); };
-      script.onerror = () => { script.remove(); reject(new Error("Could not start Inspect")); };
+      script.onerror = () => { script.remove(); reject(new Error(t("Could not start Inspect"))); };
       document.documentElement.appendChild(script);
     });
     return { ok: true, preview: true };
@@ -114,13 +115,13 @@ export async function startMeasure(): Promise<ExtensionResponse> {
 }
 
 export async function resetOrigin(origin: string): Promise<ExtensionResponse> {
-  if (!isValidHttpOrigin(origin)) return { ok: false, error: "Site Reset is unavailable on this page" };
+  if (!isValidHttpOrigin(origin)) return { ok: false, error: t("Site Reset is unavailable on this page") };
   if (!hasChromeApi()) {
     await new Promise<void>((resolve) => window.setTimeout(resolve, 900));
     return { ok: true, preview: true };
   }
   const granted = await chrome.permissions.request({ permissions: ["browsingData"] });
-  if (!granted) return { ok: false, error: "Permission to clear site data is required" };
+  if (!granted) return { ok: false, error: t("Permission to clear site data is required") };
   return sendExtensionMessage("RESET_ORIGIN", { origin });
 }
 
@@ -136,7 +137,7 @@ export async function openSidePanel(): Promise<void> {
     return;
   }
   const currentWindow = await chrome.windows.getCurrent();
-  if (currentWindow.id === undefined) throw new Error("Current Chrome window is unavailable");
+  if (currentWindow.id === undefined) throw new Error(t("Current Chrome window is unavailable"));
   await chrome.sidePanel.open({ windowId: currentWindow.id });
   window.close();
 }
@@ -155,7 +156,7 @@ export async function saveSettings(settings: Partial<ExtensionSettings>): Promis
 }
 
 export async function pickColor(): Promise<string> {
-  if (!window.EyeDropper) throw new Error("Color Picker is not available in this version of Chrome");
+  if (!window.EyeDropper) throw new Error(t("Color Picker is not available in this version of Chrome"));
   const result = await new window.EyeDropper().open();
   const color = result.sRGBHex.toUpperCase();
   await saveSettings({ lastColor: color });

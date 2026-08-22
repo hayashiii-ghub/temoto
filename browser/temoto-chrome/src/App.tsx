@@ -61,14 +61,15 @@ import {
   TEMOTO_PROXY_INSTALL_URL,
 } from "./proxy-companion.ts";
 import type { ProxyCompanionConnection } from "./proxy-companion.ts";
+import { localizeError, t } from "./i18n.ts";
 
 const TOOL_DEFINITIONS = {
-  color: { title: "Color Picker", icon: EyedropperSample },
-  screenshot: { title: "Screenshot", icon: Selection },
-  speed: { title: "Video Speed", icon: Speedometer },
-  environment: { title: "Switch Origin", icon: ArrowsLeftRight },
-  reset: { title: "Site Reset", icon: ArrowCounterClockwise },
-  inspect: { title: "Inspect", icon: BoundingBox },
+  color: { title: t("Color Picker"), icon: EyedropperSample },
+  screenshot: { title: t("Screenshot"), icon: Selection },
+  speed: { title: t("Video Speed"), icon: Speedometer },
+  environment: { title: t("Switch Origin"), icon: ArrowsLeftRight },
+  reset: { title: t("Site Reset"), icon: ArrowCounterClockwise },
+  inspect: { title: t("Inspect"), icon: BoundingBox },
 } satisfies Record<string, { title: string; icon: PhosphorIcon }>;
 
 type ToolId = keyof typeof TOOL_DEFINITIONS;
@@ -76,7 +77,7 @@ type CaptureKind = "region" | "visible" | "full";
 type EnvironmentKey = "local" | "staging" | "production";
 
 function errorMessage(error: unknown, fallback: string): string {
-  return error instanceof Error ? error.message : fallback;
+  return localizeError(error, fallback);
 }
 
 function Brand({ descriptor }: { descriptor?: string }) {
@@ -123,7 +124,7 @@ function LauncherCard({ icon: Icon, label, description, meta, metaAccent = false
   disabled?: boolean;
 }) {
   return (
-    <button className={`launcher-card${danger ? " is-danger" : ""}`} type="button" onClick={onClick} disabled={disabled} title={disabled ? "Unavailable on this page" : undefined}>
+    <button className={`launcher-card${danger ? " is-danger" : ""}`} type="button" onClick={onClick} disabled={disabled} title={disabled ? t("Unavailable on this page") : undefined}>
       <span className="launcher-card-head">
         <Icon size={28} weight="light" aria-hidden="true" />
         {meta && <span className={`launcher-meta${metaAccent ? " is-accent" : ""}`}>{meta}</span>}
@@ -143,7 +144,7 @@ function ToolScreenHeader({ tool, onBack }: {
   const Icon = tool.icon;
   return (
     <header className="tool-screen-header">
-      <IconButton label="Back to tools" onClick={onBack}><ArrowLeft size={22} /></IconButton>
+      <IconButton label={t("Back to tools")} onClick={onBack}><ArrowLeft size={22} /></IconButton>
       <div className="tool-screen-identity">
         <Icon size={21} weight="light" aria-hidden="true" />
         <strong>{tool.title}</strong>
@@ -161,7 +162,7 @@ function SpeedControl({ speed, onChange, disabled }: {
   return (
     <div className="speed-control">
       <div className="speed-value"><span>{speed}</span><small>×</small></div>
-      <div className="speed-presets" role="group" aria-label="Playback speed presets">
+      <div className="speed-presets" role="group" aria-label={t("Playback speed presets")}>
         {SPEED_PRESETS.map((value) => (
           <button key={value} type="button" className={speed === value ? "is-active" : ""} onClick={() => update(value)} disabled={disabled}>
             {value}×
@@ -169,11 +170,11 @@ function SpeedControl({ speed, onChange, disabled }: {
         ))}
       </div>
       <div className="speed-slider-row">
-        <button type="button" onClick={() => update(speed - 0.05)} disabled={disabled} aria-label="Decrease speed">−</button>
-        <input type="range" min="0" max="1000" step="1" value={speedToSliderPosition(speed)} onChange={(event) => update(sliderPositionToSpeed(event.target.value))} disabled={disabled} aria-label="Playback speed" aria-valuetext={`${speed} times`} />
-        <button type="button" onClick={() => update(speed + 0.05)} disabled={disabled} aria-label="Increase speed">＋</button>
+        <button type="button" onClick={() => update(speed - 0.05)} disabled={disabled} aria-label={t("Decrease speed")}>−</button>
+        <input type="range" min="0" max="1000" step="1" value={speedToSliderPosition(speed)} onChange={(event) => update(sliderPositionToSpeed(event.target.value))} disabled={disabled} aria-label={t("Playback speed")} aria-valuetext={t("{speed} times", { speed })} />
+        <button type="button" onClick={() => update(speed + 0.05)} disabled={disabled} aria-label={t("Increase speed")}>＋</button>
       </div>
-      <div className="speed-shortcuts" aria-label="Keyboard shortcuts">
+      <div className="speed-shortcuts" aria-label={t("Keyboard shortcuts")}>
         <span><kbd>S</kbd><small>−0.25</small></span>
         <span><kbd>G</kbd><small>1↔1.5×</small></span>
         <span><kbd>D</kbd><small>+0.25</small></span>
@@ -207,10 +208,10 @@ function ScreenshotPanel({ onDone }: { onDone: (message: string) => void }) {
         : kind === "full"
           ? await captureFullPage(captureOptions)
           : await captureVisible(captureOptions);
-      if (!result?.ok) throw new Error(result?.error || "Could not capture this page");
-      onDone(result?.preview ? "Capture starts in the installed extension" : "Capture started");
+      if (!result?.ok) throw new Error(t(result?.error || "Could not capture this page"));
+      onDone(t(result?.preview ? "Capture starts in the installed extension" : "Capture started"));
     } catch (error) {
-      onDone(errorMessage(error, "Could not capture this page"));
+      onDone(errorMessage(error, t("Could not capture this page")));
     } finally {
       setBusy(false);
     }
@@ -218,38 +219,38 @@ function ScreenshotPanel({ onDone }: { onDone: (message: string) => void }) {
   return (
     <div className="inline-panel screenshot-actions">
       <button className="primary-action" type="button" disabled={busy} onClick={() => run("region")}>
-        <Ruler size={18} /> Select region
+        <Ruler size={18} /> {t("Select region")}
       </button>
       <button className="secondary-action" type="button" disabled={busy} onClick={() => run("visible")}>
-        <Camera size={18} /> Visible area
+        <Camera size={18} /> {t("Visible area")}
       </button>
       <button className="secondary-action full-page-action" type="button" disabled={busy} onClick={() => run("full")}>
-        <ArrowsOutLineVertical size={18} /> Full page
+        <ArrowsOutLineVertical size={18} /> {t("Full page")}
       </button>
-      <p>Copy the result or save it as a PNG after capture.</p>
+      <p>{t("Copy the result or save it as a PNG after capture.")}</p>
       <div className={`screenshot-options${optionsOpen ? " is-open" : ""}`}>
         <button className="screenshot-options-toggle" type="button" aria-expanded={optionsOpen} onClick={() => setOptionsOpen((open) => !open)}>
           <SlidersHorizontal size={15} weight="light" />
-          <span>Capture options</span>
-          <small>{captureOptions.delayMs ? `${captureOptions.delayMs / 1000}s delay` : "Automatic"}</small>
+          <span>{t("Capture options")}</span>
+          <small>{captureOptions.delayMs ? t("{seconds}s delay", { seconds: captureOptions.delayMs / 1000 }) : t("Automatic")}</small>
           {optionsOpen ? <CaretUp size={13} /> : <CaretDown size={13} />}
         </button>
         {optionsOpen && (
           <div className="screenshot-options-body">
             <label className="capture-option-row">
-              <span><strong>Delay</strong><small>Wait before capture</small></span>
+              <span><strong>{t("Delay")}</strong><small>{t("Wait before capture")}</small></span>
               <select value={captureOptions.delayMs} onChange={(event) => updateOption("delayMs", Number(event.target.value))}>
-                <option value="0">None</option>
-                <option value="1000">1 sec</option>
-                <option value="3000">3 sec</option>
-                <option value="5000">5 sec</option>
+                <option value="0">{t("None")}</option>
+                <option value="1000">{t("1 sec")}</option>
+                <option value="3000">{t("3 sec")}</option>
+                <option value="5000">{t("5 sec")}</option>
               </select>
             </label>
             <button className="capture-option-row capture-switch-row" type="button" role="switch" aria-checked={captureOptions.forceReveal} onClick={() => updateOption("forceReveal", !captureOptions.forceReveal)}>
-              <span><strong>Force reveal</strong><small>Show scroll-reveal content</small></span>
+              <span><strong>{t("Force reveal")}</strong><small>{t("Show scroll-reveal content")}</small></span>
               <i className={`capture-switch${captureOptions.forceReveal ? " is-on" : ""}`}><span /></i>
             </button>
-            <p>Lazy content preload and animation freeze stay automatic.</p>
+            <p>{t("Lazy content preload and animation freeze stay automatic.")}</p>
           </div>
         )}
       </div>
@@ -263,32 +264,32 @@ function EnvironmentPanel({ page, project, onDone }: {
   onDone: (message: string) => void;
 }) {
   const targets: Array<[string, string]> = [
-    ["LOCAL", project.local],
-    ["STAGING", project.staging],
-    ["PRODUCTION", project.production],
+    [t("LOCAL"), project.local],
+    [t("STAGING"), project.staging],
+    [t("PRODUCTION"), project.production],
   ];
   const currentUrl = page.url || page.origin;
   return (
     <div className="inline-panel environment-actions">
-      <div className="environment-title"><span>{project.name}</span><small>Keep path, query and hash</small></div>
+      <div className="environment-title"><span>{project.name}</span><small>{t("Keep path, query and hash")}</small></div>
       <div className="environment-grid">
         {targets.map(([label, origin]) => (
           <button key={label} type="button" disabled={!isValidHttpOrigin(origin)} onClick={async () => {
             const result = await switchEnvironment(origin, currentUrl);
-            if (result?.preview) onDone(`Switching to ${origin}`);
+            if (result?.preview) onDone(t("Switching to {origin}", { origin }));
           }}>
             <span>{label}</span><small>{origin.replace(/^https?:\/\//, "")}</small>
           </button>
         ))}
       </div>
-      <button className="text-action" type="button" onClick={openSidePanel}>Manage project settings</button>
+      <button className="text-action" type="button" onClick={openSidePanel}>{t("Manage project settings")}</button>
     </div>
   );
 }
 
 function PopupApp() {
-  const [page, setPage] = useState<PageInfo>({ hostname: "Current page", origin: "", url: "", videoCount: 0, playbackRate: 1 });
-  const [settings, setSettings] = useState<ExtensionSettings>({ project: { name: "Local project", local: "http://localhost:3000", staging: "https://staging.example.com", production: "https://example.com" }, lastColor: "#7C5CFC", lastSpeed: 1.5, screenshot: { delayMs: 0, forceReveal: false } });
+  const [page, setPage] = useState<PageInfo>({ hostname: t("Current page"), origin: "", url: "", videoCount: 0, playbackRate: 1 });
+  const [settings, setSettings] = useState<ExtensionSettings>({ project: { name: t("Local project"), local: "http://localhost:3000", staging: "https://staging.example.com", production: "https://example.com" }, lastColor: "#7C5CFC", lastSpeed: 1.5, screenshot: { delayMs: 0, forceReveal: false } });
   const [activeTool, setActiveTool] = useState<ToolId | null>(null);
   const [speed, setSpeed] = useState(1.5);
   const [toast, setToast] = useState("");
@@ -304,7 +305,7 @@ function PopupApp() {
       const initialSpeed = nextPage?.videoCount ? nextPage.playbackRate : nextSettings?.lastSpeed;
       setSpeed(initialSpeed || 1);
       const failure = pageResult.status === "rejected" ? pageResult.reason : settingsResult.status === "rejected" ? settingsResult.reason : null;
-      if (failure) setToast(failure.message || "Could not initialize temoto");
+      if (failure) setToast(t(failure.message || "Could not initialize temoto"));
     });
   }, []);
 
@@ -319,7 +320,7 @@ function PopupApp() {
     setSettings((current) => ({ ...current, lastSpeed: value }));
     await saveSettings({ lastSpeed: value });
     const result = await setVideoSpeed(value);
-    if (!result?.ok) setToast(result?.error || "Could not update playback speed");
+    if (!result?.ok) setToast(t(result?.error || "Could not update playback speed"));
   };
 
   useEffect(() => {
@@ -340,18 +341,18 @@ function PopupApp() {
     try {
       const color = await pickColor();
       setSettings((current) => ({ ...current, lastColor: color }));
-      setToast(`${color} copied`);
+      setToast(t("{color} copied", { color }));
       await navigator.clipboard?.writeText(color);
     } catch (error) {
       if (!(error instanceof DOMException && error.name === "AbortError")) {
-        setToast(errorMessage(error, "Could not pick a color"));
+        setToast(errorMessage(error, t("Could not pick a color")));
       }
     }
   };
 
   const runMeasure = async () => {
     const result = await startMeasure();
-    setToast(result?.preview ? "Inspect mode active" : "Select an element on the page");
+    setToast(t(result?.preview ? "Inspect mode active" : "Select an element on the page"));
     if (!result?.preview) window.close();
   };
 
@@ -361,9 +362,9 @@ function PopupApp() {
     try {
       const result = await resetOrigin(page.origin);
       setResetOpen(false);
-      setToast(result?.ok ? `Cleared site data for ${page.hostname}` : result?.error || "Could not reset this site");
+      setToast(result?.ok ? t("Cleared site data for {host}", { host: page.hostname }) : t(result?.error || "Could not reset this site"));
     } catch (error) {
-      setToast(errorMessage(error, "Could not reset this site"));
+      setToast(errorMessage(error, t("Could not reset this site")));
     } finally {
       setResetBusy(false);
     }
@@ -371,21 +372,21 @@ function PopupApp() {
 
   const copyLastColor = async () => {
     await navigator.clipboard?.writeText(settings.lastColor);
-    setToast(`${settings.lastColor} copied`);
+    setToast(t("{color} copied", { color: settings.lastColor }));
   };
 
   const renderActiveTool = () => {
     if (activeTool === "color") {
       return (
         <section className="tool-screen-body tool-detail-body">
-          <p className="tool-description">Pick any pixel from the current page and copy its color value.</p>
+          <p className="tool-description">{t("Pick any pixel from the current page and copy its color value.")}</p>
           <div className="color-readout">
             <i style={{ background: settings.lastColor }} />
             <strong>{settings.lastColor}</strong>
           </div>
           <div className="tool-primary-actions">
-            <button className="primary-action" type="button" onClick={runPicker}><EyedropperSample size={18} /> Pick a color</button>
-            <button className="secondary-action" type="button" onClick={copyLastColor}><Copy size={18} /> Copy value</button>
+            <button className="primary-action" type="button" onClick={runPicker}><EyedropperSample size={18} /> {t("Pick a color")}</button>
+            <button className="secondary-action" type="button" onClick={copyLastColor}><Copy size={18} /> {t("Copy value")}</button>
           </div>
         </section>
       );
@@ -393,7 +394,7 @@ function PopupApp() {
     if (activeTool === "screenshot") {
       return (
         <section className="tool-screen-body tool-detail-body screenshot-screen">
-          <p className="tool-description">Capture a region, the visible area, or the full page.</p>
+          <p className="tool-description">{t("Capture a region, the visible area, or the full page.")}</p>
           <ScreenshotPanel onDone={setToast} />
         </section>
       );
@@ -401,8 +402,8 @@ function PopupApp() {
     if (activeTool === "speed") {
       return (
         <section className="tool-screen-body tool-detail-body speed-screen">
-          <p className="tool-description">Set playback speed for videos on the current page.</p>
-          {!page.videoCount && <p className="empty-note">No video found on this page. Your last speed is still saved.</p>}
+          <p className="tool-description">{t("Set playback speed for videos on the current page.")}</p>
+          {!page.videoCount && <p className="empty-note">{t("No video found on this page. Your last speed is still saved.")}</p>}
           <SpeedControl speed={speed} onChange={updateSpeed} disabled={!page.videoCount && isExtensionRuntime()} />
         </section>
       );
@@ -410,7 +411,7 @@ function PopupApp() {
     if (activeTool === "environment") {
       return (
         <section className="tool-screen-body tool-detail-body environment-screen">
-          <p className="tool-description">Move between project origins without losing the current path.</p>
+          <p className="tool-description">{t("Move between project origins without losing the current path.")}</p>
           <EnvironmentPanel page={page} project={settings.project} onDone={setToast} />
         </section>
       );
@@ -418,16 +419,16 @@ function PopupApp() {
     if (activeTool === "reset") {
       return (
         <section className="tool-screen-body tool-detail-body danger-screen">
-          <p className="tool-description">Clear cookies, local storage, cache, IndexedDB and service workers for {page.hostname}.</p>
-          <button className="danger-primary" type="button" onClick={() => setResetOpen(true)}>Review and reset</button>
+          <p className="tool-description">{t("Clear cookies, local storage, cache, IndexedDB and service workers for {host}.", { host: page.hostname })}</p>
+          <button className="danger-primary" type="button" onClick={() => setResetOpen(true)}>{t("Review and reset")}</button>
         </section>
       );
     }
     if (activeTool === "inspect") {
       return (
         <section className="tool-screen-body tool-detail-body">
-          <p className="tool-description">Inspect size, spacing, type and color, then copy a stable CSS selector.</p>
-          <button className="primary-action solo-action" type="button" onClick={runMeasure}><Ruler size={18} /> Start inspecting</button>
+          <p className="tool-description">{t("Inspect size, spacing, type and color, then copy a stable CSS selector.")}</p>
+          <button className="primary-action solo-action" type="button" onClick={runMeasure}><Ruler size={18} /> {t("Start inspecting")}</button>
         </section>
       );
     }
@@ -445,15 +446,15 @@ function PopupApp() {
         <>
           <header className="app-header launcher-header">
             <Brand />
-            <IconButton label="Open settings" onClick={openSidePanel}><SlidersHorizontal size={22} weight="light" /></IconButton>
+            <IconButton label={t("Open settings")} onClick={openSidePanel}><SlidersHorizontal size={22} weight="light" /></IconButton>
           </header>
-          <section className="launcher-grid" aria-label="Developer tools">
-            <LauncherCard icon={EyedropperSample} label="Color Picker" description="Pick from the page" onClick={() => setActiveTool("color")} />
-            <LauncherCard icon={Selection} label="Screenshot" description="Region, viewport, or full" onClick={() => setActiveTool("screenshot")} disabled={!isPageToolAvailable("screenshot", page)} />
-            <LauncherCard icon={Speedometer} label="Video Speed" description="Control page playback" meta={isPageToolAvailable("speed", page) ? (page.videoCount ? `${speed}x` : "No video") : "Unavailable"} metaAccent={Boolean(page.videoCount)} onClick={() => setActiveTool("speed")} disabled={!isPageToolAvailable("speed", page)} />
-            <LauncherCard icon={ArrowsLeftRight} label="Switch Origin" description="Local, staging, or production" onClick={() => setActiveTool("environment")} disabled={!isPageToolAvailable("environment", page)} />
-            <LauncherCard icon={ArrowCounterClockwise} label="Site Reset" description="Clear the current site" onClick={() => setActiveTool("reset")} danger disabled={!isPageToolAvailable("reset", page)} />
-            <LauncherCard icon={BoundingBox} label="Inspect" description="Measure and copy CSS" onClick={() => setActiveTool("inspect")} disabled={!isPageToolAvailable("inspect", page)} />
+          <section className="launcher-grid" aria-label={t("Developer tools")}>
+            <LauncherCard icon={EyedropperSample} label={t("Color Picker")} description={t("Pick from the page")} onClick={() => setActiveTool("color")} />
+            <LauncherCard icon={Selection} label={t("Screenshot")} description={t("Region, viewport, or full")} onClick={() => setActiveTool("screenshot")} disabled={!isPageToolAvailable("screenshot", page)} />
+            <LauncherCard icon={Speedometer} label={t("Video Speed")} description={t("Control page playback")} meta={isPageToolAvailable("speed", page) ? (page.videoCount ? `${speed}x` : t("No video")) : t("Unavailable")} metaAccent={Boolean(page.videoCount)} onClick={() => setActiveTool("speed")} disabled={!isPageToolAvailable("speed", page)} />
+            <LauncherCard icon={ArrowsLeftRight} label={t("Switch Origin")} description={t("Local, staging, or production")} onClick={() => setActiveTool("environment")} disabled={!isPageToolAvailable("environment", page)} />
+            <LauncherCard icon={ArrowCounterClockwise} label={t("Site Reset")} description={t("Clear the current site")} onClick={() => setActiveTool("reset")} danger disabled={!isPageToolAvailable("reset", page)} />
+            <LauncherCard icon={BoundingBox} label={t("Inspect")} description={t("Measure and copy CSS")} onClick={() => setActiveTool("inspect")} disabled={!isPageToolAvailable("inspect", page)} />
           </section>
         </>
       )}
@@ -463,12 +464,12 @@ function PopupApp() {
         <div className="dialog-backdrop" role="presentation" onMouseDown={() => { if (!resetBusy) setResetOpen(false); }}>
           <div className="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="reset-title" aria-busy={resetBusy} onMouseDown={(event) => event.stopPropagation()}>
             <div className="dialog-icon"><Trash size={22} /></div>
-            <h2 id="reset-title">Reset {page.hostname}?</h2>
-            <p>This clears cookies, local storage, cache, IndexedDB and service workers, then reloads the page.</p>
+            <h2 id="reset-title">{t("Reset {host}?", { host: page.hostname })}</h2>
+            <p>{t("This clears cookies, local storage, cache, IndexedDB and service workers, then reloads the page.")}</p>
             <div className="dialog-actions">
-              <button type="button" disabled={resetBusy} onClick={() => setResetOpen(false)}>Cancel</button>
+              <button type="button" disabled={resetBusy} onClick={() => setResetOpen(false)}>{t("Cancel")}</button>
               <button className="danger-button" type="button" disabled={resetBusy} onClick={confirmReset}>
-                {resetBusy ? <><ArrowCounterClockwise className="reset-spinner" size={16} /> Resetting…</> : "Clear and reload"}
+                {resetBusy ? <><ArrowCounterClockwise className="reset-spinner" size={16} /> {t("Resetting…")}</> : t("Clear and reload")}
               </button>
             </div>
           </div>
@@ -479,7 +480,7 @@ function PopupApp() {
 }
 
 function SidePanelApp() {
-  const [project, setProject] = useState<ProjectSettings>({ name: "Local project", local: "http://localhost:3000", staging: "https://staging.example.com", production: "https://example.com" });
+  const [project, setProject] = useState<ProjectSettings>({ name: t("Local project"), local: "http://localhost:3000", staging: "https://staging.example.com", production: "https://example.com" });
   const [saved, setSaved] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<EnvironmentKey, string>>>({});
 
@@ -490,7 +491,7 @@ function SidePanelApp() {
     event.preventDefault();
     const nextErrors: Partial<Record<EnvironmentKey, string>> = {};
     (["local", "staging", "production"] as const).forEach((key) => {
-      if (!isValidHttpOrigin(project[key])) nextErrors[key] = "Enter an origin beginning with http(s)://";
+      if (!isValidHttpOrigin(project[key])) nextErrors[key] = t("Enter an origin beginning with http(s)://");
     });
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
@@ -501,27 +502,27 @@ function SidePanelApp() {
 
   return (
     <main className="app-shell sidepanel-shell">
-      <header className="app-header"><Brand /><span className="panel-status"><i /> PROJECT SETTINGS</span></header>
+      <header className="app-header"><Brand /><span className="panel-status"><i /> {t("PROJECT SETTINGS")}</span></header>
       <div className="sidepanel-content">
         <section className="settings-intro">
-          <p className="eyebrow">ORIGIN CONFIGURATION</p>
-          <h1>Set project origins.</h1>
-          <p>Choose the Local, Staging and Production origins used by Switch Origin in the popup.</p>
+          <p className="eyebrow">{t("ORIGIN CONFIGURATION")}</p>
+          <h1>{t("Set project origins.")}</h1>
+          <p>{t("Choose the Local, Staging and Production origins used by Switch Origin in the popup.")}</p>
         </section>
         <form className="settings-form" onSubmit={submit}>
-          <label><span>PROJECT NAME</span><input value={project.name} onChange={(event) => update("name", event.target.value)} /></label>
+          <label><span>{t("PROJECT NAME")}</span><input value={project.name} onChange={(event) => update("name", event.target.value)} /></label>
           {([["local", "LOCAL"], ["staging", "STAGING"], ["production", "PRODUCTION"]] as const).map(([key, label]) => (
             <label key={key} className={errors[key] ? "has-error" : ""}>
-              <span>{label}</span>
+              <span>{t(label)}</span>
               <input value={project[key]} onChange={(event) => update(key, event.target.value)} spellCheck="false" />
               {errors[key] && <small>{errors[key]}</small>}
             </label>
           ))}
-          <button className="save-button" type="submit">{saved ? <><Check size={18} /> Saved</> : "Save origins"}</button>
+          <button className="save-button" type="submit">{saved ? <><Check size={18} /> {t("Saved")}</> : t("Save origins")}</button>
         </form>
         <ProxyCompanionSummary />
         <section className="settings-block compact">
-          <div><strong>Privacy</strong><small>Video shortcuts run locally on HTTP(S) pages. Other tools access a page only when selected. Data is never sent outside the browser.</small></div>
+          <div><strong>{t("Privacy")}</strong><small>{t("Video shortcuts run locally on HTTP(S) pages. Other tools access a page only when selected. Data is never sent outside the browser.")}</small></div>
           <LockSimple size={20} />
         </section>
       </div>
@@ -536,7 +537,7 @@ function ProxyCompanionSummary() {
   const refresh = useCallback(async () => {
     const next = await getProxyCompanion();
     setCompanion(next);
-    setError(next.availability === "error" ? "Update or reload temoto Proxy, then try again." : "");
+    setError(next.availability === "error" ? t("Update or reload temoto Proxy, then try again.") : "");
   }, []);
 
   useEffect(() => {
@@ -555,7 +556,7 @@ function ProxyCompanionSummary() {
     try {
       await runProxyCompanionAction("OPEN_MANAGER");
     } catch (nextError) {
-      setError(errorMessage(nextError, "temoto Proxy could not open."));
+      setError(errorMessage(nextError, t("temoto Proxy could not open.")));
     }
   };
 
@@ -563,10 +564,10 @@ function ProxyCompanionSummary() {
   const active = summary?.profiles.find((profile) => profile.id === summary.activeProfileId);
   const statusCode = summary?.status.code || companion.availability;
   const description = summary
-    ? active ? `${active.name} · ${summary.status.label}` : summary.status.label
-    : companion.availability === "loading" ? "Checking companion…"
-      : companion.availability === "missing" ? "Not installed"
-        : "Companion unavailable";
+    ? active ? `${active.name} · ${t(summary.status.label)}` : t(summary.status.label)
+    : companion.availability === "loading" ? t("Checking companion…")
+      : companion.availability === "missing" ? t("Not installed")
+        : t("Companion unavailable");
 
   return (
     <section className={`proxy-summary is-${statusCode}`}>
@@ -576,14 +577,14 @@ function ProxyCompanionSummary() {
       </div>
       {companion.availability === "missing" && (
         <button type="button" onClick={() => window.open(TEMOTO_PROXY_INSTALL_URL, "_blank", "noopener,noreferrer")}>
-          Install <ArrowSquareOut size={15} />
+          {t("Install")} <ArrowSquareOut size={15} />
         </button>
       )}
       {companion.availability === "error" && (
-        <button type="button" onClick={refresh}>Retry <ArrowCounterClockwise size={15} /></button>
+        <button type="button" onClick={refresh}>{t("Retry")} <ArrowCounterClockwise size={15} /></button>
       )}
       {summary && (
-        <button type="button" onClick={openProxy}>Open Proxy <ArrowSquareOut size={15} /></button>
+        <button type="button" onClick={openProxy}>{t("Open Proxy")} <ArrowSquareOut size={15} /></button>
       )}
       {error && <p className="proxy-error" role="status">{error}</p>}
     </section>
@@ -627,7 +628,7 @@ function loadCaptureImage(dataUrl: string): Promise<HTMLImageElement> {
   return new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image();
     image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error("Could not load the capture."));
+    image.onerror = () => reject(new Error(t("Could not load the capture.")));
     image.src = dataUrl;
   });
 }
@@ -654,12 +655,12 @@ function captureImagesAreEquivalent(first: CanvasImageSource, second: CanvasImag
 
 function CaptureApp() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [status, setStatus] = useState("Loading capture…");
+  const [status, setStatus] = useState(t("Loading capture…"));
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (!isExtensionRuntime()) {
-      setStatus("Capture from the installed extension to preview it here.");
+      setStatus(t("Capture from the installed extension to preview it here."));
       return;
     }
     let cancelled = false;
@@ -671,7 +672,7 @@ function CaptureApp() {
         : (await chrome.storage.session.get("pendingCapture")).pendingCapture as PendingCapture | undefined;
       const pendingCapture = storedCapture || legacyCapture;
       if (!pendingCapture) {
-        setStatus("No capture found.");
+        setStatus(t("No capture found."));
         return;
       }
 
@@ -689,11 +690,11 @@ function CaptureApp() {
           ));
           const { renderFrames } = planFullPageFrames(pendingCapture.frames, duplicateFlags);
           const outputHeight = Math.round(pendingCapture.document.height * scaleY);
-          if (outputHeight > 32000) throw new Error("This page is too tall to export as one PNG.");
+          if (outputHeight > 32000) throw new Error(t("This page is too tall to export as one PNG."));
           canvas.width = images[0].naturalWidth;
           canvas.height = outputHeight;
           const context = canvas.getContext("2d");
-          if (!context) throw new Error("Could not prepare the capture canvas.");
+          if (!context) throw new Error(t("Could not prepare the capture canvas."));
           renderFrames.forEach(({ index, outputY }) => {
             context.drawImage(images[index], 0, Math.round(outputY * scaleY));
           });
@@ -707,13 +708,13 @@ function CaptureApp() {
             canvas.width = Math.round(rect.width * scaleX);
             canvas.height = Math.round(rect.height * scaleY);
             const context = canvas.getContext("2d");
-            if (!context) throw new Error("Could not prepare the capture canvas.");
+            if (!context) throw new Error(t("Could not prepare the capture canvas."));
             context.drawImage(image, rect.x * scaleX, rect.y * scaleY, rect.width * scaleX, rect.height * scaleY, 0, 0, canvas.width, canvas.height);
           } else {
             canvas.width = image.naturalWidth;
             canvas.height = image.naturalHeight;
             const context = canvas.getContext("2d");
-            if (!context) throw new Error("Could not prepare the capture canvas.");
+            if (!context) throw new Error(t("Could not prepare the capture canvas."));
             context.drawImage(image, 0, 0);
           }
         }
@@ -722,7 +723,7 @@ function CaptureApp() {
           setStatus("");
         }
       } catch (error) {
-        if (!cancelled) setStatus(errorMessage(error, "Could not load the capture."));
+        if (!cancelled) setStatus(errorMessage(error, t("Could not load the capture.")));
       } finally {
         await Promise.allSettled([
           captureStore.removePendingCapture(),
@@ -732,7 +733,7 @@ function CaptureApp() {
     };
 
     renderCapture().catch((error) => {
-      if (!cancelled) setStatus(errorMessage(error, "Could not load the capture."));
+      if (!cancelled) setStatus(errorMessage(error, t("Could not load the capture.")));
     });
     return () => { cancelled = true; };
   }, []);
@@ -740,15 +741,15 @@ function CaptureApp() {
   const toBlob = () => new Promise<Blob>((resolve, reject) => {
     const canvas = canvasRef.current;
     if (!canvas) {
-      reject(new Error("Capture canvas is unavailable"));
+      reject(new Error(t("Capture canvas is unavailable")));
       return;
     }
-    canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("Could not create a PNG")), "image/png");
+    canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error(t("Could not create a PNG"))), "image/png");
   });
   const copy = async () => {
     const blob = await toBlob();
     await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
-    setStatus("Copied to clipboard");
+    setStatus(t("Copied to clipboard"));
   };
   const download = async () => {
     const blob = await toBlob();
@@ -758,17 +759,17 @@ function CaptureApp() {
     anchor.download = `temoto-${new Date().toISOString().replace(/[:.]/g, "-")}.png`;
     anchor.click();
     URL.revokeObjectURL(url);
-    setStatus("PNG saved");
+    setStatus(t("PNG saved"));
   };
 
   return (
     <main className="app-shell capture-shell">
-      <header className="app-header"><Brand descriptor="CAPTURE" /><IconButton label="Close" onClick={() => window.close()}><X size={22} /></IconButton></header>
+      <header className="app-header"><Brand descriptor={t("CAPTURE")} /><IconButton label={t("Close")} onClick={() => window.close()}><X size={22} /></IconButton></header>
       <section className="capture-content">
         <div className={`capture-stage${ready ? " is-ready" : ""}`}><canvas ref={canvasRef} />{!ready && <p>{status}</p>}</div>
         <div className="capture-actions">
-          <button type="button" disabled={!ready} onClick={copy}><Copy size={19} />Copy</button>
-          <button type="button" disabled={!ready} onClick={download}><DownloadSimple size={19} />Save PNG</button>
+          <button type="button" disabled={!ready} onClick={copy}><Copy size={19} />{t("Copy")}</button>
+          <button type="button" disabled={!ready} onClick={download}><DownloadSimple size={19} />{t("Save PNG")}</button>
         </div>
         {ready && status && <p className="capture-status">{status}</p>}
       </section>

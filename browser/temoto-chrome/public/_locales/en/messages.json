@@ -1,0 +1,44 @@
+{
+  "extensionName": {
+    "message": "temoto for Chrome",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "Color, capture, video speed and developer utilities close at hand.",
+    "description": "Extension description"
+  },
+  "actionTitle": {
+    "message": "Open temoto",
+    "description": "Toolbar action title"
+  },
+  "commandOpen": {
+    "message": "Open temoto",
+    "description": "Keyboard command description"
+  },
+  "inspectStatus": {
+    "message": "Inspecting",
+    "description": "Inspect overlay status"
+  },
+  "inspectInstruction": {
+    "message": "Click to copy selector",
+    "description": "Inspect overlay instruction"
+  },
+  "inspectExit": {
+    "message": "Exit",
+    "description": "Inspect overlay exit label"
+  },
+  "selectorCopied": {
+    "message": "Copied $SELECTOR$",
+    "description": "Confirmation after copying an inspected CSS selector",
+    "placeholders": {
+      "selector": {
+        "content": "$1",
+        "example": "#content"
+      }
+    }
+  },
+  "captureSelectionHint": {
+    "message": "Drag to select a capture area · Esc to cancel",
+    "description": "Region capture instruction"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "extensionName": {
+    "message": "temoto for Chrome",
+    "description": "拡張機能名"
+  },
+  "extensionDescription": {
+    "message": "色の取得、画面撮影、動画速度、接続先切り替えなど、開発ツールを手元に。",
+    "description": "拡張機能の説明"
+  },
+  "actionTitle": {
+    "message": "temotoを開く",
+    "description": "ツールバーの操作名"
+  },
+  "commandOpen": {
+    "message": "temotoを開く",
+    "description": "キーボードコマンドの説明"
+  },
+  "inspectStatus": {
+    "message": "検証中",
+    "description": "検証オーバーレイの状態"
+  },
+  "inspectInstruction": {
+    "message": "クリックしてセレクターをコピー",
+    "description": "検証オーバーレイの案内"
+  },
+  "inspectExit": {
+    "message": "終了",
+    "description": "検証オーバーレイの終了ラベル"
+  },
+  "selectorCopied": {
+    "message": "$SELECTOR$をコピーしました",
+    "description": "検証したCSSセレクターのコピー完了",
+    "placeholders": {
+      "selector": {
+        "content": "$1",
+        "example": "#content"
+      }
+    }
+  },
+  "captureSelectionHint": {
+    "message": "ドラッグして撮影範囲を選択 · Escでキャンセル",
+    "description": "範囲撮影の案内"
+  }
+}

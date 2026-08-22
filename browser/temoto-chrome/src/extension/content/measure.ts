@@ -1,4 +1,5 @@
 ((): void => {
+  const message = (key: string, fallback: string, substitutions?: string | string[]) => chrome.i18n?.getMessage(key, substitutions) || fallback;
   const temotoWindow = window as typeof window & { __temotoMeasureCleanup?: () => void };
   temotoWindow.__temotoMeasureCleanup?.();
   const outline = document.createElement("div");
@@ -12,10 +13,10 @@
   const instruction = document.createElement("span");
   const keycap = document.createElement("kbd");
   const exitLabel = document.createElement("span");
-  status.textContent = "Inspecting";
-  instruction.textContent = "Click to copy selector";
+  status.textContent = message("inspectStatus", "Inspecting");
+  instruction.textContent = message("inspectInstruction", "Click to copy selector");
   keycap.textContent = "Esc";
-  exitLabel.textContent = "Exit";
+  exitLabel.textContent = message("inspectExit", "Exit");
   Object.assign(status.style, { color: "#bca7d0" });
   Object.assign(instruction.style, { color: "#d0d0cd" });
   Object.assign(keycap.style, { padding: "4px 6px", border: "1px solid rgba(255,255,255,.2)", borderRadius: "6px", background: "rgba(255,255,255,.07)", color: "#f4f4f2", font: "500 9px/1 ui-monospace, SFMono-Regular, monospace", boxShadow: "inset 0 -1px 0 rgba(255,255,255,.12)" });
@@ -69,7 +70,7 @@
     try { await navigator.clipboard.writeText(selector); } catch {
       const area = document.createElement("textarea"); area.value = selector; document.body.appendChild(area); area.select(); document.execCommand("copy"); area.remove();
     }
-    showToast(`Copied ${selector}`);
+    showToast(message("selectorCopied", `Copied ${selector}`, selector));
     cleanup();
   };
   const key = (event: KeyboardEvent) => { if (event.key === "Escape") cleanup(); };
