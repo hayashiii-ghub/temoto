@@ -1,3 +1,5 @@
+import type { CSSProperties, ReactNode } from "react";
+
 import { CopyCommandButton } from "./CopyCommandButton";
 import { JapaneseText } from "./JapaneseText";
 import { ProductNavigation } from "./ProductNavigation";
@@ -243,21 +245,6 @@ function ChromePreview({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function HubScene() {
-  return (
-    <div className="hubScene" aria-hidden="true">
-      <div className="hubPane">
-        <span>MACOS</span>
-        <ShelfPreview compact />
-      </div>
-      <div className="hubPane">
-        <span>CHROME</span>
-        <ChromePreview compact />
-      </div>
-    </div>
-  );
-}
-
 const proxyFeatures = [
   { name: "Named profiles", text: "HTTP、HTTPS、SOCKS4、SOCKS5の接続先を、名前付きプロファイルとして保存します。" },
   { name: "Domain routing", text: "選んだドメインだけをプロキシへ通すか、直接接続へ切り替えます。" },
@@ -267,30 +254,39 @@ const proxyFeatures = [
   { name: "Team profiles", text: "認証情報を除いたプロファイルをJSONで読み込み・書き出しできます。" },
 ] as const;
 
-function ProxyPreview() {
+function ProxyPreview({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="proxyScene" role="img" aria-label="temoto Proxyのプロファイル設定画面イメージ">
-      <div className="proxyWindow">
-        <div className="proxyTopbar"><strong>temoto <span>Proxy</span></strong><small>PROXY OFF</small></div>
-        <div className="proxyBody">
-          <aside>
-            <span>PROFILES</span>
-            <div className="proxyProfile isActive"><i /><strong>Local proxy</strong><small>HTTP · 127.0.0.1:8080</small></div>
-            <div className="proxyProfile"><i /><strong>Staging</strong><small>HTTPS · proxy.dev:443</small></div>
-          </aside>
-          <div className="proxySettings">
-            <p>PROFILE</p>
-            <h3>Local proxy</h3>
-            <div className="proxyTabs"><strong>Fixed proxy</strong><span>Domain routing</span><span>PAC</span></div>
-            <dl>
-              <div><dt>TYPE</dt><dd>HTTP</dd></div>
-              <div><dt>HOST</dt><dd>127.0.0.1</dd></div>
-              <div><dt>PORT</dt><dd>8080</dd></div>
-            </dl>
-            <div className="proxyBypass"><span>DIRECT CONNECTIONS</span><code>&lt;local&gt;<br />localhost<br />127.0.0.1</code></div>
-            <button type="button" tabIndex={-1}>Save &amp; activate</button>
+    <div className={`proxyScene${compact ? " isCompact" : ""}`} role="img" aria-label="temoto Proxyのポップアップ画面イメージ">
+      <div className="proxyPopup">
+        <div className="proxyPopupHeader">
+          <p>temoto <span>Proxy</span></p>
+          <span className="proxyPopupSettings" aria-hidden="true"><ChromeSettingsMark /></span>
+        </div>
+        <div className="proxyPopupStatus">
+          <div className="proxyStatusLine"><i /><span>Proxy active</span></div>
+          <h3>Charles local</h3>
+          <p>HTTP · 127.0.0.1:8080</p>
+          <div className="proxyPopupActions"><strong>Turn off safely</strong><span>Test</span></div>
+        </div>
+        <div className="proxyPopupProfiles">
+          <div className="proxyPopupSection"><span>Profiles</span><small>3</small></div>
+          <div className="proxyPopupProfile isActive">
+            <i style={{ "--profile-color": "#9974f8" } as CSSProperties} />
+            <span><strong>Charles local</strong><small>HTTP · 127.0.0.1:8080</small></span>
+            <em>ACTIVE</em>
+          </div>
+          <div className="proxyPopupProfile">
+            <i style={{ "--profile-color": "#6ebf93" } as CSSProperties} />
+            <span><strong>Staging routes</strong><small>HTTP · 127.0.0.1:8080</small></span>
+            <em>ROUTED</em>
+          </div>
+          <div className="proxyPopupProfile">
+            <i style={{ "--profile-color": "#d2a154" } as CSSProperties} />
+            <span><strong>Company PAC</strong><small>PAC URL</small></span>
+            <em>PAC</em>
           </div>
         </div>
+        <div className="proxyPopupFooter"><span>Regular windows only unless explicitly enabled</span><strong>Manage</strong></div>
       </div>
     </div>
   );
@@ -340,6 +336,44 @@ function LocationModes() {
   );
 }
 
+function ProductShowcaseCard({
+  href,
+  label,
+  version,
+  title,
+  statement,
+  detail,
+  mark,
+  visual,
+  featured = false,
+  product,
+}: {
+  href: string;
+  label: string;
+  version: string;
+  title: string;
+  statement: string;
+  detail: string;
+  mark: ReactNode;
+  visual: ReactNode;
+  featured?: boolean;
+  product: "macos" | "chrome" | "proxy";
+}) {
+  return (
+    <a className={`productShowcaseCard is${product[0].toUpperCase()}${product.slice(1)}${featured ? " isFeatured" : ""}`} href={href}>
+      <div className="productShowcaseCopy">
+        <div className="productMeta"><span>{label}</span><em>{version}</em></div>
+        <div className="productShowcaseMark" aria-hidden="true">{mark}</div>
+        <h3>{title}</h3>
+        <p><JapaneseText>{statement}</JapaneseText></p>
+        <small>{product === "macos" ? <JapaneseText>{detail}</JapaneseText> : detail}</small>
+        <span className="productShowcaseAction"><span>詳しく見る</span><i aria-hidden="true">↓</i></span>
+      </div>
+      <div className="productShowcaseVisual">{visual}</div>
+    </a>
+  );
+}
+
 export default function Home() {
   return (
     <>
@@ -354,65 +388,70 @@ export default function Home() {
 
       <main id="content">
 
-      <section className="hero shell">
-        <div className="heroCopy">
-          <h1><JapaneseText>作業の途中を、手元に。</JapaneseText></h1>
-          <p className="lead">
-            <JapaneseText>temotoは、作業の途中にあるものを近くに残すための小さな道具。Macではファイルとリンクの棚。Chromeでは、ページを試す道具と開発用プロキシ。</JapaneseText>
-          </p>
-          <div className="heroActions">
-            <a className="button primary" href="#macos">macOS を見る <span aria-hidden="true">↓</span></a>
-            <a className="button ghost" href="#chrome">Chrome を見る <span aria-hidden="true">↓</span></a>
-            <a className="button ghost" href="#proxy">Proxy を見る <span aria-hidden="true">↓</span></a>
+      <section className="hero" aria-labelledby="hero-title">
+        <div className="heroInner shell">
+          <div className="heroCopy">
+            <h1 id="hero-title"><span className="heroTitleLine"><JapaneseText>作業の途中を、</JapaneseText></span><span className="heroTitleLine"><JapaneseText>手元に。</JapaneseText></span></h1>
+            <p className="lead">
+              <JapaneseText>temotoは、作業の途中にあるものを近くに残すための小さな道具。Macではファイルとリンクの棚。Chromeでは、ページを試す道具と開発用プロキシ。</JapaneseText>
+            </p>
+            <div className="heroActions">
+              <a className="button primary" href="#macos">macOS を見る <span aria-hidden="true">↓</span></a>
+              <a className="button ghost" href="#chrome">Chrome を見る <span aria-hidden="true">↓</span></a>
+              <a className="button ghost" href="#proxy">Proxy を見る <span aria-hidden="true">↓</span></a>
+            </div>
+            <p className="requirements">Open source　·　No account　·　macOS / Chrome</p>
           </div>
-          <p className="requirements">Open source　·　No account　·　macOS / Chrome</p>
-        </div>
-        <HubScene />
-      </section>
-
-      <section className="signalStrip" aria-label="temotoの製品">
-        <div className="shell signalInner">
-          <p><JapaneseText>作業の途中を、手元に。</JapaneseText><br /><span><JapaneseText>使う場所に合わせて。</JapaneseText></span></p>
-          <dl>
-            <div><dt>01</dt><dd>MACOS SHELF</dd></div>
-            <div><dt>02</dt><dd>CHROME TOOLS</dd></div>
-            <div><dt>03</dt><dd>PROXY PROFILES</dd></div>
-          </dl>
         </div>
       </section>
 
-      <section className="section shell" id="products">
-        <div className="sectionHeading">
-          <p className="eyebrow"><span /> CHOOSE A TOOL</p>
-          <h2><JapaneseText>使う場所に合わせた、3つのtemoto。</JapaneseText></h2>
-          <p><JapaneseText>データも設定も共有しません。手元に残したいものが違うだけです。</JapaneseText></p>
-        </div>
-        <div className="productPick">
-          <a className="productCard" href="#macos">
-            <div className="productMeta"><span>FOR MACOS</span><em>{macosVersion}</em></div>
-            <div className="productVisual"><MacAppIcon /></div>
-            <h3>temoto for macOS</h3>
-            <p><JapaneseText>移動する前に、置いておく。</JapaneseText></p>
-            <small><JapaneseText>ファイル、フォルダ、URL、テキストを、画面の上かメニューバーへ。</JapaneseText></small>
-          </a>
-          <a className="productCard" href="#chrome">
-            <div className="productMeta"><span>FOR CHROME</span><em>{chromeVersion}</em></div>
-            <div className="productVisual isChrome"><ChromeMark /></div>
-            <h3>temoto for Chrome</h3>
-            <p><JapaneseText>試す道具を、タブのそばに。</JapaneseText></p>
-            <small>Color Picker, Screenshot, Video Speed, Switch Origin, Site Reset, Inspect</small>
-          </a>
-          <a className="productCard" href="#proxy">
-            <div className="productMeta"><span>PROXY FOR CHROME</span><em>{proxyVersion}</em></div>
-            <div className="productVisual isChrome"><ProxyMark /></div>
-            <h3>temoto Proxy</h3>
-            <p><JapaneseText>接続先を、見えるプロファイルに。</JapaneseText></p>
-            <small>HTTP, HTTPS, SOCKS4, SOCKS5, Domain routing, PAC, Authentication</small>
-          </a>
+      <section className="productOverview" id="products">
+        <div className="section shell">
+          <div className="sectionHeading">
+            <p className="eyebrow"><span /> CHOOSE A TOOL</p>
+            <h2><JapaneseText>使う場所に合わせた、3つのtemoto。</JapaneseText></h2>
+            <p><JapaneseText>データも設定も共有しません。手元に残したいものが違うだけです。</JapaneseText></p>
+          </div>
+          <div className="productShowcase">
+            <ProductShowcaseCard
+              href="#macos"
+              label="FOR MACOS"
+              version={macosVersion}
+              title="temoto for macOS"
+              statement="移動する前に、置いておく。"
+              detail="ファイル、フォルダ、URL、テキストを、画面の上かメニューバーへ。"
+              mark={<MacAppIcon />}
+              visual={<ShelfPreview compact />}
+              product="macos"
+              featured
+            />
+            <ProductShowcaseCard
+              href="#chrome"
+              label="FOR CHROME"
+              version={chromeVersion}
+              title="temoto for Chrome"
+              statement="試す道具を、タブのそばに。"
+              detail="Color Picker, Screenshot, Video Speed, Switch Origin, Site Reset, Inspect"
+              mark={<ChromeMark />}
+              visual={<ChromePreview compact />}
+              product="chrome"
+            />
+            <ProductShowcaseCard
+              href="#proxy"
+              label="PROXY FOR CHROME"
+              version={proxyVersion}
+              title="temoto Proxy"
+              statement="接続先を、見えるプロファイルに。"
+              detail="HTTP, HTTPS, SOCKS4, SOCKS5, Domain routing, PAC, Authentication"
+              mark={<ProxyMark />}
+              visual={<ProxyPreview compact />}
+              product="proxy"
+            />
+          </div>
         </div>
       </section>
 
-      <section className="productBlock" id="macos">
+      <section className="productBlock isMacos" id="macos">
         <div className="productHero shell">
           <div className="heroCopy">
             <p className="eyebrow"><span /> TEMOTO FOR MACOS</p>
@@ -616,13 +655,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="finalCta shell">
-        <p>CHOOSE A TEMOTO</p>
-        <h2><JapaneseText>手元の道具を、選ぶ。</JapaneseText></h2>
-        <div className="finalActions">
-          <a className="button primary" href={downloadUrl}>macOS版をダウンロード <span aria-hidden="true">↘</span></a>
-          <a className="button ghost" href={chromeStoreUrl}>Chrome版をインストール <span aria-hidden="true">↗</span></a>
-          <a className="button ghost" href={proxyStoreUrl}>Proxy版をインストール <span aria-hidden="true">↗</span></a>
+      <section className="finalCta">
+        <div className="finalCtaInner shell">
+          <p>CHOOSE A TEMOTO</p>
+          <h2><JapaneseText>手元の道具を、選ぶ。</JapaneseText></h2>
+          <div className="finalActions">
+            <a className="button primary" href={downloadUrl}>macOS版をダウンロード <span aria-hidden="true">↘</span></a>
+            <a className="button ghost" href={chromeStoreUrl}>Chrome版をインストール <span aria-hidden="true">↗</span></a>
+            <a className="button ghost" href={proxyStoreUrl}>Proxy版をインストール <span aria-hidden="true">↗</span></a>
+          </div>
         </div>
       </section>
       </main>
