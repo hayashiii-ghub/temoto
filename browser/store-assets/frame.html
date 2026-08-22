@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>temoto store asset</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --accent: #9974f8;
+        --ink: #f4f4f2;
+        --muted: #a2a2a0;
+        --line: rgba(255, 255, 255, .11);
+        --panel: #171717;
+        --black: #080808;
+      }
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+      body {
+        background: var(--black);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .canvas {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 520px;
+        align-items: center;
+        gap: 74px;
+        padding: 56px 70px;
+        isolation: isolate;
+        background:
+          radial-gradient(circle at 10% 8%, rgba(153, 116, 248, .16), transparent 34%),
+          radial-gradient(circle at 86% 82%, rgba(153, 116, 248, .08), transparent 29%),
+          #080808;
+      }
+      .canvas::before {
+        content: "";
+        position: absolute;
+        inset: 28px;
+        z-index: -1;
+        border: 1px solid rgba(255, 255, 255, .075);
+        border-radius: 30px;
+      }
+      .copy { align-self: stretch; display: flex; flex-direction: column; justify-content: center; padding-left: 12px; }
+      .brand { position: absolute; top: 58px; left: 82px; font-size: 20px; font-weight: 650; letter-spacing: -.04em; }
+      .brand span { color: var(--accent); }
+      .eyebrow {
+        margin: 0 0 29px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #bdbdb9;
+        font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+        letter-spacing: .14em;
+      }
+      .eyebrow::before { content: ""; width: 34px; height: 1px; background: #666662; }
+      h1 { max-width: 610px; margin: 0; font-size: 62px; line-height: 1.03; font-weight: 430; letter-spacing: -.055em; white-space: pre-line; }
+      .description { max-width: 570px; margin: 32px 0 0; color: var(--muted); font-size: 18px; line-height: 1.8; letter-spacing: -.018em; }
+      .product-frame {
+        width: 500px;
+        height: 650px;
+        display: grid;
+        place-items: center;
+        position: relative;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: rgba(29, 29, 29, .88);
+        box-shadow: 0 45px 100px rgba(0, 0, 0, .55);
+      }
+      .product-frame::before {
+        content: "";
+        position: absolute;
+        width: 420px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, .055);
+        box-shadow: 0 0 0 64px rgba(255, 255, 255, .012), 0 0 0 128px rgba(255, 255, 255, .007);
+      }
+      iframe {
+        width: 416px;
+        height: 500px;
+        position: relative;
+        z-index: 1;
+        display: block;
+        border: 0;
+        background: #080808;
+        box-shadow: 0 32px 70px rgba(0, 0, 0, .52);
+      }
+      .meta {
+        position: absolute;
+        left: 82px;
+        bottom: 58px;
+        color: #686866;
+        font: 500 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+        letter-spacing: .16em;
+      }
+      body[data-format="promo"] .canvas {
+        display: grid;
+        grid-template-columns: 1fr;
+        place-items: center;
+        padding: 0;
+        background:
+          radial-gradient(circle at 22% 8%, rgba(153, 116, 248, .22), transparent 46%),
+          radial-gradient(circle at 88% 84%, rgba(153, 116, 248, .1), transparent 34%),
+          #080808;
+      }
+      body[data-format="promo"] .canvas::before { inset: 14px; border-radius: 22px; }
+      body[data-format="promo"] .copy,
+      body[data-format="promo"] .product-frame,
+      body[data-format="promo"] .meta,
+      body[data-format="promo"] .brand { display: none; }
+      .promo-lockup { display: none; align-items: center; gap: 24px; }
+      body[data-format="promo"] .promo-lockup { display: flex; }
+      .promo-icon {
+        width: 88px;
+        height: 88px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 25px;
+        background: rgba(28, 28, 28, .88);
+        box-shadow: 0 22px 48px rgba(0, 0, 0, .4);
+        object-fit: contain;
+      }
+      .promo-name { font-size: 31px; font-weight: 650; letter-spacing: -.045em; }
+      .promo-name span { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <main class="canvas">
+      <div class="brand">temoto <span id="brand-product">for Chrome</span></div>
+      <section class="copy">
+        <p class="eyebrow" id="eyebrow">FOR CHROME</p>
+        <h1 id="title">Developer tools,
+close at hand.</h1>
+        <p class="description" id="description">Color, capture, video speed, origin switching, site reset, and inspection.</p>
+      </section>
+      <div class="product-frame"><iframe id="product-preview" title="Product preview"></iframe></div>
+      <p class="meta" id="meta">LOCAL TOOLS · NO ACCOUNT · OPEN SOURCE</p>
+      <div class="promo-lockup">
+        <img class="promo-icon" id="promo-icon" alt="" />
+        <div class="promo-name">temoto <span id="promo-product">for Chrome</span></div>
+      </div>
+    </main>
+    <script>
+      const params = new URLSearchParams(location.search);
+      const product = params.get("product") === "proxy" ? "proxy" : "chrome";
+      const lang = params.get("lang") === "ja" ? "ja" : "en";
+      const format = params.get("format") === "promo" ? "promo" : "screenshot";
+      document.body.dataset.format = format;
+      document.documentElement.lang = lang;
+
+      const content = {
+        chrome: {
+          descriptor: "for Chrome",
+          eyebrow: "FOR CHROME",
+          icon: "/site/public/product-chrome-icon.png",
+          preview: `http://127.0.0.1:4173/?lang=${lang}`,
+          en: {
+            title: "Developer tools,\nclose at hand.",
+            description: "Color, capture, video speed, origin switching, site reset, and inspection.",
+            meta: "SIX LOCAL TOOLS · NO ACCOUNT · OPEN SOURCE",
+          },
+          ja: {
+            title: "開発ツールを、\n手元に。",
+            description: "色の取得、画面撮影、動画速度、接続先の切り替え、サイトのリセット、検証まで。",
+            meta: "6つのローカルツール · アカウント不要 · オープンソース",
+          },
+        },
+        proxy: {
+          descriptor: "Proxy",
+          eyebrow: "FOR PROXY",
+          icon: "/site/public/product-proxy-icon.png",
+          preview: `http://127.0.0.1:4174/popup.html?lang=${lang}`,
+          en: {
+            title: "Proxy profiles,\nclear and reversible.",
+            description: "Named development routes with visible state and a safe way back to Off.",
+            meta: "LOCAL PROFILES · VISIBLE STATE · SAFE OFF",
+          },
+          ja: {
+            title: "プロキシ設定を、\n見える状態に。",
+            description: "開発用の経路をプロファイルとして管理。現在の状態を確認し、安全にオフへ戻せます。",
+            meta: "ローカルプロファイル · 状態を表示 · 安全にオフ",
+          },
+        },
+      }[product];
+      const copy = content[lang];
+      document.querySelector("#brand-product").textContent = content.descriptor;
+      document.querySelector("#promo-product").textContent = content.descriptor;
+      document.querySelector("#eyebrow").textContent = content.eyebrow;
+      document.querySelector("#title").textContent = copy.title;
+      document.querySelector("#description").textContent = copy.description;
+      document.querySelector("#meta").textContent = copy.meta;
+      document.querySelector("#promo-icon").src = content.icon;
+      document.querySelector("#product-preview").src = content.preview;
+    </script>
+  </body>
+</html>

@@ -1,11 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "temoto Proxy",
+  "name": "__MSG_extensionName__",
   "short_name": "temoto Proxy",
-  "version": "1.0.1",
+  "version": "1.1.0",
+  "default_locale": "en",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1ZuOP4a2Pk08CmKbpH8S5OI86cPw6y6Sa2VSjJeORG4UuoosxdGkejA2TLYIfcpVcf9gGD4yMbdAN+cW02/XYGcytx/LO9QzqemhWf20wjPzLP6e21+r+vonvCQOvx4/xWHeUf2e+EIZOLHSxdla/HK4qiW5NjWHBUxdnyRpkpebNeSpx7GwnXKCCvvq5XiXw+PzrAzoFFDJ1fxyF/czMkbNjfAvfc9cNTyTKqTfvdu6x/G6/KCIYMNP0ZmRMqZJE6PlrUBFC03i5DNPAR/kSj4hASpM1+LZ860orYuXXc7gynJxdpRe8+mU7cXJ3mRDnyyLOt1bWx1A61OHHYJztQIDAQAB",
   "minimum_chrome_version": "116",
-  "description": "Safe, visible and reversible proxy profiles for web development.",
+  "description": "__MSG_extensionDescription__",
   "permissions": [
     "proxy",
     "storage",
@@ -21,7 +22,7 @@
     "type": "module"
   },
   "action": {
-    "default_title": "temoto Proxy",
+    "default_title": "__MSG_actionTitle__",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/action-16.png",

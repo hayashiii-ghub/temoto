@@ -1,0 +1,171 @@
+export type UiLocale = "en" | "ja";
+
+type Replacements = Record<string, string | number>;
+
+const ja: Record<string, string> = {
+  "Color Picker": "カラーピッカー",
+  Screenshot: "スクリーンショット",
+  "Video Speed": "動画速度",
+  "Switch Origin": "接続先を切り替え",
+  "Site Reset": "サイトをリセット",
+  Inspect: "検証",
+  "Unavailable on this page": "このページでは利用できません",
+  "Back to tools": "ツール一覧へ戻る",
+  "Playback speed presets": "再生速度のプリセット",
+  "Decrease speed": "再生速度を下げる",
+  "Playback speed": "再生速度",
+  "{speed} times": "{speed}倍",
+  "Increase speed": "再生速度を上げる",
+  "Keyboard shortcuts": "キーボードショートカット",
+  "Could not capture this page": "このページを撮影できませんでした",
+  "Capture starts in the installed extension": "撮影はインストール済みの拡張機能で開始されます",
+  "Capture started": "撮影を開始しました",
+  "Select region": "範囲を選択",
+  "Visible area": "表示中の範囲",
+  "Full page": "ページ全体",
+  "Copy the result or save it as a PNG after capture.": "撮影後に結果をコピーするか、PNGで保存できます。",
+  "Capture options": "撮影オプション",
+  Automatic: "自動",
+  "{seconds}s delay": "{seconds}秒待機",
+  Delay: "待機時間",
+  "Wait before capture": "撮影前に待機",
+  None: "なし",
+  "1 sec": "1秒",
+  "3 sec": "3秒",
+  "5 sec": "5秒",
+  "Force reveal": "非表示要素を表示",
+  "Show scroll-reveal content": "スクロールで現れる内容を表示",
+  "Lazy content preload and animation freeze stay automatic.": "遅延読み込みとアニメーション停止は自動で処理されます。",
+  "Keep path, query and hash": "パス、クエリ、ハッシュを維持",
+  LOCAL: "ローカル",
+  STAGING: "ステージング",
+  PRODUCTION: "本番",
+  "Switching to {origin}": "{origin}へ切り替えています",
+  "Manage project settings": "プロジェクト設定を管理",
+  "Could not initialize temoto": "temotoを初期化できませんでした",
+  "Could not update playback speed": "再生速度を変更できませんでした",
+  "{color} copied": "{color}をコピーしました",
+  "Could not pick a color": "色を取得できませんでした",
+  "Inspect mode active": "検証モードを開始しました",
+  "Select an element on the page": "ページ上の要素を選択してください",
+  "Cleared site data for {host}": "{host}のサイトデータを消去しました",
+  "Could not reset this site": "このサイトをリセットできませんでした",
+  "Pick any pixel from the current page and copy its color value.": "現在のページから色を選び、カラー値をコピーします。",
+  "Pick a color": "色を選択",
+  "Copy value": "値をコピー",
+  "Capture a region, the visible area, or the full page.": "範囲、表示中の領域、またはページ全体を撮影します。",
+  "Set playback speed for videos on the current page.": "現在のページにある動画の再生速度を変更します。",
+  "No video found on this page. Your last speed is still saved.": "このページに動画がありません。最後の再生速度は保存されています。",
+  "Move between project origins without losing the current path.": "現在のパスを保ったまま、プロジェクトの接続先を切り替えます。",
+  "Clear cookies, local storage, cache, IndexedDB and service workers for {host}.": "{host}のCookie、ローカルストレージ、キャッシュ、IndexedDB、Service Workerを消去します。",
+  "Review and reset": "内容を確認してリセット",
+  "Inspect size, spacing, type and color, then copy a stable CSS selector.": "サイズ、余白、文字、色を確認し、安定したCSSセレクターをコピーします。",
+  "Start inspecting": "検証を開始",
+  "Open settings": "設定を開く",
+  "Developer tools": "開発ツール",
+  "Pick from the page": "ページから色を取得",
+  "Region, viewport, or full": "範囲、表示領域、ページ全体",
+  "Control page playback": "ページ内の動画を操作",
+  "Local, staging, or production": "ローカル、ステージング、本番",
+  "Clear the current site": "現在のサイトデータを消去",
+  "Measure and copy CSS": "計測してCSSをコピー",
+  "No video": "動画なし",
+  Unavailable: "利用不可",
+  "Reset {host}?": "{host}をリセットしますか？",
+  "This clears cookies, local storage, cache, IndexedDB and service workers, then reloads the page.": "Cookie、ローカルストレージ、キャッシュ、IndexedDB、Service Workerを消去し、ページを再読み込みします。",
+  Cancel: "キャンセル",
+  "Resetting…": "リセット中…",
+  "Clear and reload": "消去して再読み込み",
+  "Enter an origin beginning with http(s)://": "http(s)://で始まるオリジンを入力してください",
+  "PROJECT SETTINGS": "プロジェクト設定",
+  "ORIGIN CONFIGURATION": "接続先の設定",
+  "Set project origins.": "プロジェクトの接続先を設定。",
+  "Choose the Local, Staging and Production origins used by Switch Origin in the popup.": "ポップアップの接続先切り替えで使うローカル、ステージング、本番のオリジンを指定します。",
+  "PROJECT NAME": "プロジェクト名",
+  Saved: "保存しました",
+  "Save origins": "接続先を保存",
+  Privacy: "プライバシー",
+  "Video shortcuts run locally on HTTP(S) pages. Other tools access a page only when selected. Data is never sent outside the browser.": "動画ショートカットはHTTP(S)ページ内でローカルに動作します。他のツールは選択時のみページへアクセスし、データをブラウザ外へ送信しません。",
+  "Update or reload temoto Proxy, then try again.": "temoto Proxyを更新または再読み込みして、もう一度お試しください。",
+  "temoto Proxy could not open.": "temoto Proxyを開けませんでした。",
+  "Checking companion…": "連携状態を確認中…",
+  "Not installed": "未インストール",
+  "Companion unavailable": "連携を利用できません",
+  Install: "インストール",
+  Retry: "再試行",
+  "Open Proxy": "Proxyを開く",
+  "Could not load the capture.": "撮影結果を読み込めませんでした。",
+  "This page is too tall to export as one PNG.": "このページは長すぎるため、1枚のPNGとして書き出せません。",
+  "Could not prepare the capture canvas.": "撮影用キャンバスを準備できませんでした。",
+  "Loading capture…": "撮影結果を読み込み中…",
+  "Capture from the installed extension to preview it here.": "インストール済みの拡張機能から撮影すると、ここで確認できます。",
+  "No capture found.": "撮影結果が見つかりません。",
+  "Capture canvas is unavailable": "撮影用キャンバスを利用できません",
+  "Could not create a PNG": "PNGを作成できませんでした",
+  "Copied to clipboard": "クリップボードへコピーしました",
+  "PNG saved": "PNGを保存しました",
+  Close: "閉じる",
+  Copy: "コピー",
+  "Save PNG": "PNGを保存",
+  "Could not read the current page": "現在のページを読み取れませんでした",
+  "Could not start Inspect": "検証を開始できませんでした",
+  "Site Reset is unavailable on this page": "このページではサイトのリセットを利用できません",
+  "Permission to clear site data is required": "サイトデータを消去する権限が必要です",
+  "Current Chrome window is unavailable": "現在のChromeウィンドウを利用できません",
+  "Color Picker is not available in this version of Chrome": "このバージョンのChromeではカラーピッカーを利用できません",
+  "No active tab found": "操作対象のタブが見つかりません",
+  "Keep the selected page active until the capture finishes": "撮影が完了するまで対象のページを表示したままにしてください",
+  "The selected page viewport is unavailable": "対象ページの表示領域を取得できません",
+  "The selected page could not be prepared for capture": "対象ページを撮影用に準備できませんでした",
+  "The page height is unavailable": "ページの高さを取得できません",
+  "The page changed while it was being captured": "撮影中にページの状態が変わりました",
+  "The page capture metrics are unavailable": "ページ撮影に必要な寸法を取得できません",
+  "Keep the page active until the full-page capture finishes": "ページ全体の撮影が完了するまで対象のページを表示したままにしてください",
+  "Full-page capture could not capture every section. Please try again.": "ページ全体を撮影できませんでした。もう一度お試しください。",
+  "The latest page height is unavailable": "最新のページ高さを取得できません",
+  "Invalid temoto Proxy response": "temoto Proxyから無効な応答を受け取りました",
+  "Unsupported companion action": "未対応の連携操作です",
+  "Proxy active": "プロキシ有効",
+  "Proxy off": "プロキシオフ",
+  "Controlled by another extension": "別の拡張機能が管理中",
+  "Controlled by browser policy": "ブラウザポリシーが管理中",
+  "Unrecognized temoto setting": "未認識のtemoto設定",
+  "Profile not applied": "プロファイル未適用",
+  "Proxy settings changed": "プロキシ設定が変更されました",
+  "Unknown state": "状態不明",
+  "Inspecting": "検証中",
+  "Click to copy selector": "クリックしてセレクターをコピー",
+  Exit: "終了",
+  "Drag to select a capture area · Esc to cancel": "ドラッグして撮影範囲を選択 · Escでキャンセル",
+  "Current page": "現在のページ",
+  "Local project": "ローカルプロジェクト",
+  "Local development": "ローカル開発",
+  CAPTURE: "撮影",
+};
+
+function requestedLocale(): string {
+  const override = new URLSearchParams(globalThis.location?.search || "").get("lang");
+  if (override) return override;
+  if (typeof chrome !== "undefined" && chrome.i18n?.getUILanguage) return chrome.i18n.getUILanguage();
+  return globalThis.navigator?.language || "en";
+}
+
+export function getUiLocale(): UiLocale {
+  return requestedLocale().toLowerCase().startsWith("ja") ? "ja" : "en";
+}
+
+export function t(source: string, replacements: Replacements = {}): string {
+  const template = getUiLocale() === "ja" ? ja[source] || source : source;
+  return template.replace(/\{(\w+)\}/g, (match, key: string) => (
+    Object.prototype.hasOwnProperty.call(replacements, key) ? String(replacements[key]) : match
+  ));
+}
+
+export function localizeError(error: unknown, fallback: string): string {
+  const message = error instanceof Error ? error.message : typeof error === "string" ? error : fallback;
+  return t(message || fallback);
+}
+
+export function applyDocumentLocale(): void {
+  document.documentElement.lang = getUiLocale();
+}

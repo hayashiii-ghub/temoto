@@ -1,0 +1,14 @@
+{
+  "extensionName": {
+    "message": "temoto Proxy",
+    "description": "拡張機能名"
+  },
+  "extensionDescription": {
+    "message": "安全で見通しがよく、いつでも戻せる開発用プロキシプロファイル。",
+    "description": "拡張機能の説明"
+  },
+  "actionTitle": {
+    "message": "temoto Proxyを開く",
+    "description": "ツールバーの操作名"
+  }
+}

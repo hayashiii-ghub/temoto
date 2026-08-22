@@ -34,6 +34,27 @@ temoto for Chrome brings six common page-testing tools into one focused popup:
 
 temoto processes its tools locally, does not transmit page data, and does not use analytics. Persistent HTTP(S) page access is used only to make the documented Video Speed shortcuts available without opening the popup. Site Reset asks for its optional permission only when you choose that tool. The optional Proxy integration uses an extension-ID-allowlisted local API and never receives proxy endpoints, PAC contents, bypass rules, usernames, or passwords.
 
+## Japanese localization
+
+**Summary**
+
+色の取得、画面撮影、動画速度、接続先の切り替え、サイトのリセット、ページ検証をひとつに。
+
+**Detailed description**
+
+開発ツールを、必要な場所ですぐ手元に。
+
+temoto for Chromeは、ページの確認でよく使う6つの機能をひとつのポップアップにまとめます。
+
+- 画面上の色を取得して、HEX値をコピー。
+- 範囲、表示中の画面、ページ全体を撮影し、PNGとしてコピーまたは保存。
+- ポップアップやページ上のショートカットからHTML5動画の再生速度を変更。
+- 現在のパス、クエリ、ハッシュを保ったままLocal、Staging、Productionを切り替え。
+- 必要なときだけ、現在のサイトのキャッシュ、Cookie、ストレージ、Service Workerをリセット。
+- 要素を計測し、短いCSSセレクターをコピー。
+
+処理は端末内で行われ、ページデータの送信や分析は行いません。別途temoto Proxyをインストールすると、サイドパネルから有効状態とプロファイル名を確認し、管理画面を開けます。
+
 ## Privacy practices
 
 **Single purpose description**
@@ -66,6 +87,7 @@ https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY
 
 - Store icon: `public/icons/icon-128.png` (128 × 128 PNG).
 - Required screenshot: `store/assets/screenshot-launcher-1280x800.jpg` (1280 × 800 JPEG).
+- Japanese screenshot: `store/assets/screenshot-launcher-ja-1280x800.jpg` (1280 × 800 JPEG).
 - Required small promo tile: `store/assets/promo-small-440x280.jpg` (440 × 280 JPEG).
 - Optional marquee promo tile: 1400 × 560 PNG or JPEG.
 - Up to five screenshots may be supplied. Show the actual popup and core tools rather than feature claims that are not implemented.
@@ -95,4 +117,5 @@ No account or credentials are required.
 - [ ] Select the intended regions and visibility in Distribution.
 - [ ] Enable deferred publishing if manual control after review is preferred.
 - [ ] Recheck the manifest name, description, version, icons, and minimum Chrome version before upload.
+- [ ] Confirm the uploaded package version is `0.2.0` and add the Japanese localized listing and screenshot.
 - [x] Reserve both Chrome Web Store items and replace the development keys/IDs with the store-issued identities.

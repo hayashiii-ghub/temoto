@@ -1,0 +1,14 @@
+{
+  "extensionName": {
+    "message": "temoto Proxy",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "Safe, visible and reversible proxy profiles for web development.",
+    "description": "Extension description"
+  },
+  "actionTitle": {
+    "message": "Open temoto Proxy",
+    "description": "Toolbar action title"
+  }
+}

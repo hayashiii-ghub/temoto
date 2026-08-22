@@ -23,6 +23,23 @@ temoto Proxy turns Chrome's proxy configuration into named development workspace
 
 temoto Proxy has no analytics service and does not inspect or transmit page traffic.
 
+## Japanese localization
+
+**Summary:** 開発用プロキシを、安全で見える、戻せるプロファイルに。
+
+**Description**
+
+temoto Proxyは、Chromeのプロキシ設定を名前付きの開発用プロファイルとして管理します。
+
+- HTTP、HTTPS、SOCKS4、SOCKS5をコンパクトなポップアップから切り替え。
+- ローカルプロキシ、ドメイン別ルーティング、PAC設定をプロファイルとして保存。
+- Chromeのポリシーや他の拡張機能との競合を、設定変更の前に確認。
+- 現在の有効状態を表示し、temotoの設定だけを安全にオフ。
+- 認証パスワードは現在のChromeセッション内だけに保持。
+- 認証情報を含めずにチーム用プロファイルを読み込み・書き出し。
+
+アカウントや分析サービスは使わず、ページの通信内容を検査・送信しません。
+
 ## Privacy policy URL after this branch is merged
 
 https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-proxy/PRIVACY.md
@@ -32,7 +49,10 @@ https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-proxy/PRIVACY.
 - Store icon: `dist/client/icons/icon-128.png` after running `npm run build` (128 × 128 PNG).
 - Required screenshot: `store/assets/screenshot-manager-1280x800.png` (1280 × 800 PNG).
 - Popup screenshot: `store/assets/screenshot-popup-1280x800.jpg` (1280 × 800 JPEG).
-- Optional promotion video and promotional tiles may be omitted for the initial submission.
+- Japanese manager screenshot: `store/assets/screenshot-manager-ja-1280x800.png` (1280 × 800 PNG).
+- Japanese popup screenshot: `store/assets/screenshot-popup-ja-1280x800.jpg` (1280 × 800 JPEG).
+- Required small promo tile: `store/assets/promo-small-440x280.jpg` (440 × 280 JPEG).
+- Optional promotion video and marquee promo tile may be omitted.
 
 ## Single purpose
 
@@ -72,4 +92,5 @@ No account or temoto-operated server is required.
 - [ ] Capture store screenshots from the actual extension.
 - [ ] Publish `PRIVACY.md` at a stable public URL.
 - [ ] Complete Chrome Web Store Limited Use disclosures truthfully.
+- [ ] Confirm the uploaded package version is `1.1.0` and add the Japanese localized listing and screenshots.
 - [x] Reserve both Chrome Web Store items and replace the development keys/IDs with the store-issued identities.

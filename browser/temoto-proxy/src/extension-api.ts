@@ -1,6 +1,7 @@
 import { createExportBundle, createProfile, normalizeProfile, parseImportBundle } from "./proxy-core.js";
 import type { ProxyProfile } from "./proxy-core.js";
 import type { DiagnosticResult, EffectiveState } from "./proxy-runtime.js";
+import { t } from "./i18n.js";
 
 interface StateResponse { ok: true; state: EffectiveState }
 interface DiagnosticResponse { ok: true; result: DiagnosticResult }
@@ -130,19 +131,19 @@ export async function sendMessage<T extends MessageType>(type: T, ...args: Messa
   const payload = args[0];
   if (!hasChromeRuntime()) return await previewMessage(type, payload as MessagePayloads[T]) as MessageResponses[T];
   const response = await chrome.runtime.sendMessage({ type, ...(payload ?? {}) }) as MessageResponses[T] | { ok: false; error?: string };
-  if (!response?.ok) throw new Error(response?.error || "temoto Proxy could not complete this action");
+  if (!response?.ok) throw new Error(t(response?.error || "temoto Proxy could not complete this action"));
   return response as MessageResponses[T];
 }
 
 export function endpointLabel(profile: ProxyProfile): string {
-  if (profile.kind === "pac") return profile.pac.source === "url" ? "PAC URL" : "PAC script";
+  if (profile.kind === "pac") return profile.pac.source === "url" ? t("PAC URL") : t("PAC script");
   const endpoint = profile.endpoints?.single || profile.endpoints?.http || profile.endpoints?.https || profile.endpoints?.fallback;
-  if (!endpoint) return "No endpoint";
+  if (!endpoint) return t("No endpoint");
   return `${endpoint.scheme.toUpperCase()} · ${endpoint.host}:${endpoint.port}`;
 }
 
 export function profileKindLabel(profile: ProxyProfile): string {
-  return { fixed: "FIXED", rules: "ROUTED", pac: "PAC" }[profile.kind];
+  return { fixed: t("FIXED"), rules: t("ROUTED"), pac: "PAC" }[profile.kind];
 }
 
 export function el<K extends keyof HTMLElementTagNameMap>(

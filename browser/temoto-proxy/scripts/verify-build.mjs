@@ -25,15 +25,20 @@ const required = [
   "icons/icon-48.png",
   "icons/icon-128.png",
   "icons/action-16.png",
-  "icons/action-32.png"
+  "icons/action-32.png",
+  "_locales/en/messages.json",
+  "_locales/ja/messages.json"
 ];
 
 await Promise.all(required.map((file) => access(resolve(buildRoot, file))));
 const manifest = JSON.parse(await readFile(resolve(buildRoot, "manifest.json"), "utf8"));
+const packageJson = JSON.parse(await readFile(resolve(root, "package.json"), "utf8"));
 const requiredPermissions = ["proxy", "storage", "webRequest", "webRequestAuthProvider"];
 if (
   manifest.manifest_version !== 3
   || manifest.action?.default_popup !== "popup.html"
+  || manifest.default_locale !== "en"
+  || manifest.version !== packageJson.version
   || manifest.side_panel
   || manifest.background?.service_worker !== "service-worker.js"
   || !manifest.host_permissions?.includes("<all_urls>")

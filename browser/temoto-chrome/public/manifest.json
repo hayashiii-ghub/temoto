@@ -1,11 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "temoto for Chrome",
+  "name": "__MSG_extensionName__",
   "short_name": "temoto",
-  "version": "0.1.9",
+  "version": "0.2.0",
+  "default_locale": "en",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAthJhWDJ8IAyd1Z/valqBgT9WOBPRpwX95WF+8cL0Rzjm/IWASF3kolRa5WBUj6mi9VoRHTysT5XfePhRefSk23elC81WvVgwc0mDdJWvUOByeXUaTbZm0HDKANtBbsjmFltd/TVjGj1tApEo3KUh4nrAIlqm3BfHjXhMWP42kcc9Pdo/XmqzsxF82oL2brC5FK7jiL6IW5VkoOOFxcwo5TfeGbDbSApuiPtyr1VQyB+khla6MkfSxGD+1cokhSZtom56IFAo7CoGF72VNn4ee/rg4U/+5EIuKQ4w3Enj5/GnbXfUCPSNDkqcqOz0/FyjXtbE8EpseycY6/umIp5X1QIDAQAB",
   "minimum_chrome_version": "116",
-  "description": "Color, capture, video speed and developer utilities close at hand.",
+  "description": "__MSG_extensionDescription__",
   "permissions": [
     "activeTab",
     "scripting",
@@ -29,7 +30,7 @@
     }
   ],
   "action": {
-    "default_title": "temoto",
+    "default_title": "__MSG_actionTitle__",
     "default_popup": "index.html",
     "default_icon": {
       "16": "icons/action-16.png",
@@ -51,7 +52,7 @@
         "default": "Alt+Shift+T",
         "mac": "Command+Shift+T"
       },
-      "description": "Open temoto"
+      "description": "__MSG_commandOpen__"
     }
   }
 }

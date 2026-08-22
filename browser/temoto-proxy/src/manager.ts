@@ -2,6 +2,9 @@ import { createProfile } from "./proxy-core.js";
 import type { ProxyEndpoint, ProxyProfile, ProxyStatus, RoutingRule } from "./proxy-core.js";
 import { downloadText, el, endpointLabel, profileKindLabel, sendMessage } from "./extension-api.js";
 import type { EffectiveState } from "./proxy-runtime.js";
+import { localizeDocument, localizeError, t } from "./i18n.js";
+
+localizeDocument();
 
 type FormControl = HTMLInputElement & HTMLSelectElement & HTMLTextAreaElement;
 type ProxyForm = HTMLFormElement & {
@@ -37,11 +40,11 @@ let toastTimer: ReturnType<typeof setTimeout> | undefined;
 for (const container of queryAll<HTMLElement>("[data-endpoint]")) {
   const key = container.dataset.endpoint;
   container.append(
-    el("label", { className: "field" }, el("span", { text: "Type" }), el("select", { name: `${key}Scheme` },
+    el("label", { className: "field" }, el("span", { text: t("Type") }), el("select", { name: `${key}Scheme` },
       ...["http", "https", "socks4", "socks5"].map((value) => el("option", { value, text: value.toUpperCase() })),
     )),
-    el("label", { className: "field endpoint-host" }, el("span", { text: "Host" }), el("input", { name: `${key}Host`, spellcheck: "false", placeholder: "127.0.0.1" })),
-    el("label", { className: "field" }, el("span", { text: "Port" }), el("input", { name: `${key}Port`, type: "number", min: "1", max: "65535", inputmode: "numeric" })),
+    el("label", { className: "field endpoint-host" }, el("span", { text: t("Host") }), el("input", { name: `${key}Host`, spellcheck: "false", placeholder: "127.0.0.1" })),
+    el("label", { className: "field" }, el("span", { text: t("Port") }), el("input", { name: `${key}Port`, type: "number", min: "1", max: "65535", inputmode: "numeric" })),
   );
 }
 
@@ -65,7 +68,7 @@ async function run<T>(action: () => Promise<T>): Promise<T | null> {
     }
     return response;
   } catch (error) {
-    showToast(error instanceof Error ? error.message : String(error), "error");
+    showToast(localizeError(error), "error");
     return null;
   } finally {
     busy = false;
@@ -87,11 +90,11 @@ function selectedProfile(): EffectiveState["profiles"][number] | null {
 
 function statusMessage(status: ProxyStatus): string {
   const messages: Partial<Record<ProxyStatus["code"], string>> = {
-    conflict: "Another extension has higher priority. temoto will not overwrite it.",
-    policy: "Chrome or an administrator policy controls proxy settings.",
-    changed: "The effective Chrome setting changed after activation. Reapply the profile or turn temoto off.",
-    inactive: "A profile is selected but Chrome is not currently using it.",
-    orphaned: "Chrome reports a temoto-controlled setting that is not linked to a saved profile. Turn temoto off to clear it.",
+    conflict: t("Another extension has higher priority. temoto will not overwrite it."),
+    policy: t("Chrome or an administrator policy controls proxy settings."),
+    changed: t("The effective Chrome setting changed after activation. Reapply the profile or turn temoto off."),
+    inactive: t("A profile is selected but Chrome is not currently using it."),
+    orphaned: t("Chrome reports a temoto-controlled setting that is not linked to a saved profile. Turn temoto off to clear it."),
   };
   return messages[status.code] || "";
 }
@@ -99,13 +102,13 @@ function statusMessage(status: ProxyStatus): string {
 function renderShell(): void {
   if (!state) return;
   const active = activeProfile();
-  statusNode.textContent = active && state.status.code === "active" ? `${active.name} · active` : state.status.label;
+  statusNode.textContent = active && state.status.code === "active" ? t("{name} · active", { name: active.name }) : t(state.status.label);
   statusDot.dataset.tone = state.status.tone;
   globalToggle.disabled = false;
-  globalToggle.textContent = active ? "Turn off safely" : "Proxy off";
+  globalToggle.textContent = active ? t("Turn off safely") : t("Proxy off");
   globalToggle.classList.toggle("danger-text", Boolean(active));
   globalToggle.onclick = active || state.status.code === "orphaned"
-    ? () => run(async () => { const response = await sendMessage("DEACTIVATE"); showToast("temoto control cleared", "success"); return response; })
+    ? () => run(async () => { const response = await sendMessage("DEACTIVATE"); showToast(t("temoto control cleared"), "success"); return response; })
     : null;
 
   const message = statusMessage(state.status);
@@ -138,7 +141,7 @@ function renderSidebar(): void {
     },
     el("i", { className: "profile-color", style: `--profile-color:${profile.color}` }),
     el("span", { className: "profile-copy" }, el("strong", { text: profile.name }), el("small", { text: endpointLabel(profile) })),
-    active ? el("span", { className: "active-pip", title: "Active", text: "ON" }) : null,
+    active ? el("span", { className: "active-pip", title: t("Active"), text: t("ON") }) : null,
     );
   }));
 }
@@ -178,8 +181,8 @@ function populateForm(profile: EffectiveState["profiles"][number]): void {
   query("#editor-title").textContent = profile.name;
   query("#footer-profile-name").textContent = profile.name;
   query("#credential-state").textContent = profile.auth?.passwordReady
-    ? "Session password is ready. Leave the password field blank to keep it."
-    : "No session password is loaded. It will be requested again after Chrome restarts.";
+    ? t("Session password is ready. Leave the password field blank to keep it.")
+    : t("No session password is loaded. It will be requested again after Chrome restarts.");
   diagnosticResult.hidden = true;
   renderRules();
   updateVisibility();
@@ -193,25 +196,25 @@ function renderRules(): void {
     el("input", {
       value: rule.pattern,
       placeholder: "*.staging.example.com",
-      "aria-label": `Rule ${index + 1} pattern`,
+      "aria-label": t("Rule {number} pattern", { number: index + 1 }),
       onchange: ((event: Event) => { ruleDraft[index].pattern = (event.target as HTMLInputElement).value; }) as EventListener,
     }),
     el("select", {
-      "aria-label": `Rule ${index + 1} action`,
+      "aria-label": t("Rule {number} action", { number: index + 1 }),
       onchange: ((event: Event) => { ruleDraft[index].action = (event.target as HTMLSelectElement).value as RoutingRule["action"]; }) as EventListener,
     },
-    el("option", { value: "proxy", text: "USE PROXY", selected: rule.action === "proxy" ? "selected" : null }),
-    el("option", { value: "direct", text: "DIRECT", selected: rule.action === "direct" ? "selected" : null }),
+    el("option", { value: "proxy", text: t("USE PROXY"), selected: rule.action === "proxy" ? "selected" : null }),
+    el("option", { value: "direct", text: t("DIRECT"), selected: rule.action === "direct" ? "selected" : null }),
     ),
     el("button", {
       type: "button",
       className: "rule-delete",
-      "aria-label": `Delete rule ${index + 1}`,
+      "aria-label": t("Delete rule {number}", { number: index + 1 }),
       text: "×",
       onclick: () => { ruleDraft.splice(index, 1); renderRules(); },
     }),
   )));
-  if (!ruleDraft.length) list.append(el("div", { className: "empty-rules", text: "No domain rules yet. The fallback below handles every destination." }));
+  if (!ruleDraft.length) list.append(el("div", { className: "empty-rules", text: t("No domain rules yet. The fallback below handles every destination.") }));
 }
 
 function currentKind(): ProxyProfile["kind"] {
@@ -229,12 +232,12 @@ function updateVisibility(): void {
   query("#protocol-endpoints").hidden = kind !== "fixed" || !perProtocol;
   query<HTMLElement>("#profile-form [name=perProtocol]").closest<HTMLElement>("label")!.hidden = kind !== "fixed";
   query("#auth-fields").hidden = !form.elements.authEnabled.checked;
-  query("#pac-value-label").textContent = form.elements.pacSource.value === "url" ? "PAC URL" : "PAC script";
+  query("#pac-value-label").textContent = form.elements.pacSource.value === "url" ? t("PAC URL") : t("PAC script");
   form.elements.pacValue.rows = form.elements.pacSource.value === "url" ? 2 : 9;
 }
 
 function collectProfile(): ProxyProfile {
-  if (!draft) throw new Error("No profile is selected");
+  if (!draft) throw new Error(t("No profile is selected"));
   const kind = currentKind();
   return {
     ...structuredClone(draft),
@@ -275,10 +278,10 @@ async function save({ activate = false }: { activate?: boolean } = {}) {
     const activated = await sendMessage("ACTIVATE_PROFILE", { profileId: profile.id });
     state = activated.state;
     renderShell();
-    showToast(`${profile.name} saved and activated`, "success");
+    showToast(t("{name} saved and activated", { name: profile.name }), "success");
     return activated;
   }
-  showToast(`${profile.name} saved`, "success");
+  showToast(t("{name} saved", { name: profile.name }), "success");
   return response;
 }
 
@@ -286,7 +289,7 @@ function updateActiveControls() {
   if (!draft || !state) return;
   const isActive = draft.id === state.activeProfileId && state.status.code === "active";
   const activateButton = query("#activate-profile");
-  activateButton.textContent = isActive ? "Save & reapply" : "Save & activate";
+  activateButton.textContent = isActive ? t("Save & reapply") : t("Save & activate");
 }
 
 function newProfile() {
@@ -294,7 +297,7 @@ function newProfile() {
   run(async () => {
     const response = await sendMessage("SAVE_PROFILE", { profile });
     draft = null;
-    showToast("New profile created", "success");
+    showToast(t("New profile created"), "success");
     return response;
   });
 }
@@ -307,8 +310,8 @@ form.addEventListener("change", (event) => {
   const target = event.target as FormControl;
   if (["kind", "perProtocol", "authEnabled", "pacSource"].includes(target.name)) updateVisibility();
   if (target.name === "name") {
-    query("#editor-title").textContent = target.value || "Untitled profile";
-    query("#footer-profile-name").textContent = target.value || "Untitled profile";
+    query("#editor-title").textContent = target.value || t("Untitled profile");
+    query("#footer-profile-name").textContent = target.value || t("Untitled profile");
   }
 });
 
@@ -322,7 +325,7 @@ query("#run-diagnostic").addEventListener("click", () => run(async () => {
   const saved = await save({ activate: false });
   if (!saved) return null;
   const selected = selectedProfile();
-  if (!state || !selected || (state.activeProfileId !== draft?.id && state.activeProfileId !== selected.id)) throw new Error("Activate this profile before running a connection test");
+  if (!state || !selected || (state.activeProfileId !== draft?.id && state.activeProfileId !== selected.id)) throw new Error(t("Activate this profile before running a connection test"));
   const profileId = selected.id;
   const response = await sendMessage("DIAGNOSE", { profileId });
   diagnosticResult.hidden = false;
@@ -333,20 +336,20 @@ query("#run-diagnostic").addEventListener("click", () => run(async () => {
   return response;
 }));
 query("#duplicate-profile").addEventListener("click", () => run(async () => {
-  if (!draft) throw new Error("No profile is selected");
+  if (!draft) throw new Error(t("No profile is selected"));
   const response = await sendMessage("DUPLICATE_PROFILE", { profileId: draft.id });
   draft = null;
-  showToast("Profile duplicated", "success");
+  showToast(t("Profile duplicated"), "success");
   return response;
 }));
 query("#delete-profile").addEventListener("click", () => {
   if (!draft || !state) return;
   const profile = draft;
-  if (!confirm(`Delete “${profile.name}”?${profile.id === state.activeProfileId ? " temoto will first clear its active proxy setting." : ""}`)) return;
+  if (!confirm(`${t("Delete “{name}”?", { name: profile.name })}${profile.id === state.activeProfileId ? t(" temoto will first clear its active proxy setting.") : ""}`)) return;
   run(async () => {
     const response = await sendMessage("DELETE_PROFILE", { profileId: profile.id });
     draft = null;
-    showToast("Profile deleted", "success");
+    showToast(t("Profile deleted"), "success");
     return response;
   });
 });
@@ -356,7 +359,7 @@ query("#empty-create").addEventListener("click", newProfile);
 query("#export-profiles").addEventListener("click", () => run(async () => {
   const response = await sendMessage("EXPORT_PROFILES");
   downloadText(`temoto-proxy-${new Date().toISOString().slice(0, 10)}.json`, response.json);
-  showToast("Profiles exported without secrets", "success");
+  showToast(t("Profiles exported without secrets"), "success");
   return response;
 }));
 query("#import-profiles").addEventListener("click", () => query<HTMLInputElement>("#import-file").click());
@@ -365,11 +368,11 @@ query<HTMLInputElement>("#import-file").addEventListener("change", async (event)
   const file = target.files?.[0];
   if (!file) return;
   const json = await file.text();
-  const replace = confirm("Replace all saved profiles with this file?\n\nChoose Cancel to merge the imported profiles instead.");
+  const replace = confirm(t("Replace all saved profiles with this file?\n\nChoose Cancel to merge the imported profiles instead."));
   await run(async () => {
     const response = await sendMessage("IMPORT_PROFILES", { json, mode: replace ? "replace" : "merge" });
     draft = null;
-    showToast(replace ? "Profiles replaced — enter passwords again" : "Profiles merged — test URLs reset", "success");
+    showToast(t(replace ? "Profiles replaced — enter passwords again" : "Profiles merged — test URLs reset"), "success");
     return response;
   });
   target.value = "";
@@ -379,7 +382,7 @@ const incognitoEnabled = query<HTMLInputElement>("#incognito-enabled");
 const incognitoSession = query<HTMLInputElement>("#incognito-session");
 incognitoEnabled.addEventListener("change", () => run(async () => {
   const response = await sendMessage("SET_INCOGNITO", { enabled: incognitoEnabled.checked, sessionOnly: incognitoSession.checked });
-  showToast(incognitoEnabled.checked ? "Incognito proxy enabled explicitly" : "Incognito proxy cleared", "success");
+  showToast(t(incognitoEnabled.checked ? "Incognito proxy enabled explicitly" : "Incognito proxy cleared"), "success");
   return response;
 }));
 incognitoSession.addEventListener("change", () => {
@@ -394,8 +397,8 @@ function renderIncognitoControls(): void {
   incognitoSession.checked = Boolean(state.incognitoSessionOnly);
   query("#incognito-session-row").hidden = !state.incognitoEnabled;
   query("#incognito-help").textContent = state.incognitoAllowed
-    ? "Explicitly applies the active profile only to incognito windows."
-    : "Enable “Allow in Incognito” for temoto Proxy in Chrome extensions first.";
+    ? t("Explicitly applies the active profile only to incognito windows.")
+    : t("Enable “Allow in Incognito” for temoto Proxy in Chrome extensions first.");
 }
 
 run(async () => {

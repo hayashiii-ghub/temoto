@@ -1,6 +1,6 @@
 {
   "name": "temoto-chrome",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,7 @@
     "package": "npm run build && node scripts/package-extension.mjs",
     "package:store-bootstrap": "npm run build && node scripts/package-extension.mjs --store-bootstrap",
     "preview": "vite preview",
-    "test": "npm run typecheck && npm run build:extension-runtime && node --test tests/url-utils.test.mjs tests/page-safety.test.mjs tests/capture-utils.test.mjs tests/capture-plan.test.mjs tests/video-speed.test.mjs tests/video-speed-content.test.mjs tests/proxy-companion.test.mjs",
+    "test": "npm run typecheck && npm run build:extension-runtime && node --test tests/url-utils.test.mjs tests/page-safety.test.mjs tests/capture-utils.test.mjs tests/capture-plan.test.mjs tests/video-speed.test.mjs tests/video-speed-content.test.mjs tests/proxy-companion.test.mjs tests/i18n.test.mjs",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.extension.json --noEmit",
     "test:sites": "node --test tests/sites-worker.test.mjs"
   },
