@@ -2,7 +2,6 @@ import type { CSSProperties, ReactNode } from "react";
 
 import { CopyCommandButton } from "./CopyCommandButton";
 import { JapaneseText } from "./JapaneseText";
-import { ProductNavigation } from "./ProductNavigation";
 
 const downloadUrl =
   "https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.dmg";
@@ -378,38 +377,12 @@ export default function Home() {
   return (
     <>
       <a className="skipLink" href="#content">本文へ移動</a>
-      <header className="siteHeader" id="top">
-        <div className="nav shell">
-          <a className="brand" href="#top" aria-label="temoto トップへ">temoto</a>
-          <ProductNavigation />
-          <a className="navGitHub" href={repositoryUrl} aria-label="GitHub"><span>GitHub</span><i aria-hidden="true">↗</i></a>
-        </div>
-      </header>
-
       <main id="content">
-
-      <section className="hero" aria-labelledby="hero-title">
-        <div className="heroInner shell">
-          <div className="heroCopy">
-            <h1 id="hero-title"><span className="heroTitleLine"><JapaneseText>作業の途中を、</JapaneseText></span><span className="heroTitleLine"><JapaneseText>手元に。</JapaneseText></span></h1>
-            <p className="lead">
-              <JapaneseText>temotoは、作業の途中にあるものを近くに残すための小さな道具。Macではファイルとリンクの棚。Chromeでは、ページを試す道具と開発用プロキシ。</JapaneseText>
-            </p>
-            <div className="heroActions">
-              <a className="button primary" href="#macos">macOS を見る <span aria-hidden="true">↓</span></a>
-              <a className="button ghost" href="#chrome">Chrome を見る <span aria-hidden="true">↓</span></a>
-              <a className="button ghost" href="#proxy">Proxy を見る <span aria-hidden="true">↓</span></a>
-            </div>
-            <p className="requirements">Open source　·　No account　·　macOS / Chrome</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="productOverview" id="products">
+      <div id="top" />
+      <section className="productOverview" id="products" aria-labelledby="products-title">
         <div className="section shell">
           <div className="sectionHeading">
-            <p className="eyebrow"><span /> CHOOSE A TOOL</p>
-            <h2><JapaneseText>使う場所に合わせた、3つのtemoto。</JapaneseText></h2>
+            <h1 id="products-title"><JapaneseText>使う場所に合わせた、3つのtemoto。</JapaneseText></h1>
             <p><JapaneseText>データも設定も共有しません。手元に残したいものが違うだけです。</JapaneseText></p>
           </div>
           <div className="productShowcase">
@@ -668,7 +641,7 @@ export default function Home() {
       </section>
       </main>
       <footer className="footer shell">
-        <a className="brand" href="#top">temoto</a>
+        <a className="brand" href="#top" aria-label="ページ上部へ戻る">temoto</a>
         <p>© 2026 temoto</p>
         <div>
           <a href={repositoryUrl}>GitHub</a>

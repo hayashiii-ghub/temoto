@@ -23,25 +23,13 @@ button { font: inherit; }
 
 .skipLink { position: fixed; z-index: 100; left: 16px; top: 12px; padding: 10px 14px; border-radius: 9px; background: var(--paper); color: #0c0c0c; font-size: 12px; font-weight: 600; transform: translateY(-150%); transition: transform .2s ease; }
 .skipLink:focus { transform: translateY(0); }
-.siteHeader { position: sticky; z-index: 50; top: 0; border-bottom: 1px solid rgba(255,255,255,.07); background: rgba(8,8,8,.86); backdrop-filter: blur(22px) saturate(120%); -webkit-backdrop-filter: blur(22px) saturate(120%); }
-.nav { height: 88px; display: flex; align-items: center; }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 17px; line-height: 1; font-weight: 600; letter-spacing: -.045em; }
 .brand .temotoMark { width: 18px; height: 18px; }
-.navLinks { margin-left: auto; display: flex; gap: 32px; color: var(--muted); font-size: 12px; }
-.navLinks a, .footer a { transition: color .2s ease; }
-.navLinks a:hover, .footer a:hover { color: var(--ink); }
-.navLinks a[aria-current="location"] { color: var(--ink); }
-.navGitHub { margin-left: 38px; min-width: 118px; height: 39px; padding: 0 16px; border: 1px solid var(--line); border-radius: 999px; display: flex; align-items: center; justify-content: space-between; font: 500 11px var(--font-ibm-plex-mono); text-transform: uppercase; letter-spacing: .06em; transition: background .2s ease, border-color .2s ease; }
-.navGitHub:hover { background: rgba(255,255,255,.07); border-color: var(--line-strong); }
-.navGitHub i { font-style: normal; font-size: 14px; }
-#macos, #chrome, #proxy, #products { scroll-margin-top: 104px; }
+.footer a { transition: color .2s ease; }
+.footer a:hover { color: var(--ink); }
+#macos, #chrome, #proxy, #products { scroll-margin-top: 24px; }
 
-.hero { min-height: 760px; height: calc(100svh - 88px); max-height: 940px; }
-.heroInner { min-height: inherit; height: 100%; display: grid; grid-template-columns: minmax(0, 860px); align-items: center; justify-content: center; padding-block: 62px 74px; text-align: center; }
 .heroCopy { position: relative; z-index: 2; }
-.hero .lead { margin-inline: auto; }
-.hero .heroActions { justify-content: center; }
-.hero .requirements { margin-inline: auto; }
 .eyebrow { margin: 0 0 28px; display: flex; align-items: center; gap: 11px; color: #bcbcb9; font: 500 10px var(--font-ibm-plex-mono); letter-spacing: .14em; }
 .eyebrow > span { width: 26px; height: 1px; background: #6c6c69; }
 h1, h2, h3, p { text-wrap: pretty; }
@@ -49,9 +37,7 @@ h1, h2 { text-wrap: balance; }
 .jaPhrase { word-break: keep-all; overflow-wrap: anywhere; }
 .jaChunk { white-space: nowrap; }
 h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-spacing: -.068em; font-weight: 400; }
-.heroTitleLine { display: block; }
 .lead { max-width: 540px; margin: 30px 0 0; color: var(--muted); font-size: clamp(15px, 1.25vw, 18px); line-height: 1.9; letter-spacing: -.018em; }
-.heroActions { margin-top: 40px; display: flex; align-items: center; gap: 29px; }
 .button { min-height: 52px; display: inline-flex; align-items: center; justify-content: space-between; gap: 42px; padding: 0 22px; border-radius: 13px; font-size: 13px; font-weight: 600; transition: transform .2s ease, background .2s ease; }
 .button:hover { transform: translateY(-2px); }
 .button.primary { background: var(--accent); color: #0c0c0c; }
@@ -328,7 +314,6 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
     radial-gradient(circle at 12% 10%, rgba(153,116,248,.11), transparent 30%),
     #161616;
   color: var(--ink);
-  border-top: 1px solid rgba(255,255,255,.075);
 }
 .productOverview .eyebrow,
 .productBlock.isChrome .eyebrow { color: #aaa3b3; }
@@ -387,11 +372,9 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 }
 
 @media (max-width: 1080px) {
-  .hero { height: auto; max-height: none; }
-  .heroInner { grid-template-columns: 1fr; padding-block: 110px 88px; }
   .productHero { height: auto; max-height: none; grid-template-columns: 1fr; padding-top: 110px; }
   .heroCopy { text-align: center; }
-  .heroCopy .eyebrow, .heroActions { justify-content: center; }
+  .heroCopy .eyebrow { justify-content: center; }
   .lead { margin-inline: auto; }
   .shelfScene { width: min(680px, 100%); height: 620px; margin-inline: auto; }
   .workflowGrid { grid-template-columns: 1fr; }
@@ -418,22 +401,10 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 
 @media (max-width: 640px) {
   .shell { width: min(100% - 28px, 1240px); }
-  .nav { height: 70px; }
-  .navLinks { margin-left: auto; gap: 12px; font-size: 10px; }
-  .navGitHub { margin-left: 14px; min-width: 40px; width: 40px; padding: 0; justify-content: center; }
-  .navGitHub span { display: none; }
-  .hero { min-height: 0; }
-  .heroInner { min-height: 0; padding-block: 112px 96px; }
   h1 { font-size: clamp(42px, 12.7vw, 57px); line-height: 1.11; }
   .lead { margin-top: 24px; font-size: 14px; line-height: 1.85; }
-  .heroActions { margin-top: 32px; flex-direction: column; gap: 22px; }
-  .hero .lead { margin-top: 30px; }
-  .hero .heroActions { width: 100%; margin-top: 38px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  .hero .heroActions .button:first-child { grid-column: 1 / -1; }
-  .hero .heroActions .button { gap: 16px; padding-inline: 18px; }
   .button { width: 100%; }
   .requirements { max-width: 300px; margin: 21px auto 0; line-height: 1.8; }
-  .hero .requirements { margin-top: 26px; }
   .shelfScene { height: 430px; min-height: 0; }
   .shelfScene::after { width: 290px; height: 290px; box-shadow: 0 0 0 50px rgba(255,255,255,.012); }
   .appShelf { width: 300px; max-width: 88%; padding: 20px 16px 15px; border-radius: 43px; }
