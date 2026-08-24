@@ -439,7 +439,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
   max-width: 13ch;
   margin: 36px auto 0;
   font-size: clamp(56px, 7.6vw, 104px);
-  line-height: 1.02;
+  line-height: 1.05;
   letter-spacing: -.07em;
 }
 
