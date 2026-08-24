@@ -366,8 +366,8 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
   top: 20px;
   left: 50%;
   width: max-content;
-  min-height: 50px;
-  padding: 7px 18px;
+  min-height: 44px;
+  padding: 5px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -381,7 +381,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 }
 
 .topRail a:not(.brand) {
-  min-height: 34px;
+  min-height: 32px;
   padding: 0 11px;
   display: inline-flex;
   align-items: center;
@@ -396,7 +396,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .installNote a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 .page .brand {
-  min-height: 34px;
+  min-height: 32px;
   padding-right: 14px;
   display: inline-flex;
   align-items: center;
@@ -677,7 +677,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 }
 
 @media (max-width: 640px) {
-  .topRail { top: 12px; min-height: 56px; padding: 6px 14px; font-size: 12px; }
+  .topRail { top: 12px; min-height: 48px; padding: 2px 12px; font-size: 12px; }
   .topRail .brand { min-height: 44px; padding-right: 11px; }
   .topRail a:not(.brand) { min-height: 44px; padding: 0 10px; }
   .navHow { display: none !important; }
