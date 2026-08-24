@@ -22,29 +22,30 @@ function withoutBreakHints(html) {
     .replace(/<\/?span\b[^>]*>/g, "");
 }
 
-test("temotoのブランドハブをサーバーレンダリングする", async () => {
+test("renders the English temoto landing page", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
   const htmlWithoutBreakHints = withoutBreakHints(html);
-  assert.match(html, /<html lang="ja">/);
-  assert.match(html, /<title>temoto — Chromeの作業を、手元で整える。<\/title>/);
-  assert.match(html, /<wbr\s*\/?/);
-  assert.match(htmlWithoutBreakHints, /ページを試す6つの道具と、開発用プロキシ。役割を分けた2つの拡張です。/);
-  assert.match(htmlWithoutBreakHints, /Chromeの作業を、手元で整える。/);
-  assert.match(html, /<h1 id="products-title">/);
+  assert.match(html, /<html lang="en">/);
+  assert.match(html, /<title>temoto — Browser tools, close at hand\.<\/title>/);
+  assert.match(htmlWithoutBreakHints, /Keep browser work/);
+  assert.match(htmlWithoutBreakHints, /close at hand\./);
+  assert.match(html, /<h1 id="temoto-title">/);
   assert.match(html, /temoto for Chrome/);
   assert.match(html, /temoto Proxy/);
   assert.match(html, /0\.2\.0/);
   assert.match(html, /1\.1\.0/);
-  assert.match(htmlWithoutBreakHints, /Chrome Web Storeで公開中です/);
-  assert.match(htmlWithoutBreakHints, /Chromeに追加/);
-  assert.doesNotMatch(htmlWithoutBreakHints, /審査中/);
-  assert.match(htmlWithoutBreakHints, /実際の速度をバッジに表示します/);
-  assert.match(htmlWithoutBreakHints, /接続先を、見えるプロファイルに。/);
-  assert.match(htmlWithoutBreakHints, /temoto for Chromeには有効状態だけを共有し、詳細操作はProxy側で行います/);
+  assert.match(htmlWithoutBreakHints, /Test the page that is already open\./);
+  assert.match(htmlWithoutBreakHints, /Make every proxy route visible\./);
+  assert.match(htmlWithoutBreakHints, /Local-first, because browser work is still your work\./);
+  assert.match(htmlWithoutBreakHints, /Two extensions\. Install only what you need\./);
+  assert.match(htmlWithoutBreakHints, /Questions, answered plainly\./);
+  assert.match(htmlWithoutBreakHints, /Add to Chrome/);
+  assert.match(htmlWithoutBreakHints, /No temoto account/);
+  assert.match(htmlWithoutBreakHints, /Session-only credentials/);
   assert.doesNotMatch(html, /temotoMark/);
   assert.match(html, /chromeMark/);
   assert.match(html, /proxyMark/);
@@ -61,13 +62,12 @@ test("temotoのブランドハブをサーバーレンダリングする", async
   assert.match(html, /Measure and copy CSS/);
   assert.doesNotMatch(html, /Environments/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
-  assert.doesNotMatch(html, /KEEP IT CLOSE/);
-  assert.doesNotMatch(html, /Keep it close/);
+  assert.doesNotMatch(htmlWithoutBreakHints, /[\u3040-\u30ff\u3400-\u9fff]/);
   assert.doesNotMatch(html, /chromeGlyph|fileMark-file|actionClipboard/);
   assert.doesNotMatch(html, /Context by temoto|temoto for macOS|ShelfDrop|DMG|Option \+ Tab|href="\/context(?:[#?"])/);
 });
 
-test("公開用メタデータと主要リンクを含む", async () => {
+test("includes public metadata and primary links", async () => {
   const response = await render();
   const html = await response.text();
 
@@ -79,13 +79,14 @@ test("公開用メタデータと主要リンクを含む", async () => {
   assert.match(html, /chromewebstore\.google\.com\/detail\/temoto-for-chrome\/gcncgknjklghkoeiapcbdghodepnllid/);
   assert.match(html, /chromewebstore\.google\.com\/detail\/temoto-proxy\/hohabmdadcdkifcmbclkgnomhhlllnbb/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto/);
-  assert.match(html, /class="skipLink" href="#content"/);
+  assert.match(html, /class="skipLink" href="#content">Skip to content/);
   assert.match(html, /<main id="content">/);
-  assert.match(html, /<div id="top"><\/div>/);
-  assert.doesNotMatch(html, /class="siteHeader"|class="navLinks"|class="navGitHub"/);
-  assert.doesNotMatch(html, /class="mobileProductNav"/);
-  assert.match(html, /Chrome版をインストール/);
-  assert.match(html, /Proxy版をインストール/);
+  assert.match(html, /<nav class="topRail" aria-label="Primary">/);
+  assert.match(html, /<section class="hero" id="top"/);
+  assert.match(html, /<section class="section features" id="how"/);
+  assert.match(html, /<section class="section installSection" id="install"/);
+  assert.match(html, /Add temoto for Chrome/);
+  assert.match(html, /Add temoto Proxy/);
 });
 
 test("OG画像は1200x630のPNGである", () => {
@@ -125,34 +126,35 @@ test("Proxyの画面イメージは現行popupの骨格とプレビュー状態�
   assert.doesNotMatch(source, /className="proxyWindow"/);
 });
 
-test("ページは2製品の共通ショーケースから始まる", () => {
+test("uses the long-form LP sequence with temoto's linear design", () => {
   const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
   const source = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const layout = readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
-  assert.doesNotMatch(source, /function HubScene|<HubScene \/>/);
-  assert.doesNotMatch(css, /\.hubScene|\.hubPane/);
-  assert.doesNotMatch(source, /signalStrip|MACOS SHELF|CHROME TOOLS|PROXY PROFILES/);
-  assert.doesNotMatch(css, /\.signalStrip|\.signalInner/);
-  assert.doesNotMatch(css, /font-zen-old-mincho/);
-  assert.doesNotMatch(layout, /Zen_Old_Mincho/);
-  assert.doesNotMatch(source, /<section className="hero"/);
-  assert.doesNotMatch(css, /\.hero\s*\{|\.heroInner|\.heroTitleLine|\.heroActions/);
-  assert.match(source, /<section className="productOverview" id="products" aria-labelledby="products-title">/);
-  assert.match(source, /<h1 id="products-title"><JapaneseText>Chromeの作業を、手元で整える。<\/JapaneseText><\/h1>/);
-  assert.doesNotMatch(source, /CHOOSE A TOOL/);
+  assert.match(source, /<nav className="topRail" aria-label="Primary">/);
+  assert.match(source, /<section className="hero" id="top" aria-labelledby="temoto-title">/);
+  assert.match(source, /<section className="showcaseSection" aria-label="temoto in the browser">/);
+  assert.match(source, /<section className="section features" id="how" aria-label="How temoto works">/);
+  assert.equal(source.match(/index: "(?:i|ii|iii|iv)\./g)?.length, 4);
+  assert.match(source, /<section className="section privacy"/);
+  assert.match(source, /<section className="section installSection" id="install"/);
+  assert.match(source, /<section className="section faq"/);
+  assert.match(source, /<section className="finalCta"/);
+  assert.match(css, /\.topRail \{[^}]*border: 1px solid/);
+  assert.match(css, /\.page \.button \{[^}]*border-radius: 0;/);
+  assert.match(css, /\.showcaseFrame \{[^}]*grid-template-columns: repeat\(2,/);
+  assert.doesNotMatch(source, /JapaneseText/);
 });
 
-test("2製品は実画面を使う共通ショーケースで配置する", () => {
+test("places both real product previews in the shared showcase and feature rows", () => {
   const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
   const source = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
-  assert.equal(source.match(/<ProductShowcaseCard\b/g)?.length, 2);
-  assert.match(source, /visual=\{<ChromePreview compact \/>\}/);
-  assert.match(source, /visual=\{<ProxyPreview compact \/>\}/);
-  assert.match(css, /\.productShowcase \{[^}]*grid-template-columns: repeat\(2,/);
-  assert.match(css, /@media \(max-width: 760px\) \{\s*\.productShowcase \{ grid-template-columns: 1fr; \}/);
+  assert.equal(source.match(/<div className="showcaseProduct">/g)?.length, 2);
+  assert.match(source, /<ChromePreview compact \/>/);
+  assert.match(source, /<ProxyPreview compact \/>/);
+  assert.match(source, /feature\.product === "chrome" \? <ChromePreview compact \/> : <ProxyPreview compact \/>/);
+  assert.match(css, /\.showcaseFrame \{[^}]*grid-template-columns: repeat\(2,/);
+  assert.match(css, /@media \(max-width: 640px\) \{[\s\S]*\.showcaseFrame \{ width: 100%; min-height: 0; grid-template-columns: 1fr; transform: none; \}/);
+  assert.match(css, /@media \(max-width: 640px\) \{[\s\S]*\.showcaseProduct \{ min-height: 382px;/);
   assert.doesNotMatch(source, /macos|MacAppIcon|ShelfPreview/);
-  assert.doesNotMatch(css, /isMacos|macAppIcon|shelfScene/);
-  assert.doesNotMatch(css, /\.productPick|\.productCard|\.productVisual/);
 });
 
 test("商品アイコンは各Chrome拡張の正規128px素材を使う", () => {
@@ -170,5 +172,8 @@ test("OG画像のソースも2製品の正規素材を参照する", () => {
   const source = readFileSync(new URL("../scripts/og.html", import.meta.url), "utf8");
   assert.match(source, /\.\.\/public\/product-chrome-icon\.png/);
   assert.match(source, /\.\.\/public\/product-proxy-icon\.png/);
+  assert.match(source, /Keep browser work/);
+  assert.match(source, /close at hand\./);
   assert.doesNotMatch(source, /macOS|THREE TOOLS/);
+  assert.doesNotMatch(source, /[\u3040-\u30ff\u3400-\u9fff]/);
 });

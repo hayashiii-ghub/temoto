@@ -14,9 +14,9 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
   display: "swap",
 });
-const title = "temoto — Chromeの作業を、手元で整える。";
+const title = "temoto — Browser tools, close at hand.";
 const description =
-  "Chromeでページを試す6つの道具と、開発用プロキシを安全に切り替えるためのtemoto。";
+  "Six page-testing tools and a focused proxy profile manager for Chrome.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://temoto.haygsiiii.chatgpt.site"),
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     title,
     description,
     type: "website",
-    locale: "ja_JP",
+    locale: "en_US",
     images: [{ url: "/og-temoto.png", width: 1200, height: 630, alt: title }],
   },
   twitter: {
@@ -42,5 +42,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="ja"><body className={`${ibmPlexSansJP.variable} ${ibmPlexMono.variable}`}>{children}</body></html>;
+  return <html lang="en"><body className={`${ibmPlexSansJP.variable} ${ibmPlexMono.variable}`}>{children}</body></html>;
 }
