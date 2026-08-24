@@ -71,3 +71,7 @@ browser/temoto-proxy/   temoto Proxy
 browser/shared/         shared popup design tokens
 site/                   public website
 ```
+
+## License
+
+[MIT](./LICENSE)
