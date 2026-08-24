@@ -367,9 +367,10 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
   left: 50%;
   width: 414px;
   min-height: 50px;
-  padding: 7px 9px 7px 14px;
+  padding: 7px 9px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 3px;
   border: 1px solid var(--page-line);
   background: rgba(10, 10, 11, .86);
@@ -676,7 +677,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 }
 
 @media (max-width: 640px) {
-  .topRail { top: 12px; width: 280px; min-height: 56px; padding: 6px 7px 6px 11px; font-size: 12px; }
+  .topRail { top: 12px; width: 280px; min-height: 56px; padding: 6px 7px; font-size: 12px; }
   .topRail .brand { min-height: 44px; padding-right: 11px; }
   .topRail a:not(.brand) { min-height: 44px; padding: 0 10px; }
   .navHow { display: none !important; }
