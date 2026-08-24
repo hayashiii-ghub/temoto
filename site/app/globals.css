@@ -438,7 +438,7 @@ h1 { margin: 0; font-size: clamp(58px, 5.25vw, 78px); line-height: 1.08; letter-
 .hero h1 {
   max-width: 13ch;
   margin: 36px auto 0;
-  font-size: clamp(60px, 8.2vw, 112px);
+  font-size: clamp(56px, 7.6vw, 104px);
   line-height: .98;
   letter-spacing: -.07em;
 }
