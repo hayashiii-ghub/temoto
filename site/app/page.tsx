@@ -1,10 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 
-import { CopyCommandButton } from "./CopyCommandButton";
 import { JapaneseText } from "./JapaneseText";
 
-const downloadUrl =
-  "https://github.com/hayashiii-ghub/temoto/releases/latest/download/temoto-macos.dmg";
 const repositoryUrl = "https://github.com/hayashiii-ghub/temoto";
 const chromeSourceUrl = `${repositoryUrl}/tree/main/browser/temoto-chrome`;
 const proxySourceUrl = `${repositoryUrl}/tree/main/browser/temoto-proxy`;
@@ -12,37 +9,8 @@ const chromeStoreUrl =
   "https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid";
 const proxyStoreUrl =
   "https://chromewebstore.google.com/detail/temoto-proxy/hohabmdadcdkifcmbclkgnomhhlllnbb";
-const installScriptSourceUrl = `${repositoryUrl}/blob/main/script/install_latest.sh`;
-const releasesUrl = `${repositoryUrl}/releases/latest`;
-const macosVersion = "v1.1.4";
-const chromeVersion = "0.1.9";
-const proxyVersion = "1.0.1";
-const updateCommand =
-  "curl -fsSL https://github.com/hayashiii-ghub/temoto/releases/latest/download/install_latest.sh | bash";
-
-const capabilities = [
-  {
-    number: "01",
-    title: "離れた場所へ、まとめて運ぶ。",
-    text: "Finderで選んだファイルを棚へ。移動先を開いてから、ひとつでも、まとめてでも取り出せます。",
-    className: "capabilityWide",
-    visual: <TransferVisual />,
-  },
-  {
-    number: "02",
-    title: "ファイル以外も、同じ場所に。",
-    text: "フォルダ、画像、URL、テキスト。作業の途中にあるものを、種類を分けずに置いておけます。",
-    className: "capabilityTypes",
-    visual: <TypeStack />,
-  },
-  {
-    number: "03",
-    title: "画面の上か、メニューバーか。",
-    text: "ピン留めすれば、閉じるまでほかのウィンドウより手前に残ります。メニューバーならアイコンの下に開き、外側をクリックすると閉じます。",
-    className: "capabilityCompact",
-    visual: <LocationModes />,
-  },
-];
+const chromeVersion = "0.2.0";
+const proxyVersion = "1.1.0";
 
 const chromeTools = [
   {
@@ -83,121 +51,12 @@ const chromeTools = [
   },
 ];
 
-function MacAppIcon() {
-  return <span className="macAppIcon" aria-hidden="true" />;
-}
-
-function MenuBarIcon() {
-  return <span className="menuBarIcon" aria-hidden="true" />;
-}
-
 function ChromeMark({ className }: { className?: string }) {
   return <span className={className ? `chromeMark ${className}` : "chromeMark"} aria-hidden="true" />;
 }
 
 function ProxyMark({ className }: { className?: string }) {
   return <span className={className ? `proxyMark ${className}` : "proxyMark"} aria-hidden="true" />;
-}
-
-const shelfIcons = {
-  pinSlash: "M52.44,36A6,6,0,0,0,43.56,44L71.27,74.51C61.78,76,50.6,80,39.22,89.18A14,14,0,0,0,38.1,110l49.71,49.71-44.05,44a6,6,0,1,0,8.48,8.48l44.05-44.05L146,217.89a14,14,0,0,0,9.9,4.11q.49,0,1,0a14,14,0,0,0,10.19-5.54,85.51,85.51,0,0,0,12.44-22.84l24,26.45a6,6,0,1,0,8.87-8.08ZM157.49,209.21a2,2,0,0,1-3,.2L46.58,101.51a2,2,0,0,1,.18-3c13.18-10.64,25.84-12.9,34.79-12.7L170,183.11C167.83,193.74,162.11,203.07,157.49,209.21Zm76.42-106.62-44.65,44.78a6,6,0,1,1-8.5-8.47l44.65-44.79a2,2,0,0,0,0-2.84L164.73,30.59a2,2,0,0,0-2.83,0L120.68,71.94a6,6,0,0,1-8.5-8.47l41.23-41.36a14,14,0,0,1,19.81,0l60.69,60.69A14,14,0,0,1,233.91,102.59Z",
-  close: "M204.24,195.76a6,6,0,1,1-8.48,8.48L128,136.49,60.24,204.24a6,6,0,0,1-8.48-8.48L119.51,128,51.76,60.24a6,6,0,0,1,8.48-8.48L128,119.51l67.76-67.75a6,6,0,0,1,8.48,8.48L136.49,128Z",
-  chevronUp: "M212.24,164.24a6,6,0,0,1-8.48,0L128,88.49,52.24,164.24a6,6,0,0,1-8.48-8.48l80-80a6,6,0,0,1,8.48,0l80,80A6,6,0,0,1,212.24,164.24Z",
-  ellipsis: "M138,128a10,10,0,1,1-10-10A10,10,0,0,1,138,128ZM60,118a10,10,0,1,0,10,10A10,10,0,0,0,60,118Zm136,0a10,10,0,1,0,10,10A10,10,0,0,0,196,118Z",
-  file: "M212.24,83.76l-56-56A6,6,0,0,0,152,26H56A14,14,0,0,0,42,40V216a14,14,0,0,0,14,14H200a14,14,0,0,0,14-14V88A6,6,0,0,0,212.24,83.76ZM158,46.48,193.52,82H158ZM200,218H56a2,2,0,0,1-2-2V40a2,2,0,0,1,2-2h90V88a6,6,0,0,0,6,6h50V216A2,2,0,0,1,200,218Z",
-  folder: "M216,74H130.49l-27.9-27.9a13.94,13.94,0,0,0-9.9-4.1H40A14,14,0,0,0,26,56V200.62A13.39,13.39,0,0,0,39.38,214H216.89A13.12,13.12,0,0,0,230,200.89V88A14,14,0,0,0,216,74ZM40,54H92.69a2,2,0,0,1,1.41.59L113.51,74H38V56A2,2,0,0,1,40,54ZM218,200.89a1.11,1.11,0,0,1-1.11,1.11H39.38A1.4,1.4,0,0,1,38,200.62V86H216a2,2,0,0,1,2,2Z",
-  link: "M238,88.18a52.42,52.42,0,0,1-15.4,35.66l-34.75,34.75A52.28,52.28,0,0,1,150.62,174h-.05A52.63,52.63,0,0,1,98,119.9a6,6,0,0,1,6-5.84h.17a6,6,0,0,1,5.83,6.16A40.62,40.62,0,0,0,150.58,162h0a40.4,40.4,0,0,0,28.73-11.9l34.75-34.74A40.63,40.63,0,0,0,156.63,57.9l-11,11a6,6,0,0,1-8.49-8.49l11-11a52.62,52.62,0,0,1,74.43,0A52.83,52.83,0,0,1,238,88.18Zm-127.62,98.9-11,11A40.36,40.36,0,0,1,70.6,210h0a40.63,40.63,0,0,1-28.7-69.36L76.62,105.9A40.63,40.63,0,0,1,146,135.77a6,6,0,0,0,5.83,6.16H152a6,6,0,0,0,6-5.84A52.63,52.63,0,0,0,68.14,97.42L33.38,132.16A52.63,52.63,0,0,0,70.56,222h0a52.26,52.26,0,0,0,37.22-15.42l11-11a6,6,0,1,0-8.49-8.48Z",
-  drag: "M188,82a25.85,25.85,0,0,0-14.59,4.49A26,26,0,0,0,128,75.41,26,26,0,0,0,82,92v22H68a26,26,0,0,0-26,26v12a86,86,0,0,0,172,0V108A26,26,0,0,0,188,82Zm14,70a74,74,0,0,1-148,0V140a14,14,0,0,1,14-14H82v26a6,6,0,0,0,12,0V92a14,14,0,0,1,28,0v28a6,6,0,0,0,12,0V92a14,14,0,0,1,28,0v28a6,6,0,0,0,12,0V108a14,14,0,0,1,28,0Z",
-  clipboard: "M200,34H162.83a45.91,45.91,0,0,0-69.66,0H56A14,14,0,0,0,42,48V216a14,14,0,0,0,14,14H200a14,14,0,0,0,14-14V48A14,14,0,0,0,200,34Zm-72-4a34,34,0,0,1,34,34v2H94V64A34,34,0,0,1,128,30Zm74,186a2,2,0,0,1-2,2H56a2,2,0,0,1-2-2V48a2,2,0,0,1,2-2H85.67A45.77,45.77,0,0,0,82,64v8a6,6,0,0,0,6,6h80a6,6,0,0,0,6-6V64a45.77,45.77,0,0,0-3.67-18H200a2,2,0,0,1,2,2Z",
-  copy: "M216,34H88a6,6,0,0,0-6,6V82H40a6,6,0,0,0-6,6V216a6,6,0,0,0,6,6H168a6,6,0,0,0,6-6V174h42a6,6,0,0,0,6-6V40A6,6,0,0,0,216,34ZM162,210H46V94H162Zm48-48H174V88a6,6,0,0,0-6-6H94V46H210Z",
-  folderPlus: "M216,74H130.49l-27.9-27.9a13.94,13.94,0,0,0-9.9-4.1H40A14,14,0,0,0,26,56V200.62A13.39,13.39,0,0,0,39.38,214H216.89A13.12,13.12,0,0,0,230,200.89V88A14,14,0,0,0,216,74ZM40,54H92.69a2,2,0,0,1,1.41.59L113.51,74H38V56A2,2,0,0,1,40,54ZM218,200.89a1.11,1.11,0,0,1-1.11,1.11H39.38A1.4,1.4,0,0,1,38,200.62V86H216a2,2,0,0,1,2,2ZM158,144a6,6,0,0,1-6,6H134v18a6,6,0,0,1-12,0V150H104a6,6,0,0,1,0-12h18V120a6,6,0,0,1,12,0v18h18A6,6,0,0,1,158,144Z",
-  archive: "M224,50H32A14,14,0,0,0,18,64V88a14,14,0,0,0,14,14h2v90a14,14,0,0,0,14,14H208a14,14,0,0,0,14-14V102h2a14,14,0,0,0,14-14V64A14,14,0,0,0,224,50ZM210,192a2,2,0,0,1-2,2H48a2,2,0,0,1-2-2V102H210ZM226,88a2,2,0,0,1-2,2H32a2,2,0,0,1-2-2V64a2,2,0,0,1,2-2H224a2,2,0,0,1,2,2ZM98,136a6,6,0,0,1,6-6h48a6,6,0,0,1,0,12H104A6,6,0,0,1,98,136Z",
-  trash: "M216,50H174V40a22,22,0,0,0-22-22H104A22,22,0,0,0,82,40V50H40a6,6,0,0,0,0,12H50V208a14,14,0,0,0,14,14H192a14,14,0,0,0,14-14V62h10a6,6,0,0,0,0-12ZM94,40a10,10,0,0,1,10-10h48a10,10,0,0,1,10,10V50H94ZM194,208a2,2,0,0,1-2,2H64a2,2,0,0,1-2-2V62H194ZM110,104v64a6,6,0,0,1-12,0V104a6,6,0,0,1,12,0Zm48,0v64a6,6,0,0,1-12,0V104a6,6,0,0,1,12,0Z",
-} as const;
-
-function ShelfIcon({ name, className }: { name: keyof typeof shelfIcons; className?: string }) {
-  return (
-    <svg className={className ? `shelfIcon ${className}` : "shelfIcon"} viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
-      <path d={shelfIcons[name]} />
-    </svg>
-  );
-}
-
-function CloseMark() {
-  return <ShelfIcon name="close" />;
-}
-
-function ChevronMark() {
-  return <ShelfIcon name="chevronUp" />;
-}
-
-function PinMark() {
-  return <ShelfIcon name="pinSlash" />;
-}
-
-function EllipsisMark() {
-  return <ShelfIcon name="ellipsis" />;
-}
-
-function FileMark({ kind }: { kind: "file" | "folder" | "link" }) {
-  switch (kind) {
-    case "file":
-      return <ShelfIcon name="file" className="fileMark" />;
-    case "folder":
-      return <ShelfIcon name="folder" className="fileMark" />;
-    case "link":
-      return <ShelfIcon name="link" className="fileMark" />;
-    default: {
-      const exhaustive: never = kind;
-      return exhaustive;
-    }
-  }
-}
-
-function ShelfPreview({ compact = false }: { compact?: boolean }) {
-  return (
-    <div className={`shelfScene${compact ? " isCompact" : ""}`} role="img" aria-label="3つの項目が入ったtemoto for macOSの画面イメージ">
-      <div className="sceneLabel sceneLabelTop"><span>ON SCREEN</span><i /></div>
-      <div className="appShelf">
-        <div className="appShelfHighlight" />
-        <div className="appHeader">
-          <span className="appCount">3</span>
-          <span className="appDrag" aria-hidden="true" />
-          <span className="appControl"><PinMark /></span>
-          <span className="appControl"><CloseMark /></span>
-          <span className="appControl"><ChevronMark /></span>
-          <span className="appControl"><EllipsisMark /></span>
-        </div>
-        <div className="appItems">
-          <div className="appItem">
-            <FileMark kind="file" />
-            <span><strong>Final-cut.mov</strong><small>1.82 GB · Movie</small></span>
-            <span className="appItemMore"><EllipsisMark /></span>
-          </div>
-          <div className="appItem">
-            <FileMark kind="folder" />
-            <span><strong>Brand assets</strong><small>12 items · Folder</small></span>
-            <span className="appItemMore"><EllipsisMark /></span>
-          </div>
-          <div className="appItem">
-            <FileMark kind="link" />
-            <span><strong>Reference board</strong><small>www.figma.com</small></span>
-            <span className="appItemMore"><EllipsisMark /></span>
-          </div>
-        </div>
-        <div className="appActions" aria-hidden="true">
-          <span><ShelfIcon name="drag" /></span>
-          <span><ShelfIcon name="clipboard" /></span>
-          <span><ShelfIcon name="copy" /></span>
-          <span><ShelfIcon name="folderPlus" /></span>
-          <span><ShelfIcon name="archive" /></span>
-          <span><ShelfIcon name="trash" /></span>
-        </div>
-      </div>
-      <div className="sceneLabel sceneLabelBottom"><i /><span>230 × 230 PX</span></div>
-      <div className="shortcutTag"><kbd>⌥</kbd><span>+</span><kbd>⇥</kbd><small>ADD FROM FINDER</small></div>
-    </div>
-  );
 }
 
 function ChromeSettingsMark() {
@@ -291,50 +150,6 @@ function ProxyPreview({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function TransferVisual() {
-  return (
-    <div className="transferVisual" aria-hidden="true">
-      <div className="transferNode"><FileMark kind="file" /><span>Finder</span></div>
-      <div className="transferLine"><i /><i /></div>
-      <div className="transferAppIcon"><MacAppIcon /></div>
-      <div className="transferLine"><i /><i /></div>
-      <div className="transferNode destination"><FileMark kind="folder" /><span>Destination</span></div>
-    </div>
-  );
-}
-
-function TypeStack() {
-  return (
-    <div className="typeStack" aria-hidden="true">
-      <span><FileMark kind="file" /><small>FILE</small></span>
-      <span><FileMark kind="folder" /><small>FOLDER</small></span>
-      <span><FileMark kind="link" /><small>LINK</small></span>
-      <span className="textType">Aa<small>TEXT</small></span>
-    </div>
-  );
-}
-
-function LocationModes() {
-  return (
-    <div className="locationModes" aria-hidden="true">
-      <figure>
-        <div className="locationCard">
-          <PinMark />
-          <b />
-          <CloseMark />
-        </div>
-        <figcaption>ON SCREEN</figcaption>
-      </figure>
-      <figure>
-        <div className="locationCard isMenuBar">
-          <span className="menuBarChip"><MenuBarIcon /></span>
-        </div>
-        <figcaption>MENU BAR</figcaption>
-      </figure>
-    </div>
-  );
-}
-
 function ProductShowcaseCard({
   href,
   label,
@@ -344,7 +159,6 @@ function ProductShowcaseCard({
   detail,
   mark,
   visual,
-  featured = false,
   product,
 }: {
   href: string;
@@ -355,17 +169,16 @@ function ProductShowcaseCard({
   detail: string;
   mark: ReactNode;
   visual: ReactNode;
-  featured?: boolean;
-  product: "macos" | "chrome" | "proxy";
+  product: "chrome" | "proxy";
 }) {
   return (
-    <a className={`productShowcaseCard is${product[0].toUpperCase()}${product.slice(1)}${featured ? " isFeatured" : ""}`} href={href}>
+    <a className={`productShowcaseCard is${product[0].toUpperCase()}${product.slice(1)}`} href={href}>
       <div className="productShowcaseCopy">
         <div className="productMeta"><span>{label}</span><em>{version}</em></div>
         <div className="productShowcaseMark" aria-hidden="true">{mark}</div>
         <h3>{title}</h3>
         <p><JapaneseText>{statement}</JapaneseText></p>
-        <small>{product === "macos" ? <JapaneseText>{detail}</JapaneseText> : detail}</small>
+        <small>{detail}</small>
         <span className="productShowcaseAction"><span>詳しく見る</span><i aria-hidden="true">↓</i></span>
       </div>
       <div className="productShowcaseVisual">{visual}</div>
@@ -382,22 +195,10 @@ export default function Home() {
       <section className="productOverview" id="products" aria-labelledby="products-title">
         <div className="section shell">
           <div className="sectionHeading">
-            <h1 id="products-title"><JapaneseText>使う場所に合わせた、3つのtemoto。</JapaneseText></h1>
-            <p><JapaneseText>データも設定も共有しません。手元に残したいものが違うだけです。</JapaneseText></p>
+            <h1 id="products-title"><JapaneseText>Chromeの作業を、手元で整える。</JapaneseText></h1>
+            <p><JapaneseText>ページを試す6つの道具と、開発用プロキシ。役割を分けた2つの拡張です。</JapaneseText></p>
           </div>
           <div className="productShowcase">
-            <ProductShowcaseCard
-              href="#macos"
-              label="FOR MACOS"
-              version={macosVersion}
-              title="temoto for macOS"
-              statement="移動する前に、置いておく。"
-              detail="ファイル、フォルダ、URL、テキストを、画面の上かメニューバーへ。"
-              mark={<MacAppIcon />}
-              visual={<ShelfPreview compact />}
-              product="macos"
-              featured
-            />
             <ProductShowcaseCard
               href="#chrome"
               label="FOR CHROME"
@@ -420,95 +221,6 @@ export default function Home() {
               visual={<ProxyPreview compact />}
               product="proxy"
             />
-          </div>
-        </div>
-      </section>
-
-      <section className="productBlock isMacos" id="macos">
-        <div className="productHero shell">
-          <div className="heroCopy">
-            <p className="eyebrow"><span /> TEMOTO FOR MACOS</p>
-            <h2><JapaneseText>移動する前に、置いておく。</JapaneseText></h2>
-            <p className="lead">
-              <JapaneseText>ファイルやリンクを一時的に置ける小さな棚。ウィンドウを行き来する手間を減らして、作業の流れを止めません。</JapaneseText>
-            </p>
-            <p className="requirements">{macosVersion}　·　macOS 26+　·　Apple Silicon / Intel　·　Open source</p>
-          </div>
-          <ShelfPreview />
-        </div>
-
-        <div className="section shell">
-          <div className="sectionHeading">
-            <p className="eyebrow"><span /> WHY MACOS</p>
-            <h2><JapaneseText>置き場所を決める前の、ちょうどいい置き場所。</JapaneseText></h2>
-            <p><JapaneseText>コピー先を探すあいだも、別のアプリを開くあいだも。いま手にしているものを、画面の上に残しておけます。</JapaneseText></p>
-          </div>
-          <div className="capabilityGrid">
-            {capabilities.map((item) => (
-              <article className={`capabilityCard ${item.className}`} key={item.number}>
-                <div className="capabilityTop"><span>{item.number}</span><i /></div>
-                <div className="capabilityVisual">{item.visual}</div>
-                <div className="capabilityCopy"><h3><JapaneseText>{item.title}</JapaneseText></h3><p><JapaneseText>{item.text}</JapaneseText></p></div>
-              </article>
-            ))}
-          </div>
-        </div>
-
-        <div className="workflow">
-          <div className="shell workflowGrid">
-            <div className="workflowIntro">
-              <p className="eyebrow"><span /> HOW IT WORKS</p>
-              <h2><JapaneseText>選ぶ。置く。取り出す。</JapaneseText></h2>
-              <p><JapaneseText>Finderで選んだものを Option + Tab で棚へ。表示の切り替えは Option + Shift + Tab です。</JapaneseText></p>
-              <div className="shortcutStack">
-                <div className="bigShortcut"><kbd>option</kbd><span>+</span><kbd>tab</kbd></div>
-                <div className="bigShortcut"><kbd>option</kbd><span>+</span><kbd>shift</kbd><span>+</span><kbd>tab</kbd></div>
-              </div>
-            </div>
-            <ol className="workflowSteps">
-              <li><span>01</span><div><h3><JapaneseText>Finderで選ぶ</JapaneseText></h3><p><JapaneseText>ファイル、フォルダ、または複数の項目を選択します。</JapaneseText></p></div></li>
-              <li><span>02</span><div><h3><JapaneseText>Option + Tabで置く</JapaneseText></h3><p><JapaneseText>選択した項目が、いちばん手前のtemotoへ追加されます。</JapaneseText></p></div></li>
-              <li><span>03</span><div><h3><JapaneseText>好きな場所へ取り出す</JapaneseText></h3><p><JapaneseText>移動先を開き、棚からドラッグ。まとめて移動、コピー、ZIP化もできます。</JapaneseText></p></div></li>
-            </ol>
-          </div>
-        </div>
-
-        <div className="section installSection shell">
-          <div className="installHeading">
-            <p className="eyebrow"><span /> GET MACOS</p>
-            <h2><JapaneseText>Macに、小さな棚を。</JapaneseText></h2>
-            <p><JapaneseText>macOS版にアカウントも設定画面もありません。ダウンロードしてApplicationsへ移すだけで使い始められます。</JapaneseText></p>
-          </div>
-          <div className="installOptions">
-            <article className="installCard installPrimary">
-              <div className="installMeta"><span>RECOMMENDED</span><em>01</em></div>
-              <h3><JapaneseText>DMGからインストール</JapaneseText></h3>
-              <ol>
-                <li><span>1</span><p><JapaneseText>最新版をダウンロード</JapaneseText></p></li>
-                <li><span>2</span><p><JapaneseText>temotoをApplicationsへ移動</JapaneseText></p></li>
-                <li><span>3</span><p><JapaneseText>Applicationsから起動</JapaneseText></p></li>
-              </ol>
-              <a className="button primary full" href={downloadUrl}>temoto for macOS <span aria-hidden="true">↘</span></a>
-              <small><JapaneseText>初回のみ、macOSから起動の確認が表示される場合があります。</JapaneseText></small>
-            </article>
-            <article className="installCard installTerminal">
-              <div className="installMeta"><span>TERMINAL</span><em>02</em></div>
-              <h3><JapaneseText>一行で導入・更新</JapaneseText></h3>
-              <p><JapaneseText>未導入ならインストール、導入済みなら最新版へ安全に入れ替えます。</JapaneseText></p>
-              <div className="terminalWindow">
-                <div className="terminalBar"><span /><span /><span /><small>zsh</small></div>
-                <div className="commandRow"><code>{updateCommand}</code><CopyCommandButton command={updateCommand} /></div>
-              </div>
-              <div className="terminalTrust">
-                <a href={installScriptSourceUrl}>実行前にスクリプトを確認 <span aria-hidden="true">↗</span></a>
-                <a href={releasesUrl}>GitHub Releaseの配布物を見る <span aria-hidden="true">↗</span></a>
-              </div>
-              <small><JapaneseText>GitHub Releasesから取得します。同じコマンドをもう一度実行すれば、いつでも最新版へ更新できます。</JapaneseText></small>
-            </article>
-          </div>
-          <div className="permissionNote">
-            <span>⌥</span>
-            <div><strong><JapaneseText>最初の一度だけ、Finderの操作を許可してください。</JapaneseText></strong><p><JapaneseText>Option + Tabで選択項目を取得するために使用します。クリップボードを自動で監視することはありません。</JapaneseText></p></div>
           </div>
         </div>
       </section>
@@ -633,8 +345,7 @@ export default function Home() {
           <p>CHOOSE A TEMOTO</p>
           <h2><JapaneseText>手元の道具を、選ぶ。</JapaneseText></h2>
           <div className="finalActions">
-            <a className="button primary" href={downloadUrl}>macOS版をダウンロード <span aria-hidden="true">↘</span></a>
-            <a className="button ghost" href={chromeStoreUrl}>Chrome版をインストール <span aria-hidden="true">↗</span></a>
+            <a className="button primary" href={chromeStoreUrl}>Chrome版をインストール <span aria-hidden="true">↗</span></a>
             <a className="button ghost" href={proxyStoreUrl}>Proxy版をインストール <span aria-hidden="true">↗</span></a>
           </div>
         </div>
@@ -646,7 +357,6 @@ export default function Home() {
         <div>
           <a href={repositoryUrl}>GitHub</a>
           <a href={`${repositoryUrl}/issues`}>Issues</a>
-          <a href="#macos">macOS</a>
           <a href="#chrome">Chrome</a>
           <a href="#proxy">Proxy</a>
         </div>

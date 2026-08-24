@@ -14,17 +14,17 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
   display: "swap",
 });
-const title = "temoto — 作業の途中を、手元に。";
+const title = "temoto — Chromeの作業を、手元で整える。";
 const description =
-  "Macではファイルとリンクの棚。Chromeではページを試す6つの道具と、開発用プロキシの切り替え。作業の途中を、手元に残すためのtemoto。";
+  "Chromeでページを試す6つの道具と、開発用プロキシを安全に切り替えるためのtemoto。";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://temoto.haygsiiii.chatgpt.site"),
   title,
   description,
   icons: {
-    icon: [{ url: "/favicon.png", type: "image/png" }],
-    shortcut: ["/favicon.png"],
+    icon: [{ url: "/product-chrome-icon.png", type: "image/png" }],
+    shortcut: ["/product-chrome-icon.png"],
   },
   openGraph: {
     title,

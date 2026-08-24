@@ -10,16 +10,6 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    runs-on: macos-26
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Build and validate scripts
-        run: make check
-
   site:
     runs-on: ubuntu-latest
     defaults:
