@@ -12,4 +12,17 @@ await copyFile(
 );
 await writeFile(resolve(publicRoot, "product-proxy-icon.png"), createTemotoIcon(128));
 
-console.log("Synced Chrome and Proxy product icons from their extension sources.");
+await copyFile(
+  resolve(siteRoot, "../browser/temoto-chrome/store/assets/screenshot-launcher-1280x800.jpg"),
+  resolve(publicRoot, "product-chrome-launcher.jpg"),
+);
+await copyFile(
+  resolve(siteRoot, "../browser/temoto-proxy/store/assets/screenshot-popup-1280x800.jpg"),
+  resolve(publicRoot, "product-proxy-popup.jpg"),
+);
+await copyFile(
+  resolve(siteRoot, "../browser/temoto-proxy/store/assets/screenshot-manager-1280x800.png"),
+  resolve(publicRoot, "product-proxy-manager.png"),
+);
+
+console.log("Synced Chrome and Proxy product assets from their extension sources.");
