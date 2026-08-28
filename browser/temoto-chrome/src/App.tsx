@@ -15,13 +15,10 @@ import {
   DownloadSimple,
   EyedropperSample,
   LockSimple,
-  Play,
   Ruler,
   Selection,
-  ShieldCheck,
   SlidersHorizontal,
   Speedometer,
-  Trash,
   X,
 } from "@phosphor-icons/react";
 import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
@@ -228,7 +225,7 @@ function ScreenshotPanel({ onDone }: { onDone: (message: string) => void }) {
         <ArrowsOutLineVertical size={18} /> {t("Full page")}
       </button>
       <p>{t("Copy the result or save it as a PNG after capture.")}</p>
-      <div className={`screenshot-options${optionsOpen ? " is-open" : ""}`}>
+      <div className="screenshot-options">
         <button className="screenshot-options-toggle" type="button" aria-expanded={optionsOpen} onClick={() => setOptionsOpen((open) => !open)}>
           <SlidersHorizontal size={15} weight="light" />
           <span>{t("Capture options")}</span>
@@ -270,7 +267,7 @@ function EnvironmentPanel({ page, project, onDone }: {
   ];
   const currentUrl = page.url || page.origin;
   return (
-    <div className="inline-panel environment-actions">
+    <div className="inline-panel">
       <div className="environment-title"><span>{project.name}</span><small>{t("Keep path, query and hash")}</small></div>
       <div className="environment-grid">
         {targets.map(([label, origin]) => (
@@ -410,7 +407,7 @@ function PopupApp() {
     }
     if (activeTool === "environment") {
       return (
-        <section className="tool-screen-body tool-detail-body environment-screen">
+        <section className="tool-screen-body tool-detail-body">
           <p className="tool-description">{t("Move between project origins without losing the current path.")}</p>
           <EnvironmentPanel page={page} project={settings.project} onDone={setToast} />
         </section>
@@ -418,7 +415,7 @@ function PopupApp() {
     }
     if (activeTool === "reset") {
       return (
-        <section className="tool-screen-body tool-detail-body danger-screen">
+        <section className="tool-screen-body tool-detail-body">
           <p className="tool-description">{t("Clear cookies, local storage, cache, IndexedDB and service workers for {host}.", { host: page.hostname })}</p>
           <button className="danger-primary" type="button" onClick={() => setResetOpen(true)}>{t("Review and reset")}</button>
         </section>
@@ -463,7 +460,6 @@ function PopupApp() {
       {resetOpen && (
         <div className="dialog-backdrop" role="presentation" onMouseDown={() => { if (!resetBusy) setResetOpen(false); }}>
           <div className="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="reset-title" aria-busy={resetBusy} onMouseDown={(event) => event.stopPropagation()}>
-            <div className="dialog-icon"><Trash size={22} /></div>
             <h2 id="reset-title">{t("Reset {host}?", { host: page.hostname })}</h2>
             <p>{t("This clears cookies, local storage, cache, IndexedDB and service workers, then reloads the page.")}</p>
             <div className="dialog-actions">
@@ -521,7 +517,7 @@ function SidePanelApp() {
           <button className="save-button" type="submit">{saved ? <><Check size={18} /> {t("Saved")}</> : t("Save origins")}</button>
         </form>
         <ProxyCompanionSummary />
-        <section className="settings-block compact">
+        <section className="settings-block">
           <div><strong>{t("Privacy")}</strong><small>{t("Video shortcuts run locally on HTTP(S) pages. Other tools access a page only when selected. Data is never sent outside the browser.")}</small></div>
           <LockSimple size={20} />
         </section>
@@ -666,11 +662,7 @@ function CaptureApp() {
     let cancelled = false;
     const renderCapture = async () => {
       const captureStore = await import(/* @vite-ignore */ chrome.runtime.getURL("capture-store.js")) as CaptureStoreModule;
-      const storedCapture = await captureStore.readPendingCapture();
-      const legacyCapture = storedCapture
-        ? null
-        : (await chrome.storage.session.get("pendingCapture")).pendingCapture as PendingCapture | undefined;
-      const pendingCapture = storedCapture || legacyCapture;
+      const pendingCapture = await captureStore.readPendingCapture();
       if (!pendingCapture) {
         setStatus(t("No capture found."));
         return;
@@ -725,10 +717,7 @@ function CaptureApp() {
       } catch (error) {
         if (!cancelled) setStatus(errorMessage(error, t("Could not load the capture.")));
       } finally {
-        await Promise.allSettled([
-          captureStore.removePendingCapture(),
-          chrome.storage.session.remove("pendingCapture"),
-        ]);
+        await captureStore.removePendingCapture();
       }
     };
 

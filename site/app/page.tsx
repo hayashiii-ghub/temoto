@@ -127,7 +127,7 @@ export default function Home() {
               </div>
             </div>
 
-            <figure className="productShot chromeShot">
+            <figure className="productShot">
               <Image
                 src="/product-chrome-launcher.jpg"
                 alt="temoto for Chrome launcher showing Color Picker, Screenshot, Video Speed, Switch Origin, Site Reset, and Inspect"
@@ -156,7 +156,7 @@ export default function Home() {
             </div>
 
             <div className="proxyGallery" aria-label="temoto Proxy product screenshots">
-              <figure className="productShot proxyPopupShot">
+              <figure className="productShot">
                 <Image
                   src="/product-proxy-popup.jpg"
                   alt="temoto Proxy popup showing the active Charles local profile and Turn off safely action"
@@ -167,7 +167,7 @@ export default function Home() {
                 />
                 <figcaption>Active state stays visible before the next request.</figcaption>
               </figure>
-              <figure className="productShot proxyManagerShot">
+              <figure className="productShot">
                 <Image
                   src="/product-proxy-manager.png"
                   alt="temoto Proxy manager showing named proxy profiles and the Charles local configuration"
@@ -223,7 +223,7 @@ export default function Home() {
           <div className="sectionNarrow">
             <p className="eyebrow">— FAQ</p>
             <h2 id="faq-title">Questions, answered plainly.</h2>
-            <div className="faqList">
+            <div>
               {faqs.map(([question, answer]) => (
                 <details className="faqItem" key={question}>
                   <summary>{question}</summary>

@@ -8,17 +8,14 @@ const buildRoot = resolve(projectRoot, "dist/client");
 const releaseRoot = resolve(projectRoot, "release");
 const manifest = JSON.parse(readFileSync(resolve(buildRoot, "manifest.json"), "utf8"));
 const packageJson = JSON.parse(readFileSync(resolve(projectRoot, "package.json"), "utf8"));
-const storeBootstrap = process.argv.includes("--store-bootstrap");
-const archiveVersion = storeBootstrap ? "0.0.0.1" : manifest.version;
+const archiveVersion = manifest.version;
 
 if (manifest.version !== packageJson.version) {
   throw new Error(`Version mismatch: manifest ${manifest.version}, package ${packageJson.version}`);
 }
 
 mkdirSync(releaseRoot, { recursive: true });
-const filename = storeBootstrap
-  ? `temoto-for-chrome-store-bootstrap-v${archiveVersion}.zip`
-  : `temoto-for-chrome-v${archiveVersion}.zip`;
+const filename = `temoto-for-chrome-v${archiveVersion}.zip`;
 const archivePath = resolve(releaseRoot, filename);
 rmSync(archivePath, { force: true });
 const temporaryRoot = mkdtempSync(resolve(tmpdir(), "temoto-chrome-package-"));

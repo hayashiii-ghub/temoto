@@ -16,8 +16,6 @@ interface MessagePayloads {
   DELETE_PROFILE: { profileId: string };
   DUPLICATE_PROFILE: { profileId: string };
   SELECT_PROFILE: { profileId: string | null };
-  SET_CREDENTIALS: { profileId: string; username: string; password: string };
-  CLEAR_CREDENTIALS: { profileId: string };
   SET_INCOGNITO: { enabled: boolean; sessionOnly: boolean };
   DIAGNOSE: { profileId: string };
   EXPORT_PROFILES: undefined;
@@ -33,8 +31,6 @@ interface MessageResponses {
   DELETE_PROFILE: StateResponse;
   DUPLICATE_PROFILE: StateResponse;
   SELECT_PROFILE: StateResponse;
-  SET_CREDENTIALS: StateResponse;
-  CLEAR_CREDENTIALS: StateResponse;
   SET_INCOGNITO: StateResponse;
   DIAGNOSE: DiagnosticResponse;
   EXPORT_PROFILES: ExportResponse;
@@ -108,7 +104,6 @@ async function previewMessage<T extends MessageType>(type: T, payload: MessagePa
     return response();
   }
   if (type === "SELECT_PROFILE") { previewState.selectedProfileId = typeof data.profileId === "string" ? data.profileId : null; return response(); }
-  if (type === "SET_CREDENTIALS" || type === "CLEAR_CREDENTIALS") return response();
   if (type === "SET_INCOGNITO") {
     previewState.incognitoEnabled = Boolean(data.enabled);
     previewState.incognitoSessionOnly = Boolean(data.sessionOnly);

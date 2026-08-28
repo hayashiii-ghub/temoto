@@ -18,14 +18,11 @@ const required = [
   "styles.css",
   "fonts/geist-latin-wght-normal.woff2",
   "fonts/ibm-plex-mono-latin-400-normal.woff2",
-  "fonts/ibm-plex-mono-latin-500-normal.woff2",
   "icons/sliders-horizontal-light.svg",
   "icons/icon-16.png",
   "icons/icon-32.png",
   "icons/icon-48.png",
   "icons/icon-128.png",
-  "icons/action-16.png",
-  "icons/action-32.png",
   "_locales/en/messages.json",
   "_locales/ja/messages.json"
 ];

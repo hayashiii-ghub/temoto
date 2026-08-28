@@ -15,7 +15,6 @@ interface RuntimeMessage {
   profileId: string;
   profile: ProxyProfile;
   password: string;
-  username: string;
   enabled: boolean;
   sessionOnly: boolean;
   json: string;
@@ -56,8 +55,6 @@ async function handleMessage(message: RuntimeMessage) {
     case "DELETE_PROFILE": return { ok: true, state: await runtime.deleteProfile(message.profileId) };
     case "DUPLICATE_PROFILE": return { ok: true, state: await runtime.duplicateProfile(message.profileId) };
     case "SELECT_PROFILE": return { ok: true, state: await runtime.selectProfile(message.profileId) };
-    case "SET_CREDENTIALS": return { ok: true, state: await runtime.setCredentials(message.profileId, message.username, message.password) };
-    case "CLEAR_CREDENTIALS": await runtime.clearCredentials(message.profileId); return { ok: true, state: await runtime.effectiveState() };
     case "SET_INCOGNITO": return { ok: true, state: await runtime.setIncognito(message.enabled, message.sessionOnly) };
     case "DIAGNOSE": return { ok: true, result: await runtime.diagnose(message.profileId) };
     case "EXPORT_PROFILES": return { ok: true, json: await runtime.exportProfiles() };
@@ -131,7 +128,7 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   if (reason === "install" && !state.profiles.length) {
     const profile = createDefaultProfile();
     await chrome.storage.local.set({ profiles: [profile], selectedProfileId: profile.id });
-    await chrome.tabs.create({ url: chrome.runtime.getURL("manager.html?welcome=1") });
+    await chrome.tabs.create({ url: chrome.runtime.getURL("manager.html") });
   }
   await refreshAction();
 });

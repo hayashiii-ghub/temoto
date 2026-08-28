@@ -1,6 +1,6 @@
 import { createProfile } from "./proxy-core.js";
 import type { ProxyEndpoint, ProxyProfile, ProxyStatus, RoutingRule } from "./proxy-core.js";
-import { downloadText, el, endpointLabel, profileKindLabel, sendMessage } from "./extension-api.js";
+import { downloadText, el, endpointLabel, sendMessage } from "./extension-api.js";
 import type { EffectiveState } from "./proxy-runtime.js";
 import { localizeDocument, localizeError, t } from "./i18n.js";
 

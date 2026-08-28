@@ -148,10 +148,7 @@ export async function getSettings(): Promise<ExtensionSettings> {
 }
 
 export async function saveSettings(settings: Partial<ExtensionSettings>): Promise<void> {
-  if (!hasChromeApi()) {
-    localStorage.setItem("temoto-settings", JSON.stringify(settings));
-    return;
-  }
+  if (!hasChromeApi()) return;
   await chrome.storage.local.set(settings);
 }
 

@@ -13,6 +13,8 @@ const required = [
   "dist/client/content/video-speed.js",
   "dist/client/content/selection.js",
   "dist/client/content/measure.js",
+  "dist/client/icons/icon-16.png",
+  "dist/client/icons/icon-32.png",
   "dist/client/_locales/en/messages.json",
   "dist/client/_locales/ja/messages.json",
 ];
@@ -24,6 +26,8 @@ const videoSpeedScript = manifest.content_scripts?.find((entry) => entry.js?.inc
 if (
   manifest.manifest_version !== 3
   || manifest.action?.default_popup !== "index.html"
+  || manifest.action?.default_icon?.["16"] !== "icons/icon-16.png"
+  || manifest.action?.default_icon?.["32"] !== "icons/icon-32.png"
   || manifest.default_locale !== "en"
   || manifest.version !== packageJson.version
   || !videoSpeedScript?.all_frames

@@ -33,8 +33,8 @@
     "default_title": "__MSG_actionTitle__",
     "default_popup": "index.html",
     "default_icon": {
-      "16": "icons/action-16.png",
-      "32": "icons/action-32.png"
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
     }
   },
   "side_panel": {

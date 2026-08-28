@@ -8,13 +8,10 @@ const buildRoot = resolve(root, "dist/client");
 const releaseRoot = resolve(root, "release");
 const manifest = JSON.parse(readFileSync(resolve(buildRoot, "manifest.json"), "utf8"));
 const packageJson = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8"));
-const storeBootstrap = process.argv.includes("--store-bootstrap");
-const archiveVersion = storeBootstrap ? "0.0.0.1" : manifest.version;
+const archiveVersion = manifest.version;
 if (manifest.version !== packageJson.version) throw new Error(`Version mismatch: manifest ${manifest.version}, package ${packageJson.version}`);
 mkdirSync(releaseRoot, { recursive: true });
-const filename = storeBootstrap
-  ? `temoto-proxy-store-bootstrap-v${archiveVersion}.zip`
-  : `temoto-proxy-v${archiveVersion}.zip`;
+const filename = `temoto-proxy-v${archiveVersion}.zip`;
 const archive = resolve(releaseRoot, filename);
 rmSync(archive, { force: true });
 const temporaryRoot = mkdtempSync(resolve(tmpdir(), "temoto-proxy-package-"));
