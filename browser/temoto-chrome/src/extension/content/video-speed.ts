@@ -116,8 +116,14 @@
     && (node.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(node.tagName))
   ));
 
-  const onMessage = (message: { type?: string; speed?: unknown }) => {
-    if (message?.type === "APPLY_VIDEO_SPEED") applySpeed(message.speed);
+  const onMessage = (
+    message: { type?: string; speed?: unknown },
+    _sender: chrome.runtime.MessageSender,
+    sendResponse: (response: { changed: number }) => void,
+  ) => {
+    if (message?.type === "APPLY_VIDEO_SPEED") {
+      sendResponse({ changed: applySpeed(message.speed) });
+    }
   };
   const onKeyDown = (event?: KeyboardEvent) => {
     if (!event || typeof event.key !== "string") return;

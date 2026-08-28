@@ -113,7 +113,9 @@ function loadContentScript(initialSpeed = 1.5) {
       for (const listener of windowListeners.get("keydown") || []) listener(event);
     },
     message(message) {
-      for (const listener of messageListeners) listener(message);
+      let response;
+      for (const listener of messageListeners) listener(message, {}, (value) => { response = value; });
+      return response;
     },
     syncVideos() {
       observerCallback();
@@ -191,8 +193,9 @@ test("page shortcuts ignore synthetic keydown events without event data", () => 
 
 test("background shortcut messages synchronize videos in the frame", () => {
   const page = loadContentScript();
-  page.message({ type: "APPLY_VIDEO_SPEED", speed: 2.25 });
+  const response = page.message({ type: "APPLY_VIDEO_SPEED", speed: 2.25 });
   assert.deepEqual(page.videos.map((video) => video.playbackRate), [2.25, 2.25]);
+  assert.deepEqual(JSON.parse(JSON.stringify(response)), { changed: 2 });
 });
 
 test("a reused video's badge follows its actual speed after a silent reset", () => {

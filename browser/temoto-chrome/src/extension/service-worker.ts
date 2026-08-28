@@ -111,13 +111,14 @@ async function installVideoSpeedShortcuts() {
   await chrome.scripting.executeScript({ target: { tabId: tab.id, allFrames: true }, files: ["content/video-speed.js"] });
 }
 
-async function applyVideoSpeed(rawSpeed: unknown): Promise<{ speed: number; changed: number }> {
+async function applyVideoSpeed(rawSpeed: unknown, tabId?: number): Promise<{ speed: number; changed: number }> {
   const speed = Math.round(Math.min(5, Math.max(0.25, Number(rawSpeed) || 1)) * 100) / 100;
-  const results = await executeInActiveTab((nextSpeed) => {
+  const targetTabId = tabId ?? (await activeTab()).id;
+  const results = await chrome.scripting.executeScript({ target: { tabId: targetTabId, allFrames: true }, func: (nextSpeed) => {
     const videos = Array.from(document.querySelectorAll("video"));
     videos.forEach((video) => { video.playbackRate = nextSpeed; });
     return videos.length;
-  }, [speed], true);
+  }, args: [speed] });
   const changed = results.reduce((total, entry) => total + Number(entry.result || 0), 0);
   return { speed, changed };
 }
@@ -423,6 +424,27 @@ async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.M
     case "SET_VIDEO_SPEED": {
       const { changed } = await applyVideoSpeed(message.speed);
       return { ok: changed > 0, changed, error: changed ? undefined : "No video found on this page" };
+    }
+    case "WEBMCP_PING":
+      return {
+        ok: true,
+        name: "temoto for Chrome",
+        version: chrome.runtime.getManifest().version,
+      };
+    case "WEBMCP_SET_VIDEO_SPEED": {
+      if (sender.tab?.id === undefined) return { ok: false, error: "The WebMCP tab is unavailable" };
+      const speed = Math.round(Math.min(5, Math.max(0.25, Number(message.speed) || 1)) * 100) / 100;
+      const response = await chrome.tabs.sendMessage(sender.tab.id, {
+        type: "APPLY_VIDEO_SPEED",
+        speed,
+      }) as { changed?: unknown } | undefined;
+      const changed = Number(response?.changed || 0);
+      return {
+        ok: changed > 0,
+        speed,
+        changed,
+        error: changed ? undefined : "No video found on this page",
+      };
     }
     case "VIDEO_SPEED_SHORTCUT": {
       const speed = Math.round(Math.min(5, Math.max(0.25, Number(message.speed) || 1)) * 100) / 100;

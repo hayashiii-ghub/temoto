@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="temoto-webmcp" content="enabled" />
+    <title>temoto WebMCP local demo</title>
+    <style>
+      :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+      body { display: grid; min-height: 100vh; margin: 0; place-items: center; background: #111; color: #f4f4f4; }
+      main { width: min(720px, calc(100% - 48px)); }
+      video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #242128; border: 1px solid #454047; }
+      code { color: #bfa8ff; }
+      button { margin: 0 8px 8px 0; padding: 8px 12px; }
+      pre { min-height: 4em; overflow: auto; padding: 12px; background: #1b191e; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><code>temoto_ping</code> · <code>temoto_set_video_speed</code></p>
+      <h1>temoto WebMCP local demo</h1>
+      <video controls></video>
+      <p>Current playback rate: <strong id="speed">1×</strong></p>
+      <p>
+        <button id="inspect" type="button">Inspect tools</button>
+        <button id="ping" type="button">Run ping</button>
+        <button id="speed-2" type="button">Set 2×</button>
+      </p>
+      <pre id="result">Ready</pre>
+    </main>
+    <script>
+      const video = document.querySelector("video");
+      const output = document.querySelector("#speed");
+      const result = document.querySelector("#result");
+      const render = () => { output.textContent = `${video.playbackRate}×`; };
+      const getTools = async () => {
+        if (!document.modelContext) throw new Error("document.modelContext is unavailable");
+        return document.modelContext.getTools();
+      };
+      const runTool = async (name, input) => {
+        const tools = await getTools();
+        const tool = tools.find((candidate) => candidate.name === name);
+        if (!tool) throw new Error(`${name} is not registered`);
+        return document.modelContext.executeTool(tool, JSON.stringify(input));
+      };
+      const show = async (action) => {
+        try {
+          result.textContent = JSON.stringify(await action(), null, 2);
+        } catch (error) {
+          result.textContent = `Error: ${error instanceof Error ? error.message : String(error)}`;
+        }
+      };
+      video.addEventListener("ratechange", render);
+      document.querySelector("#inspect").addEventListener("click", () => show(async () => (
+        (await getTools()).map(({ name, description }) => ({ name, description }))
+      )));
+      document.querySelector("#ping").addEventListener("click", () => show(() => runTool("temoto_ping", {})));
+      document.querySelector("#speed-2").addEventListener("click", () => show(() => runTool("temoto_set_video_speed", { speed: 2 })));
+      render();
+    </script>
+  </body>
+</html>

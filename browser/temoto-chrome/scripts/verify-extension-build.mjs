@@ -11,6 +11,8 @@ const required = [
   "dist/client/capture-store.js",
   "dist/client/capture-utils.js",
   "dist/client/content/video-speed.js",
+  "dist/client/content/webmcp.js",
+  "dist/client/content/webmcp-provider.js",
   "dist/client/content/selection.js",
   "dist/client/content/measure.js",
   "dist/client/icons/icon-16.png",
@@ -23,6 +25,8 @@ await Promise.all(required.map((file) => access(resolve(root, file))));
 const manifest = JSON.parse(await readFile(resolve(root, "dist/client/manifest.json"), "utf8"));
 const packageJson = JSON.parse(await readFile(resolve(root, "package.json"), "utf8"));
 const videoSpeedScript = manifest.content_scripts?.find((entry) => entry.js?.includes("content/video-speed.js"));
+const webMcpScript = manifest.content_scripts?.find((entry) => entry.js?.includes("content/webmcp.js"));
+const webMcpProviderScript = manifest.content_scripts?.find((entry) => entry.js?.includes("content/webmcp-provider.js"));
 if (
   manifest.manifest_version !== 3
   || manifest.action?.default_popup !== "index.html"
@@ -33,6 +37,16 @@ if (
   || !videoSpeedScript?.all_frames
   || !videoSpeedScript.matches?.includes("http://*/*")
   || !videoSpeedScript.matches?.includes("https://*/*")
+  || !webMcpScript
+  || webMcpScript.all_frames
+  || !webMcpScript.matches?.includes("http://*/*")
+  || !webMcpScript.matches?.includes("https://*/*")
+  || webMcpScript.world === "MAIN"
+  || !webMcpProviderScript
+  || webMcpProviderScript.world !== "MAIN"
+  || webMcpProviderScript.all_frames
+  || !webMcpProviderScript.matches?.includes("http://*/*")
+  || !webMcpProviderScript.matches?.includes("https://*/*")
 ) {
   throw new Error("Extension manifest verification failed");
 }
