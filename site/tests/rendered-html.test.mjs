@@ -31,18 +31,18 @@ test("renders the English temoto landing page", async () => {
   const text = withoutBreakHints(html);
   assert.match(html, /<html lang="en">/);
   assert.match(html, /<title>temoto — Browser tools, close at hand\.<\/title>/);
-  assert.match(text, /Test the page\./);
-  assert.match(text, /Switch the route\./);
-  assert.match(text, /Choose your temoto/);
-  assert.match(text, /Check the page that is already open\./);
-  assert.match(text, /Know what the browser is routed through\./);
-  assert.match(text, /You choose when temoto touches the page\./);
-  assert.match(text, /Two extensions\. Install only what you need\./);
-  assert.match(text, /Keep the next check small\./);
+  assert.match(text, /Browser tools\./);
+  assert.match(text, /Close at hand\./);
+  assert.match(text, /Check the page you(?:&#x27;|')re on\./);
+  assert.match(text, /Six tools, one launcher\./);
+  assert.match(text, /Choose a route\./);
+  assert.match(text, /Know what(?:&#x27;|')s active\./);
+  assert.match(text, /Permissions, plainly\./);
+  assert.match(text, /Install only what you need\./);
   assert.match(html, /temoto for Chrome/);
   assert.match(html, /temoto Proxy/);
-  assert.match(html, /0\.2\.0/);
-  assert.match(html, /1\.1\.0/);
+  assert.match(html, /v1 · Chrome 116\+/);
+  assert.match(html, /v1\.1 · Chrome 116\+/);
   assert.doesNotMatch(text, /[\u3040-\u30ff\u3400-\u9fff]/);
   assert.doesNotMatch(html, /Context by temoto|temoto for macOS|ShelfDrop|DMG|Option \+ Tab|href="\/context(?:[#?"])/);
 });
@@ -59,7 +59,7 @@ test("includes public metadata and primary links", async () => {
   assert.match(html, /chromewebstore\.google\.com\/detail\/temoto-for-chrome\/gcncgknjklghkoeiapcbdghodepnllid/);
   assert.match(html, /chromewebstore\.google\.com\/detail\/temoto-proxy\/hohabmdadcdkifcmbclkgnomhhlllnbb/);
   assert.match(html, /class="skipLink" href="#content">Skip to content/);
-  assert.match(html, /<nav class="topRail" aria-label="Primary">/);
+  assert.match(html, /<nav class="topRail wrap" aria-label="Primary">/);
   assert.match(html, /<section class="hero" id="top"/);
   assert.match(html, /<section class="productIndex" id="products"/);
   assert.match(html, /<section class="productChapter chromeChapter" id="chrome"/);
@@ -67,13 +67,14 @@ test("includes public metadata and primary links", async () => {
   assert.match(html, /<section class="section installSection" id="install"/);
 });
 
-test("uses canonical static product screenshots and no video", () => {
+test("uses site-specific UI captures and retains canonical store assets", () => {
   const source = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
-  assert.match(source, /src="\/product-chrome-launcher\.jpg"/);
-  assert.match(source, /src="\/product-proxy-popup\.jpg"/);
-  assert.match(source, /src="\/product-proxy-manager\.png"/);
+  assert.match(source, /src="\/showcase\/chrome-launcher\.png"/);
+  assert.match(source, /src="\/showcase\/proxy-popup\.png"/);
+  assert.match(source, /src="\/showcase\/proxy-manager\.png"/);
   assert.equal(source.match(/<Image\b/g)?.length, 3);
-  assert.doesNotMatch(source, /<video\b|<source\b|ChromePreview|ProxyPreview|chromeToolIcon|CSSProperties/);
+  assert.doesNotMatch(source, /<video\b|ChromePreview|ProxyPreview|chromeToolIcon|CSSProperties/);
+  assert.match(source, /<source media="\(max-width: 767px\)" srcSet="\/showcase\/proxy-manager-mobile.png"/);
 
   const pairs = [
     ["../public/product-chrome-launcher.jpg", "../../browser/temoto-chrome/store/assets/screenshot-launcher-1280x800.jpg"],
@@ -83,15 +84,36 @@ test("uses canonical static product screenshots and no video", () => {
   for (const [siteAsset, productAsset] of pairs) {
     assert.deepEqual(readFileSync(new URL(siteAsset, import.meta.url)), readFileSync(new URL(productAsset, import.meta.url)));
   }
+  for (const [name, width, height] of [["chrome-launcher", 416, 500], ["proxy-popup", 416, 500], ["proxy-manager", 1000, 760], ["proxy-manager-mobile", 390, 760]]) {
+    const png = readFileSync(new URL(`../public/showcase/${name}.png`, import.meta.url));
+    assert.equal(png.readUInt32BE(16), width);
+    assert.equal(png.readUInt32BE(20), height);
+  }
 });
 
 test("keeps the product chapters responsive without horizontal overflow rules", () => {
   const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
-  assert.match(css, /\.productIndexGrid \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/);
-  assert.match(css, /\.chapterIntro \{[\s\S]*grid-template-columns: minmax\(0, 1\.2fr\) minmax\(300px, \.8fr\);/);
+  assert.match(css, /\.productIndex \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/);
+  assert.match(css, /\.demo-selector \{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\);/);
   assert.match(css, /\.productShot img \{[^}]*width: 100%;[^}]*height: auto;[^}]*display: block;/);
-  assert.match(css, /@media \(max-width: 900px\) \{[\s\S]*\.proxyGallery \{ grid-template-columns: 1fr; \}/);
-  assert.match(css, /@media \(max-width: 640px\) \{[\s\S]*\.hero > \.heroActions \{ grid-template-columns: 1fr; \}/);
+  assert.match(css, /@media \(max-width: 767px\) \{[\s\S]*\.proxyGallery \{ grid-template-columns: 1fr;/);
+  assert.match(css, /\.demo-selector \{ grid-template-columns: 1fr;/);
+  assert.match(css, /prefers-reduced-motion: reduce/);
+  assert.doesNotMatch(css, /overflow-x:\s*(hidden|clip)/);
+});
+
+test("server HTML keeps six features, static demos, and privacy boundaries without JavaScript", async () => {
+  const html = await (await render()).text();
+  for (const feature of ["Color Picker", "Screenshot", "Video Speed", "Switch Origin", "Site Reset", "Inspect"]) assert.ok(html.includes(feature));
+  assert.match(html, /<noscript>[\s\S]*data-scene="capture"[\s\S]*data-scene="inspect"/);
+  assert.match(html, /Illustrative demo/);
+  assert.match(html, /temoto override cleared/);
+  assert.match(html, /Demo result: connection OK/);
+  assert.match(html, /browser\/temoto-chrome\/PRIVACY.md/);
+  assert.match(html, /browser\/temoto-proxy\/PRIVACY.md/);
+  assert.equal((html.match(/<details\b/g) ?? []).length, 8);
+  assert.doesNotMatch(html, /padding|margin measurement|Measure spacing/);
+  assert.doesNotMatch(html, /<button[^>]*aria-label="(?:Pause|Replay|Play demo)/);
 });
 
 test("product icons are synced from each Chrome extension", () => {
