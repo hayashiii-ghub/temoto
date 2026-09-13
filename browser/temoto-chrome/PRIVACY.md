@@ -1,6 +1,6 @@
 # Privacy Policy for temoto for Chrome
 
-Last updated: September 13, 2026 (prepared for version 1.0.1)
+Last updated: September 13, 2026 (prepared for version 1.1.0)
 
 temoto for Chrome is a toolkit for inspecting and testing the web page that the user is currently viewing. This policy explains how the extension handles data.
 

@@ -1,6 +1,6 @@
 # Chrome Web Store submission copy
 
-Prepared locally on 2026-09-13 for version **1.0.1**. Nothing has been uploaded or submitted. See [the release handoff](../../STORE-HANDOFF-2026-09-13.md) for verified artifacts and remaining checks.
+Prepared locally on 2026-09-13 for version **1.1.0**. Nothing has been uploaded or submitted. See [the release handoff](../../STORE-HANDOFF-2026-09-13.md) for verified artifacts and remaining checks.
 
 ## Product details
 
@@ -121,5 +121,5 @@ No account or credentials are required.
 - [ ] Select the intended regions and visibility in Distribution.
 - [ ] Enable deferred publishing if manual control after review is preferred.
 - [x] Check the packaged manifest against the build, including name, description, version, icons and minimum Chrome version; verify the reserved identity and omit `key` from the ZIP.
-- [ ] Confirm the uploaded package version is `1.0.1` and add the Japanese localized listing and screenshot.
+- [ ] Confirm the uploaded package version is `1.1.0` and add the Japanese localized listing and screenshot.
 - [x] Reserve both Chrome Web Store items and replace the development keys/IDs with the store-issued identities.

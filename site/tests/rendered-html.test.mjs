@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 
 import { createTemotoIcon } from "../../browser/temoto-proxy/scripts/icon-utils.mjs";
@@ -93,7 +93,8 @@ test("uses site-specific UI captures and retains canonical store assets", () => 
   for (const [siteAsset, productAsset] of pairs) {
     assert.deepEqual(readFileSync(new URL(siteAsset, import.meta.url)), readFileSync(new URL(productAsset, import.meta.url)));
   }
-  for (const [name, width, height] of [["chrome-launcher", 416, 500], ["proxy-popup", 416, 500], ["proxy-manager", 1000, 760], ["proxy-manager-mobile", 390, 760]]) {
+  assert.deepEqual(readdirSync(new URL("../public/showcase/", import.meta.url)).sort(), ["chrome-launcher.png", "proxy-popup.png"]);
+  for (const [name, width, height] of [["chrome-launcher", 416, 500], ["proxy-popup", 416, 500]]) {
     const png = readFileSync(new URL(`../public/showcase/${name}.png`, import.meta.url));
     assert.equal(png.readUInt32BE(16), width);
     assert.equal(png.readUInt32BE(20), height);

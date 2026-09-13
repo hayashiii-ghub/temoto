@@ -6,17 +6,19 @@
 
 | 商品 | 公開ページで確認した版 | 今回のZIP | 既存のストアID |
 | --- | --- | --- | --- |
-| temoto for Chrome | 0.2.0 | [1.0.1](temoto-chrome/release/temoto-for-chrome-v1.0.1.zip) | `gcncgknjklghkoeiapcbdghodepnllid` |
+| temoto for Chrome | 0.2.0 | [1.1.0](temoto-chrome/release/temoto-for-chrome-v1.1.0.zip) | `gcncgknjklghkoeiapcbdghodepnllid` |
 | temoto Proxy | 1.1.0 | [1.2.0](temoto-proxy/release/temoto-proxy-v1.2.0.zip) | `hohabmdadcdkifcmbclkgnomhhlllnbb` |
 
-新しい商品は作らず、既存商品の更新として扱います。Chromeの旧ローカル1.0.0 ZIPは上書きせず残しています。公開ページと管理画面の下書き・審査中バージョンは別の状態です。後者は未確認のため、アップロード時に番号の衝突がないことも確認してください。
+新しい商品は作らず、既存商品の更新として扱います。通常版はユーザー指定により1.1.0へ変更しました。Chromeの旧ローカル1.0.0・1.0.1 ZIPは上書きせず残しています。公開ページと管理画面の下書き・審査中バージョンは別の状態です。後者は未確認のため、アップロード時に番号の衝突がないことも確認してください。
 
 | ZIP | サイズ | SHA-256 |
 | --- | ---: | --- |
-| Chrome 1.0.1 | 379,998 bytes | `03021ae5477f4461f0bc900fe3fff1a27dfb914fb9ff0f709cc8004064416d55` |
+| Chrome 1.1.0 | 379,998 bytes | `01708d96674c7cbeb921f71c33639224362fe6d858d26d4a4215bffd8cde3086` |
 | Proxy 1.2.0 | 89,981 bytes | `a6bbd9e4bd688c3397319961be2e1c7f2a72efe162a462dc92177bc9a582c242` |
 
 両ZIPの整合性、ルートのmanifest、版番号、公開鍵から導出した既存ストアID、`key`の除去、ビルドとの全ファイル照合を確認済み。Chromeは46ファイル、Proxyは23ファイル。開発用studyやソースマップの混入なし。ZIPはローカル成果物のため、再生成するとハッシュが変わる場合があります。
+
+Chrome 1.1.0は再テスト・再ビルド済み。1.0.1 ZIPとの比較で、変更はmanifestの版番号だけであることを確認しました。機能・権限・画像の変更はありません。
 
 ## ストアの文章・画像
 

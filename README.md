@@ -68,9 +68,22 @@ npm test
 ```text
 browser/temoto-chrome/  temoto for Chrome
 browser/temoto-proxy/   temoto Proxy
-browser/shared/         shared popup design tokens
+browser/shared/         shared design tokens, icon renderer, and Store capture tools
 site/                   public website
+docs/                   asset ownership and maintenance guide
 ```
+
+Each product keeps its own build and npm lockfile; this repository is not an npm workspace.
+
+## Assets and release material
+
+- [`docs/assets.md`](./docs/assets.md): canonical logos, website images, and regeneration paths.
+- Each extension's `store/`: listing copy and current submission artwork.
+- Each extension's `release/`: local ZIP artifacts; keep the submitted ZIP unchanged.
+- [`browser/shared/STORE-CAPTURE.md`](./browser/shared/STORE-CAPTURE.md): the current Store screenshot workflow.
+- [`browser/STORE-HANDOFF-2026-09-13.md`](./browser/STORE-HANDOFF-2026-09-13.md): dated preparation evidence, not live Store status.
+
+Keep documentation and design notes out of `site/public/`; that directory is deployed as public assets.
 
 ## License
 
