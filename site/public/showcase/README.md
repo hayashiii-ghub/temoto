@@ -1,12 +1,18 @@
-# Site-only product captures
+# Website product captures
 
-Captured 2026-09-11 from the existing local browser previews, in English, at device scale 1. These are screenshots of the product UI, not generated mockups. No installed extension, real proxy configuration, credentials, or private destinations were used.
+`chrome-launcher.png` and `proxy-popup.png` show the September 12, 2026 site-aligned UI. The website is prepared for the release at the owner's request; extension packaging and Chrome Web Store publication are separate steps.
 
-- `chrome-launcher.png`: temoto for Chrome 0.2.0, Vite preview `/?lang=en`, launcher main element, 416 × 500.
-- `proxy-popup.png`: temoto Proxy 1.1.0, built `popup.html?lang=en`, popup shell, 416 × 500.
-- `proxy-manager.png`: temoto Proxy 1.1.0, built `manager.html?lang=en`, top viewport, 1000 × 760.
-- `proxy-manager-mobile.png`: same preview at 390 × 760, selected by the site's picture element below 768px so the profile text stays readable.
+Originally captured from the rendered 416 × 500 study surfaces (these study entrypoints have since been removed):
 
-Proxy uses the built-in preview profiles (Charles local, Staging routes, Company PAC). The localhost endpoint is example data. The selected profile is Charles local, with authentication off; no PAC contents or private hosts are shown. The existing preview already shows an active profile. In the real popup the user activates a profile before testing it; the website illustration follows that order. The preview's successful test is simulated, not evidence of a network request.
+- Chrome: `browser/temoto-chrome` preview, `/?lang=en&design=site`
+- Proxy: the same study server, `/proxy-study.html?lang=en&design=site`, using sample profiles only
 
-Keep these assets separate from the canonical Store screenshots maintained by `scripts/sync-product-icons.mjs`. Recapture from the corresponding preview when product UI changes; retain the image dimensions in `app/page.tsx` and the asset tests.
+The approved styles are now the default extension UI. For future captures, use the Chrome preview at `/?lang=en` and the independently built Proxy preview at `/popup.html?lang=en`; no design query switch is needed.
+
+The manager captures from September 11 are retained as source material but are no longer shown on the site. The Proxy section pairs the popup with the route demonstration, stacking them on small screens.
+
+Proxy uses the built-in Charles local, Staging routes, and Company PAC preview profiles. The localhost endpoint is example data; no installed extension, real proxy settings, credentials, or private destinations were used. Preview connection tests are simulated, not evidence of a network request.
+
+Canonical Store artwork in `public/product-*` is still synchronized separately by `scripts/sync-product-icons.mjs`. Recapture from the corresponding preview when the product UI changes, retaining the dimensions in `app/page.tsx` and the asset tests.
+
+Serve these small UI captures directly (`unoptimized`), avoiding the image optimizer's one-year immutable cache and unsupported intrinsic widths. The popup image URLs include the first 12 characters of the file's SHA-256 digest; update the URL after recapturing. The rendered-HTML tests check the digest and direct delivery.

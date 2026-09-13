@@ -3,6 +3,7 @@ import test from "node:test";
 import { inflateSync } from "node:zlib";
 
 import { createTemotoIcon } from "../scripts/icon-utils.mjs";
+import { createTemotoIcon as createSolidIcon } from "../../shared/icon-utils.mjs";
 
 function decodeGeneratedPng(buffer) {
   const signatureLength = 8;
@@ -59,29 +60,18 @@ function visibleBounds(image) {
   return { x: minX, y: minY, width: maxX - minX + 1, height: maxY - minY + 1 };
 }
 
-function alphaWeightedMeanY(image, fromX, toX) {
-  let weightedY = 0;
-  let totalAlpha = 0;
-  for (let y = 0; y < image.height; y += 1) {
-    for (let x = fromX; x < toX; x += 1) {
-      const alpha = image.pixels[(y * image.width + x) * 4 + 3];
-      weightedY += y * alpha;
-      totalAlpha += alpha;
-    }
-  }
-  return weightedY / totalAlpha;
-}
-
-test("proxy icons keep the temoto optical bounds", () => {
-  const expectedBounds = new Map([
-    [16, { x: 2, y: 0, width: 12, height: 15 }],
-    [32, { x: 4, y: 1, width: 24, height: 29 }],
-    [48, { x: 5, y: 1, width: 38, height: 46 }],
-    [128, { x: 15, y: 4, width: 98, height: 120 }],
-  ]);
-
-  for (const [size, bounds] of expectedBounds) {
-    assert.deepEqual(visibleBounds(decodeGeneratedPng(createTemotoIcon(size))), bounds);
+test("Joint icons preserve common bounds without the old optical zoom", () => {
+  for (const size of [16, 32, 48, 128]) {
+    const image = decodeGeneratedPng(createTemotoIcon(size));
+    const solid = decodeGeneratedPng(createSolidIcon(size));
+    assert.equal(image.width, size);
+    assert.equal(image.height, size);
+    assert.deepEqual(visibleBounds(image), visibleBounds(solid));
+    const bounds = visibleBounds(image);
+    assert.ok(bounds.x >= Math.floor(size * .1));
+    assert.ok(bounds.y >= Math.floor(size * .05));
+    assert.ok(bounds.x + bounds.width <= Math.ceil(size * .9));
+    assert.ok(bounds.y + bounds.height <= Math.ceil(size * .95));
   }
 });
 
@@ -95,17 +85,26 @@ test("proxy icons keep a transparent background and temoto purple", () => {
   }
 });
 
-test("proxy bars are hollow", () => {
+test("Joint preserves two hollow blocks and the transparent diagonal seam", () => {
   const image = decodeGeneratedPng(createTemotoIcon(128));
-  const alphaAt = (x, y) => image.pixels[(y * image.width + x) * 4 + 3];
-
-  assert.equal(alphaAt(64, 38), 0, "the center of the upper bar should be transparent");
-  assert.equal(alphaAt(64, 89), 0, "the center of the lower bar should be transparent");
+  const solid = decodeGeneratedPng(createSolidIcon(128));
+  const alphaAt = (target, x, y) => target.pixels[(Math.floor(y * .8) * 128 + Math.floor(x * .8)) * 4 + 3];
+  for (const [x, y] of [[70, 30], [120, 136]]) {
+    assert.equal(alphaAt(image, x, y), 0, "the inner region must remain hollow");
+    assert.equal(alphaAt(solid, x, y), 255, "the core uses solid fills");
+  }
+  for (const target of [image, solid]) {
+    assert.equal(alphaAt(target, 80, 88), 0, "the diagonal joint stays transparent");
+    assert.equal(alphaAt(target, 55, 25), 255, "the vertical upper stem is present");
+  }
 });
 
-test("proxy bars descend from left to right like the temoto mark", () => {
-  const image = decodeGeneratedPng(createTemotoIcon(128));
-  const leftMeanY = alphaWeightedMeanY(image, 0, image.width / 2);
-  const rightMeanY = alphaWeightedMeanY(image, image.width / 2, image.width);
-  assert.ok(leftMeanY < rightMeanY, `expected left ${leftMeanY} to be above right ${rightMeanY}`);
+test("small hollow icons stay distinguishable from the solid core", () => {
+  for (const size of [16, 32, 48, 128]) {
+    const hollow = decodeGeneratedPng(createTemotoIcon(size));
+    const solid = decodeGeneratedPng(createSolidIcon(size));
+    const alpha = (image) => image.pixels.reduce((sum, value, i) => sum + (i % 4 === 3 ? value : 0), 0);
+    assert.ok(alpha(hollow) < alpha(solid) * .8);
+    assert.ok(alpha(hollow) > alpha(solid) * .25);
+  }
 });

@@ -82,9 +82,7 @@ function Brand({ descriptor }: { descriptor?: string }) {
     <div className="brand-lockup">
       <div className="brand-name">
         <span>temoto</span>
-        {descriptor
-          ? <span className="brand-context"> {descriptor}</span>
-          : <><span className="brand-for"> for </span><span className="brand-chrome">Chrome</span></>}
+        {descriptor && <span className="brand-context"> {descriptor}</span>}
       </div>
     </div>
   );

@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   title,
   description,
   icons: {
-    icon: [{ url: "/product-chrome-icon.png", type: "image/png" }],
-    shortcut: ["/product-chrome-icon.png"],
+    icon: [{ url: "/temoto-mark.svg", type: "image/svg+xml" }],
+    shortcut: ["/temoto-mark.svg"],
   },
   openGraph: {
     title,

@@ -17,7 +17,9 @@ h2 { font-size: clamp(40px, 4.45vw, 64px); }
 .skipLink { position: fixed; top: 10px; left: 16px; z-index: 20; background: var(--ink); color: var(--black); padding: 12px 20px; transform: translateY(-160%); }
 .skipLink:focus { transform: translateY(0); }
 .topRail { height: 80px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); }
-.brand { font-size: 30px; font-weight: 700; letter-spacing: -.045em; }
+@font-face { font-family: "Geist Brand"; src: url('/brand/Geist-Variable.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-family: "Geist Brand", sans-serif; font-size: 30px; font-weight: 650; letter-spacing: -.055em; }
+.brandMark { width: 32px; height: 36px; flex: none; background: url('/temoto-mark.svg') center / contain no-repeat; }
 .topRail > div { display: flex; align-items: center; gap: 38px; }
 .topRail > div a { display: flex; align-items: center; min-height: 44px; color: #c5c5c3; font-size: 16px; }
 .topRail a:hover, .textLink:hover, .footer a:hover { color: var(--accent); }
@@ -101,6 +103,14 @@ h2 { font-size: clamp(40px, 4.45vw, 64px); }
 .static-scenes { display: grid; gap: 32px; margin-top: 32px; }
 .static-scenes figcaption { font-size: 16px; color: var(--muted); }
 .proxyGallery { display: grid; grid-template-columns: 360px minmax(0, 1fr); align-items: center; gap: 64px; margin-block: 64px 32px; }
+.proxyGallery > figure { width: min(360px, 100%); justify-self: center; }
+.proxyGallery .proxy-demo { margin-top: 0; min-width: 0; }
+.proxyGallery .route-label { font-size: 24px; }
+.proxyGallery .proxy-svg [data-part="proxy-active"], .proxyGallery .proxy-svg [data-part="proxy-result"], .proxyGallery .proxy-svg [data-part="proxy-cleared"] { display: none; }
+.proxyGallery .proxy-mobile-readout { display: block; position: relative; min-height: 54px; margin-top: 20px; font: 14px/1.6 var(--mono); }
+.proxyGallery .proxy-mobile-readout span { position: absolute; top: 0; left: 0; }
+.proxyGallery .proxy-mobile-readout [data-part="proxy-result"] { top: 26px; }
+.proxyGallery .proxy-caption { margin-top: 8px; }
 .muted { color: var(--muted); max-width: 780px; }
 .section-copy { color: #c5c5c3; font-size: 18px; max-width: 760px; margin-top: 24px; }
 .installList { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px; margin-top: 48px; }
@@ -109,8 +119,8 @@ h2 { font-size: clamp(40px, 4.45vw, 64px); }
 .installName h3 { font-size: 26px; font-weight: 600; }
 .installName p { font: 14px/1.6 var(--mono); color: var(--muted); margin-top: 8px; }
 .chromeMark, .proxyMark { display: inline-block; width: 54px; height: 54px; flex: none; background: center / contain no-repeat; }
-.chromeMark { background-image: url('/product-chrome-icon.png'); }
-.proxyMark { background-image: url('/product-proxy-icon.png'); }
+.chromeMark { background-image: url('/temoto-mark.svg'); }
+.proxyMark { background-image: url('/temoto-proxy-mark.svg'); }
 .installList h4 { font-size: 20px; font-weight: 600; margin: 32px 0 14px; }
 .installList article > p { color: var(--muted); flex: 1; margin-bottom: 30px; }
 .installList .textLink { margin-top: 18px; }
@@ -139,7 +149,8 @@ h2 { font-size: clamp(40px, 4.45vw, 64px); }
   .productIndex strong { font-size: 23px; }
   .tools-layout { grid-template-columns: 1fr; gap: 48px; }
   .chapterIntro { grid-template-columns: 1fr; gap: 28px; }
-  .proxyGallery { grid-template-columns: 280px minmax(0, 1fr); gap: 28px; }
+  .proxyGallery { grid-template-columns: 1fr; gap: 48px; }
+  .proxyGallery .proxy-demo { width: 100%; max-width: 800px; justify-self: center; }
   .installList { gap: 32px; }
   .installName h3 { font-size: 22px; }
   .demo-selector button { padding-inline: 0; gap: 12px; }
@@ -194,7 +205,6 @@ h2 { font-size: clamp(40px, 4.45vw, 64px); }
   .proxy-mobile-readout span { position: absolute; top: 0; left: 0; }
   .proxy-mobile-readout [data-part="proxy-result"] { top: 26px; }
   .proxyGallery { grid-template-columns: 1fr; margin-top: 40px; gap: 40px; }
-  .proxyGallery > figure:first-child { width: min(360px, 100%); justify-self: center; }
   .installList, .privacyFacts, .faq { grid-template-columns: 1fr; gap: 40px; }
   .installList .button { width: 100%; }
   .privacy-links { flex-wrap: wrap; gap: 8px 24px; }

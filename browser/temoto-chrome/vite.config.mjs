@@ -17,6 +17,7 @@ export default defineConfig({
     include: ["react", "react-dom/client"],
   },
   server: {
+    fs: { allow: [import.meta.dirname, resolve(import.meta.dirname, "../shared")] },
     host: "0.0.0.0",
     allowedHosts: ["terminal.local"],
     warmup: {

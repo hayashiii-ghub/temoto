@@ -1,4 +1,4 @@
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
@@ -17,6 +17,8 @@ const required = [
   "dist/client/content/measure.js",
   "dist/client/icons/icon-16.png",
   "dist/client/icons/icon-32.png",
+  "dist/client/icons/icon-48.png",
+  "dist/client/icons/icon-128.png",
   "dist/client/_locales/en/messages.json",
   "dist/client/_locales/ja/messages.json",
 ];
@@ -50,4 +52,13 @@ if (
 ) {
   throw new Error("Extension manifest verification failed");
 }
-console.log(`Verified temoto extension build (${required.length} required files).`);
+// The approved theme is the default; never reintroduce study assets or switches.
+const clientRoot = resolve(root, "dist/client");
+for (const file of await readdir(clientRoot, { recursive: true })) {
+  if (!/\.(?:html|css|js)$/.test(file)) continue;
+  const content = await readFile(resolve(clientRoot, file), "utf8");
+  if (/study/i.test(file) || /studyScreen|site-study|proxy-study|--temoto-study-/.test(content)) {
+    throw new Error(`Local visual study leaked into extension build: ${file}`);
+  }
+}
+console.log(`Verified temoto extension build (${required.length} required files; no local study assets).`);

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
@@ -53,7 +54,12 @@ test("includes public metadata and primary links", async () => {
 
   assert.match(html, /property="og:image" content="https:\/\/temoto\.haygsiiii\.chatgpt\.site\/og-temoto\.png"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
-  assert.match(html, /rel="icon" href="https:\/\/temoto\.haygsiiii\.chatgpt\.site\/product-chrome-icon\.png" type="image\/png"/);
+  assert.match(html, /rel="icon" href="https:\/\/temoto\.haygsiiii\.chatgpt\.site\/temoto-mark\.svg" type="image\/svg\+xml"/);
+  assert.equal((html.match(/class="brandMark"/g) ?? []).length, 2);
+  assert.doesNotMatch(html, /not yet in the Store version|New (?:launcher|Proxy) preview/);
+  assert.doesNotMatch(html, /\/_vinext\/image/);
+  assert.match(html, /The Chrome launcher\./);
+  assert.match(html, /The active profile, at a glance\./);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/tree\/main\/browser\/temoto-chrome/);
   assert.match(html, /github\.com\/hayashiii-ghub\/temoto\/tree\/main\/browser\/temoto-proxy/);
   assert.match(html, /chromewebstore\.google\.com\/detail\/temoto-for-chrome\/gcncgknjklghkoeiapcbdghodepnllid/);
@@ -69,12 +75,15 @@ test("includes public metadata and primary links", async () => {
 
 test("uses site-specific UI captures and retains canonical store assets", () => {
   const source = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
-  assert.match(source, /src="\/showcase\/chrome-launcher\.png"/);
-  assert.match(source, /src="\/showcase\/proxy-popup\.png"/);
-  assert.match(source, /src="\/showcase\/proxy-manager\.png"/);
-  assert.equal(source.match(/<Image\b/g)?.length, 3);
+  for (const name of ["chrome-launcher", "proxy-popup"]) {
+    const image = readFileSync(new URL(`../public/showcase/${name}.png`, import.meta.url));
+    const revision = createHash("sha256").update(image).digest("hex").slice(0, 12);
+    assert.ok(source.includes(`src="/showcase/${name}.png?v=${revision}"`), `${name} URL must follow its image content`);
+  }
+  assert.doesNotMatch(source, /proxy-manager|manager-shot/);
+  assert.equal(source.match(/<Image\b/g)?.length, 2);
   assert.doesNotMatch(source, /<video\b|ChromePreview|ProxyPreview|chromeToolIcon|CSSProperties/);
-  assert.match(source, /<source media="\(max-width: 767px\)" srcSet="\/showcase\/proxy-manager-mobile.png"/);
+  assert.match(source, /className="proxyGallery">[\s\S]*?<figure[\s\S]*?<\/figure>\s*<ProxyRouteDemo \/>/);
 
   const pairs = [
     ["../public/product-chrome-launcher.jpg", "../../browser/temoto-chrome/store/assets/screenshot-launcher-1280x800.jpg"],
@@ -123,6 +132,16 @@ test("product icons are synced from each Chrome extension", () => {
 
   assert.deepEqual(siteChromeIcon, extensionChromeIcon);
   assert.deepEqual(siteProxyIcon, createTemotoIcon(128));
+});
+
+test("site Proxy mark uses an outline of the same Joint geometry", () => {
+  const solid = readFileSync(new URL("../public/temoto-mark.svg", import.meta.url), "utf8");
+  const outline = readFileSync(new URL("../public/temoto-proxy-mark.svg", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(outline, /fill="none" stroke="currentColor"/);
+  assert.deepEqual([...outline.matchAll(/<path d="([^"]+)"/g)].map(match => match[1]), [...solid.matchAll(/<path d="([^"]+)"/g)].map(match => match[1]));
+  assert.match(css, /\.chromeMark \{ background-image: url\('\/temoto-mark.svg'\); \}/);
+  assert.match(css, /\.proxyMark \{ background-image: url\('\/temoto-proxy-mark.svg'\); \}/);
 });
 
 test("OG image remains 1200x630 and references both product icons", () => {

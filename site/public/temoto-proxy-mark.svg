@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="12" stroke-linejoin="miter" color="#9974f8" role="img" aria-labelledby="title">
+  <title id="title">temoto Proxy — Joint</title>
+  <defs>
+    <path d="M52 8H96V46H140L36 106.044H16V61L52 40Z" id="upper"/>
+    <path d="M144 58V100H108V118H144V152H78L48 129V113.426Z" id="lower"/>
+    <clipPath id="silhouette" fill="white" stroke="none"><use href="#upper"/><use href="#lower"/></clipPath>
+  </defs>
+  <g clip-path="url(#silhouette)"><use href="#upper"/><use href="#lower"/></g>
+</svg>

@@ -68,7 +68,7 @@ async function run<T>(action: () => Promise<T>): Promise<T | null> {
     }
     return response;
   } catch (error) {
-    showToast(localizeError(error), "error");
+    showToast(t("Could not complete action: {message}", { message: localizeError(error) }), "error");
     return null;
   } finally {
     busy = false;
@@ -106,7 +106,6 @@ function renderShell(): void {
   statusDot.dataset.tone = state.status.tone;
   globalToggle.disabled = false;
   globalToggle.textContent = active ? t("Turn off safely") : t("Proxy off");
-  globalToggle.classList.toggle("danger-text", Boolean(active));
   globalToggle.onclick = active || state.status.code === "orphaned"
     ? () => run(async () => { const response = await sendMessage("DEACTIVATE"); showToast(t("temoto control cleared"), "success"); return response; })
     : null;
@@ -132,6 +131,7 @@ function renderSidebar(): void {
     const selected = profile.id === snapshot.selectedProfileId || (!snapshot.selectedProfileId && profile.id === snapshot.profiles[0]?.id);
     return el("button", {
       className: `sidebar-profile${selected ? " is-selected" : ""}`,
+      "aria-current": selected ? "true" : null,
       type: "button",
       onclick: () => run(async () => {
         const response = await sendMessage("SELECT_PROFILE", { profileId: profile.id });
@@ -139,7 +139,6 @@ function renderSidebar(): void {
         return response;
       }),
     },
-    el("i", { className: "profile-color", style: `--profile-color:${profile.color}` }),
     el("span", { className: "profile-copy" }, el("strong", { text: profile.name }), el("small", { text: endpointLabel(profile) })),
     active ? el("span", { className: "active-pip", title: t("Active"), text: t("ON") }) : null,
     );
@@ -164,7 +163,6 @@ function populateForm(profile: EffectiveState["profiles"][number]): void {
   draft = structuredClone(profile);
   ruleDraft = structuredClone(profile.routingRules || []);
   form.elements.name.value = profile.name;
-  form.elements.color.value = profile.color;
   form.querySelector<HTMLInputElement>(`input[name="kind"][value="${profile.kind}"]`)!.checked = true;
   form.elements.perProtocol.checked = profile.endpointMode === "perProtocol";
   for (const key of ["single", "http", "https", "fallback"] as const) setEndpoint(key, profile.endpoints[key]);
@@ -174,6 +172,7 @@ function populateForm(profile: EffectiveState["profiles"][number]): void {
   form.elements.pacValue.value = profile.pac?.value || "";
   form.elements.bypassList.value = (profile.bypassList || []).join("\n");
   form.elements.authEnabled.checked = Boolean(profile.auth?.enabled);
+  query<HTMLDetailsElement>("#authentication-section").open = Boolean(profile.auth?.enabled);
   form.elements.username.value = profile.auth?.username || "";
   form.elements.password.value = "";
   form.elements.authHosts.value = (profile.auth?.allowedHosts || []).join("\n");
@@ -242,7 +241,6 @@ function collectProfile(): ProxyProfile {
   return {
     ...structuredClone(draft),
     name: form.elements.name.value,
-    color: form.elements.color.value,
     kind,
     endpointMode: form.elements.perProtocol.checked ? "perProtocol" : "single",
     endpoints: {

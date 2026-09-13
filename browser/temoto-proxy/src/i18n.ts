@@ -16,6 +16,13 @@ const ja: Record<string, string> = {
   "Regular windows only unless explicitly enabled": "明示的に有効化しない限り通常ウィンドウのみ",
   Manage: "管理",
   "New profile": "新しいプロファイル",
+  "Save a proxy server or PAC configuration to switch connections.": "プロキシサーバーやPAC設定を保存して、接続を切り替えられます。",
+  "Destinations that bypass the proxy": "プロキシを経由しない宛先",
+  "Session-only credentials": "セッション中だけ保持する認証情報",
+  "Check the active connection": "現在の接続を確認",
+  "Browser settings": "ブラウザー設定",
+  "Incognito access": "シークレットウィンドウへの適用",
+  "Could not complete action: {message}": "操作できませんでした：{message}",
   Import: "読み込む",
   Export: "書き出す",
   "NETWORK WORKSPACES": "ネットワークワークスペース",
@@ -247,7 +254,7 @@ export function localizeDocument(root: Document = document): void {
   while (node) {
     const value = node.nodeValue || "";
     const trimmed = value.trim();
-    if (trimmed && ja[trimmed]) node.nodeValue = value.replace(trimmed, ja[trimmed]);
+    if (trimmed && ja[trimmed] && !node.parentElement?.closest('[translate="no"]')) node.nodeValue = value.replace(trimmed, ja[trimmed]);
     node = walker.nextNode();
   }
   for (const element of root.querySelectorAll<HTMLElement>("[aria-label], [title], [placeholder]")) {

@@ -31,6 +31,10 @@ function Arrow() {
   return <svg className="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M4 12h16m-7-7 7 7-7 7" /></svg>;
 }
 
+function Brand() {
+  return <a className="brand" href="#top"><span className="brandMark" aria-hidden="true" />temoto</a>;
+}
+
 function StoreLink({ href, children }: { href: string; children: React.ReactNode }) {
   return <a className="button primary" href={href}><span className="desktop-store-label">{children}</span><span className="mobile-store-label">View in Chrome Web Store</span><Arrow /></a>;
 }
@@ -39,7 +43,7 @@ export default function Home() {
   return <div className="page" lang="en">
     <a className="skipLink" href="#content">Skip to content</a>
     <nav className="topRail wrap" aria-label="Primary">
-      <a className="brand" href="#top">temoto</a>
+      <Brand />
       <div><a href="#chrome">Tools</a><a href="#proxy">Proxy</a><a href="#install">Install</a><a className="nav-github" href={repositoryUrl}>GitHub</a></div>
     </nav>
     <main id="content" className="wrap">
@@ -62,16 +66,15 @@ export default function Home() {
         <h2 id="tools-title">Six tools, one launcher.</h2>
         <div className="tools-layout">
           <div><dl className="feature-list">{features.map(([name, copy], i) => <div key={name}><span aria-hidden="true">0{i + 1}</span><dt>{name}</dt><dd>{copy}</dd></div>)}</dl><StoreLink href={chromeStoreUrl}>Add temoto for Chrome</StoreLink></div>
-          <figure className="productShot launcher-shot"><Image src="/showcase/chrome-launcher.png" alt="temoto for Chrome launcher with all six page tools" width={416} height={500} loading="lazy" /><figcaption>The Chrome launcher.</figcaption></figure>
+          <figure className="productShot launcher-shot"><Image src="/showcase/chrome-launcher.png?v=a5ba433b840e" alt="temoto launcher with all six page tools" width={416} height={500} loading="lazy" unoptimized /><figcaption>The Chrome launcher.</figcaption></figure>
         </div>
       </section>
       <section className="productChapter proxyChapter" id="proxy" aria-labelledby="proxy-title">
         <p className="eyebrow"><span>02 /</span> temoto Proxy</p>
         <div className="chapterIntro"><h2 id="proxy-title">Choose a route.<br />Know what&apos;s active.</h2><div><p>Save development proxy profiles. See the active route. Clear temoto&apos;s override when you&apos;re done.</p><a className="textLink" href={proxyStoreUrl}>Add temoto Proxy <Arrow /></a></div></div>
-        <ProxyRouteDemo />
         <div className="proxyGallery">
-          <figure className="productShot"><Image src="/showcase/proxy-popup.png" alt="temoto Proxy popup with built-in preview profiles and safe off control" width={416} height={500} loading="lazy" /><figcaption>The active profile, at a glance.</figcaption></figure>
-          <figure className="productShot manager-shot"><picture><source media="(max-width: 767px)" srcSet="/showcase/proxy-manager-mobile.png" width={390} height={760} /><Image src="/showcase/proxy-manager.png" alt="temoto Proxy manager showing the built-in Charles local preview profile" width={1000} height={760} loading="lazy" /></picture><figcaption>Named profiles. Explicit settings.</figcaption></figure>
+          <figure className="productShot"><Image src="/showcase/proxy-popup.png?v=e330f39fc977" alt="temoto Proxy popup with sample profiles and safe off control" width={416} height={500} loading="lazy" unoptimized /><figcaption>The active profile, at a glance.</figcaption></figure>
+          <ProxyRouteDemo />
         </div>
         <p className="muted">Switch Origin changes a page&apos;s URL origin. Proxy controls browser-wide connection settings. These are separate tools.</p>
       </section>
@@ -90,6 +93,6 @@ export default function Home() {
       </section>
       <section className="section faq" aria-labelledby="faq-title"><h2 id="faq-title">FAQ</h2><div>{faqs.map(([question, answer]) => <details className="faqItem" key={question}><summary>{question}</summary><p>{answer}</p></details>)}</div></section>
     </main>
-    <footer className="footer wrap"><a className="brand" href="#top">temoto</a><p>Free. Open source. Close at hand.</p><div><a href={repositoryUrl}>GitHub</a><a href={`${repositoryUrl}/issues`}>Issues</a><a href="#install">Install</a></div></footer>
+    <footer className="footer wrap"><Brand /><p>Free. Open source. Close at hand.</p><div><a href={repositoryUrl}>GitHub</a><a href={`${repositoryUrl}/issues`}>Issues</a><a href="#install">Install</a></div></footer>
   </div>;
 }

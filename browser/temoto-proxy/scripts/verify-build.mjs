@@ -14,6 +14,7 @@ const required = [
   "popup.js",
   "popup-tokens.css",
   "manager.html",
+  "manager.css",
   "manager.js",
   "styles.css",
   "fonts/geist-latin-wght-normal.woff2",
