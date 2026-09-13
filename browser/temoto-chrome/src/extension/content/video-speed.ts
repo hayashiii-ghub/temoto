@@ -12,6 +12,26 @@
   const mediaChangeEvents = ["loadstart", "emptied", "loadedmetadata", "play"] as const;
   const trackedVideos = new Map<HTMLVideoElement, TrackedVideo>();
   let positionFrame: number | null = null;
+  let stopped = false;
+
+  const isActive = (): boolean => {
+    if (stopped) return false;
+    try {
+      if (chrome.runtime.id) return true;
+    } catch {
+      // Reloaded extensions leave their old content scripts in open pages.
+    }
+    cleanup();
+    return false;
+  };
+  const onNotificationError = (error: unknown): void => {
+    if (error && typeof error === "object" && "message" in error
+      && error.message === "Extension context invalidated.") {
+      cleanup();
+    } else {
+      isActive();
+    }
+  };
 
   const videos = (): HTMLVideoElement[] => Array.from(document.querySelectorAll("video"));
   const clamp = (value: unknown): number => {
@@ -35,9 +55,11 @@
     badge.style.top = `${Math.round(rect.top + 8)}px`;
   };
   const positionBadges = () => {
+    if (!isActive()) return;
     trackedVideos.forEach(({ badge }, video) => positionBadge(video, badge));
   };
   const schedulePosition = () => {
+    if (!isActive()) return;
     if (positionFrame !== null) return;
     positionFrame = window.requestAnimationFrame(() => {
       positionFrame = null;
@@ -49,6 +71,7 @@
     if (tracked) tracked.badge.textContent = formatSpeed(video.playbackRate);
   };
   const syncVideo = (video: HTMLVideoElement) => {
+    if (!isActive()) return;
     syncBadge(video);
     schedulePosition();
   };
@@ -93,6 +116,7 @@
     trackedVideos.delete(video);
   };
   const syncVideos = () => {
+    if (!isActive()) return;
     const pageVideos = new Set(videos());
     trackedVideos.forEach((_, video) => {
       if (!pageVideos.has(video)) removeVideo(video);
@@ -121,11 +145,13 @@
     _sender: chrome.runtime.MessageSender,
     sendResponse: (response: { changed: number }) => void,
   ) => {
+    if (!isActive()) return;
     if (message?.type === "APPLY_VIDEO_SPEED") {
       sendResponse({ changed: applySpeed(message.speed) });
     }
   };
   const onKeyDown = (event?: KeyboardEvent) => {
+    if (!isActive()) return;
     if (!event || typeof event.key !== "string") return;
     const key = event.key.toLowerCase();
     if (!['g', 'd', 's'].includes(key) || event.metaKey || event.ctrlKey || event.altKey || isEditable(event)) return;
@@ -140,7 +166,12 @@
     event.preventDefault();
     event.stopPropagation();
     applySpeed(nextSpeed);
-    chrome.runtime.sendMessage({ type: "VIDEO_SPEED_SHORTCUT", speed: nextSpeed }).catch(() => {});
+    try {
+      // Context invalidation can throw before sendMessage returns a Promise.
+      chrome.runtime.sendMessage({ type: "VIDEO_SPEED_SHORTCUT", speed: nextSpeed }).catch(onNotificationError);
+    } catch (error) {
+      onNotificationError(error);
+    }
   };
 
   const observer = new MutationObserver(syncVideos);
@@ -150,17 +181,24 @@
   window.addEventListener("scroll", schedulePosition, true);
   window.addEventListener("resize", schedulePosition);
   document.addEventListener("fullscreenchange", schedulePosition);
-  syncVideos();
-
-  temotoWindow.__temotoVideoSpeedShortcutCleanup = () => {
+  function cleanup(): void {
+    if (stopped) return;
+    stopped = true;
     observer.disconnect();
     if (positionFrame !== null) window.cancelAnimationFrame(positionFrame);
+    positionFrame = null;
     trackedVideos.forEach((_, video) => removeVideo(video));
-    chrome.runtime.onMessage.removeListener(onMessage);
     window.removeEventListener("keydown", onKeyDown, true);
     window.removeEventListener("scroll", schedulePosition, true);
     window.removeEventListener("resize", schedulePosition);
     document.removeEventListener("fullscreenchange", schedulePosition);
     delete temotoWindow.__temotoVideoSpeedShortcutCleanup;
-  };
+    try {
+      chrome.runtime.onMessage.removeListener(onMessage);
+    } catch {
+      // The runtime API itself may already be unavailable during cleanup.
+    }
+  }
+  temotoWindow.__temotoVideoSpeedShortcutCleanup = cleanup;
+  syncVideos();
 })();

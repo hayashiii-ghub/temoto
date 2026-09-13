@@ -57,6 +57,11 @@ function loadContentScript(initialSpeed = 1.5) {
   const messageListeners = new Set();
   const sentMessages = [];
   let observerCallback = () => {};
+  let disconnected = false;
+  let canceledFrames = 0;
+  let notificationError;
+  let rejectNotification = false;
+  let throwOnRemove = false;
   const window = {
     innerWidth: 1024,
     innerHeight: 768,
@@ -66,7 +71,7 @@ function loadContentScript(initialSpeed = 1.5) {
     },
     removeEventListener(type, listener) { windowListeners.get(type)?.delete(listener); },
     requestAnimationFrame() { return 1; },
-    cancelAnimationFrame() {},
+    cancelAnimationFrame() { canceledFrames++; },
   };
   const document = {
     body: root,
@@ -82,16 +87,24 @@ function loadContentScript(initialSpeed = 1.5) {
   class MutationObserver {
     constructor(callback) { observerCallback = callback; }
     observe() {}
-    disconnect() {}
+    disconnect() { disconnected = true; }
   }
   const chrome = {
     runtime: {
+      id: "temoto-test",
       onMessage: {
         addListener(listener) { messageListeners.add(listener); },
-        removeListener(listener) { messageListeners.delete(listener); },
+        removeListener(listener) {
+          if (throwOnRemove) throw new Error("Extension context invalidated.");
+          messageListeners.delete(listener);
+        },
       },
       sendMessage(message) {
         sentMessages.push(message);
+        if (notificationError) {
+          if (rejectNotification) return Promise.reject(notificationError);
+          throw notificationError;
+        }
         return Promise.resolve();
       },
     },
@@ -108,6 +121,24 @@ function loadContentScript(initialSpeed = 1.5) {
   return {
     videos,
     sentMessages,
+    invalidate() {
+      chrome.runtime.id = undefined;
+      throwOnRemove = true;
+    },
+    failNotification(message, asynchronous = false) {
+      notificationError = new Error(message);
+      rejectNotification = asynchronous;
+      throwOnRemove = message === "Extension context invalidated.";
+    },
+    cleanup: () => window.__temotoVideoSpeedShortcutCleanup?.(),
+    resources: () => ({
+      disconnected,
+      canceledFrames,
+      windowListeners: [...windowListeners.values()].reduce((sum, set) => sum + set.size, 0),
+      documentListeners: [...documentListeners.values()].reduce((sum, set) => sum + set.size, 0),
+      videoListeners: videos.reduce((sum, video) => sum
+        + [...video.listeners.values()].reduce((count, set) => count + set.size, 0), 0),
+    }),
     badges: () => root.children.filter((element) => Object.hasOwn(element.dataset, "temotoVideoSpeed")),
     keydown(event) {
       for (const listener of windowListeners.get("keydown") || []) listener(event);
@@ -214,4 +245,70 @@ test("a newly inserted video keeps its own speed", () => {
   assert.equal(page.videos[0].playbackRate, 1);
   assert.equal(page.videos[1].playbackRate, 1.75);
   assert.deepEqual(page.badges().map((badge) => badge.textContent).sort(), ["1.75×", "1×"]);
+});
+
+function assertStopped(page) {
+  assert.equal(page.badges().length, 0);
+  assert.deepEqual(page.resources(), {
+    disconnected: true,
+    canceledFrames: 1,
+    windowListeners: 0,
+    documentListeners: 0,
+    videoListeners: 0,
+  });
+  const speeds = page.videos.map((video) => video.playbackRate);
+  const sent = page.sentMessages.length;
+  assert.doesNotThrow(() => {
+    page.keydown(keyEvent("d", [page.element()]));
+    page.syncVideos(); // A queued observer callback must not recreate badges.
+    page.message({ type: "APPLY_VIDEO_SPEED", speed: 3 });
+    page.cleanup();
+  });
+  assert.deepEqual(page.videos.map((video) => video.playbackRate), speeds);
+  assert.equal(page.sentMessages.length, sent);
+  assert.equal(page.badges().length, 0);
+}
+
+test("invalidated context releases resources without consuming the next shortcut", () => {
+  const page = loadContentScript();
+  page.dispatch("play"); // Schedule a badge-position frame before invalidation.
+  page.invalidate();
+  assert.doesNotThrow(() => page.keydown(keyEvent("d", [page.element()], {
+    preventDefault() { assert.fail("stale handler consumed a key"); },
+    stopPropagation() { assert.fail("stale handler stopped propagation"); },
+  })));
+  assert.deepEqual(page.videos.map((video) => video.playbackRate), [1.5, 1.5]);
+  assert.equal(page.sentMessages.length, 0);
+  assertStopped(page);
+});
+
+test("DOM activity also cleans up an invalidated script without a shortcut", () => {
+  const page = loadContentScript();
+  page.dispatch("play");
+  page.invalidate();
+  assert.doesNotThrow(() => page.syncVideos());
+  assertStopped(page);
+});
+
+for (const asynchronous of [false, true]) {
+  test(`notification invalidation is handled when ${asynchronous ? "rejected" : "thrown synchronously"}`, async () => {
+    const page = loadContentScript();
+    page.failNotification("Extension context invalidated.", asynchronous);
+    assert.doesNotThrow(() => page.keydown(keyEvent("d", [page.element()])));
+    await Promise.resolve();
+    assert.equal(page.sentMessages.length, 1);
+    assertStopped(page);
+  });
+}
+
+test("a transient notification rejection does not disable local video controls", async () => {
+  const page = loadContentScript();
+  page.failNotification("Could not establish connection. Receiving end does not exist.", true);
+  page.keydown(keyEvent("d", [page.element()]));
+  await Promise.resolve();
+  page.keydown(keyEvent("d", [page.element()]));
+  await Promise.resolve();
+  assert.deepEqual(page.videos.map((video) => video.playbackRate), [2, 2]);
+  assert.equal(page.badges().length, 2);
+  assert.equal(page.resources().disconnected, false);
 });
