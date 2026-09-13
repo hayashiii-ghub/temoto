@@ -1,5 +1,7 @@
 # Chrome Web Store submission copy
 
+Prepared locally on 2026-09-13 for version **1.2.0**. Nothing has been uploaded or submitted. See [the release handoff](../../STORE-HANDOFF-2026-09-13.md) for verified artifacts and remaining checks.
+
 ## Product
 
 **Name:** temoto Proxy
@@ -40,7 +42,7 @@ temoto Proxyは、Chromeのプロキシ設定を名前付きの開発用プロ�
 
 アカウントや分析サービスは使わず、ページの通信内容を検査・送信しません。
 
-## Privacy policy URL after this branch is merged
+## Privacy policy URL (publish the updated local policy before submission)
 
 https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-proxy/PRIVACY.md
 
@@ -83,14 +85,15 @@ No account or temoto-operated server is required.
 ## Release checklist
 
 - [x] Reserve the store item with the `0.0.0.1` bootstrap ZIP and record Item ID `hohabmdadcdkifcmbclkgnomhhlllnbb` and its public key.
-- [ ] Run `npm run check`.
-- [ ] Run `npm run package` and confirm `manifest.json` is at the ZIP root.
+- [x] Run `npm run check`.
+- [x] Run `npm run package` and confirm `manifest.json` is at the ZIP root.
 - [ ] Load `dist/client` in the current stable Google Chrome release.
 - [ ] Verify activation and Off with a disposable reviewer-controlled proxy.
 - [ ] Verify wrong credentials stop retrying and produce a visible failure.
 - [ ] Verify another proxy extension produces a visible conflict without being overwritten.
-- [ ] Capture store screenshots from the actual extension.
+- [x] Prepare English/Japanese screenshots from the built popup and manager with sample profiles; verify dimensions and appearance.
+- [ ] Compare the screenshots with the installed extension in current stable Google Chrome. The local preview does not verify proxy traffic.
 - [ ] Publish `PRIVACY.md` at a stable public URL.
 - [ ] Complete Chrome Web Store Limited Use disclosures truthfully.
-- [ ] Confirm the uploaded package version is `1.1.0` and add the Japanese localized listing and screenshots.
+- [ ] Confirm the uploaded package version is `1.2.0` and add the Japanese localized listing and screenshots.
 - [x] Reserve both Chrome Web Store items and replace the development keys/IDs with the store-issued identities.

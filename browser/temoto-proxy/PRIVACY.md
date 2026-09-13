@@ -1,6 +1,6 @@
 # Privacy policy for temoto Proxy
 
-Last updated: August 14, 2026
+Last updated: September 13, 2026 (prepared for version 1.2.0)
 
 temoto Proxy is a local Chrome extension for managing development proxy profiles. It does not transmit personal data, browsing data, page content, request bodies, response bodies, or analytics to the developer or to third parties.
 
@@ -18,7 +18,7 @@ When the user runs a connection test, the extension sends a credential-free HTTP
 
 The extension listens for proxy authentication challenges only. It supplies session credentials only when Chrome identifies the challenge as a proxy challenge and its proxy host exactly matches a host explicitly allowed in the active profile. Authentication attempts are limited to prevent retry loops.
 
-When the separately installed temoto for Chrome companion is present, temoto Proxy accepts local messages only from its allowlisted extension ID. It may return effective status and profile ID, name, color, and kind, and may perform an explicit profile activation, safe Off, or manager-open action. It never returns endpoints, routing rules, PAC contents, bypass entries, usernames, passwords, or complete profiles to the companion.
+When the separately installed temoto for Chrome companion is present, temoto Proxy accepts local messages only from its allowlisted extension ID. It may return effective status and profile ID, name, color, and kind, and may open its manager. Profile activation and safe Off remain actions in temoto Proxy itself, not in the companion API. It never returns endpoints, routing rules, PAC contents, bypass entries, usernames, passwords, or complete profiles to the companion.
 
 ## Permissions
 

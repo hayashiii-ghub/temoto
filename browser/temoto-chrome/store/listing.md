@@ -1,5 +1,7 @@
 # Chrome Web Store submission copy
 
+Prepared locally on 2026-09-13 for version **1.0.1**. Nothing has been uploaded or submitted. See [the release handoff](../../STORE-HANDOFF-2026-09-13.md) for verified artifacts and remaining checks.
+
 ## Product details
 
 **Name**
@@ -32,7 +34,7 @@ temoto for Chrome brings six common page-testing tools into one focused popup:
 - Measure an element and copy a compact CSS selector.
 - When the separately installed temoto Proxy companion is available, view its effective state and active profile identity, then open its full manager from the side panel.
 
-temoto processes its tools locally, does not transmit page data, and does not use analytics. Persistent HTTP(S) page access is used only to make the documented Video Speed shortcuts available without opening the popup. Site Reset asks for its optional permission only when you choose that tool. The optional Proxy integration uses an extension-ID-allowlisted local API and never receives proxy endpoints, PAC contents, bypass rules, usernames, or passwords.
+temoto processes its tools locally, does not transmit page data, and does not use analytics. Persistent HTTP(S) page access enables the documented Video Speed shortcuts and a local WebMCP bridge on pages that explicitly opt in. That bridge provides only an extension-availability check and video-speed control for the requesting tab. Site Reset asks for its optional permission only when you choose that tool. The optional Proxy integration uses an extension-ID-allowlisted local API and never receives proxy endpoints, PAC contents, bypass rules, usernames, or passwords.
 
 ## Japanese localization
 
@@ -55,6 +57,8 @@ temoto for Chromeは、ページの確認でよく使う6つの機能をひと�
 
 処理は端末内で行われ、ページデータの送信や分析は行いません。別途temoto Proxyをインストールすると、サイドパネルから有効状態とプロファイル名を確認し、管理画面を開けます。
 
+明示的に対応を有効にしたページでは、WebMCP向けのローカル連携で拡張の有無を確認し、そのタブの動画速度を変更できます。他のタブや設定、画面撮影データは公開しません。
+
 ## Privacy practices
 
 **Single purpose description**
@@ -65,7 +69,7 @@ Provide web developers with local tools for inspecting and testing the current p
 
 - `activeTab`: Grants temporary access to the current tab after the user opens temoto or selects a tool for the remaining on-demand page utilities.
 - `scripting`: Runs the user-requested video detection/control, capture selection overlay, and Measure / Inspect tool in the current tab.
-- Website access on HTTP(S) pages: Loads the local Video Speed handler in every page frame so `G`, `D`, and `S` can change HTML5 playback speed without opening the popup. The handler ignores editable fields and modifier-key combinations and does not collect or transmit page content or keystrokes.
+- Website access on HTTP(S) pages: Loads the local Video Speed handler in every page frame so `G`, `D`, and `S` can change HTML5 playback speed without opening the popup. The handler ignores editable fields and modifier-key combinations and does not collect or transmit page content or keystrokes. Top-level pages explicitly declaring `meta[name="temoto-webmcp"][content="enabled"]` may also use a local availability/video-speed bridge; no general browsing or configuration access is exposed.
 - `storage`: Stores user-configured environment origins and the last selected color and playback speed locally.
 - `sidePanel`: Opens persistent settings and environment configuration without keeping the popup open.
 - `clipboardWrite`: Copies a user-selected color, screenshot, or CSS selector only after a user action.
@@ -79,7 +83,7 @@ Provide web developers with local tools for inspecting and testing the current p
 - Disclose that the optional, separately installed temoto Proxy companion shares only installation state, effective status, and profile identity through local extension messaging.
 - Complete every Limited Use certification checkbox truthfully.
 
-**Privacy policy URL after this branch is merged**
+**Privacy policy URL (publish the updated local policy before submission)**
 
 https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY.md
 
@@ -109,13 +113,13 @@ No account or credentials are required.
 
 - [x] Retain the existing published store item and record Item ID `gcncgknjklghkoeiapcbdghodepnllid` and its public key.
 - [ ] Verify all six tools in the current stable Google Chrome release, not only another Chromium browser.
-- [ ] Run `npm test`, `npm run build`, `npm run test:sites`, and `npm run package`.
+- [x] Run `npm test`, `npm run build` (through package), `npm run test:sites`, and `npm run package`.
 - [ ] Upload the ZIP from `release/`; confirm `manifest.json` is at the ZIP root.
 - [ ] Upload the required screenshot and 440 × 280 small promo tile.
 - [ ] Use the single-purpose text and permission justifications above in the Privacy tab.
 - [ ] Make the privacy policy URL publicly accessible after merge.
 - [ ] Select the intended regions and visibility in Distribution.
 - [ ] Enable deferred publishing if manual control after review is preferred.
-- [ ] Recheck the manifest name, description, version, icons, and minimum Chrome version before upload.
-- [ ] Confirm the uploaded package version is `0.2.0` and add the Japanese localized listing and screenshot.
+- [x] Check the packaged manifest against the build, including name, description, version, icons and minimum Chrome version; verify the reserved identity and omit `key` from the ZIP.
+- [ ] Confirm the uploaded package version is `1.0.1` and add the Japanese localized listing and screenshot.
 - [x] Reserve both Chrome Web Store items and replace the development keys/IDs with the store-issued identities.

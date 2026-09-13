@@ -5,14 +5,14 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const readJson = async (path) => JSON.parse(await readFile(new URL(path, root), "utf8"));
 
-test("manifest and locale catalogs describe the 1.0.0 localized extension", async () => {
+test("manifest and locale catalogs describe the 1.0.1 localized extension", async () => {
   const [manifest, en, ja] = await Promise.all([
     readJson("public/manifest.json"),
     readJson("public/_locales/en/messages.json"),
     readJson("public/_locales/ja/messages.json"),
   ]);
 
-  assert.equal(manifest.version, "1.0.0");
+  assert.equal(manifest.version, "1.0.1");
   assert.equal(manifest.default_locale, "en");
   assert.equal(manifest.name, "__MSG_extensionName__");
   assert.deepEqual(Object.keys(ja).sort(), Object.keys(en).sort());
