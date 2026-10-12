@@ -5,9 +5,9 @@ import { MotionControls } from "./controls";
 import { useMotion } from "./use-motion";
 
 const demos = [
-  { id: "pick", label: "Pick a color", copy: "Pick a color and copy its hex value.", readout: "HEX / #9974F8" },
-  { id: "capture", label: "Capture a region", copy: "Capture a selected region as an image.", readout: "Selected region / PNG" },
-  { id: "inspect", label: "Inspect an element", copy: "Read size, type, and color. Copy a selector.", readout: "120 × 120 / 16px / 24px / #9974F8 / .demo-shape" },
+  { id: "pick", label: "Pick a color", copy: "Pick a color and copy HEX, RGB, or HSL.", readout: "HEX / #9974F8" },
+  { id: "capture", label: "Capture the visible area", copy: "Capture the visible area or the full page, with no setup needed.", readout: "Visible area / PNG" },
+  { id: "inspect", label: "Inspect CSS", copy: "Read size, spacing, fonts, and colors. Copy grouped CSS.", readout: "120 × 120 / padding: 24px / font-size: 16px / color: #9974F8" },
 ] as const;
 
 export function PageToolDemo() {
@@ -21,10 +21,10 @@ export function PageToolDemo() {
     <p className="demo-readout">{selected.readout}</p>
     {playback !== "static" ? <div className="demo-selector" role="group" aria-label="Page tool demonstrations">
       {demos.map((demo) => <button type="button" key={demo.id} aria-pressed={scene === demo.id} aria-describedby="demo-description" onClick={() => select(demo.id)}><span className="selection-dot" aria-hidden="true" />{demo.label}</button>)}
-    </div> : <p className="static-demo-note">Color Picker · Screenshot · Inspect</p>}
+    </div> : <p className="static-demo-note">Color Picker · Screenshot · CSS</p>}
     <noscript><div className="static-scenes">
-      <figure data-scene="capture"><WorkbenchGeometry /><figcaption>Capture a region — Capture a selected region as an image.</figcaption></figure>
-      <figure data-scene="inspect"><WorkbenchGeometry /><figcaption>Inspect an element — 120 × 120. Read size, type, and color. Copy a selector.</figcaption></figure>
+      <figure data-scene="capture"><WorkbenchGeometry /><figcaption>Capture the visible area — Capture the visible area or the full page, with no setup needed.</figcaption></figure>
+      <figure data-scene="inspect"><WorkbenchGeometry /><figcaption>Inspect CSS — 120 × 120. padding: 24px; font-size: 16px; color: #9974F8. Copy grouped CSS.</figcaption></figure>
     </div></noscript>
     <span className="sr-only" aria-live="polite">{selected.label}{playback === "complete" ? ": demonstration complete." : playback === "paused" ? ": paused." : ""}</span>
   </div>;

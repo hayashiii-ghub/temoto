@@ -23,7 +23,7 @@ function queryAll<T extends Element = HTMLElement>(selector: string): NodeListOf
 
 const form = query<ProxyForm>("#profile-form");
 const profileList = query("#manager-profile-list");
-const toast = query("#manager-toast");
+const actionResult = query("#manager-result");
 const notice = query("#manager-notice");
 const empty = query("#empty-manager");
 const statusNode = query("#manager-status");
@@ -35,7 +35,6 @@ let state: EffectiveState | null = null;
 let draft: EffectiveState["profiles"][number] | null = null;
 let ruleDraft: RoutingRule[] = [];
 let busy = false;
-let toastTimer: ReturnType<typeof setTimeout> | undefined;
 
 for (const container of queryAll<HTMLElement>("[data-endpoint]")) {
   const key = container.dataset.endpoint;
@@ -48,18 +47,18 @@ for (const container of queryAll<HTMLElement>("[data-endpoint]")) {
   );
 }
 
-function showToast(message: string, tone = "neutral"): void {
-  toast.textContent = message;
-  toast.dataset.tone = tone;
-  toast.hidden = false;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { toast.hidden = true; }, 3200);
+function showResult(message: string, tone: "neutral" | "error" = "neutral"): void {
+  actionResult.textContent = message;
+  actionResult.dataset.tone = tone;
+  actionResult.setAttribute("role", tone === "error" ? "alert" : "status");
+  actionResult.hidden = !message;
 }
 
 async function run<T>(action: () => Promise<T>): Promise<T | null> {
   if (busy) return null;
   busy = true;
   document.body.dataset.busy = "true";
+  showResult("");
   try {
     const response = await action();
     if (response && typeof response === "object" && "state" in response && response.state) {
@@ -68,7 +67,8 @@ async function run<T>(action: () => Promise<T>): Promise<T | null> {
     }
     return response;
   } catch (error) {
-    showToast(t("Could not complete action: {message}", { message: localizeError(error) }), "error");
+    showResult(localizeError(error), "error");
+    actionResult.scrollIntoView({ block: "nearest", behavior: "instant" });
     return null;
   } finally {
     busy = false;
@@ -102,12 +102,14 @@ function statusMessage(status: ProxyStatus): string {
 function renderShell(): void {
   if (!state) return;
   const active = activeProfile();
+  const clearable = Boolean(active) || state.status.code === "orphaned";
   statusNode.textContent = active && state.status.code === "active" ? t("{name} · active", { name: active.name }) : t(state.status.label);
   statusDot.dataset.tone = state.status.tone;
   globalToggle.disabled = false;
-  globalToggle.textContent = active ? t("Turn off safely") : t("Proxy off");
-  globalToggle.onclick = active || state.status.code === "orphaned"
-    ? () => run(async () => { const response = await sendMessage("DEACTIVATE"); showToast(t("temoto control cleared"), "success"); return response; })
+  globalToggle.hidden = !clearable;
+  globalToggle.textContent = "Off";
+  globalToggle.onclick = clearable
+    ? () => run(() => sendMessage("DEACTIVATE"))
     : null;
 
   const message = statusMessage(state.status);
@@ -139,7 +141,7 @@ function renderSidebar(): void {
         return response;
       }),
     },
-    el("span", { className: "profile-copy" }, el("strong", { text: profile.name }), el("small", { text: endpointLabel(profile) })),
+    el("span", { className: "profile-copy" }, el("strong", { text: profile.name, title: profile.name }), el("small", { text: endpointLabel(profile), title: endpointLabel(profile) })),
     active ? el("span", { className: "active-pip", title: t("Active"), text: t("ON") }) : null,
     );
   }));
@@ -175,13 +177,13 @@ function populateForm(profile: EffectiveState["profiles"][number]): void {
   query<HTMLDetailsElement>("#authentication-section").open = Boolean(profile.auth?.enabled);
   form.elements.username.value = profile.auth?.username || "";
   form.elements.password.value = "";
+  form.elements.password.placeholder = profile.auth?.passwordReady ? "Leave blank to keep" : "Password";
   form.elements.authHosts.value = (profile.auth?.allowedHosts || []).join("\n");
   form.elements.diagnosticUrl.value = profile.diagnosticUrl || "https://example.com/";
   query("#editor-title").textContent = profile.name;
-  query("#footer-profile-name").textContent = profile.name;
   query("#credential-state").textContent = profile.auth?.passwordReady
-    ? t("Session password is ready. Leave the password field blank to keep it.")
-    : t("No session password is loaded. It will be requested again after Chrome restarts.");
+    ? "Session password ready"
+    : "No session password";
   diagnosticResult.hidden = true;
   renderRules();
   updateVisibility();
@@ -213,7 +215,7 @@ function renderRules(): void {
       onclick: () => { ruleDraft.splice(index, 1); renderRules(); },
     }),
   )));
-  if (!ruleDraft.length) list.append(el("div", { className: "empty-rules", text: t("No domain rules yet. The fallback below handles every destination.") }));
+  if (!ruleDraft.length) list.append(el("div", { className: "empty-rules", text: "No rules" }));
 }
 
 function currentKind(): ProxyProfile["kind"] {
@@ -276,18 +278,17 @@ async function save({ activate = false }: { activate?: boolean } = {}) {
     const activated = await sendMessage("ACTIVATE_PROFILE", { profileId: profile.id });
     state = activated.state;
     renderShell();
-    showToast(t("{name} saved and activated", { name: profile.name }), "success");
     return activated;
   }
-  showToast(t("{name} saved", { name: profile.name }), "success");
   return response;
 }
 
 function updateActiveControls() {
   if (!draft || !state) return;
-  const isActive = draft.id === state.activeProfileId && state.status.code === "active";
+  const willReapply = draft.id === state.activeProfileId;
   const activateButton = query("#activate-profile");
-  activateButton.textContent = isActive ? t("Save & reapply") : t("Save & activate");
+  activateButton.hidden = willReapply;
+  query("#save-profile").textContent = willReapply ? "Save & reapply" : "Save";
 }
 
 function newProfile() {
@@ -295,7 +296,6 @@ function newProfile() {
   run(async () => {
     const response = await sendMessage("SAVE_PROFILE", { profile });
     draft = null;
-    showToast(t("New profile created"), "success");
     return response;
   });
 }
@@ -309,7 +309,6 @@ form.addEventListener("change", (event) => {
   if (["kind", "perProtocol", "authEnabled", "pacSource"].includes(target.name)) updateVisibility();
   if (target.name === "name") {
     query("#editor-title").textContent = target.value || t("Untitled profile");
-    query("#footer-profile-name").textContent = target.value || t("Untitled profile");
   }
 });
 
@@ -327,6 +326,7 @@ query("#run-diagnostic").addEventListener("click", () => run(async () => {
   const profileId = selected.id;
   const response = await sendMessage("DIAGNOSE", { profileId });
   diagnosticResult.hidden = false;
+  diagnosticResult.setAttribute("role", response.result.ok ? "status" : "alert");
   diagnosticResult.dataset.tone = response.result.ok ? "success" : "error";
   diagnosticResult.textContent = response.result.reachable
     ? `${response.result.status} ${response.result.statusText || ""} · ${response.result.latencyMs} ms · ${response.result.url}`
@@ -337,7 +337,6 @@ query("#duplicate-profile").addEventListener("click", () => run(async () => {
   if (!draft) throw new Error(t("No profile is selected"));
   const response = await sendMessage("DUPLICATE_PROFILE", { profileId: draft.id });
   draft = null;
-  showToast(t("Profile duplicated"), "success");
   return response;
 }));
 query("#delete-profile").addEventListener("click", () => {
@@ -347,7 +346,6 @@ query("#delete-profile").addEventListener("click", () => {
   run(async () => {
     const response = await sendMessage("DELETE_PROFILE", { profileId: profile.id });
     draft = null;
-    showToast(t("Profile deleted"), "success");
     return response;
   });
 });
@@ -357,7 +355,6 @@ query("#empty-create").addEventListener("click", newProfile);
 query("#export-profiles").addEventListener("click", () => run(async () => {
   const response = await sendMessage("EXPORT_PROFILES");
   downloadText(`temoto-proxy-${new Date().toISOString().slice(0, 10)}.json`, response.json);
-  showToast(t("Profiles exported without secrets"), "success");
   return response;
 }));
 query("#import-profiles").addEventListener("click", () => query<HTMLInputElement>("#import-file").click());
@@ -370,7 +367,7 @@ query<HTMLInputElement>("#import-file").addEventListener("change", async (event)
   await run(async () => {
     const response = await sendMessage("IMPORT_PROFILES", { json, mode: replace ? "replace" : "merge" });
     draft = null;
-    showToast(t(replace ? "Profiles replaced — enter passwords again" : "Profiles merged — test URLs reset"), "success");
+    showResult(t(replace ? "Profiles replaced — enter passwords again" : "Profiles merged — test URLs reset"));
     return response;
   });
   target.value = "";
@@ -380,7 +377,6 @@ const incognitoEnabled = query<HTMLInputElement>("#incognito-enabled");
 const incognitoSession = query<HTMLInputElement>("#incognito-session");
 incognitoEnabled.addEventListener("change", () => run(async () => {
   const response = await sendMessage("SET_INCOGNITO", { enabled: incognitoEnabled.checked, sessionOnly: incognitoSession.checked });
-  showToast(t(incognitoEnabled.checked ? "Incognito proxy enabled explicitly" : "Incognito proxy cleared"), "success");
   return response;
 }));
 incognitoSession.addEventListener("change", () => {
@@ -394,9 +390,9 @@ function renderIncognitoControls(): void {
   incognitoEnabled.disabled = !state.incognitoAllowed;
   incognitoSession.checked = Boolean(state.incognitoSessionOnly);
   query("#incognito-session-row").hidden = !state.incognitoEnabled;
-  query("#incognito-help").textContent = state.incognitoAllowed
-    ? t("Explicitly applies the active profile only to incognito windows.")
-    : t("Enable “Allow in Incognito” for temoto Proxy in Chrome extensions first.");
+  const help = query("#incognito-help");
+  help.hidden = state.incognitoAllowed;
+  help.textContent = state.incognitoAllowed ? "" : "Chrome incognito access is not enabled.";
 }
 
 run(async () => {

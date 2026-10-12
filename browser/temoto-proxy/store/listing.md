@@ -1,6 +1,6 @@
 # Chrome Web Store submission copy
 
-Prepared locally on 2026-09-13 for version **1.2.0**. Nothing has been uploaded or submitted. See [the release handoff](../../STORE-HANDOFF-2026-09-13.md) for verified artifacts and remaining checks.
+The version **1.2.0** listing was prepared locally on 2026-09-13. English-only UI revisions are local work as of 2026-10-13; they have not been submitted or published by this task. The [release handoff](../../STORE-HANDOFF-2026-09-13.md) records earlier preparation evidence, not current release verification.
 
 ## Product
 
@@ -10,7 +10,7 @@ Prepared locally on 2026-09-13 for version **1.2.0**. Nothing has been uploaded 
 
 **Description**
 
-temoto Proxy turns Chrome's proxy configuration into named development workspaces.
+temoto Proxy uses an English-only interface to manage Chrome's proxy configuration as named development workspaces.
 
 - Switch HTTP, HTTPS, SOCKS4 and SOCKS5 profiles from one compact popup.
 - Route selected domains through a local proxy or connect them directly.
@@ -25,23 +25,6 @@ temoto Proxy turns Chrome's proxy configuration into named development workspace
 
 temoto Proxy has no analytics service and does not inspect or transmit page traffic.
 
-## Japanese localization
-
-**Summary:** 開発用プロキシを、安全で見える、戻せるプロファイルに。
-
-**Description**
-
-temoto Proxyは、Chromeのプロキシ設定を名前付きの開発用プロファイルとして管理します。
-
-- HTTP、HTTPS、SOCKS4、SOCKS5をコンパクトなポップアップから切り替え。
-- ローカルプロキシ、ドメイン別ルーティング、PAC設定をプロファイルとして保存。
-- Chromeのポリシーや他の拡張機能との競合を、設定変更の前に確認。
-- 現在の有効状態を表示し、temotoの設定だけを安全にオフ。
-- 認証パスワードは現在のChromeセッション内だけに保持。
-- 認証情報を含めずにチーム用プロファイルを読み込み・書き出し。
-
-アカウントや分析サービスは使わず、ページの通信内容を検査・送信しません。
-
 ## Privacy policy URL (publish the updated local policy before submission)
 
 https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-proxy/PRIVACY.md
@@ -51,8 +34,6 @@ https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-proxy/PRIVACY.
 - Store icon: `dist/client/icons/icon-128.png` after running `npm run build` (128 × 128 PNG).
 - Required screenshot: `store/assets/screenshot-manager-1280x800.png` (1280 × 800 PNG).
 - Popup screenshot: `store/assets/screenshot-popup-1280x800.jpg` (1280 × 800 JPEG).
-- Japanese manager screenshot: `store/assets/screenshot-manager-ja-1280x800.png` (1280 × 800 PNG).
-- Japanese popup screenshot: `store/assets/screenshot-popup-ja-1280x800.jpg` (1280 × 800 JPEG).
 - Required small promo tile: `store/assets/promo-small-440x280.jpg` (440 × 280 JPEG).
 - Optional promotion video and marquee promo tile may be omitted.
 
@@ -72,7 +53,7 @@ Allow web developers to configure, switch, verify and safely clear Chrome proxy 
 
 No account or temoto-operated server is required.
 
-1. Open the profile manager and inspect the preconfigured `Local proxy` profile.
+1. Open the profile manager and inspect the preconfigured `Local proxy` profile. The popup and manager remain English when Chrome uses another UI language.
 2. Start a disposable local HTTP proxy on `127.0.0.1:8080`, or edit the profile to another reviewer-controlled proxy.
 3. Save and activate the profile. Confirm the toolbar badge reads `ON` and the popup identifies the profile.
 4. Use Test to issue a credential-free `HEAD` request to the selected public diagnostic URL. Redirects are not followed.
@@ -91,9 +72,9 @@ No account or temoto-operated server is required.
 - [ ] Verify activation and Off with a disposable reviewer-controlled proxy.
 - [ ] Verify wrong credentials stop retrying and produce a visible failure.
 - [ ] Verify another proxy extension produces a visible conflict without being overwritten.
-- [x] Prepare English/Japanese screenshots from the built popup and manager with sample profiles; verify dimensions and appearance.
+- [ ] Refresh English screenshots for the simplified popup and manager; verify dimensions and appearance.
 - [ ] Compare the screenshots with the installed extension in current stable Google Chrome. The local preview does not verify proxy traffic.
 - [ ] Publish `PRIVACY.md` at a stable public URL.
 - [ ] Complete Chrome Web Store Limited Use disclosures truthfully.
-- [ ] Confirm the uploaded package version is `1.2.0` and add the Japanese localized listing and screenshots.
+- [ ] Confirm the final package version and English listing match the source selected for release.
 - [x] Reserve both Chrome Web Store items and replace the development keys/IDs with the store-issued identities.

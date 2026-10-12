@@ -18,10 +18,10 @@ function stage(url) {
   const mark = proxy ? "/brand/temoto-proxy-mark.svg" : "/brand/temoto-mark.svg";
   const title = proxy
     ? (ja ? "開発用プロキシを、<br>切り替える。" : "Your proxy.<br>One clear view.")
-    : (ja ? "6つのツールを、<br>ひとつに。" : "Six tools.<br>One popup.");
+    : (ja ? "4つのツールを、<br>ひとつに。" : "Four tools.<br>One popup.");
   const copy = proxy
     ? (ja ? "プロファイルを選び、有効な接続を確認。<br>使い終わったら、安全にオフ。" : "Choose a profile. See what is active.<br>Clear temoto’s override when you’re done.")
-    : (ja ? "色の取得、画面撮影、動画速度、接続先の切り替え、<br>サイトのリセット、ページ検証。" : "Color, capture, video speed, origin switching,<br>site reset, and page inspection.");
+    : (ja ? "色の取得、画面撮影、CSS検証、<br>動画速度の操作。" : "Color, capture, CSS inspection,<br>and video speed.");
   const src = proxy ? `/proxy/popup.html?lang=${locale}` : `/chrome/index.html?lang=${locale}`;
   return `<!doctype html><html lang="${locale}"><head><meta charset="utf-8"><title>${name} — Store capture</title><style>
   @font-face {font-family:Geist;src:url('/brand/Geist-Variable.woff2') format('woff2');font-weight:100 900;font-display:block}

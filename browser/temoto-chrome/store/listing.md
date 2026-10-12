@@ -1,6 +1,8 @@
 # Chrome Web Store submission copy
 
-Prepared locally on 2026-09-13 for version **1.1.0**. Nothing has been uploaded or submitted. See [the release handoff](../../STORE-HANDOFF-2026-09-13.md) for verified artifacts and remaining checks.
+Prepared locally on **2026-10-12** for the upcoming four-tool release. The source manifest remains **1.1.0**; the next release version has not been selected. These changes have not been uploaded, submitted, or published in this task. This file describes the current worktree, not the live Store package.
+
+This is the authoritative listing, permission, privacy-disclosure, and reviewer copy. [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) tracks readiness. The [2026-09-13 handoff](../../STORE-HANDOFF-2026-09-13.md) is historical preparation evidence for an earlier source state.
 
 ## Product details
 
@@ -14,74 +16,54 @@ English
 
 **Suggested category**
 
-Choose the closest current dashboard category for developer productivity/tools.
+Choose the closest current dashboard category for developer productivity/tools when preparing the release.
 
 **Summary**
 
-Color, capture, video speed, origin switching, site reset, and page inspection for web developers.
+Color Picker, screenshots, CSS inspection and video speed, with local color history and easy copying.
 
 **Detailed description**
 
-Developer utilities, right where you need them.
+Four page tools, close at hand.
 
-temoto for Chrome brings six common page-testing tools into one focused popup:
+temoto for Chrome puts Color Picker, Screenshot, CSS, and Video Speed in one English-only popup.
 
-- Pick any on-screen color and copy its hex value.
-- Capture a selected region, the visible page, or the full page, then copy or save a PNG.
-- Set HTML5 video speed in the popup, or use `G`, `D`, and `S` directly on the page without opening temoto.
-- Move between Local, Staging, and Production without losing the current path, query, or hash.
-- Reset cache, cookies, storage, and service workers for the current site only when requested.
-- Measure an element and copy a compact CSS selector.
-- When the separately installed temoto Proxy companion is available, view its effective state and active profile identity, then open its full manager from the side panel.
+Color Picker: pick an on-screen color and copy HEX, RGB, or HSL. Return to the latest eight picked colors, stored locally.
 
-temoto processes its tools locally, does not transmit page data, and does not use analytics. Persistent HTTP(S) page access enables the documented Video Speed shortcuts and a local WebMCP bridge on pages that explicitly opt in. That bridge provides only an extension-availability check and video-speed control for the requesting tab. Site Reset asks for its optional permission only when you choose that tool. The optional Proxy integration uses an extension-ID-allowlisted local API and never receives proxy endpoints, PAC contents, bypass rules, usernames, or passwords.
+Screenshot: capture the visible area or the full page. Review it at Fit or 100% zoom, then copy the image or save a PNG. Capture preparation runs automatically, with no setup needed.
 
-## Japanese localization
+CSS: select an element to inspect its dimensions, spacing, typography, colors, and borders. Copy grouped CSS declarations or its unique selector separately. These are computed values for the selected element, rather than the page's original stylesheet.
 
-**Summary**
+Video Speed: use popup controls from 0.25× to 5×, or press G to toggle 1× / 1.5×, D to add 0.25×, and S to subtract 0.25×. Each video keeps its own rate when media changes. The popup and subtle video badges follow the actual playback speed, including a page's own rates outside the controls' range.
 
-色の取得、画面撮影、動画速度、接続先の切り替え、サイトのリセット、ページ検証をひとつに。
+Open temoto from the Chrome toolbar, choose a tool, and use Back to return to the four-tool launcher. Color, screenshot, and CSS tools run when selected. Video shortcuts remain available on supported pages without opening the popup.
 
-**Detailed description**
+temoto processes tools locally and does not upload page content, screenshots, or settings. It has no accounts, analytics, or advertising. Persistent HTTP(S) page access enables local Video Speed controls and a limited video bridge on pages that explicitly opt in. That bridge provides only an extension-availability check and video-speed control in the requesting tab.
 
-開発ツールを、必要な場所ですぐ手元に。
-
-temoto for Chromeは、ページの確認でよく使う6つの機能をひとつのポップアップにまとめます。
-
-- 画面上の色を取得して、HEX値をコピー。
-- 範囲、表示中の画面、ページ全体を撮影し、PNGとしてコピーまたは保存。
-- ポップアップやページ上のショートカットからHTML5動画の再生速度を変更。
-- 現在のパス、クエリ、ハッシュを保ったままLocal、Staging、Productionを切り替え。
-- 必要なときだけ、現在のサイトのキャッシュ、Cookie、ストレージ、Service Workerをリセット。
-- 要素を計測し、短いCSSセレクターをコピー。
-
-処理は端末内で行われ、ページデータの送信や分析は行いません。別途temoto Proxyをインストールすると、サイドパネルから有効状態とプロファイル名を確認し、管理画面を開けます。
-
-明示的に対応を有効にしたページでは、WebMCP向けのローカル連携で拡張の有無を確認し、そのタブの動画速度を変更できます。他のタブや設定、画面撮影データは公開しません。
+Support and source: https://github.com/hayashiii-ghub/temoto
 
 ## Privacy practices
 
 **Single purpose description**
 
-Provide web developers with local tools for inspecting and testing the current page, including always-available video speed shortcuts, without remote data collection.
+Provide four local tools for web developers to inspect colors and CSS, capture the current page, and control its video playback.
 
 **Permission justifications**
 
-- `activeTab`: Grants temporary access to the current tab after the user opens temoto or selects a tool for the remaining on-demand page utilities.
-- `scripting`: Runs the user-requested video detection/control, capture selection overlay, and Measure / Inspect tool in the current tab.
-- Website access on HTTP(S) pages: Loads the local Video Speed handler in every page frame so `G`, `D`, and `S` can change HTML5 playback speed without opening the popup. The handler ignores editable fields and modifier-key combinations and does not collect or transmit page content or keystrokes. Top-level pages explicitly declaring `meta[name="temoto-webmcp"][content="enabled"]` may also use a local availability/video-speed bridge; no general browsing or configuration access is exposed.
-- `storage`: Stores user-configured environment origins and the last selected color and playback speed locally.
-- `sidePanel`: Opens persistent settings and environment configuration without keeping the popup open.
-- `clipboardWrite`: Copies a user-selected color, screenshot, or CSS selector only after a user action.
-- Optional `browsingData`: Requested only when the user runs Site Reset, then used to clear cache, cookies, storage, and service workers for the displayed current origin.
+- `activeTab`: Grants temporary access to the current tab when the user opens temoto through Chrome, supporting requested page tools.
+- `scripting`: Reads current-page/video state, applies user-requested video speeds, prepares captures and inspects the selected element's CSS.
+- Website access on HTTP(S) pages: Loads local Video Speed shortcuts and badges in page frames. The packaged badge font is available to HTTP(S) pages; it does not request a remote font service. The handler ignores editable fields and modifier-key combinations and does not record keystrokes or transmit page content. Explicitly opted-in top-level pages may also use the limited availability/video-speed bridge.
+- `storage`: Saves the last picked color, up to eight recent colors, and preferred color format locally. Temporary capture coordination metadata uses browser-session storage.
+- `clipboardWrite`: Copies user-selected color values, screenshots, CSS declarations, or selectors.
 
 **Data-use disclosure guidance**
 
-- Disclose website content because screenshot pixels and selected element details are processed locally.
-- Disclose web browsing activity/current-page information because the active URL, origin, hostname, and title are read for user-facing tools.
-- State that this data is processed locally, is not transmitted to the developer or third parties, and is not used for advertising, analytics, or unrelated purposes.
-- Disclose that the optional, separately installed temoto Proxy companion shares only installation state, effective status, and profile identity through local extension messaging.
-- Complete every Limited Use certification checkbox truthfully.
+- Disclose local website-content handling because screenshot pixels and selected element details are processed.
+- Disclose current-page information because URL, origin, hostname, title, and video state are read for the tools; no browsing-history log is retained.
+- Disclose local picked-color history and preferences. Playback rates are observed in memory rather than carried into later videos.
+- Screenshots are kept by capture ID in local IndexedDB for preview reload. The preview's Close action deletes that capture; otherwise it expires after one hour. Expired records are removed on the next capture save or load.
+- State that data is not transmitted to the developer or third parties and is not used for advertising, analytics, or unrelated purposes. The opted-in video bridge returns only its limited results to the requesting page.
+- Complete each dashboard disclosure and Limited Use certification truthfully for the final release package.
 
 **Privacy policy URL (publish the updated local policy before submission)**
 
@@ -90,36 +72,32 @@ https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY
 ## Graphic assets
 
 - Store icon: `public/icons/icon-128.png` (128 × 128 PNG).
-- Required screenshot: `store/assets/screenshot-launcher-1280x800.jpg` (1280 × 800 JPEG).
-- Japanese screenshot: `store/assets/screenshot-launcher-ja-1280x800.jpg` (1280 × 800 JPEG).
-- Required small promo tile: `store/assets/promo-small-440x280.jpg` (440 × 280 JPEG).
+- Launcher screenshot: `store/assets/screenshot-launcher-1280x800.jpg` (1280 × 800 JPEG).
+- Small promo tile: `store/assets/promo-small-440x280.jpg` (440 × 280 JPEG).
 - Optional marquee promo tile: 1400 × 560 PNG or JPEG.
-- Up to five screenshots may be supplied. Show the actual popup and core tools rather than feature claims that are not implemented.
+
+Refresh the launcher screenshots using the existing [Store capture workflow](../../shared/STORE-CAPTURE.md). They must show the current compact four-tool launcher. Inspect the saved files before marking artwork ready; source changes do not verify existing images.
 
 ## Reviewer test instructions
 
 No account or credentials are required.
 
-1. Open a regular web page and click the temoto toolbar icon.
-2. Color Picker opens Chrome's native eyedropper and copies the chosen hex value.
-3. Screenshot can capture a selected region, the visible viewport, or the full page and opens a local preview with Copy and Save PNG actions.
-4. On a page with an HTML5 video, press `G` to toggle 1× / 1.5×, `D` for +0.25×, or `S` for −0.25× without opening temoto. A subtle badge at the video's top-left shows the current rate. The popup Video Speed controls also change the rate. A page without video shows `No video`.
-5. Project Settings stores Local, Staging, and Production origins locally. Switch Origin preserves the current path, query, and hash.
-6. Measure / Inspect highlights the element under the pointer and copies its selector when clicked.
-7. Site Reset requests the optional `browsingData` permission, clears data only for the displayed current origin, and reloads the tab.
-8. Optional companion test: install temoto Proxy and open the temoto for Chrome side panel. Confirm the effective Proxy status and active profile identity appear, then choose Open Proxy and verify that the temoto Proxy manager opens. Confirm no proxy configuration or credentials appear in temoto for Chrome.
+1. Open an HTTP(S) page and click the temoto toolbar icon. Confirm the launcher has exactly Color Picker, Screenshot, CSS, and Video Speed. Its controls and page overlays remain English when Chrome or the page uses another language.
+2. Pick a color with Chrome's native eyedropper. Confirm HEX/RGB/HSL copy, revisit the tool, and check that only actual picks enter the latest-eight history. Selecting a history color must not create a duplicate.
+3. Capture the visible area and the full page. Confirm that these are the only two capture actions, with no Capture options section. Confirm separate capture previews, image dimensions, Fit/100% zoom, Copy, and Save PNG. Reload a preview within an hour to confirm it retains its own capture; its Close action deletes that capture.
+4. Start CSS inspection, select an element, inspect size, margin/padding, font, colors, and borders, then copy one group or all groups. Copy the unique selector separately. Esc exits; selected-element data is not saved as a page log.
+5. On a page with HTML5 video, use the popup and G/D/S shortcuts. Confirm commands stay within 0.25–5× and controls/badges follow actual page rate changes. Changing or inserting a video must keep its own rate; external rates outside the control range must be displayed accurately. Editable fields and modifier combinations must keep normal typing behavior. A page without video shows No video.
+6. Optional video bridge check: use the opted-in fixture to check extension availability and set video speed in the requesting tab. Confirm that it exposes no screenshots, picked colors, preferences, or other-tab controls.
 
 ## Submission checklist
 
-- [x] Retain the existing published store item and record Item ID `gcncgknjklghkoeiapcbdghodepnllid` and its public key.
-- [ ] Verify all six tools in the current stable Google Chrome release, not only another Chromium browser.
-- [x] Run `npm test`, `npm run build` (through package), `npm run test:sites`, and `npm run package`.
-- [ ] Upload the ZIP from `release/`; confirm `manifest.json` is at the ZIP root.
-- [ ] Upload the required screenshot and 440 × 280 small promo tile.
-- [ ] Use the single-purpose text and permission justifications above in the Privacy tab.
-- [ ] Make the privacy policy URL publicly accessible after merge.
-- [ ] Select the intended regions and visibility in Distribution.
-- [ ] Enable deferred publishing if manual control after review is preferred.
-- [x] Check the packaged manifest against the build, including name, description, version, icons and minimum Chrome version; verify the reserved identity and omit `key` from the ZIP.
-- [ ] Confirm the uploaded package version is `1.1.0` and add the Japanese localized listing and screenshot.
-- [x] Reserve both Chrome Web Store items and replace the development keys/IDs with the store-issued identities.
+- [x] Preserve the existing source identity, Item ID `gcncgknjklghkoeiapcbdghodepnllid`, and its public key.
+- [ ] Select the next release version; source is still 1.1.0 and no new release is recorded.
+- [ ] Verify all four tools in current stable Google Chrome, including capture reload, clipboard, CSS selection, and media replacement.
+- [ ] Run full `npm test`, `npm run build`, and `npm run test:sites` for the final source.
+- [ ] Review the refreshed English launcher screenshot and the small promo tile.
+- [ ] After release authorization, run `npm run package` without overwriting a previously submitted ZIP. Check the archive's manifest identity, version, permissions, and root layout.
+- [ ] Publish the updated privacy policy and confirm its public URL.
+- [ ] Review dashboard privacy disclosures, publisher/contact details, category, regions, and visibility for the final package.
+- [ ] With explicit submission authorization, upload the ZIP, listing, and required artwork; verify the dashboard receipt.
+- [ ] With explicit publication authorization, publish or release the reviewed package and verify its public Store state.

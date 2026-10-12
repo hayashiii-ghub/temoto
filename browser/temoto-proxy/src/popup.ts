@@ -16,28 +16,31 @@ const nodes = {
   statusLabel: query("#status-label"),
   activeName: query("#active-name"),
   activeDetail: query("#active-detail"),
+  scope: query("#scope-status"),
+  actions: query("#popup-actions"),
   toggle: query<HTMLButtonElement>("#toggle-active"),
   test: query<HTMLButtonElement>("#test-active"),
   notice: query("#status-notice"),
   list: query("#profile-list"),
   count: query("#profile-count"),
-  toast: query("#toast"),
+  result: query("#action-result"),
 };
 
 let currentState: EffectiveState | null = null;
 let busy = false;
 
-function showToast(message: string, tone = "neutral"): void {
-  nodes.toast.textContent = message;
-  nodes.toast.dataset.tone = tone;
-  nodes.toast.hidden = false;
-  setTimeout(() => { nodes.toast.hidden = true; }, 2600);
+function showResult(message: string, tone: "neutral" | "error" = "neutral"): void {
+  nodes.result.textContent = message;
+  nodes.result.dataset.tone = tone;
+  nodes.result.setAttribute("role", tone === "error" ? "alert" : "status");
+  nodes.result.hidden = !message;
 }
 
 async function run<T>(action: () => Promise<T>): Promise<void> {
   if (busy) return;
   busy = true;
   document.body.dataset.busy = "true";
+  showResult("");
   try {
     const response = await action();
     if (response && typeof response === "object" && "state" in response && response.state) {
@@ -45,7 +48,7 @@ async function run<T>(action: () => Promise<T>): Promise<void> {
       render();
     }
   } catch (error) {
-    showToast(localizeError(error), "error");
+    showResult(localizeError(error), "error");
   } finally {
     busy = false;
     document.body.dataset.busy = "false";
@@ -71,16 +74,12 @@ function renderProfile(profile: ProxyProfile): HTMLButtonElement {
     className: `popup-profile${active ? " is-active" : ""}`,
     type: "button",
     "aria-pressed": active,
-    onclick: () => run(async () => {
-      const response = await sendMessage("ACTIVATE_PROFILE", { profileId: profile.id });
-      showToast(t("{name} is active", { name: profile.name }), "success");
-      return response;
-    }),
+    onclick: () => run(() => sendMessage("ACTIVATE_PROFILE", { profileId: profile.id })),
   },
   el("i", { className: "profile-color", style: `--profile-color:${profile.color}` }),
   el("span", { className: "profile-copy" },
-    el("strong", { text: profile.name }),
-    el("small", { text: endpointLabel(profile) }),
+    el("strong", { text: profile.name, title: profile.name }),
+    el("small", { text: endpointLabel(profile), title: endpointLabel(profile) }),
   ),
   el("span", { className: "profile-kind", text: active ? t("ACTIVE") : profileKindLabel(profile) }),
   );
@@ -92,20 +91,25 @@ function render(): void {
   const snapshot = currentState;
   const { status, profiles, activeProfileId } = snapshot;
   const active = profiles.find((profile) => profile.id === activeProfileId);
+  const clearable = Boolean(active) || status.code === "orphaned";
   nodes.statusDot.dataset.tone = status.tone;
   nodes.statusLabel.textContent = t(status.label);
-  nodes.activeName.textContent = active?.name || t("Chrome's default connection");
-  nodes.activeDetail.textContent = active ? endpointLabel(active) : t("temoto is not overriding your proxy settings.");
+  nodes.activeName.textContent = active?.name || "";
+  nodes.activeName.setAttribute("title", active?.name || "");
+  nodes.activeName.hidden = !active;
+  nodes.activeDetail.textContent = active ? endpointLabel(active) : "";
+  nodes.activeDetail.setAttribute("title", nodes.activeDetail.textContent || "");
+  nodes.activeDetail.hidden = !active;
+  nodes.scope.textContent = snapshot.incognitoEnabled ? "Regular + Incognito" : "Regular";
+  nodes.actions.hidden = !clearable;
   nodes.toggle.disabled = busy;
-  nodes.toggle.textContent = active ? t("Turn off safely") : profiles.length ? t("Select a profile below") : t("Create a profile");
-  nodes.toggle.classList.toggle("danger-soft", Boolean(active));
-  nodes.toggle.onclick = active
-    ? () => run(async () => { const response = await sendMessage("DEACTIVATE"); showToast(t("temoto control cleared"), "success"); return response; })
-    : () => sendMessage("OPEN_MANAGER").then(() => window.close());
+  nodes.toggle.textContent = "Off";
+  nodes.toggle.classList.toggle("danger-soft", clearable);
+  nodes.toggle.onclick = clearable ? () => run(() => sendMessage("DEACTIVATE")) : null;
   nodes.test.hidden = !active || status.code !== "active";
   nodes.test.onclick = active ? () => run(async () => {
     const response = await sendMessage("DIAGNOSE", { profileId: active.id });
-    showToast(response.result.reachable ? `${response.result.status} · ${response.result.latencyMs} ms` : t(response.result.error || "Connection test failed"), response.result.ok ? "success" : "error");
+    showResult(response.result.reachable ? `HTTP ${response.result.status} · ${response.result.latencyMs} ms` : t(response.result.error || "Connection test failed"), response.result.ok ? "neutral" : "error");
   }) : null;
   const message = statusMessage(status);
   nodes.notice.hidden = !message;
@@ -113,12 +117,14 @@ function render(): void {
   nodes.notice.dataset.tone = status.tone;
   nodes.count.textContent = String(profiles.length);
   nodes.list.replaceChildren(...profiles.map(renderProfile));
-  if (!profiles.length) nodes.list.append(el("button", { className: "empty-profile", type: "button", onclick: () => sendMessage("OPEN_MANAGER").then(() => window.close()) }, t("Create your first proxy profile")));
+  if (!profiles.length) nodes.list.append(el("button", { className: "empty-profile", type: "button", onclick: openManager }, "New profile"));
 }
 
-const openManager = () => sendMessage("OPEN_MANAGER").then(() => window.close());
+const openManager = () => run(async () => {
+  await sendMessage("OPEN_MANAGER");
+  window.close();
+});
 query("#open-manager").addEventListener("click", openManager);
-query("#manage-footer").addEventListener("click", openManager);
 
 run(async () => {
   const response = await sendMessage("GET_STATE");

@@ -1,4 +1,5 @@
-import { isValidHttpOrigin, replaceOrigin } from "./url-utils.ts";
+import { normalizeHexColor, normalizeColorHistory } from "./color-utils.ts";
+import type { ColorFormat } from "./color-utils.ts";
 import { t } from "./i18n.ts";
 
 declare global {
@@ -16,23 +17,10 @@ export interface PageInfo {
   playbackRate: number;
 }
 
-export interface ProjectSettings {
-  name: string;
-  local: string;
-  staging: string;
-  production: string;
-}
-
-export interface ScreenshotOptions {
-  delayMs: number;
-  forceReveal: boolean;
-}
-
 export interface ExtensionSettings {
-  project: ProjectSettings;
   lastColor: string;
-  lastSpeed: number;
-  screenshot: ScreenshotOptions;
+  colorHistory: string[];
+  colorFormat: ColorFormat;
 }
 
 export interface ExtensionResponse {
@@ -57,15 +45,9 @@ const previewPage: PageInfo = {
 };
 
 const defaultSettings: ExtensionSettings = {
-  project: {
-    name: t("Local project"),
-    local: "http://localhost:3000",
-    staging: "https://staging.example.com",
-    production: "https://example.com",
-  },
-  lastColor: "#7C5CFC",
-  lastSpeed: 1.5,
-  screenshot: { delayMs: 0, forceReveal: false },
+  lastColor: "#9974F8",
+  colorHistory: [],
+  colorFormat: "hex",
 };
 
 export async function sendExtensionMessage<T = ExtensionResponse>(
@@ -76,35 +58,36 @@ export async function sendExtensionMessage<T = ExtensionResponse>(
   return chrome.runtime.sendMessage({ type, ...payload }) as Promise<T>;
 }
 
-export async function detectPage(): Promise<PageInfo> {
+async function readPage(type: string): Promise<PageInfo> {
   if (!hasChromeApi()) return previewPage;
-  const response = await sendExtensionMessage<ExtensionResponse & { page?: PageInfo }>("DETECT_PAGE");
+  const response = await sendExtensionMessage<ExtensionResponse & { page?: PageInfo }>(type);
   if (!response.ok || !response.page) throw new Error(t(response.error || "Could not read the current page"));
   return response.page;
 }
+
+export function detectPage(): Promise<PageInfo> { return readPage("DETECT_PAGE"); }
+export function refreshPage(): Promise<PageInfo> { return readPage("GET_PAGE_STATE"); }
 
 export async function setVideoSpeed(speed: number): Promise<ExtensionResponse> {
   if (!hasChromeApi()) return { ok: true, changed: 1 };
   return sendExtensionMessage("SET_VIDEO_SPEED", { speed });
 }
 
-export function captureVisible(options: ScreenshotOptions): Promise<ExtensionResponse> {
-  return sendExtensionMessage("CAPTURE_VISIBLE", { options });
+export function captureVisible(): Promise<ExtensionResponse> {
+  return sendExtensionMessage("CAPTURE_VISIBLE");
 }
 
-export function captureFullPage(options: ScreenshotOptions): Promise<ExtensionResponse> {
-  return sendExtensionMessage("CAPTURE_FULL_PAGE", { options });
-}
-
-export function captureRegion(options: ScreenshotOptions): Promise<ExtensionResponse> {
-  return sendExtensionMessage("START_REGION_CAPTURE", { options });
+export function captureFullPage(): Promise<ExtensionResponse> {
+  return sendExtensionMessage("CAPTURE_FULL_PAGE");
 }
 
 export async function startMeasure(): Promise<ExtensionResponse> {
   if (!hasChromeApi()) {
     await new Promise<void>((resolve, reject) => {
       const script = document.createElement("script");
-      script.src = `/src/extension/content/measure.ts?preview=${Date.now()}`;
+      script.type = "module";
+      const source = import.meta.env?.DEV ? "/src/extension/content/measure.ts" : "./content/measure.js";
+      script.src = `${source}?preview=${Date.now()}-${Math.random().toString(36).slice(2)}`;
       script.onload = () => { script.remove(); resolve(); };
       script.onerror = () => { script.remove(); reject(new Error(t("Could not start Inspect"))); };
       document.documentElement.appendChild(script);
@@ -114,37 +97,14 @@ export async function startMeasure(): Promise<ExtensionResponse> {
   return sendExtensionMessage("START_MEASURE");
 }
 
-export async function resetOrigin(origin: string): Promise<ExtensionResponse> {
-  if (!isValidHttpOrigin(origin)) return { ok: false, error: t("Site Reset is unavailable on this page") };
-  if (!hasChromeApi()) {
-    await new Promise<void>((resolve) => window.setTimeout(resolve, 900));
-    return { ok: true, preview: true };
-  }
-  const granted = await chrome.permissions.request({ permissions: ["browsingData"] });
-  if (!granted) return { ok: false, error: t("Permission to clear site data is required") };
-  return sendExtensionMessage("RESET_ORIGIN", { origin });
-}
-
-export async function switchEnvironment(targetOrigin: string, currentUrl: string): Promise<ExtensionResponse> {
-  const nextUrl = replaceOrigin(currentUrl, targetOrigin);
-  if (!hasChromeApi()) return { ok: true, preview: true, url: nextUrl };
-  return sendExtensionMessage("NAVIGATE", { url: nextUrl });
-}
-
-export async function openSidePanel(): Promise<void> {
-  if (!hasChromeApi()) {
-    window.location.assign("/sidepanel.html");
-    return;
-  }
-  const currentWindow = await chrome.windows.getCurrent();
-  if (currentWindow.id === undefined) throw new Error(t("Current Chrome window is unavailable"));
-  await chrome.sidePanel.open({ windowId: currentWindow.id });
-  window.close();
-}
-
 export async function getSettings(): Promise<ExtensionSettings> {
   if (!hasChromeApi()) return defaultSettings;
-  return chrome.storage.local.get(defaultSettings) as Promise<ExtensionSettings>;
+  const raw = await chrome.storage.local.get({ ...defaultSettings }) as Partial<ExtensionSettings>;
+  return {
+    lastColor: normalizeHexColor(raw.lastColor) || defaultSettings.lastColor,
+    colorHistory: normalizeColorHistory(raw.colorHistory),
+    colorFormat: ["hex", "rgb", "hsl"].includes(raw.colorFormat || "") ? raw.colorFormat as ColorFormat : "hex",
+  };
 }
 
 export async function saveSettings(settings: Partial<ExtensionSettings>): Promise<void> {
@@ -156,7 +116,6 @@ export async function pickColor(): Promise<string> {
   if (!window.EyeDropper) throw new Error(t("Color Picker is not available in this version of Chrome"));
   const result = await new window.EyeDropper().open();
   const color = result.sRGBHex.toUpperCase();
-  await saveSettings({ lastColor: color });
   return color;
 }
 

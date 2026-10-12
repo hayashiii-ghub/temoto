@@ -5,7 +5,6 @@ import {
   didFullPageCaptureAdvance,
   nextFullPageCaptureY,
   normalizeCaptureMetrics,
-  normalizeScreenshotOptions,
 } from "../src/extension/capture-utils.ts";
 
 test("full-page capture advances by one viewport and aligns the final frame to the bottom", () => {
@@ -40,15 +39,4 @@ test("capture metrics account for high-density displays", () => {
     () => normalizeCaptureMetrics(MAX_FULL_PAGE_HEIGHT / 2 + 1, 800, 2),
     /height limit/,
   );
-});
-
-test("screenshot options accept supported delays and normalize unsafe input", () => {
-  assert.deepEqual(normalizeScreenshotOptions({ delayMs: 3000, forceReveal: true }), {
-    delayMs: 3000,
-    forceReveal: true,
-  });
-  assert.deepEqual(normalizeScreenshotOptions({ delayMs: 999999, forceReveal: "yes" }), {
-    delayMs: 0,
-    forceReveal: false,
-  });
 });

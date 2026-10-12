@@ -9,17 +9,15 @@ const proxySourceUrl = `${repositoryUrl}/tree/main/browser/temoto-proxy`;
 const chromeStoreUrl = "https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid";
 const proxyStoreUrl = "https://chromewebstore.google.com/detail/temoto-proxy/hohabmdadcdkifcmbclkgnomhhlllnbb";
 const features = [
-  ["Color Picker", "Pick a color and copy its hex value."],
-  ["Screenshot", "Capture a region, the viewport, or the full page."],
-  ["Video Speed", "Change video speed from the popup or page shortcuts."],
-  ["Switch Origin", "Switch origins while keeping the path, query, and hash."],
-  ["Site Reset", "Clear site data for the current origin with your permission."],
-  ["Inspect", "Read element size, type, and color. Copy a CSS selector."],
+  ["Color Picker", "Pick a color. Copy HEX, RGB, or HSL and revisit your latest eight colors."],
+  ["Screenshot", "Capture the visible area or the full page. Preview at Fit or 100%, then copy or save a PNG."],
+  ["CSS", "Inspect size, spacing, fonts, and colors. Copy grouped CSS or a unique selector."],
+  ["Video Speed", "Control playback from 0.25× to 5×. Follow each video’s actual rate with popup controls or G/D/S."],
 ] as const;
 const faqs = [
-  ["What is temoto?", "temoto is a pair of focused Chrome extensions: six tools for testing the current page, and a separate companion for development proxy settings."],
+  ["What is temoto?", "temoto is a pair of focused Chrome extensions: four tools for the current page, and a separate manager for development proxy settings."],
   ["Why are there two extensions?", "Chrome's proxy permission changes browser-wide network behavior. Keeping Proxy separate lets you install that permission only when you need it."],
-  ["What is included in temoto?", "Color Picker, Screenshot, Video Speed, Switch Origin, Site Reset, and Inspect."],
+  ["What is included in temoto?", "Color Picker, Screenshot, CSS, and Video Speed."],
   ["Which proxy types are supported?", "HTTP, HTTPS, SOCKS4, SOCKS5, domain routing, generated or existing PAC scripts, and authenticated profiles."],
   ["Does temoto upload page data?", "No. temoto has no accounts, analytics, or telemetry, and it does not send page content or settings to us."],
   ["Are proxy passwords saved?", "Passwords are kept only for the current browser session and are never included in exported profiles."],
@@ -50,7 +48,7 @@ export default function Home() {
       <section className="hero" id="top" aria-labelledby="temoto-title">
         <div className="hero-copy">
           <h1 id="temoto-title">Browser tools.<br />Close at hand.</h1>
-          <p className="heroSubtitle">Six page tools. A separate proxy companion. Built for Chrome.</p>
+          <p className="heroSubtitle">Four page tools. A separate proxy companion. Built for Chrome.</p>
           <div className="heroActions"><StoreLink href={chromeStoreUrl}>Get temoto for Chrome</StoreLink><a className="textLink" href="#proxy">Explore Proxy <Arrow /></a></div>
           <p className="heroMeta">Free · Open source · No account · Chrome</p>
           <p className="mobile-install-note">Install on desktop Chrome.</p>
@@ -58,15 +56,15 @@ export default function Home() {
         <HeroMotion />
       </section>
       <section className="productIndex" id="products" aria-label="Choose your temoto">
-        <a href="#chrome"><span className="index-number">01 /</span><span><strong>temoto</strong><span>Six page tools.</span></span></a>
+        <a href="#chrome"><span className="index-number">01 /</span><span><strong>temoto</strong><span>Four page tools.</span></span></a>
         <a href="#proxy"><span className="index-number">02 /</span><span><strong>temoto Proxy</strong><span>Browser-wide proxy profiles.</span></span></a>
       </section>
       <section className="productChapter chromeChapter" id="chrome" aria-labelledby="chrome-title"><PageToolDemo /></section>
       <section className="section tools-section" aria-labelledby="tools-title">
-        <h2 id="tools-title">Six tools, one launcher.</h2>
+        <h2 id="tools-title">Four tools, one launcher.</h2>
         <div className="tools-layout">
           <div><dl className="feature-list">{features.map(([name, copy], i) => <div key={name}><span aria-hidden="true">0{i + 1}</span><dt>{name}</dt><dd>{copy}</dd></div>)}</dl><StoreLink href={chromeStoreUrl}>Add temoto for Chrome</StoreLink></div>
-          <figure className="productShot launcher-shot"><Image src="/showcase/chrome-launcher.png?v=a5ba433b840e" alt="temoto launcher with all six page tools" width={416} height={500} loading="lazy" unoptimized /><figcaption>The Chrome launcher.</figcaption></figure>
+          <figure className="productShot launcher-shot"><Image src="/showcase/chrome-launcher.png?v=f3707870e637" alt="temoto launcher with four page tools in a two by two grid" width={416} height={500} loading="lazy" unoptimized /><figcaption>The Chrome launcher.</figcaption></figure>
         </div>
       </section>
       <section className="productChapter proxyChapter" id="proxy" aria-labelledby="proxy-title">
@@ -76,18 +74,18 @@ export default function Home() {
           <figure className="productShot"><Image src="/showcase/proxy-popup.png?v=e330f39fc977" alt="temoto Proxy popup with sample profiles and safe off control" width={416} height={500} loading="lazy" unoptimized /><figcaption>The active profile, at a glance.</figcaption></figure>
           <ProxyRouteDemo />
         </div>
-        <p className="muted">Switch Origin changes a page&apos;s URL origin. Proxy controls browser-wide connection settings. These are separate tools.</p>
+        <p className="muted">Proxy profiles control browser-wide connections. The four page tools work independently.</p>
       </section>
       <section className="section installSection" id="install" aria-labelledby="install-title">
         <h2 id="install-title">Install only what you need.</h2><p className="section-copy">The page tools, the proxy companion, or both. Each works independently.</p>
         <div className="installList">
-          <article><div className="installName"><span className="chromeMark" aria-hidden="true" /><div><h3>temoto for Chrome</h3><p>v1 · Chrome 116+</p></div></div><h4>Current-page tools</h4><p>Six tools for page checks. Active-tab access, script execution, local storage, side panel, and clipboard writing. Site Reset requests data-clearing permission separately.</p><StoreLink href={chromeStoreUrl}>Add temoto for Chrome</StoreLink><a className="textLink" href={chromeSourceUrl}>Source &amp; permissions <Arrow /></a></article>
+          <article><div className="installName"><span className="chromeMark" aria-hidden="true" /><div><h3>temoto for Chrome</h3><p>v1 · Chrome 116+</p></div></div><h4>Current-page tools</h4><p>Pick colors, capture the page, inspect CSS, and control video speed. Color history and preferences stay in your browser.</p><StoreLink href={chromeStoreUrl}>Add temoto for Chrome</StoreLink><a className="textLink" href={chromeSourceUrl}>Source &amp; permissions <Arrow /></a></article>
           <article><div className="installName"><span className="proxyMark" aria-hidden="true" /><div><h3>temoto Proxy</h3><p>v1.1 · Chrome 116+</p></div></div><h4>Browser-wide proxy settings</h4><p>Named proxy profiles with active-state and connection checks. Proxy, storage, and authentication permissions; host access supports connection checks and proxy authentication.</p><StoreLink href={proxyStoreUrl}>Add temoto Proxy</StoreLink><a className="textLink" href={proxySourceUrl}>Source &amp; permissions <Arrow /></a></article>
         </div><p className="mobile-install-note">Install on desktop Chrome.</p>
       </section>
       <section className="section privacy" aria-labelledby="privacy-title">
         <h2 id="privacy-title">Permissions, plainly.</h2>
-        <dl className="privacyFacts"><div><dt>Page tools</dt><dd>Choose a tool to act on the current page. Site Reset asks for data-clearing permission.</dd></div><div><dt>Video Speed</dt><dd>Keyboard shortcut handlers remain available on supported pages.</dd></div><div><dt>Proxy</dt><dd>Active profiles affect browser-wide routing. Turning off clears temoto&apos;s override, not other extensions&apos; settings.</dd></div><div><dt>Credentials</dt><dd>Kept for the current browser session. Never included in exported profiles.</dd></div></dl>
+        <dl className="privacyFacts"><div><dt>Page tools</dt><dd>Color, screenshot, and CSS tools act on the current page when you choose them.</dd></div><div><dt>Video Speed</dt><dd>Local shortcuts remain available on supported pages and follow each video’s actual rate.</dd></div><div><dt>Proxy</dt><dd>Active profiles affect browser-wide routing. Turning off clears temoto&apos;s override, not other extensions&apos; settings.</dd></div><div><dt>Credentials</dt><dd>Kept for the current browser session. Never included in exported profiles.</dd></div></dl>
         <p className="section-copy">No temoto account, analytics, or telemetry. Page content, settings, and proxy credentials are not sent to us.</p>
         <div className="privacy-links"><a href={`${repositoryUrl}/blob/main/browser/temoto-chrome/PRIVACY.md`}>Chrome privacy <Arrow /></a><a href={`${repositoryUrl}/blob/main/browser/temoto-proxy/PRIVACY.md`}>Proxy privacy <Arrow /></a></div>
       </section>

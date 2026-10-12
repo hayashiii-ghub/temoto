@@ -6,15 +6,6 @@ export const CAPTURE_PRELOAD_SETTLE_MS = 600;
 export const CAPTURE_RESOURCE_WAIT_MS = 5000;
 export const MAX_FULL_PAGE_HEIGHT = 32000;
 export const CAPTURE_SCROLL_TOLERANCE = 1;
-export const SCREENSHOT_DELAY_OPTIONS = [0, 1000, 3000, 5000];
-
-export function normalizeScreenshotOptions(options: { delayMs?: unknown; forceReveal?: unknown } = {}) {
-  const delayMs = Number(options.delayMs);
-  return {
-    delayMs: SCREENSHOT_DELAY_OPTIONS.includes(delayMs) ? delayMs : 0,
-    forceReveal: options.forceReveal === true,
-  };
-}
 
 export function normalizeCaptureMetrics(documentHeight: unknown, viewportHeight: unknown, outputScale: unknown = 1) {
   const pageHeight = Math.max(1, Math.ceil(Number(documentHeight) || 0));

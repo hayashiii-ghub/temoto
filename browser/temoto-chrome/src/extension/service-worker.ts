@@ -1,5 +1,5 @@
 import { savePendingCapture } from "./capture-store.js";
-import { normalizeResetOrigin } from "./reset-origin.js";
+import { withCaptureLock } from "./capture-lock.js";
 import {
   CAPTURE_INTERVAL_MS,
   CAPTURE_PRELOAD_SCROLL_INTERVAL_MS,
@@ -11,20 +11,7 @@ import {
   didFullPageCaptureAdvance,
   nextFullPageCaptureY,
   normalizeCaptureMetrics,
-  normalizeScreenshotOptions,
 } from "./capture-utils.js";
-
-interface ScreenshotOptions {
-  delayMs: number;
-  forceReveal: boolean;
-}
-
-interface CaptureRect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
 
 interface CaptureViewport {
   width: number;
@@ -34,7 +21,6 @@ interface CaptureViewport {
 interface CaptureFrame {
   dataUrl: string;
   scrollY: number;
-  duplicateOfPrevious: boolean;
 }
 
 interface SavedStyleProperty {
@@ -54,11 +40,6 @@ interface FullPageCaptureState {
 interface ExtensionMessage {
   type: string;
   speed?: unknown;
-  options?: Partial<ScreenshotOptions>;
-  rect?: CaptureRect;
-  viewport?: CaptureViewport;
-  origin?: string;
-  url?: string;
 }
 
 interface PageDetection {
@@ -71,16 +52,6 @@ interface PageDetection {
 }
 
 const wait = (milliseconds: number) => new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
-const FORCE_REVEAL_STYLE_ID = "__temoto-force-reveal-style";
-const FORCE_REVEAL_CSS = `
-  [data-aos], [data-sr], .reveal, .scroll-reveal,
-  .wow, .animated, [class*="fadeIn"], [class*="slideIn"],
-  [class*="fade-in"], [class*="slide-in"] {
-    opacity: 1 !important;
-    transform: none !important;
-    visibility: visible !important;
-  }
-`;
 
 async function activeTab(): Promise<chrome.tabs.Tab & { id: number; windowId: number }> {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -123,47 +94,54 @@ async function applyVideoSpeed(rawSpeed: unknown, tabId?: number): Promise<{ spe
   return { speed, changed };
 }
 
-async function setForceReveal(tabId: number, enabled: boolean): Promise<void> {
-  await executeInTab(tabId, (styleId: string, css: string, shouldEnable: boolean) => {
-    document.getElementById(styleId)?.remove();
-    if (!shouldEnable) return;
-    const style = document.createElement("style");
-    style.id = styleId;
-    style.textContent = css;
-    document.documentElement.appendChild(style);
-  }, [FORCE_REVEAL_STYLE_ID, FORCE_REVEAL_CSS, enabled] as [string, string, boolean]);
+async function setTemotoOverlayVisibility(tabId: number, hidden: boolean): Promise<void> {
+  await chrome.scripting.executeScript({ target: { tabId, allFrames: true }, func: (shouldHide: boolean) => {
+    const captureWindow = window as typeof window & {
+      __temotoCaptureOverlayState?: Array<{ element: HTMLElement; value: string; priority: string }>;
+    };
+    const saved = captureWindow.__temotoCaptureOverlayState || [];
+    if (!shouldHide) {
+      for (const item of saved) {
+        if (item.value) item.element.style.setProperty("visibility", item.value, item.priority);
+        else item.element.style.removeProperty("visibility");
+      }
+      delete captureWindow.__temotoCaptureOverlayState;
+      return;
+    }
+    captureWindow.__temotoCaptureOverlayState = saved;
+    for (const element of document.querySelectorAll<HTMLElement>("[data-temoto-inspect], [data-temoto-video-speed]")) {
+      if (!saved.some((item) => item.element === element)) {
+        saved.push({ element, value: element.style.getPropertyValue("visibility"), priority: element.style.getPropertyPriority("visibility") });
+      }
+      // Append after the inspector host's all: initial !important reset.
+      element.style.removeProperty("visibility");
+      element.style.setProperty("visibility", "hidden", "important");
+    }
+  }, args: [hidden] });
 }
 
-async function capture(
-  rect: CaptureRect | null = null,
-  viewport: CaptureViewport | null = null,
-  rawOptions: Partial<ScreenshotOptions> = {},
-  sourceTab: (chrome.tabs.Tab & { id: number; windowId: number }) | null = null,
-): Promise<void> {
-  const options = normalizeScreenshotOptions(rawOptions);
-  const tab = sourceTab || await activeTab();
+async function capture(): Promise<void> {
+  const tab = await activeTab();
   let dataUrl;
+  let currentViewport: CaptureViewport | undefined;
   try {
-    if (options.forceReveal) await setForceReveal(tab.id, true);
-    if (options.delayMs) await wait(options.delayMs);
-    if (options.forceReveal) await wait(CAPTURE_SCROLL_SETTLE_MS);
+    currentViewport = await executeInTab(tab.id, () => ({ width: window.innerWidth, height: window.innerHeight }));
+    if (!currentViewport) throw new Error("The selected page viewport is unavailable");
     const [visibleTab] = await chrome.tabs.query({ active: true, windowId: tab.windowId });
     if (visibleTab?.id !== tab.id) throw new Error("Keep the selected page active until the capture finishes");
+    await setTemotoOverlayVisibility(tab.id, true);
+    await wait(CAPTURE_SCROLL_SETTLE_MS);
     dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
   } finally {
-    if (options.forceReveal) await setForceReveal(tab.id, false).catch(() => {});
+    await setTemotoOverlayVisibility(tab.id, false).catch(() => {});
   }
-  const currentViewport = viewport || await executeInTab(tab.id, () => ({ width: window.innerWidth, height: window.innerHeight }));
-  if (!currentViewport) throw new Error("The selected page viewport is unavailable");
-  await savePendingCapture({ type: "single", dataUrl, rect, viewport: currentViewport, createdAt: Date.now() });
-  await chrome.tabs.create({ url: chrome.runtime.getURL("capture.html") });
+  const captureId = await savePendingCapture({ type: "single", dataUrl, viewport: currentViewport });
+  await chrome.tabs.create({ url: chrome.runtime.getURL(`capture.html?id=${encodeURIComponent(captureId)}`) });
 }
 
-async function captureFullPage(rawOptions: Partial<ScreenshotOptions> = {}): Promise<{ frameCount: number; height: number }> {
-  const options = normalizeScreenshotOptions(rawOptions);
+async function captureFullPage(): Promise<{ frameCount: number; height: number }> {
   const tab = await activeTab();
-  if (options.delayMs) await wait(options.delayMs);
-  const setup = await executeInTab(tab.id, (forceRevealCss: string) => {
+  const setup = await executeInTab(tab.id, () => {
     const stateKey = "__temotoFullPageCaptureState";
     const captureWindow = window as typeof window & { __temotoFullPageCaptureState?: FullPageCaptureState };
     const previous = captureWindow.__temotoFullPageCaptureState;
@@ -194,7 +172,6 @@ async function captureFullPage(rawOptions: Partial<ScreenshotOptions> = {}): Pro
         transition-duration: 0.001s !important;
         transition-delay: 0s !important;
       }
-      ${forceRevealCss}
     `;
     root.appendChild(styleElement);
 
@@ -217,7 +194,7 @@ async function captureFullPage(rawOptions: Partial<ScreenshotOptions> = {}): Pro
         height: Math.max(root.scrollHeight, body?.scrollHeight || 0, window.innerHeight),
       },
     };
-  }, [options.forceReveal ? FORCE_REVEAL_CSS : ""] as [string]);
+  });
 
   if (!setup) throw new Error("The selected page could not be prepared for capture");
 
@@ -310,6 +287,7 @@ async function captureFullPage(rawOptions: Partial<ScreenshotOptions> = {}): Pro
         if (!hideFloatingElements && state.floatingElements.length === 0) {
           const maxFloatingHeight = window.innerHeight * 0.45;
           for (const element of document.body?.querySelectorAll<HTMLElement>("*") || []) {
+            if (element.matches("[data-temoto-inspect], [data-temoto-video-speed]")) continue;
             const position = getComputedStyle(element).position;
             if (position !== "fixed" && position !== "sticky") continue;
             const rect = element.getBoundingClientRect();
@@ -323,14 +301,19 @@ async function captureFullPage(rawOptions: Partial<ScreenshotOptions> = {}): Pro
         return {
           scrollY: window.scrollY,
           documentHeight: Math.max(root.scrollHeight, body?.scrollHeight || 0, window.innerHeight),
+          viewport: { width: window.innerWidth, height: window.innerHeight },
         };
       }, [captureY, frames.length > 0] as [number, boolean]);
       if (!metrics) throw new Error("The page capture metrics are unavailable");
+      if (metrics.viewport.width !== setup.viewport.width || metrics.viewport.height !== setup.viewport.height) {
+        throw new Error("The page size changed while it was being captured");
+      }
 
       const previousFrame = frames.at(-1);
-      if (previousFrame && !didFullPageCaptureAdvance(previousFrame.scrollY, metrics.scrollY)) {
-        documentHeight = Math.min(documentHeight, Math.ceil(previousFrame.scrollY + setup.viewport.height));
-        break;
+      if ((!previousFrame && Math.abs(metrics.scrollY) > 1)
+        || (previousFrame && (!didFullPageCaptureAdvance(previousFrame.scrollY, metrics.scrollY)
+          || metrics.scrollY > previousFrame.scrollY + setup.viewport.height + 1))) {
+        throw new Error("Full-page capture could not capture every section. Please try again.");
       }
 
       documentHeight = Math.max(documentHeight, metrics.documentHeight);
@@ -339,18 +322,10 @@ async function captureFullPage(rawOptions: Partial<ScreenshotOptions> = {}): Pro
       const currentTab = await activeTab();
       if (currentTab.id !== tab.id) throw new Error("Keep the page active until the full-page capture finishes");
 
+      await setTemotoOverlayVisibility(tab.id, true);
       await wait(CAPTURE_SCROLL_SETTLE_MS);
-      let dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
-      let duplicateOfPrevious = previousFrame?.dataUrl === dataUrl;
-      if (duplicateOfPrevious) {
-        await wait(CAPTURE_INTERVAL_MS);
-        dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
-        duplicateOfPrevious = previousFrame?.dataUrl === dataUrl;
-      }
-      if (duplicateOfPrevious) {
-        throw new Error("Full-page capture could not capture every section. Please try again.");
-      }
-      frames.push({ dataUrl, scrollY: metrics.scrollY, duplicateOfPrevious });
+      const dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
+      frames.push({ dataUrl, scrollY: metrics.scrollY });
 
       await wait(CAPTURE_INTERVAL_MS);
       const latestDocumentHeight = await executeInTab(tab.id, () => Math.max(
@@ -366,14 +341,6 @@ async function captureFullPage(rawOptions: Partial<ScreenshotOptions> = {}): Pro
       if (nextY === null) break;
       captureY = nextY;
     }
-
-    await savePendingCapture({
-      type: "fullPage",
-      frames,
-      viewport: setup.viewport,
-      document: { width: setup.viewport.width, height: documentHeight },
-      createdAt: Date.now(),
-    });
   } finally {
     await executeInTab(tab.id, () => {
       const captureWindow = window as typeof window & { __temotoFullPageCaptureState?: FullPageCaptureState };
@@ -394,16 +361,24 @@ async function captureFullPage(rawOptions: Partial<ScreenshotOptions> = {}): Pro
       state.styleElement?.remove();
       delete captureWindow.__temotoFullPageCaptureState;
     }).catch(() => {});
+    await setTemotoOverlayVisibility(tab.id, false).catch(() => {});
   }
 
-  await chrome.tabs.create({ url: chrome.runtime.getURL("capture.html") });
+  const captureId = await savePendingCapture({
+    type: "fullPage",
+    frames,
+    viewport: setup.viewport,
+    document: { width: setup.viewport.width, height: documentHeight },
+  });
+  await chrome.tabs.create({ url: chrome.runtime.getURL(`capture.html?id=${encodeURIComponent(captureId)}`) });
   return { frameCount: frames.length, height: documentHeight };
 }
 
 async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.MessageSender): Promise<Record<string, unknown>> {
   switch (message.type) {
-    case "DETECT_PAGE": {
-      await installVideoSpeedShortcuts();
+    case "DETECT_PAGE":
+    case "GET_PAGE_STATE": {
+      if (message.type === "DETECT_PAGE") await installVideoSpeedShortcuts();
       const results = await executeInActiveTab(() => {
         const videos = Array.from(document.querySelectorAll("video"));
         return { url: location.href, hostname: location.hostname, origin: location.origin, title: document.title, videoCount: videos.length, playbackRate: videos[0]?.playbackRate || 1 };
@@ -421,6 +396,8 @@ async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.M
       };
       return { ok: true, page };
     }
+    case "VIDEO_STATE_CHANGED":
+      return { ok: true };
     case "SET_VIDEO_SPEED": {
       const { changed } = await applyVideoSpeed(message.speed);
       return { ok: changed > 0, changed, error: changed ? undefined : "No video found on this page" };
@@ -448,57 +425,23 @@ async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.M
     }
     case "VIDEO_SPEED_SHORTCUT": {
       const speed = Math.round(Math.min(5, Math.max(0.25, Number(message.speed) || 1)) * 100) / 100;
-      await chrome.storage.local.set({ lastSpeed: speed });
       if (sender.tab?.id) {
         await chrome.tabs.sendMessage(sender.tab.id, { type: "APPLY_VIDEO_SPEED", speed }).catch(() => {});
       }
       return { ok: true, speed };
     }
     case "CAPTURE_VISIBLE":
-      await capture(null, null, message.options);
+      await withCaptureLock(capture);
       return { ok: true };
     case "CAPTURE_FULL_PAGE": {
-      const result = await captureFullPage(message.options);
+      const result = await withCaptureLock(captureFullPage);
       return { ok: true, ...result };
-    }
-    case "START_REGION_CAPTURE": {
-      const tab = await activeTab();
-      const optionsKey = `pendingRegionCaptureOptions:${tab.id}`;
-      await chrome.storage.session.set({ [optionsKey]: normalizeScreenshotOptions(message.options) });
-      await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["content/selection.js"] });
-      return { ok: true };
-    }
-    case "CAPTURE_REGION_SELECTED": {
-      if (sender.tab?.id === undefined || sender.tab.windowId === undefined || !message.rect || !message.viewport) {
-        return { ok: false, error: "The selected tab is unavailable" };
-      }
-      const optionsKey = `pendingRegionCaptureOptions:${sender.tab.id}`;
-      const storedOptions = (await chrome.storage.session.get(optionsKey))[optionsKey] as Partial<ScreenshotOptions> | undefined;
-      await chrome.storage.session.remove(optionsKey);
-      if (!sender.tab.active) return { ok: false, error: "The selected tab is not active" };
-      await new Promise((resolve) => setTimeout(resolve, 80));
-      await capture(
-        message.rect,
-        message.viewport,
-        { ...storedOptions, forceReveal: false },
-        sender.tab as chrome.tabs.Tab & { id: number; windowId: number },
-      );
-      return { ok: true };
     }
     case "START_MEASURE": {
       const tab = await activeTab();
       await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["content/measure.js"] });
       return { ok: true };
     }
-    case "RESET_ORIGIN":
-      if (!message.origin) return { ok: false, error: "Site Reset is unavailable on this page" };
-      await chrome.browsingData.remove({ origins: [normalizeResetOrigin(message.origin)] }, { cache: true, cacheStorage: true, cookies: true, indexedDB: true, localStorage: true, serviceWorkers: true });
-      await chrome.tabs.reload((await activeTab()).id, { bypassCache: true });
-      return { ok: true };
-    case "NAVIGATE":
-      if (!message.url) return { ok: false, error: "The destination is unavailable" };
-      await chrome.tabs.update((await activeTab()).id, { url: message.url });
-      return { ok: true };
     default:
       return { ok: false, error: "Unknown message" };
   }
@@ -509,8 +452,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({ ok: false, error: error instanceof Error ? error.message : "Unexpected extension error" });
   });
   return true;
-});
-
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false }).catch(() => {});
 });

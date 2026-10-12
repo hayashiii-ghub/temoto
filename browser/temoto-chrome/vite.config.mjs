@@ -8,7 +8,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         popup: resolve(import.meta.dirname, "index.html"),
-        sidepanel: resolve(import.meta.dirname, "sidepanel.html"),
         capture: resolve(import.meta.dirname, "capture.html"),
       },
     },

@@ -1,6 +1,6 @@
 # temoto
 
-temoto is a pair of Chrome extensions for testing pages and managing development proxy settings. The products are separately installable and share only the minimum state needed for their companion integration.
+temoto contains two independently installable Chrome extensions: four focused page tools and a separate development proxy manager.
 
 - [Website](https://temoto.haygsiiii.chatgpt.site)
 - [temoto for Chrome](https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid)
@@ -10,16 +10,14 @@ temoto is a pair of Chrome extensions for testing pages and managing development
 
 ### temoto for Chrome
 
-A compact browser toolkit with six page-testing utilities:
+A compact browser toolkit with four page tools:
 
-- Color Picker
-- Screenshot
-- Video Speed
-- Switch Origin
-- Site Reset
-- Inspect
+- Color Picker: HEX, RGB, HSL, and the latest eight picked colors.
+- Screenshot: visible-area and full-page capture with preview, clipboard copy, and PNG download.
+- CSS: inspect an element and copy its size, spacing, typography, and colors.
+- Video Speed: popup controls and page shortcuts that follow each video's actual rate.
 
-Source, privacy details, development commands, and packaging instructions are in [`browser/temoto-chrome/`](./browser/temoto-chrome/).
+Source, privacy details, development commands, and packaging instructions are in [`browser/temoto-chrome/`](./browser/temoto-chrome/). The four-tool changes are local development work; the existing Store links do not confirm that this source has been released.
 
 ### temoto Proxy
 

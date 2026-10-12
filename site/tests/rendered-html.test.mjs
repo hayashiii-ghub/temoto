@@ -35,7 +35,7 @@ test("renders the English temoto landing page", async () => {
   assert.match(text, /Browser tools\./);
   assert.match(text, /Close at hand\./);
   assert.match(text, /Check the page you(?:&#x27;|')re on\./);
-  assert.match(text, /Six tools, one launcher\./);
+  assert.match(text, /Four tools, one launcher\./);
   assert.match(text, /Choose a route\./);
   assert.match(text, /Know what(?:&#x27;|')s active\./);
   assert.match(text, /Permissions, plainly\./);
@@ -112,9 +112,18 @@ test("keeps the product chapters responsive without horizontal overflow rules", 
   assert.doesNotMatch(css, /overflow-x:\s*(hidden|clip)/);
 });
 
-test("server HTML keeps six features, static demos, and privacy boundaries without JavaScript", async () => {
+test("server HTML exposes four tools and computed CSS with privacy boundaries without JavaScript", async () => {
   const html = await (await render()).text();
-  for (const feature of ["Color Picker", "Screenshot", "Video Speed", "Switch Origin", "Site Reset", "Inspect"]) assert.ok(html.includes(feature));
+  const featureList = /<dl class="feature-list">([\s\S]*?)<\/dl>/.exec(html)?.[1] || "";
+  for (const feature of ["Color Picker", "Screenshot", "CSS", "Video Speed"]) assert.ok(featureList.includes(feature));
+  assert.equal((featureList.match(/<dt>/g) ?? []).length, 4);
+  assert.match(html, /latest eight colors/);
+  assert.match(html, /Fit or 100%/);
+  assert.match(featureList, /Capture the visible area or the full page/);
+  assert.doesNotMatch(html, /selected region|Capture a region|Force reveal|Capture options/i);
+  assert.match(html, /Copy grouped CSS or a unique selector/);
+  assert.match(html, /0\.25× to 5×/);
+  assert.doesNotMatch(html, /Switch Origin|Site Reset|Six tools|Six page tools|side panel/);
   assert.match(html, /<noscript>[\s\S]*data-scene="capture"[\s\S]*data-scene="inspect"/);
   assert.match(html, /Illustrative demo/);
   assert.match(html, /temoto override cleared/);
@@ -122,7 +131,9 @@ test("server HTML keeps six features, static demos, and privacy boundaries witho
   assert.match(html, /browser\/temoto-chrome\/PRIVACY.md/);
   assert.match(html, /browser\/temoto-proxy\/PRIVACY.md/);
   assert.equal((html.match(/<details\b/g) ?? []).length, 8);
-  assert.doesNotMatch(html, /padding|margin measurement|Measure spacing/);
+  assert.match(html, /padding: 24px/);
+  assert.match(html, /font-size: 16px/);
+  assert.match(html, /Copy grouped CSS/);
   assert.doesNotMatch(html, /<button[^>]*aria-label="(?:Pause|Replay|Play demo)/);
 });
 

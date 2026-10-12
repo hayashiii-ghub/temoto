@@ -1,6 +1,6 @@
 # temoto Proxy
 
-`temoto Proxy` turns Chrome proxy settings into named development workspaces that are visible, reversible and safe to share. It is a separate companion to `temoto for Chrome` because Chrome's mandatory `proxy` permission changes browser-wide network behavior.
+`temoto Proxy` uses an English-only interface to turn Chrome proxy settings into named development workspaces that are visible, reversible and safe to share. It is a separate companion to `temoto for Chrome` because Chrome's mandatory `proxy` permission changes browser-wide network behavior.
 
 ## Product goal
 

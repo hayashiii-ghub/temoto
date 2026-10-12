@@ -9,9 +9,12 @@ export interface PlannedCaptureFrame {
 
 export function planFullPageFrames(
   frames: readonly CaptureFrame[],
-  duplicateFlags: readonly boolean[],
 ): { renderFrames: PlannedCaptureFrame[] } {
-  if (duplicateFlags.some((duplicate, index) => index > 0 && duplicate)) {
+  if (!frames.length || frames.some((frame, index) => (
+    !Number.isFinite(frame.scrollY)
+    || frame.scrollY < 0
+    || (index === 0 ? frame.scrollY > 1 : frame.scrollY <= frames[index - 1].scrollY)
+  ))) {
     throw new Error("Full-page capture could not capture every section. Please try again.");
   }
 

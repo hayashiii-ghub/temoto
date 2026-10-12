@@ -12,32 +12,28 @@
       <header class="product-header">
         <div class="brand" translate="no">temoto <span>Proxy</span></div>
         <button class="icon-button" id="open-manager" type="button" aria-label="Open profile manager" title="Open profile manager">
-          <img src="icons/sliders-horizontal-light.svg" alt="" aria-hidden="true" />
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M40,88H73a32,32,0,0,0,62,0h81a8,8,0,0,0,0-16H135a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16Zm64-24A16,16,0,1,1,88,80,16,16,0,0,1,104,64ZM216,168H199a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16h97a32,32,0,0,0,62,0h17a8,8,0,0,0,0-16Zm-48,24a16,16,0,1,1,16-16A16,16,0,0,1,168,192Z" /></svg>
         </button>
       </header>
 
       <section class="popup-status" aria-live="polite">
-        <div class="status-line"><i id="status-dot"></i><span id="status-label">Reading Chrome settings…</span></div>
+        <div class="status-line"><i id="status-dot"></i><span id="status-label">Reading Chrome settings…</span><span class="popup-scope" id="scope-status"></span></div>
         <h1 id="active-name">Proxy state</h1>
         <p id="active-detail">Checking the effective browser configuration.</p>
-        <div class="popup-primary-actions">
+        <div class="popup-primary-actions" id="popup-actions" hidden>
           <button class="button primary" id="toggle-active" type="button" disabled>Loading…</button>
           <button class="button secondary" id="test-active" type="button" hidden>Test</button>
         </div>
       </section>
 
       <div class="notice" id="status-notice" role="status" hidden></div>
+      <div class="action-result" id="action-result" role="alert" hidden></div>
 
       <section class="popup-profiles" aria-labelledby="profiles-title">
         <div class="section-heading"><h2 id="profiles-title">Profiles</h2><span id="profile-count"></span></div>
         <div class="profile-list" id="profile-list"></div>
       </section>
 
-      <footer class="popup-footer">
-        <span>Regular windows only unless explicitly enabled</span>
-        <button type="button" id="manage-footer">Manage</button>
-      </footer>
-      <div class="toast" id="toast" role="status" hidden></div>
     </main>
     <script type="module" src="popup.js"></script>
   </body>

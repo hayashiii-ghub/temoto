@@ -16,7 +16,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 const title = "temoto — Browser tools, close at hand.";
 const description =
-  "Six page-testing tools and a focused proxy profile manager for Chrome.";
+  "Four focused page tools and a separate proxy profile manager for Chrome.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://temoto.haygsiiii.chatgpt.site"),

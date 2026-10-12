@@ -1,4 +1,4 @@
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
@@ -24,11 +24,12 @@ const required = [
   "icons/icon-32.png",
   "icons/icon-48.png",
   "icons/icon-128.png",
-  "_locales/en/messages.json",
-  "_locales/ja/messages.json"
+  "_locales/en/messages.json"
 ];
 
 await Promise.all(required.map((file) => access(resolve(buildRoot, file))));
+const locales = await readdir(resolve(buildRoot, "_locales"));
+if (locales.length !== 1 || locales[0] !== "en") throw new Error("temoto Proxy must package only the English locale");
 const manifest = JSON.parse(await readFile(resolve(buildRoot, "manifest.json"), "utf8"));
 const packageJson = JSON.parse(await readFile(resolve(root, "package.json"), "utf8"));
 const requiredPermissions = ["proxy", "storage", "webRequest", "webRequestAuthProvider"];

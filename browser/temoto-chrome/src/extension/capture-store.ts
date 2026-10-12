@@ -1,6 +1,6 @@
 const DATABASE_NAME = "temoto-captures";
 const STORE_NAME = "captures";
-const PENDING_CAPTURE_ID = "pending";
+export const CAPTURE_RETENTION_MS = 60 * 60 * 1000;
 
 function requestResult<T>(request: IDBRequest<T>): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -28,35 +28,59 @@ async function openCaptureDatabase() {
   return requestResult(request);
 }
 
-export async function savePendingCapture(capture: Record<string, unknown>): Promise<void> {
+function purgeExpiredCaptures(store: IDBObjectStore, now: number): void {
+  const request = store.openCursor();
+  request.onsuccess = () => {
+    const cursor = request.result;
+    if (!cursor) return;
+    const createdAt = Number(cursor.value.createdAt);
+    if (!Number.isFinite(createdAt) || createdAt <= now - CAPTURE_RETENTION_MS) cursor.delete();
+    cursor.continue();
+  };
+}
+
+export async function savePendingCapture(capture: Record<string, unknown>): Promise<string> {
   const database = await openCaptureDatabase();
+  const id = crypto.randomUUID();
+  const createdAt = Date.now();
   try {
     const transaction = database.transaction(STORE_NAME, "readwrite");
-    transaction.objectStore(STORE_NAME).put({ ...capture, id: PENDING_CAPTURE_ID });
-    await transactionDone(transaction);
+    const done = transactionDone(transaction);
+    const store = transaction.objectStore(STORE_NAME);
+    purgeExpiredCaptures(store, createdAt);
+    store.put({ ...capture, id, createdAt });
+    await done;
+    return id;
   } finally {
     database.close();
   }
 }
 
-export async function readPendingCapture(): Promise<Record<string, unknown> | null> {
+export async function loadPendingCapture(id: string): Promise<Record<string, unknown> | null> {
+  if (!id) return null;
   const database = await openCaptureDatabase();
   try {
-    const transaction = database.transaction(STORE_NAME, "readonly");
-    const capture = await requestResult(transaction.objectStore(STORE_NAME).get(PENDING_CAPTURE_ID));
-    await transactionDone(transaction);
-    return capture || null;
+    const transaction = database.transaction(STORE_NAME, "readwrite");
+    const done = transactionDone(transaction);
+    const store = transaction.objectStore(STORE_NAME);
+    const now = Date.now();
+    purgeExpiredCaptures(store, now);
+    const capture = await requestResult(store.get(id));
+    await done;
+    return capture && Number(capture.createdAt) > now - CAPTURE_RETENTION_MS ? capture : null;
   } finally {
     database.close();
   }
 }
 
-export async function removePendingCapture(): Promise<void> {
+export async function clearPendingCapture(id: string): Promise<void> {
+  if (!id) return;
   const database = await openCaptureDatabase();
   try {
     const transaction = database.transaction(STORE_NAME, "readwrite");
-    transaction.objectStore(STORE_NAME).delete(PENDING_CAPTURE_ID);
-    await transactionDone(transaction);
+    const done = transactionDone(transaction);
+    transaction.objectStore(STORE_NAME).delete(id);
+    await done;
   } finally {
     database.close();
   }

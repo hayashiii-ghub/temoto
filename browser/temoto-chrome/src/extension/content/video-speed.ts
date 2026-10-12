@@ -6,13 +6,23 @@
   type TrackedVideo = {
     badge: HTMLDivElement;
     onRateChange: () => void;
-    onMediaChange: () => void;
+    onMediaChange: (event: Event) => void;
   };
 
   const mediaChangeEvents = ["loadstart", "emptied", "loadedmetadata", "play"] as const;
   const trackedVideos = new Map<HTMLVideoElement, TrackedVideo>();
   let positionFrame: number | null = null;
+  let notificationScheduled = false;
+  let mediaRevision = 0;
+  let notifiedRevision = 0;
+  let notifiedVideos: HTMLVideoElement[] = [];
+  let notifiedRates: number[] = [];
+  let notifiedSources: string[] = [];
   let stopped = false;
+  let fontRequested = false;
+  let badgeFont: FontFace | null = null;
+  let fontRequest: AbortController | null = null;
+  const badgeFontFamily = "temoto Geist Sans";
 
   const isActive = (): boolean => {
     if (stopped) return false;
@@ -32,6 +42,31 @@
       isActive();
     }
   };
+  const loadBadgeFont = async (): Promise<void> => {
+    if (fontRequested || !isActive()) return;
+    if (typeof FontFace !== "function" || typeof fetch !== "function" || typeof AbortController !== "function"
+      || !document.fonts?.add || !document.fonts?.delete) return;
+    fontRequested = true;
+    const controller = new AbortController();
+    fontRequest = controller;
+    try {
+      const url = chrome.runtime.getURL("fonts/geist-latin-wght-normal.woff2");
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) return;
+      const bytes = await response.arrayBuffer();
+      if (!isActive()) return;
+      // Binary data lets FontFace avoid making a page-scoped font URL request.
+      const face = new FontFace(badgeFontFamily, bytes, { weight: "100 900", style: "normal", display: "swap" });
+      await face.load();
+      if (!isActive()) return;
+      document.fonts.add(face);
+      badgeFont = face;
+    } catch (error) {
+      onNotificationError(error);
+    } finally {
+      if (fontRequest === controller) fontRequest = null;
+    }
+  };
 
   const videos = (): HTMLVideoElement[] => Array.from(document.querySelectorAll("video"));
   const clamp = (value: unknown): number => {
@@ -39,7 +74,39 @@
     const speed = Number.isFinite(numericValue) ? numericValue : 1;
     return Math.round(Math.min(5, Math.max(0.25, speed)) * 100) / 100;
   };
-  const formatSpeed = (speed: unknown): string => `${Number(clamp(speed).toFixed(2))}×`;
+  const actualSpeed = (value: unknown): number => {
+    const speed = Number(value);
+    return Number.isFinite(speed) && speed > 0 ? speed : 1;
+  };
+  const formatSpeed = (speed: unknown): string => `${Number(actualSpeed(speed).toPrecision(6))}×`;
+  const scheduleNotification = () => {
+    if (!isActive() || notificationScheduled) return;
+    notificationScheduled = true;
+    queueMicrotask(() => {
+      notificationScheduled = false;
+      if (!isActive()) return;
+      const pageVideos = videos();
+      const rates = pageVideos.map((video) => actualSpeed(video.playbackRate));
+      const sources = pageVideos.map((video) => video.currentSrc || video.src || "");
+      if (mediaRevision === notifiedRevision
+        && pageVideos.length === notifiedVideos.length
+        && pageVideos.every((video, index) => video === notifiedVideos[index]
+          && rates[index] === notifiedRates[index] && sources[index] === notifiedSources[index])) return;
+      notifiedRevision = mediaRevision;
+      notifiedVideos = pageVideos;
+      notifiedRates = rates;
+      notifiedSources = sources;
+      try {
+        chrome.runtime.sendMessage({
+          type: "VIDEO_STATE_CHANGED",
+          videoCount: pageVideos.length,
+          playbackRate: rates[0] || 1,
+        }).catch(onNotificationError);
+      } catch (error) {
+        onNotificationError(error);
+      }
+    });
+  };
   const positionBadge = (video: HTMLVideoElement, badge: HTMLDivElement) => {
     const rect = video.getBoundingClientRect();
     const visible = rect.width >= 72
@@ -70,10 +137,12 @@
     const tracked = trackedVideos.get(video);
     if (tracked) tracked.badge.textContent = formatSpeed(video.playbackRate);
   };
-  const syncVideo = (video: HTMLVideoElement) => {
+  const syncVideo = (video: HTMLVideoElement, mediaChanged = false) => {
     if (!isActive()) return;
+    if (mediaChanged) mediaRevision++;
     syncBadge(video);
     schedulePosition();
+    scheduleNotification();
   };
   const addVideo = (video: HTMLVideoElement) => {
     const badge = document.createElement("div");
@@ -90,8 +159,9 @@
       borderRadius: "4px",
       background: "rgba(8,8,8,.38)",
       color: "rgba(255,255,255,.72)",
-      font: "500 10px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, monospace",
-      letterSpacing: "-.02em",
+      font: `600 12px/1.2 "${badgeFontFamily}", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`,
+      fontVariantNumeric: "tabular-nums",
+      letterSpacing: "-.01em",
       textAlign: "center",
       textShadow: "0 1px 2px rgba(0,0,0,.45)",
       backdropFilter: "blur(5px)",
@@ -100,12 +170,13 @@
     badge.textContent = formatSpeed(video.playbackRate);
 
     const onRateChange = () => syncVideo(video);
-    const onMediaChange = () => syncVideo(video);
+    const onMediaChange = (event: Event) => syncVideo(video, event.type !== "play");
     video.addEventListener("ratechange", onRateChange);
     mediaChangeEvents.forEach((eventName) => video.addEventListener(eventName, onMediaChange));
     (document.body || document.documentElement).append(badge);
     trackedVideos.set(video, { badge, onRateChange, onMediaChange });
     positionBadge(video, badge);
+    void loadBadgeFont();
   };
   const removeVideo = (video: HTMLVideoElement) => {
     const tracked = trackedVideos.get(video);
@@ -125,6 +196,7 @@
       if (!trackedVideos.has(video)) addVideo(video);
     });
     positionBadges();
+    scheduleNotification();
   };
   const applySpeed = (rawSpeed: unknown): number => {
     const nextSpeed = clamp(Number(rawSpeed) || 1);
@@ -133,6 +205,7 @@
       video.playbackRate = nextSpeed;
       syncBadge(video);
     });
+    scheduleNotification();
     return pageVideos.length;
   };
   const isEditable = (event: Event): boolean => event.composedPath().some((node) => (
@@ -154,7 +227,7 @@
     if (!isActive()) return;
     if (!event || typeof event.key !== "string") return;
     const key = event.key.toLowerCase();
-    if (!['g', 'd', 's'].includes(key) || event.metaKey || event.ctrlKey || event.altKey || isEditable(event)) return;
+    if (!['g', 'd', 's'].includes(key) || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey || isEditable(event)) return;
 
     const pageVideos = videos();
     if (!pageVideos.length) return;
@@ -184,6 +257,16 @@
   function cleanup(): void {
     if (stopped) return;
     stopped = true;
+    fontRequest?.abort();
+    fontRequest = null;
+    if (badgeFont) {
+      try {
+        document.fonts.delete(badgeFont);
+      } catch {
+        // Font teardown must not retain stale video listeners or badges.
+      }
+      badgeFont = null;
+    }
     observer.disconnect();
     if (positionFrame !== null) window.cancelAnimationFrame(positionFrame);
     positionFrame = null;
