@@ -1,0 +1,80 @@
+.launcher-preview {
+  width: 100%;
+  container-type: inline-size;
+  container-name: launcher-preview;
+}
+
+.launcher-preview__surface {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  aspect-ratio: 486 / 462;
+  overflow: hidden;
+  border: 1px solid var(--temoto-popup-line, #3c3c3b);
+  border-radius: 1.6461cqi;
+  background: var(--temoto-popup-bg, #080808);
+  color: var(--temoto-popup-text, #f4f4f2);
+  font-family: "Geist", Arial, sans-serif;
+  text-align: left;
+}
+
+.launcher-preview__brand {
+  display: flex;
+  align-items: center;
+  flex: 0 0 15.2263cqi;
+  margin: 0;
+  padding-inline: 6.5844cqi;
+  border-bottom: 1px solid var(--temoto-popup-line, #3c3c3b);
+  font-size: clamp(1rem, 5.7613cqi, 2.5rem);
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+.launcher-preview__tools {
+  display: grid;
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.launcher-preview__row {
+  display: flex;
+  align-items: center;
+  gap: 5.7613cqi;
+  min-width: 0;
+  padding-inline: 6.5844cqi;
+}
+
+.launcher-preview__row + .launcher-preview__row {
+  border-top: 1px solid var(--temoto-popup-line, #3c3c3b);
+}
+
+.launcher-preview__icon {
+  display: block;
+  flex: none;
+  width: 4.5267cqi;
+  height: 4.5267cqi;
+}
+
+.launcher-preview__label {
+  font-size: clamp(.6875rem, 4.1152cqi, 1.5rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -.015em;
+  white-space: nowrap;
+}
+
+.launcher-preview__detail {
+  margin-inline-start: auto;
+  color: var(--temoto-popup-accent-text, #bda5ff);
+  font-size: clamp(.625rem, 3.7037cqi, 1.375rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  letter-spacing: -.03em;
+  white-space: nowrap;
+}

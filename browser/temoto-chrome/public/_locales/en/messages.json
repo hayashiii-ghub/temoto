@@ -4,7 +4,7 @@
     "description": "Extension name"
   },
   "extensionDescription": {
-    "message": "Color picker, screenshots, CSS inspection and video speed in one compact toolkit.",
+    "message": "Color picker, screenshots, CSS inspection, video speed and simple proxy switching in one compact toolkit.",
     "description": "Extension description"
   },
   "actionTitle": {

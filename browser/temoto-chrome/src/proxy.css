@@ -1,0 +1,37 @@
+.proxy-panel { font-family: var(--temoto-ui-font); }
+.proxy-panel button { font-family: inherit; font-size: var(--temoto-control-font-size); font-weight: var(--temoto-control-font-weight); line-height: 1.4; cursor: pointer; }
+.proxy-panel button:disabled { cursor: default; opacity: var(--temoto-popup-disabled-opacity); }
+.proxy-panel button:focus-visible { outline: 2px solid var(--temoto-popup-focus); outline-offset: -2px; }
+.proxy-error { flex: 0 0 auto; margin: 0; padding: 12px 24px; color: var(--temoto-popup-text); background: var(--temoto-popup-accent-soft); border-bottom: 1px solid var(--line); font-size: .75rem; line-height: 1.6; overflow-wrap: anywhere; }
+.proxy-new, .proxy-delete { flex: 0 0 auto; width: 100%; min-height: var(--temoto-control-height); padding: 0 24px; display: flex; align-items: center; gap: 8px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--temoto-popup-text); }
+.proxy-new { justify-content: flex-end; }
+.proxy-new:hover:not(:disabled), .proxy-delete:hover:not(:disabled), .proxy-action:hover:not(:disabled) { background: var(--temoto-popup-control-hover-bg); }
+.proxy-profile-row { display: grid; grid-template-columns: minmax(0, 1fr) 60px; }
+.proxy-select { width: 100%; min-width: 0; height: var(--temoto-launcher-row-height); min-height: var(--temoto-launcher-row-height); padding: 0 24px; display: flex; align-items: center; gap: 16px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; color: inherit; text-align: left; }
+.proxy-select > svg { flex: 0 0 auto; }
+.proxy-select strong { font-size: var(--temoto-label-font-size); font-weight: var(--temoto-label-font-weight); letter-spacing: -.015em; }
+.proxy-copy { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.proxy-copy strong, .proxy-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.proxy-copy small { color: var(--temoto-popup-muted); font-size: .6875rem; line-height: 1.4; }
+.proxy-edit-cell { height: var(--temoto-launcher-row-height); display: grid; place-items: center; border-bottom: 1px solid var(--line); }
+.proxy-edit { width: var(--temoto-control-height); height: var(--temoto-control-height); padding: 0; display: grid; place-items: center; border: 0; border-radius: 0; background: transparent; color: inherit; }
+.proxy-select:hover:not(:disabled), .proxy-edit:hover:not(:disabled) { background: var(--temoto-popup-surface-hover); }
+.proxy-profile-row.is-active, .proxy-off.is-active { background: var(--temoto-popup-accent); color: var(--temoto-popup-bg); }
+.proxy-profile-row.is-active .proxy-copy small { color: inherit; }
+.proxy-profile-row.is-active button:focus-visible, .proxy-off.is-active:focus-visible, .proxy-kind button[aria-pressed="true"]:focus-visible { outline-color: var(--temoto-popup-bg); }
+.proxy-editor { margin: 0; }
+.proxy-fields { margin: 0; padding: 0; border: 0; min-width: 0; }
+.proxy-field { display: grid; grid-template-columns: 82px minmax(0, 1fr); align-items: center; gap: 16px; min-height: 68px; padding: 12px 24px; border-bottom: 1px solid var(--line); }
+.proxy-field > span { color: var(--temoto-popup-muted); font-size: .75rem; line-height: 1.4; }
+.proxy-field input, .proxy-field select { width: 100%; min-width: 0; height: var(--temoto-control-height); padding: 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--temoto-popup-text); font-family: var(--temoto-ui-font); font-size: var(--temoto-control-font-size); font-weight: var(--temoto-control-font-weight); line-height: 1.4; color-scheme: dark; }
+.proxy-field select, .proxy-field select option { background-color: var(--temoto-popup-bg); color: var(--temoto-popup-text); }
+.proxy-field input:focus-visible, .proxy-field select:focus-visible { outline: none; border-bottom-color: var(--temoto-popup-focus); box-shadow: inset 0 -1px var(--temoto-popup-focus); }
+.proxy-kind { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.proxy-kind button { height: var(--temoto-control-height); border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--temoto-popup-text); }
+.proxy-kind button + button { border-left: 1px solid var(--line); }
+.proxy-kind button[aria-pressed="true"] { background: var(--temoto-popup-accent); color: var(--temoto-popup-bg); }
+.proxy-action-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.proxy-action { min-height: var(--temoto-action-row-height); padding: 0 16px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: var(--temoto-popup-bg); color: var(--temoto-popup-text); }
+.proxy-action-row .proxy-action + .proxy-action { border-left: 1px solid var(--line); }
+.proxy-save-row { position: sticky; bottom: 0; z-index: 1; background: var(--temoto-popup-bg); border-top: 1px solid var(--line); }
+.proxy-confirm p { margin: 0; padding: 12px 24px; font-size: .75rem; line-height: 1.6; border-bottom: 1px solid var(--line); }

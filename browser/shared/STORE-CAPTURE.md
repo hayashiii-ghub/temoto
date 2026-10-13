@@ -1,6 +1,6 @@
 # Store artwork capture
 
-The capture stage serves the actual built product HTML/CSS/JavaScript using its existing browser-preview data. It does not install an extension, apply a proxy or verify real network behavior. The stage itself is excluded from both release ZIPs.
+The capture stage serves the actual built product HTML/CSS/JavaScript using its existing browser-preview data. It does not install an extension, apply a proxy or verify real network behavior. The stage itself is excluded from release ZIPs. Current product artwork is for the five-tool main extension; standalone Proxy routes are retained only for legacy material.
 
 From each product directory, build using the existing `npm run build` command. Then, from the repository root:
 
@@ -22,6 +22,10 @@ Use browser capture, not reconstructed product markup. Set device scale to 1 aft
 
 The 2026-09-13 set was captured in the Codex in-app browser. Popup compositions label their sample data; manager captures show built-in sample profiles. Neither is evidence of installed Chrome runtime or network testing.
 
-Run the site's existing `npm run sync:product-icons` command after updating artwork to synchronize its canonical copies. This does not deploy the website.
+Run the site's existing `npm run sync:product-icons` command after updating main-extension artwork to synchronize its Chrome icon and launcher copies. It no longer rebuilds or refreshes legacy Proxy images. This does not deploy the website.
 
-Current temoto Proxy uses only `popup.html` for home and profile editing. The retired manager route must not be used for new artwork. Existing manager images remain historical release material. Recapture the popup and its inline editor in English before publishing the popup-only version.
+On October 13, 2026 the built five-row launcher—Color Picker, Screenshot, CSS, Video Speed, and Proxy—was recaptured for the site as a 416 × 402 PNG (SHA-256 prefix `47ae7d5e3c53`) and for the English/Japanese Store artwork as 1280 × 800 JPEGs. Formats, dimensions, and the saved images were checked. The single-product OG image was also refreshed as a 1200 × 630 PNG. These captures do not verify native Chrome permissions or real proxy traffic.
+
+Use the same built-UI process for later launcher and integrated Proxy-control captures. Earlier four-tool screenshots and standalone Proxy popup/manager images are historical material, rather than evidence for the integrated product. Keep legacy assets and source for existing users; do not label them as the new Proxy UI.
+
+The retained legacy Proxy uses `popup.html` for home and profile editing. The retired manager route is available only from older builds and must not be used for new product artwork.

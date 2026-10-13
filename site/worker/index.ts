@@ -40,7 +40,20 @@ const worker = {
       }, allowedWidths);
     }
 
-    return handler.fetch(request, env, ctx);
+    const response = await handler.fetch(request, env, ctx);
+    // Google Fonts can emit hundreds of subset preloads. Keep response headers
+    // below the hosting gateway's limit without changing the HTML or font CSS.
+    const link = response.headers.get("Link");
+    if (link && new TextEncoder().encode(link).byteLength > 32 * 1024) {
+      const headers = new Headers(response.headers);
+      headers.delete("Link");
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      });
+    }
+    return response;
   },
 };
 

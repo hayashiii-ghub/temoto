@@ -2,130 +2,132 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>temoto OG</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+JP:wght@400;500;600&display=block"
-      rel="stylesheet"
-    />
+    <meta name="viewport" content="width=1200, initial-scale=1" />
+    <title>temoto — Less friction. More doing.</title>
     <style>
+      @font-face {
+        font-family: "Inter";
+        src: url("../public/brand/Inter-Bold.ttf") format("truetype");
+        font-style: normal;
+        font-weight: 700;
+        font-display: block;
+      }
+
+      @font-face {
+        font-family: "Geist";
+        src: url("../public/brand/Geist-Variable.woff2") format("woff2");
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: block;
+      }
+
+      * { box-sizing: border-box; }
+
       html,
       body {
         width: 1200px;
         height: 630px;
         margin: 0;
         overflow: hidden;
-        background: #080808;
-        color: #f4f4f2;
-        font-family: "IBM Plex Sans JP", "Hiragino Sans", sans-serif;
-        font-feature-settings: "palt" 1;
+        background: #9974f8;
+        color: #080808;
+        font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-synthesis: none;
         -webkit-font-smoothing: antialiased;
       }
+
       main {
-        box-sizing: border-box;
+        position: relative;
         width: 1200px;
         height: 630px;
-        display: grid;
-        grid-template-columns: minmax(0, 0.95fr) minmax(560px, 1.05fr);
-        align-items: center;
-        gap: 48px;
-        padding: 72px 80px;
-        background:
-          radial-gradient(ellipse 58% 72% at 82% 48%, rgba(153, 116, 248, 0.1), transparent 58%),
-          radial-gradient(ellipse 46% 64% at 18% 86%, rgba(255, 255, 255, 0.035), transparent 52%),
-          #080808;
+        background: #9974f8;
       }
-      .eyebrow {
-        margin: 0 0 28px;
+
+      .lower-field {
+        position: absolute;
+        inset: 474px 0 0;
+        background: #080808;
+      }
+
+      .brand {
+        position: absolute;
+        top: 42px;
+        left: 64px;
         display: flex;
         align-items: center;
-        gap: 11px;
-        color: #bcbcb9;
-        font: 500 10px/1 "IBM Plex Mono", monospace;
-        letter-spacing: 0.14em;
+        gap: 12px;
+        font-size: 40px;
+        font-weight: 650;
+        line-height: 1;
+        letter-spacing: -0.055em;
       }
-      .eyebrow span {
-        width: 26px;
-        height: 1px;
-        background: #6c6c69;
+
+      .brand img {
+        display: block;
+        width: 40px;
+        height: 40px;
+        filter: brightness(0);
       }
-      .brand {
-        margin: 0 0 20px;
-        font-size: 72px;
-        font-weight: 600;
-        letter-spacing: -0.045em;
-        line-height: 0.95;
+
+      .copy {
+        position: absolute;
+        top: 168px;
+        left: 64px;
+        width: 620px;
       }
+
+      .eyebrow {
+        margin: 0 0 24px;
+        font-size: 20px;
+        font-weight: 450;
+        line-height: 1.3;
+        letter-spacing: -0.015em;
+      }
+
       h1 {
         margin: 0;
-        font-size: 36px;
-        font-weight: 500;
-        letter-spacing: -0.04em;
-        line-height: 1.35;
-        word-break: keep-all;
+        font-family: "Inter", "Geist", sans-serif;
+        font-size: 96px;
+        font-weight: 700;
+        line-height: 1.02;
+        letter-spacing: -0.06em;
       }
-      .lead {
-        margin: 22px 0 0;
-        color: #a2a2a0;
-        font-size: 18px;
-        font-weight: 400;
-        line-height: 1.7;
-        word-break: keep-all;
-      }
-      .products {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-      .tile {
-        height: 238px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 18px;
-        border: 1px solid rgba(255, 255, 255, 0.09);
-        border-radius: 0;
-        background: #141414;
-      }
-      .tile img {
+
+      h1 span { display: block; white-space: nowrap; }
+
+      .launcher {
+        position: absolute;
+        top: 160px;
+        right: 64px;
         display: block;
-        width: 80px;
-        height: 80px;
-        object-fit: contain;
+        width: 416px;
+        height: 402px;
+        box-shadow: 0 16px 40px rgba(8, 8, 8, 0.16);
       }
-      .tile span {
-        color: #686866;
-        font: 500 11px/1 "IBM Plex Mono", monospace;
-        letter-spacing: 0.08em;
+
+      .tools {
+        position: absolute;
+        left: 64px;
+        bottom: 58px;
+        margin: 0;
+        color: #f4f4f2;
+        font-size: 21px;
+        font-weight: 450;
+        line-height: 1.3;
+        letter-spacing: -0.015em;
       }
     </style>
   </head>
   <body>
     <main>
-      <section>
-        <p class="eyebrow"><span></span> TWO CHROME EXTENSIONS</p>
-        <p class="brand">temoto</p>
-        <h1>Keep browser work<br />close at hand.</h1>
-        <p class="lead">Four focused page tools.<br />A focused proxy profile manager.</p>
+      <div class="lower-field" aria-hidden="true"></div>
+      <header class="brand"><img src="../public/temoto-mark.svg" alt="" /><span>temoto</span></header>
+      <section class="copy">
+        <p class="eyebrow">A small toolkit for Chrome</p>
+        <h1><span>Less friction.</span><span>More doing.</span></h1>
       </section>
-      <section class="products" aria-hidden="true">
-        <div class="tile">
-          <img src="../public/product-chrome-icon.png" alt="" />
-          <span>TEMOTO FOR CHROME</span>
-        </div>
-        <div class="tile">
-          <img src="../public/product-proxy-icon.png" alt="" />
-          <span>TEMOTO PROXY</span>
-        </div>
-      </section>
+      <img class="launcher" src="../public/showcase/chrome-launcher.png" width="416" height="402" alt="temoto's five tools: Color Picker, Screenshot, CSS, Video Speed, and Proxy" />
+      <p class="tools">Color · Capture · CSS · Video · Proxy</p>
     </main>
-    <script>
-      document.fonts.load('600 72px "IBM Plex Sans JP"');
-      document.fonts.load('500 36px "IBM Plex Sans JP"');
-      document.fonts.load('400 18px "IBM Plex Sans JP"');
-      document.fonts.load('500 10px "IBM Plex Mono"');
-    </script>
   </body>
 </html>

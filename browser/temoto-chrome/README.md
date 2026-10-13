@@ -1,6 +1,6 @@
 # temoto for Chrome
 
-`temoto for Chrome` keeps four page tools in one English-only popup: Color Picker, Screenshot, CSS, and Video Speed. This README describes the four-tool source under development. The manifest remains at version 1.1.0; this change has not been submitted or published.
+`temoto for Chrome` keeps five tools in one English-only popup: Color Picker, Screenshot, CSS, Video Speed, and Proxy. This README describes the integrated source under development. The manifest remains at version 1.1.0; this change has not been submitted or published.
 
 ## Features
 
@@ -9,13 +9,23 @@
 - Select an element to inspect its dimensions, margin, padding, typography, colors, and borders. Copy grouped CSS declarations or a unique selector as a separate action. The displayed values are computed styles; they do not recover the page's original stylesheet or reproduce its full layout.
 - Change HTML5 video speed from 0.25× to 5× using the popup or page shortcuts: `G` toggles 1× / 1.5×, `D` adds 0.25×, and `S` subtracts 0.25×. The popup and each video's passive badge follow its actual rate, including rates outside the controls' range. A new or reused video keeps its own rate; temoto does not carry a previous selection into later videos.
 
-`temoto Proxy` remains a separately installed, independently operated product. The core extension has no environment side panel or Proxy controls.
+- Save named Fixed proxy profiles with one HTTP, HTTPS, SOCKS4, or SOCKS5 endpoint, or a PAC URL. Add, edit, delete, and click a saved profile to switch regular Chrome windows. Saving a new profile does not activate it. Editing the active profile uses Save & reapply and updates its current setting immediately; other saves keep the profile inactive. Off clears temoto's override and lets the underlying Chrome/system setting take effect.
+
+Proxy uses the required Chrome `proxy` permission across regular windows, rather than only the current tab. It does not provide custom authentication, connection tests, domain routing, import/export, or incognito configuration. A proxy server or PAC URL must be supplied by the user.
+
+## Moving from the old temoto Proxy
+
+1. Open the separately installed `temoto Proxy` and select Off.
+2. Open temoto → Proxy and recreate each needed Fixed endpoint or PAC URL profile.
+3. Click the saved profile when you want to activate it; use Off when finished.
+
+There is no automatic import or activation. The old extension's profiles and session credentials are preserved. Its [source and documentation](../temoto-proxy/) remain available for existing advanced profiles.
 
 ## Privacy
 
 Video shortcuts and badges run locally on HTTP(S) pages without opening the popup. They ignore editable fields and modifier-key combinations, do not record keystrokes, and send no data to external servers. An optional bridge on explicitly opted-in pages supports extension availability and video-speed control only.
 
-Color history and preferred color format remain in Chrome's local extension storage. Each screenshot has its own local capture ID and stays in the extension's IndexedDB so its preview can reload. The preview's Close action deletes that capture. Otherwise, it expires after one hour; expired records are removed on the next capture save or load.
+Color history, preferred color format, saved proxy profiles, and selected proxy state remain in Chrome's local extension storage. Proxy stores no usernames or passwords. Unfinished editor fields stay in browser-session storage until Save, Cancel, or Delete; reopening the popup can restore them without applying a proxy. Each screenshot has its own local capture ID and stays in the extension's IndexedDB so its preview can reload. The preview's Close action deletes that capture. Otherwise, it expires after one hour; expired records are removed on the next capture save or load.
 
 See [PRIVACY.md](./PRIVACY.md) for the complete policy and permission details.
 
@@ -36,7 +46,7 @@ npm run build
 npm run test:sites
 ```
 
-Load `dist/client` as an unpacked extension from `chrome://extensions` after running the build. The popup is 416px wide and fits its content. Its four tools form a compact list; CSS starts inspection directly, and the other tools open their controls.
+Load `dist/client` as an unpacked extension from `chrome://extensions` after running the build. The popup is 416px wide and fits its content. Its five tools form a compact list; CSS starts inspection directly, and the other tools open their controls.
 
 ## Chrome Web Store package
 

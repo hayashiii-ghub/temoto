@@ -1,6 +1,6 @@
 # Asset ownership
 
-Keep the two extensions and website independently built. Share design sources and capture tools, not extension runtimes.
+Keep the main temoto extension and website independently built. The former standalone Proxy source and its assets remain for existing users and migration; the main build must not depend on its runtime or icon generator. Share design sources and capture tools.
 
 ## Logos and fonts
 
@@ -22,14 +22,16 @@ Use [`browser/shared/STORE-CAPTURE.md`](../browser/shared/STORE-CAPTURE.md) and 
 
 ## Website assets
 
-- `site/public/showcase/` contains only the two UI captures currently rendered by `site/app/page.tsx`: `chrome-launcher.png` and `proxy-popup.png`, each 416 × 500.
-- `site/public/product-*` retains the canonical Store-image copies and icons. `npm run sync:product-icons` in `site/` refreshes them from the extension sources; it also runs before development and builds. The icons are inputs to the OG image template. These are intentional copies, not independent source artwork.
+- `site/app/components/launcher-preview.tsx` renders the five-tool product illustration as HTML and CSS, following the selected landing-page design. It is a static overview, not an operating extension. Its SVG icons in `site/public/tools/` come from the extension's existing `@phosphor-icons/react` 2.1.10 library, with its MIT license retained.
+- `site/public/showcase/chrome-launcher.png` remains the original five-row product capture used in the OG template: PNG, 416 × 402, SHA-256 prefix `47ae7d5e3c53`, captured October 13, 2026. `proxy-popup.png` remains a historical standalone-Proxy capture and is not shown as the integrated UI.
+- `site/public/product-*` retains canonical Store-image copies and icons. `npm run sync:product-icons` in `site/` refreshes only the main Chrome icon and launcher, and also runs before development and builds. Existing `product-proxy-*` files are historical copies; they are preserved without requiring legacy Proxy code during the site build.
+- The page keeps the original temoto mark and Geist font. Its headline uses Inter Bold from Google Fonts, stored with its SIL Open Font License under `site/public/brand/`. All fonts are served locally.
 - `site/public/og-temoto.png` is the 1200 × 630 share image. Its existing template and rendering command are in `site/scripts/`.
 
-The UI was simplified to compact English-only layouts on October 13, 2026; the current Store and website screenshots still show the earlier layout and need recapture before publishing that UI.
+The main extension gained simple Proxy switching as its fifth tool on October 13, 2026. Its English/Japanese Store launcher JPEGs were recaptured from the built five-row UI at 1280 × 800. Image formats, dimensions, and saved-image appearance were checked. Earlier four-tool launcher artwork has been replaced; standalone Proxy artwork remains historical. The integrated extension has not yet been released to the Chrome Store; website publication is tracked separately.
 
-The Chrome showcase and English/Japanese launcher Store images were recaptured on October 12, 2026 from the built four-tool popup through the existing capture stage. The Proxy showcase remains the September 12 capture. The strict popup theme remains the default UI. For future captures, use the core preview at `/?lang=en` and the separate Proxy preview at `/popup.html?lang=en`; use sample profiles, not credentials or private destinations. The standalone Proxy manager has been retired. Its existing Store images and `site/public/product-proxy-manager.png` remain historical release material; do not delete or treat them as current UI evidence.
+The previous Chrome showcase and English/Japanese Store images had been captured on October 12, 2026 from the four-tool popup; the October 13 five-tool captures supersede them. The legacy Proxy showcase remains the September 12 capture. For later main-product captures, use the core preview at `/?lang=en` with sample profiles, rather than credentials or private destinations. The retired standalone Proxy manager's Store images and `site/public/product-proxy-manager.png` remain historical release material; do not delete or treat them as current UI evidence.
 
-After recapturing a showcase image, update its first-12-character SHA-256 query in `site/app/page.tsx`, preserve direct delivery (`unoptimized`), and run `npm run lint` and `npm test` in `site/`. Tests check dimensions, revision hashes, and Store-copy consistency. Keep capture notes here, not under the publicly served directory.
+After updating the page or its assets, run `npm run lint` and `npm test` in `site/`. Tests check server-rendered copy and tool names, the single Store action and preview notice, retained asset consistency, and OG image dimensions. Keep capture notes here, not under the publicly served directory. The selected source and visual QA evidence are in `site/docs/design/`; the latest comparison is recorded in `site/design-qa.md`.
 
-Proxy now adds and edits profiles inside its popup. Recapture the popup home and inline editor before a release; the existing Proxy showcase and manager artwork have not been updated for this change.
+Integrated Proxy belongs to the main temoto popup. The legacy Proxy showcase and manager artwork remain historical; do not reuse them as proof of the integrated UI. The single-product OG template and its 1200 × 630 PNG were refreshed locally on October 14, 2026 to match the selected purple-and-black landing page. This is artwork verification, not website deployment.

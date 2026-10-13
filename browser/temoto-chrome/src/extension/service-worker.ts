@@ -1,5 +1,7 @@
 import { savePendingCapture } from "./capture-store.js";
 import { withCaptureLock } from "./capture-lock.js";
+import { isTrustedProxyPopup } from "./proxy-core.js";
+import { createProxyRuntime } from "./proxy-runtime.js";
 import {
   CAPTURE_INTERVAL_MS,
   CAPTURE_PRELOAD_SCROLL_INTERVAL_MS,
@@ -40,6 +42,8 @@ interface FullPageCaptureState {
 interface ExtensionMessage {
   type: string;
   speed?: unknown;
+  profile?: unknown;
+  profileId?: unknown;
 }
 
 interface PageDetection {
@@ -52,6 +56,26 @@ interface PageDetection {
 }
 
 const wait = (milliseconds: number) => new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
+const proxyMessages = new Set(["PROXY_GET_STATE", "PROXY_SAVE_PROFILE", "PROXY_DELETE_PROFILE", "PROXY_ACTIVATE", "PROXY_OFF"]);
+let proxyRuntime: ReturnType<typeof createProxyRuntime> | undefined;
+
+async function handleProxyMessage(message: ExtensionMessage, sender: chrome.runtime.MessageSender): Promise<Record<string, unknown>> {
+  if (!isTrustedProxyPopup(sender, chrome.runtime.id)) return { ok: false, error: "Proxy controls are available only in temoto's popup" };
+  const runtime = proxyRuntime ||= createProxyRuntime(chrome);
+  try {
+    switch (message.type) {
+      case "PROXY_GET_STATE": return { ok: true, state: await runtime.getState() };
+      case "PROXY_SAVE_PROFILE": return { ok: true, state: await runtime.saveProfile(message.profile) };
+      case "PROXY_DELETE_PROFILE": return { ok: true, state: await runtime.deleteProfile(message.profileId) };
+      case "PROXY_ACTIVATE": return { ok: true, state: await runtime.activate(message.profileId) };
+      case "PROXY_OFF": return { ok: true, state: await runtime.off() };
+      default: return { ok: false, error: "Unknown proxy message" };
+    }
+  } catch (error) {
+    const state = await runtime.getState().catch(() => undefined);
+    return { ok: false, error: error instanceof Error ? error.message : "Proxy operation failed", ...(state ? { state } : {}) };
+  }
+}
 
 async function activeTab(): Promise<chrome.tabs.Tab & { id: number; windowId: number }> {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -375,6 +399,7 @@ async function captureFullPage(): Promise<{ frameCount: number; height: number }
 }
 
 async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.MessageSender): Promise<Record<string, unknown>> {
+  if (proxyMessages.has(message?.type)) return handleProxyMessage(message, sender);
   switch (message.type) {
     case "DETECT_PAGE":
     case "GET_PAGE_STATE": {

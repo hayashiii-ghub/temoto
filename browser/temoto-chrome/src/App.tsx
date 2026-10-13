@@ -3,6 +3,7 @@ import type { MouseEventHandler, ReactNode } from "react";
 import {
   ArrowLeft,
   ArrowsOutLineVertical,
+  ArrowsLeftRight,
   BracketsCurly,
   Camera,
   Copy,
@@ -39,11 +40,13 @@ import {
 import { formatColor, addColorToHistory } from "./color-utils.ts";
 import type { ColorFormat } from "./color-utils.ts";
 import { localizeError, t } from "./i18n.ts";
+import ProxyPanel from "./ProxyPanel.tsx";
 
 const TOOL_DEFINITIONS = {
   color: { title: t("Color Picker"), icon: Eyedropper },
   screenshot: { title: t("Screenshot"), icon: Scan },
   speed: { title: t("Video Speed"), icon: Gauge },
+  proxy: { title: "Proxy", icon: ArrowsLeftRight },
 } satisfies Record<string, { title: string; icon: PhosphorIcon }>;
 
 type ToolId = keyof typeof TOOL_DEFINITIONS;
@@ -362,6 +365,7 @@ function PopupApp() {
       {activeTool === "color" && <ColorPanel settings={settings} onChange={(update) => setSettings((current) => ({ ...current, ...update }))} onError={onToolError} />}
       {activeTool === "screenshot" && <section className="tool-screen-body tool-detail-body screenshot-screen"><ScreenshotPanel onError={onToolError} /></section>}
       {activeTool === "speed" && <section className="tool-screen-body tool-detail-body speed-screen">{!page.videoCount && <p className="empty-note">{t("No video found on this page.")}</p>}<SpeedControl speed={page.playbackRate} onChange={updateSpeed} disabled={!page.videoCount} />{speedBusy && <p className="speed-state" role="status">{t("Updating playback speed…")}</p>}</section>}
+      {activeTool === "proxy" && <ProxyPanel />}
     </> : <>
       <header className="app-header launcher-header"><Brand /></header>
       <ToolError message={error} />
@@ -370,6 +374,7 @@ function PopupApp() {
         <LauncherRow icon={Scan} label={t("Screenshot")} onClick={() => openTool("screenshot")} disabled={!isPageToolAvailable("screenshot", page)} />
         <LauncherRow icon={BracketsCurly} label="CSS" error={inspectError} busy={inspectBusy} meta={inspectBusy ? t("Starting…") : inspectError ? t("Retry") : undefined} onClick={runMeasure} disabled={inspectBusy || !isPageToolAvailable("inspect", page)} />
         <LauncherRow icon={Gauge} label={t("Video Speed")} meta={isPageToolAvailable("speed", page) ? (page.videoCount ? String(page.playbackRate) + "×" : t("No video")) : t("Unavailable")} metaAccent={Boolean(page.videoCount)} onClick={() => openTool("speed")} disabled={!isPageToolAvailable("speed", page)} />
+        <LauncherRow icon={ArrowsLeftRight} label="Proxy" onClick={() => openTool("proxy")} />
       </section>
     </>}
   </main>;

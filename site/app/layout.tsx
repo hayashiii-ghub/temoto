@@ -1,25 +1,12 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans_JP } from "next/font/google";
 import "./globals.css";
 
-const ibmPlexSansJP = IBM_Plex_Sans_JP({
-  variable: "--font-ibm-plex-sans-jp",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-});
-const title = "temoto — Browser tools, close at hand.";
+const title = "temoto — Less friction. More doing.";
 const description =
-  "Four focused page tools and an independent proxy-profile popup for Chrome.";
+  "Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching in one Chrome extension.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://temoto.haygsiiii.chatgpt.site"),
+  metadataBase: new URL("https://temoto.hayashiii-gpt.chatgpt.site"),
   title,
   description,
   icons: {
@@ -31,16 +18,16 @@ export const metadata: Metadata = {
     description,
     type: "website",
     locale: "en_US",
-    images: [{ url: "/og-temoto.png", width: 1200, height: 630, alt: title }],
+    images: [{ url: "/og-temoto.png?v=7707304e185e", width: 1200, height: 630, alt: title }],
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: ["/og-temoto.png"],
+    images: ["/og-temoto.png?v=7707304e185e"],
   },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body className={`${ibmPlexSansJP.variable} ${ibmPlexMono.variable}`}>{children}</body></html>;
+  return <html lang="en"><body>{children}</body></html>;
 }

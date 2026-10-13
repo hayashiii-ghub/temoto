@@ -1,6 +1,10 @@
 # temoto Proxy
 
-`temoto Proxy` is an English-only Chrome extension for saving and switching development proxy profiles. Add and edit profiles inside the popup; there is no separate manager tab. It remains independently installable from `temoto` because Chrome's `proxy` permission changes browser-wide connection settings.
+This is the retained **legacy standalone extension**. Simple Proxy switching now belongs to [temoto for Chrome](../temoto-chrome/), alongside its four page tools. The legacy source stays available for existing advanced profiles and is no longer presented as the main product.
+
+To move: select Off in this old extension, then recreate the needed Fixed endpoints or PAC URLs in temoto → Proxy. There is no automatic migration or activation, and the old profiles and credentials are preserved.
+
+The legacy English-only popup still adds, edits, and switches development proxy profiles without a separate manager tab. Its feature and privacy descriptions below apply to this retained source only.
 
 日本語の機能説明と操作例は [FEATURES.ja.md](./FEATURES.ja.md) を参照してください。
 

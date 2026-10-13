@@ -1,6 +1,8 @@
 # temoto Proxy instructions
 
-`temoto Proxy` is an independent Manifest V3 Chrome extension. It shares the lowercase `temoto` brand, but it must stay separately installable from `browser/temoto-chrome/` because the required Chrome `proxy` permission affects browser-wide network settings.
+`temoto Proxy` is the retained legacy standalone Manifest V3 extension. On 2026-10-13 the user approved simple Proxy switching in `browser/temoto-chrome/`; that main extension is now the product to present publicly. The rules below apply to this legacy source and its existing advanced profiles. Preserve its code, saved profiles, and session credentials; do not automatically migrate or activate them in the main extension.
+
+For migration, first select Off in the legacy extension, then recreate needed Fixed endpoints or PAC URLs in temoto. The main switcher has no custom authentication, diagnostics, domain routing, import/export, or incognito configuration. Do not import this legacy runtime into its build.
 
 ## Product contract
 

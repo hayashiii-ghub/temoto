@@ -11,7 +11,8 @@
     "activeTab",
     "scripting",
     "storage",
-    "clipboardWrite"
+    "clipboardWrite",
+    "proxy"
   ],
   "background": {
     "service_worker": "service-worker.js",

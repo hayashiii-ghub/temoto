@@ -10,6 +10,8 @@ const required = [
   "dist/client/capture-store.js",
   "dist/client/capture-lock.js",
   "dist/client/capture-utils.js",
+  "dist/client/proxy-core.js",
+  "dist/client/proxy-runtime.js",
   "dist/client/content/video-speed.js",
   "dist/client/content/webmcp.js",
   "dist/client/content/webmcp-provider.js",
@@ -42,6 +44,9 @@ if (
   || manifest.permissions?.includes("sidePanel")
   || manifest.side_panel
   || manifest.optional_permissions?.includes("browsingData")
+  || !manifest.permissions?.includes("proxy")
+  || manifest.optional_permissions?.includes("proxy")
+  || manifest.permissions?.some((permission) => ["webRequest", "webRequestAuthProvider", "tabs"].includes(permission))
   || !videoSpeedScript?.all_frames
   || !videoSpeedScript.matches?.includes("http://*/*")
   || !videoSpeedScript.matches?.includes("https://*/*")

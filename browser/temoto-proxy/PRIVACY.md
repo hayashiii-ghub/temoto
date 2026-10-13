@@ -2,7 +2,9 @@
 
 Last updated: October 13, 2026 (local draft for the popup-only source)
 
-This policy describes the current source changes; it does not confirm that they have been published to the Chrome Web Store.
+This policy describes only the retained legacy standalone extension; it does not confirm that its source changes have been published to the Chrome Web Store. The main extension's integrated simple switcher is covered by [its own policy](../temoto-chrome/PRIVACY.md).
+
+Migration does not read, delete, import, or activate this extension's stored profiles or session credentials. Users first select Off here, then recreate needed Fixed endpoints or PAC URLs in the main extension.
 
 temoto Proxy manages development proxy profiles locally. It does not send browsing data, page content, request/response bodies, or analytics to the developer.
 

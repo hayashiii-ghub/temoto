@@ -2,7 +2,9 @@
 
 Last updated: 2026-10-13
 
-The popup-only editor is local source work. Source version **1.2.0** is unchanged. No upload, submission, or publication of these changes is claimed.
+This is the retained legacy standalone extension, rather than a second main product. Simple Proxy switching is now developed in [temoto for Chrome](../temoto-chrome/). Its code, profiles, and credentials are preserved for existing users and explicit migration.
+
+The legacy popup-only editor is local source work. Source version **1.2.0** is unchanged. No upload, submission, or publication of these changes is claimed. No new legacy release is authorized by the main-extension integration.
 
 [store/listing.md](./store/listing.md) remains the authoritative product copy, permission justification, reviewer instructions, and release checklist. [PRIVACY.md](./PRIVACY.md) includes the password-free browser-session drafts.
 
@@ -20,7 +22,7 @@ The popup-only editor is local source work. Source version **1.2.0** is unchange
 - Local browser preview: add/edit, invalid input, password-free draft restore, and existing routing/per-protocol/inline-PAC preservation passed at 416px width.
 - Website lint and all 8 tests passed after copy updates.
 
-## Release work still pending
+## If a separate legacy release is authorized
 
 - Verify the installed extension's popup/editor/draft and legacy profiles in stable Chrome.
 - Review real proxy activation, Off, authentication, conflicts, and Incognito against a controlled disposable proxy.

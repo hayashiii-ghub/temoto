@@ -18,10 +18,10 @@ function stage(url) {
   const mark = proxy ? "/brand/temoto-proxy-mark.svg" : "/brand/temoto-mark.svg";
   const title = proxy
     ? (ja ? "開発用プロキシを、<br>切り替える。" : "Your proxy.<br>One clear view.")
-    : (ja ? "4つのツールを、<br>ひとつに。" : "Four tools.<br>One popup.");
+    : (ja ? "5つのツールを、<br>ひとつに。" : "Five tools.<br>One popup.");
   const copy = proxy
     ? (ja ? "プロファイルを選び、有効な接続を確認。<br>使い終わったら、安全にオフ。" : "Choose a profile. See what is active.<br>Clear temoto’s override when you’re done.")
-    : (ja ? "色の取得、画面撮影、CSS検証、<br>動画速度の操作。" : "Color, capture, CSS inspection,<br>and video speed.");
+    : (ja ? "色の取得、画面撮影、CSS検証、<br>動画速度とプロキシの切り替え。" : "Color, capture, CSS inspection,<br>video speed, and proxy switching.");
   const src = proxy ? `/proxy/popup.html?lang=${locale}` : `/chrome/index.html?lang=${locale}`;
   return `<!doctype html><html lang="${locale}"><head><meta charset="utf-8"><title>${name} — Store capture</title><style>
   @font-face {font-family:Geist;src:url('/brand/Geist-Variable.woff2') format('woff2');font-weight:100 900;font-display:block}
@@ -29,7 +29,7 @@ function stage(url) {
   body{width:${promo ? 440 : 1280}px;height:${promo ? 280 : 800}px;overflow:hidden}
   header{position:absolute;top:66px;left:72px;display:flex;align-items:center;gap:14px;font-size:32px;font-weight:700;letter-spacing:-.045em}
   header img{width:45px;height:45px}.copy{position:absolute;left:72px;top:246px;width:650px}h1{margin:0;font-size:${ja ? 52 : 76}px;font-weight:650;line-height:1.15;letter-spacing:-.045em}p{margin:34px 0 0;font-size:${ja ? 18 : 21}px;line-height:1.7;color:#a6a6a3}
-  iframe{position:absolute;right:72px;top:150px;width:416px;height:500px;border:0;background:#080808}
+  iframe{position:absolute;right:72px;top:${proxy ? 150 : 199}px;width:416px;height:${proxy ? 500 : 402}px;border:0;background:#080808}
   footer{position:absolute;left:72px;bottom:63px;color:#a6a6a3;font-size:14px}.promo{height:280px;display:flex;align-items:center;justify-content:center;gap:22px}.promo img{width:118px;height:136px}.promo strong{font-size:${proxy ? 36 : 48}px;line-height:1.1;letter-spacing:-.055em}.promo small{display:block;font-size:25px;font-weight:500;margin-top:6px;color:#bda5ff}
   </style></head><body>${promo ? `<main class="promo"><img src="${mark}" alt=""><strong>temoto${proxy ? "<small>Proxy</small>" : ""}</strong></main>` : `<header><img src="${mark}" alt="">${name}</header><main><section class="copy"><h1>${title}</h1><p>${copy}</p></section><iframe title="${name} popup" src="${src}"></iframe></main><footer>${ja ? "サンプルページ・プロファイルでの表示" : "Shown with a sample page or profile"}</footer>`}</body></html>`;
 }

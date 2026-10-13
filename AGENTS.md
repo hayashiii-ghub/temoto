@@ -1,20 +1,20 @@
 # Repository guide
 
-This repository contains two independently built Chrome extensions under the lowercase `temoto` brand and their public website.
+This repository contains the main `temoto` Chrome extension and its public website. The former standalone `temoto Proxy` source remains available for migration and existing users.
 
 ## Project map
 
 - `browser/temoto-chrome/`: the Chrome extension. Follow its nested `AGENTS.md` when working in this directory.
-- `browser/temoto-proxy/`: the standalone Chrome proxy companion. Follow its nested `AGENTS.md` when working in this directory.
-- `browser/shared/`: shared popup design tokens used by both extensions.
-- `site/`: the public website for both extensions, built with Next.js/vinext and deployed through a Cloudflare Worker.
+- `browser/temoto-proxy/`: legacy standalone Proxy source and saved-data compatibility. Preserve existing profiles and credentials; follow its nested `AGENTS.md` when working there.
+- `browser/shared/`: shared design sources and capture tools, including those retained for the legacy extension.
+- `site/`: the public website for temoto, built with Next.js/vinext and deployed through a Cloudflare Worker.
 
 ## Validation
 
 Run checks for the product you changed:
 
 - Chrome extension: from `browser/temoto-chrome/`, run `npm test`, `npm run build`, and `npm run test:sites`
-- Proxy companion: from `browser/temoto-proxy/`, run `npm run check`
+- Legacy Proxy, when changed: from `browser/temoto-proxy/`, run `npm run check`
 - Website: from `site/`, run `npm run lint` and `npm test`
 
 ## Working conventions
