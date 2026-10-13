@@ -35,8 +35,6 @@ import {
   clampPlaybackSpeed,
   speedFromShortcut,
   SPEED_PRESETS,
-  speedToSliderPosition,
-  sliderPositionToSpeed,
 } from "./video-speed.ts";
 import { formatColor, addColorToHistory } from "./color-utils.ts";
 import type { ColorFormat } from "./color-utils.ts";
@@ -128,15 +126,14 @@ function SpeedControl({ speed, onChange, disabled }: {
       <div className="speed-value"><span>{speed}</span><small>×</small></div>
       <div className="speed-presets" role="group" aria-label={t("Playback speed presets")}>
         {SPEED_PRESETS.map((value) => (
-          <button key={value} type="button" className={speed === value ? "is-active" : ""} onClick={() => update(value)} disabled={disabled}>
+          <button key={value} type="button" className={speed === value ? "is-active" : ""} aria-pressed={speed === value} onClick={() => update(value)} disabled={disabled}>
             {value}×
           </button>
         ))}
       </div>
-      <div className="speed-slider-row">
-        <button type="button" onClick={() => update(speed - 0.05)} disabled={disabled} aria-label={t("Decrease speed")}>−</button>
-        <input type="range" min="0" max="1000" step="1" value={speedToSliderPosition(speed)} onChange={(event) => update(sliderPositionToSpeed(event.target.value))} disabled={disabled} aria-label={t("Playback speed")} aria-valuetext={t("{speed} times", { speed })} />
-        <button type="button" onClick={() => update(speed + 0.05)} disabled={disabled} aria-label={t("Increase speed")}>＋</button>
+      <div className="speed-stepper" role="group" aria-label={t("Adjust playback speed")}>
+        <button type="button" onClick={() => update(speed - 0.05)} disabled={disabled} aria-label={t("Decrease speed by 0.05")}>−0.05</button>
+        <button type="button" onClick={() => update(speed + 0.05)} disabled={disabled} aria-label={t("Increase speed by 0.05")}>+0.05</button>
       </div>
       <div className="speed-shortcuts" aria-label={t("Keyboard shortcuts")}>
         <span><kbd>S</kbd><small>−0.25</small></span>
@@ -170,7 +167,6 @@ function ScreenshotPanel({ onError }: { onError: (message: string) => void }) {
         <ArrowsOutLineVertical size={18} /> {t("Full page")}
       </button>
       {busy && <p role="status">{t("Capturing… Keep the page active.")}</p>}
-
     </div>
   );
 }

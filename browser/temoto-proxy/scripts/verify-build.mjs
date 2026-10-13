@@ -13,9 +13,9 @@ const required = [
   "popup.html",
   "popup.js",
   "popup-tokens.css",
-  "manager.html",
-  "manager.css",
-  "manager.js",
+  "profile-editor.js",
+  "profile-editor.css",
+  "editor-draft.js",
   "styles.css",
   "fonts/geist-latin-wght-normal.woff2",
   "fonts/ibm-plex-mono-latin-400-normal.woff2",
@@ -28,6 +28,10 @@ const required = [
 ];
 
 await Promise.all(required.map((file) => access(resolve(buildRoot, file))));
+const outputFiles = await readdir(buildRoot);
+if (["manager.html", "manager.css", "manager.js"].some((file) => outputFiles.includes(file))) {
+  throw new Error("Removed manager files must not be packaged in temoto Proxy");
+}
 const locales = await readdir(resolve(buildRoot, "_locales"));
 if (locales.length !== 1 || locales[0] !== "en") throw new Error("temoto Proxy must package only the English locale");
 const manifest = JSON.parse(await readFile(resolve(buildRoot, "manifest.json"), "utf8"));
@@ -39,6 +43,8 @@ if (
   || manifest.default_locale !== "en"
   || manifest.version !== packageJson.version
   || manifest.side_panel
+  || manifest.options_ui
+  || manifest.options_page
   || manifest.background?.service_worker !== "service-worker.js"
   || !manifest.host_permissions?.includes("<all_urls>")
   || manifest.externally_connectable?.ids?.length !== 1

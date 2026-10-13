@@ -24,7 +24,7 @@ export type CompanionRequest =
 
 export type CompanionResponse =
   | { ok: true; protocolVersion: typeof COMPANION_PROTOCOL_VERSION; summary: CompanionSummary }
-  | { ok: true; protocolVersion: typeof COMPANION_PROTOCOL_VERSION };
+  | { ok: false; protocolVersion: typeof COMPANION_PROTOCOL_VERSION; error: string };
 
 interface CompanionRuntime {
   effectiveState(): Promise<unknown>;
@@ -71,7 +71,7 @@ function responseWithSummary(state: unknown): Extract<CompanionResponse, { summa
 
 export async function handleCompanionMessage(
   message: unknown,
-  { runtime, openManager }: { runtime: CompanionRuntime; openManager: () => Promise<void> },
+  { runtime }: { runtime: CompanionRuntime },
 ): Promise<CompanionResponse> {
   const request = message as Partial<CompanionRequest> | null | undefined;
   if (request?.namespace !== COMPANION_NAMESPACE || request?.protocolVersion !== COMPANION_PROTOCOL_VERSION) {
@@ -83,8 +83,7 @@ export async function handleCompanionMessage(
     case "GET_SUMMARY":
       return responseWithSummary(await runtime.effectiveState());
     case "OPEN_MANAGER":
-      await openManager();
-      return { ok: true, protocolVersion: COMPANION_PROTOCOL_VERSION };
+      return { ok: false, protocolVersion: COMPANION_PROTOCOL_VERSION, error: "Open temoto Proxy from the Chrome toolbar." };
     default:
       throw new Error("Unsupported companion action");
   }

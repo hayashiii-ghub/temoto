@@ -2,11 +2,11 @@
 
 ## Goal
 
-temoto Proxy enables web developers to switch Chrome's network route as a named development workspace without needing proxy expertise or fearing a stuck, invisible or unsafe browser configuration.
+temoto Proxy lets web developers add, edit, and switch named Chrome proxy profiles inside the toolbar popup.
 
-The finished product is not a raw host-and-port switch. It makes the effective browser state visible, validates every change before applying it, recovers safely when a change fails, separates shareable configuration from secrets, and always provides an explicit path back to Chrome's underlying setting.
+The popup shows effective state and scope, validates profile inputs, separates saved configuration from session passwords, and provides Off to clear temoto's override.
 
-This document defines the product itself. There is no reduced MVP contract.
+This document describes the current popup-only source. Previously published packages and historical artwork may still contain the retired manager page.
 
 ## Intended users
 
@@ -19,7 +19,7 @@ Consumer VPN, anonymity, traffic inspection, response modification and operating
 
 ## Product invariants
 
-1. **Safe by default:** invalid or uncontrollable settings are rejected before temoto changes Chrome.
+1. **Validated changes:** malformed profile inputs and uncontrollable settings are rejected before applying a Chrome setting.
 2. **Always reversible:** Off calls `chrome.proxy.settings.clear` and never forces `direct`, `system` or another replacement mode.
 3. **Effective state is visible:** the UI distinguishes Off, active, changed, conflicting, policy-controlled and orphaned states.
 4. **Local first:** there is no temoto service, telemetry endpoint, analytics pipeline or browsing-data collection.
@@ -31,26 +31,29 @@ Consumer VPN, anonymity, traffic inspection, response modification and operating
 
 ### Profiles and routing
 
-- Create, edit, duplicate, delete, activate and deactivate named profiles.
+- Create basic Fixed proxy and PAC URL profiles with the popup header New action.
+- Edit saved profiles through their separate Edit action; selecting a home profile activates it.
+- Duplicate saved configurations, not unsaved drafts. Confirm deletion inline; clear an active override before deleting its profile.
 - Support HTTP, HTTPS, SOCKS4 and SOCKS5 proxy endpoints.
-- Support one endpoint for all traffic or independent HTTP, HTTPS and fallback endpoints.
+- Support one endpoint for new Fixed profiles. Preserve full editing of existing protocol-specific HTTP, HTTPS and fallback endpoints.
 - Support Chrome bypass patterns for fixed profiles.
-- Support ordered host or URL routing rules with proxy/direct actions and a declared fallback action.
+- Preserve full editing and import of existing ordered host/URL routing profiles with proxy/direct actions and a declared fallback. Domain routing is not an initial new-profile choice.
 - Compile visual routing rules into a deterministic local PAC script.
-- Support advanced inline PAC scripts and explicit HTTP(S) PAC URLs.
-- Warn before mandatory PAC behavior that can prevent direct fallback.
+- Offer explicit HTTP(S) PAC URLs for new profiles; retain full editing/import of existing inline PAC scripts.
+- Keep the Block direct fallback choice explicit for PAC profiles.
 
 ### Authentication
 
 - Support authenticated proxy challenges without observing page authentication challenges.
-- Keep passwords only in `chrome.storage.session`.
+- Keep passwords only in `chrome.storage.session`; usernames may remain in saved local profiles.
+- Clear old session credentials when the saved username changes without a replacement password; retain matching credentials on same-username blank saves.
 - Restrict credentials to proxy challenges whose host exactly matches an explicit allowed-host list.
 - Bound automatic credential attempts to prevent authentication loops.
 - Make missing session credentials visible after Chrome restarts.
 
 ### State, recovery and conflicts
 
-- Show the active profile in the popup, manager and toolbar badge.
+- Show effective state and the active profile in popup home and the toolbar badge; keep errors and conflicts as visible inline information.
 - Read Chrome's effective value and `levelOfControl` rather than trusting saved UI state.
 - Refuse to overwrite a higher-priority extension or administrator policy.
 - Verify Chrome's setting after activation.
@@ -61,15 +64,23 @@ Consumer VPN, anonymity, traffic inspection, response modification and operating
 
 ### Diagnostics and sharing
 
-- Run a user-requested, credential-free HTTP `HEAD` request to a validated public diagnostic URL without following redirects.
+- Run connection tests only from the profile editor for an active profile. Use HTTP HEAD with page credentials omitted and redirects disabled. Proxy authentication is handled separately.
 - Report reachability, HTTP status, elapsed time and final URL locally.
-- Export all profiles as versioned JSON without secrets.
+- Keep Import/Export in collapsed home Options. Export versioned JSON without authentication usernames or passwords; connection endpoints, rules, PAC content, and other configuration remain included.
 - Merge or replace profiles from a validated temoto Proxy export.
-- Prevent an import from writing unknown fields or credentials into the normalized profile schema, reset imported diagnostic URLs, and clear all session passwords during replacement.
+- Normalize imported profiles, ignore password fields, reset imported diagnostic URLs, and clear all session passwords during replacement. Continue accepting the existing schema and advanced profile kinds.
+
+### Popup editing and companion compatibility
+
+- Do not provide manager.html, options_ui, or a side panel.
+- Persist unfinished draft fields in browser-session storage with passwords excluded; restore them when the popup reopens.
+- Save or Cancel clears the draft; unfinished edits never apply network changes merely because the popup closes.
+- GET_SUMMARY remains extension-ID allowlisted and limited to effective status/profile identity.
+- Legacy OPEN_MANAGER returns an explicit toolbar instruction rather than opening a tab.
 
 ### Incognito
 
-- Leave incognito unchanged by default.
+- Keep Incognito inside home Options and leave it unchanged by default.
 - Detect whether Chrome has granted “Allow in Incognito”.
 - Apply the active profile only after explicit in-product opt-in.
 - Support session-only and persistent incognito scopes.
@@ -90,7 +101,7 @@ Consumer VPN, anonymity, traffic inspection, response modification and operating
 - Configuration generation is deterministic and independently testable.
 - Chrome mutation paths use read, validate, set/clear and verify steps.
 - Persistent state uses `chrome.storage.local`; runtime secrets use `chrome.storage.session`.
-- Every error returned by Chrome reaches a visible UI status or toast.
+- Chrome errors are reported inline. Do not reserve a notification rail or show routine success toasts.
 
 ### Performance
 
@@ -103,7 +114,7 @@ Consumer VPN, anonymity, traffic inspection, response modification and operating
 - All controls have accessible names and keyboard-focus treatment.
 - State is communicated by text as well as color.
 - The extension targets Manifest V3 and Chrome 116 or later on macOS and Windows.
-- The popup remains usable at its fixed 416-pixel width; the manager adapts below 820 pixels.
+- Home and inline editing remain usable at the 416-pixel popup width, with content-sized height up to 580px and scrolling when needed.
 
 ## Completion evidence
 
@@ -111,7 +122,7 @@ The release gate is:
 
 1. `npm test` passes core transformation, validation, authentication, conflict, rollback, Off, import/export, incognito and diagnostic tests.
 2. `npm run build` emits and verifies every required Manifest V3 file and icon.
-3. Browser visual verification covers popup active/Off/profile-switch states and manager fixed/routing/PAC/auth/incognito states.
+3. Browser visual verification covers home active/Off states, New/Edit/Cancel, password-free draft restore, Fixed/PAC URL creation, legacy routing/per-protocol/inline-PAC editing, import/export, authentication, and incognito. Historical manager artwork is not evidence for this UI.
 4. `npm run package` produces a ZIP with `manifest.json` at its root.
 5. The unpacked build loads without extension errors in current stable Chrome, and a reviewer manually verifies activation and Off against a disposable local proxy.
 

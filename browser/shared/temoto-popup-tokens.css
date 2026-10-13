@@ -1,4 +1,4 @@
-:where(body[data-surface="popup"], body.popup-page) {
+:where(body[data-surface="popup"], body[data-surface="capture"], body.popup-page, body.manager-page) {
   --temoto-popup-bg: #080808;
   --temoto-popup-surface: rgba(255, 255, 255, 0.055);
   --temoto-popup-surface-hover: rgba(255, 255, 255, 0.09);
@@ -17,16 +17,24 @@
   --temoto-popup-accent-text: #bda5ff;
   --temoto-popup-focus: var(--temoto-popup-accent);
   --temoto-popup-disabled-opacity: 0.5;
-  --temoto-popup-font: "Geist Variable", Geist, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  --temoto-ui-font: "Geist Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --temoto-popup-font: var(--temoto-ui-font);
   --temoto-popup-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --temoto-popup-width: 416px;
-  --temoto-popup-height: 500px;
+  --temoto-popup-height: auto;
   --temoto-popup-header-height: 60px;
   --temoto-popup-header-bg: var(--temoto-popup-bg);
-  --temoto-popup-brand-size: 21px;
-  --temoto-popup-brand-weight: 700;
+  --temoto-popup-brand-size: 1.375rem;
+  --temoto-popup-brand-weight: 650;
   --temoto-popup-brand-context-weight: 500;
-  --temoto-popup-brand-tracking: -0.045em;
+  --temoto-popup-brand-tracking: -0.035em;
+  --temoto-control-height: 44px;
+  --temoto-action-row-height: 56px;
+  --temoto-launcher-row-height: 68px;
+  --temoto-control-font-size: .8125rem;
+  --temoto-control-font-weight: 500;
+  --temoto-label-font-size: .9375rem;
+  --temoto-label-font-weight: 500;
   --temoto-popup-icon-size: 21px;
   --temoto-popup-icon-color: var(--temoto-popup-control-text);
   --temoto-popup-icon-opacity: 1;
@@ -41,7 +49,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :is(body[data-surface="popup"], body.popup-page) *,
-  :is(body[data-surface="popup"], body.popup-page) *::before,
-  :is(body[data-surface="popup"], body.popup-page) *::after { transition: none !important; }
+  :is(body[data-surface="popup"], body[data-surface="capture"], body.popup-page, body.manager-page) *,
+  :is(body[data-surface="popup"], body[data-surface="capture"], body.popup-page, body.manager-page) *::before,
+  :is(body[data-surface="popup"], body[data-surface="capture"], body.popup-page, body.manager-page) *::after { transition: none !important; }
 }

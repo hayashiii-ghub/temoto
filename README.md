@@ -1,6 +1,6 @@
 # temoto
 
-temoto contains two independently installable Chrome extensions: four focused page tools and a separate development proxy manager.
+temoto contains two independently installable Chrome extensions: four focused page tools and a separate extension for development proxy profiles.
 
 - [Website](https://temoto.haygsiiii.chatgpt.site)
 - [temoto for Chrome](https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid)
@@ -21,13 +21,13 @@ Source, privacy details, development commands, and packaging instructions are in
 
 ### temoto Proxy
 
-A standalone companion for named HTTP, HTTPS, SOCKS, domain-routing, PAC, and authenticated proxy profiles. It remains separate because Chrome's `proxy` permission changes browser-wide network behavior.
+A standalone extension for named HTTP, HTTPS, SOCKS, domain-routing, PAC, and authenticated proxy profiles, added and edited inside its popup. It remains separate because Chrome's `proxy` permission changes browser-wide network behavior.
 
 Source, privacy details, development commands, and packaging instructions are in [`browser/temoto-proxy/`](./browser/temoto-proxy/).
 
 ## Privacy
 
-temoto does not use accounts, analytics, or telemetry. Settings remain in Chrome's local extension storage. Proxy credentials are session-only and are never included in exports.
+temoto does not use accounts, analytics, or telemetry. Settings remain in Chrome's local extension storage. Proxy passwords are session-only; exported profiles omit passwords and authentication usernames.
 
 - [temoto for Chrome privacy policy](./browser/temoto-chrome/PRIVACY.md)
 - [temoto Proxy privacy policy](./browser/temoto-proxy/PRIVACY.md)

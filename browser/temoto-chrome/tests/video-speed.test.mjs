@@ -4,20 +4,12 @@ import assert from "node:assert/strict";
 import {
   clampPlaybackSpeed,
   speedFromShortcut,
-  speedToSliderPosition,
-  sliderPositionToSpeed,
 } from "../src/video-speed.ts";
 
 test("playback speed is capped between 0.25x and 5x", () => {
   assert.equal(clampPlaybackSpeed(0), 0.25);
   assert.equal(clampPlaybackSpeed(0.1), 0.25);
   assert.equal(clampPlaybackSpeed(7), 5);
-});
-
-test("two thirds of the slider reaches 2x", () => {
-  assert.ok(Math.abs(speedToSliderPosition(2) - (2000 / 3)) < 0.001);
-  assert.equal(sliderPositionToSpeed(2000 / 3), 2);
-  assert.equal(sliderPositionToSpeed(1000), 5);
 });
 
 test("video speed shortcuts use the requested increments", () => {

@@ -1,37 +1,41 @@
 # Privacy policy for temoto Proxy
 
-Last updated: September 13, 2026 (prepared for version 1.2.0)
+Last updated: October 13, 2026 (local draft for the popup-only source)
 
-temoto Proxy is a local Chrome extension for managing development proxy profiles. It does not transmit personal data, browsing data, page content, request bodies, response bodies, or analytics to the developer or to third parties.
+This policy describes the current source changes; it does not confirm that they have been published to the Chrome Web Store.
 
-## Data stored locally
+temoto Proxy manages development proxy profiles locally. It does not send browsing data, page content, request/response bodies, or analytics to the developer.
 
-The extension stores proxy profile names, endpoints, routing rules, bypass entries, PAC configuration, diagnostic URLs, authentication usernames, and UI state in Chrome's local extension storage. This data stays on the device unless the user explicitly exports profiles.
+## Local storage and drafts
 
-Proxy passwords are never stored in local or synchronized storage. They are held only in Chrome's in-memory session storage, are available only to extension contexts, and disappear when the browser session ends. Exported profiles omit usernames and passwords.
+Saved profile names, endpoints, routing rules, bypass entries, PAC configuration, diagnostic URLs, authentication usernames, and selected/active state remain in Chrome's local extension storage.
+
+Passwords are held only in Chrome's in-memory session storage and disappear when the browser session ends. A username change without a new password clears the old session credentials; matching usernames may retain an existing session password. Exported profiles omit authentication usernames and passwords.
+
+Unfinished popup edits are kept in browser-session storage so closing and reopening the popup can restore them. Drafts exclude passwords. Saving or canceling an edit removes its draft; closing the popup does not apply the draft's network changes.
 
 ## Network access
 
-When the user activates a profile, Chrome sends matching browser traffic through the proxy selected by the user. temoto Proxy does not receive or inspect the contents of that traffic.
+Activating a profile tells Chrome to send matching browser traffic through the user's selected proxy. temoto does not inspect or retain that traffic's contents. A user-provided remote PAC URL is fetched by Chrome as part of the selected configuration.
 
-When the user runs a connection test, the extension sends a credential-free HTTP `HEAD` request to the public URL entered by the user and displays the status and elapsed time locally. Local, private-network and metadata destinations are rejected, and redirects are not followed. No temoto-operated endpoint is used.
+A user-requested connection test sends an HTTP HEAD request to a validated public URL with page credentials omitted and redirects disabled. It displays HTTP status and elapsed time locally. Proxy-authentication challenges are handled separately; the test does not identify exit IP or country. Destination validation rejects localhost names and literal private-address forms; the test uses only an accepted HTTP(S) URL. No temoto-operated test endpoint is used.
 
-The extension listens for proxy authentication challenges only. It supplies session credentials only when Chrome identifies the challenge as a proxy challenge and its proxy host exactly matches a host explicitly allowed in the active profile. Authentication attempts are limited to prevent retry loops.
+Proxy authentication is answered only for an allowed host while temoto owns the unchanged effective setting. The session username must match the saved profile. Attempts are bounded to prevent retry loops.
 
-When the separately installed temoto for Chrome companion is present, temoto Proxy accepts local messages only from its allowlisted extension ID. It may return effective status and profile ID, name, color, and kind, and may open its manager. Profile activation and safe Off remain actions in temoto Proxy itself, not in the companion API. It never returns endpoints, routing rules, PAC contents, bypass entries, usernames, passwords, or complete profiles to the companion.
+The companion API accepts only the allowlisted core extension ID and returns limited effective status and profile identity. It never returns endpoints, rules, PAC content, authentication data, or complete profiles. Legacy OPEN_MANAGER calls return an instruction to open the toolbar popup instead of opening a tab.
 
-## Permissions
+## Permissions and scope
 
-- `proxy`: reads, applies and clears Chrome proxy settings selected by the user.
-- `storage`: stores profiles locally and keeps passwords in session-only storage.
-- `webRequest`: receives the lifecycle events needed to bound proxy authentication attempts.
-- `webRequestAuthProvider`: answers an authenticated proxy challenge after explicit user configuration.
-- `<all_urls>`: allows authenticated proxy challenges for explicitly allowed proxy hosts and user-requested diagnostics for validated public destinations. It is not used to collect browsing history or page content.
+- `proxy`: read, apply, verify, and clear the selected Chrome proxy setting.
+- `storage`: store profiles locally and passwords/password-free drafts in session storage.
+- `webRequest`: receive proxy-authentication and request-completion events needed to bound retries.
+- `webRequestAuthProvider`: answer explicitly configured proxy challenges.
+- `<all_urls>`: support those challenges and user-requested diagnostics. It is not used to collect browsing history or page content.
 
-## Incognito
-
-Regular windows use Chrome's `regular_only` setting scope. Incognito settings are not changed unless the user enables both Chrome's “Allow in Incognito” access and temoto Proxy's own incognito control. The user can choose session-only or persistent incognito scope and can clear it at any time.
+Regular windows use `regular_only`. Incognito changes require both Chrome's Allow in Incognito access and the popup's explicit opt-in, with session-only or persistent scope. Off clears temoto's regular and accessible incognito overrides, allowing underlying Chrome/system settings to take effect.
 
 ## Sharing and deletion
 
-Export is initiated by the user and produces a local JSON file without secrets. Turning temoto Proxy off clears the extension's proxy override rather than forcing another connection mode. Deleting a profile removes it from extension storage; deleting an active profile clears the active override first. Disabling or uninstalling the extension also removes its control of Chrome's proxy setting.
+Export creates a local JSON file without authentication usernames or passwords; connection configuration such as endpoints and PAC content remains in it. Import resets test destinations to the public default. Replacement clears the active setting first and removes all session passwords.
+
+Deleting a profile removes it from extension storage; deleting an active profile clears its override first. Disabling or uninstalling the extension removes its control of Chrome's proxy setting.

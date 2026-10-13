@@ -14,7 +14,7 @@ It listens only on `127.0.0.1:4190`. `TEMOTO_CAPTURE_PORT` can override the port
 | --- | --- | --- |
 | `/?product=chrome&lang=en` or `lang=ja` | 1280 × 800 | Chrome launcher JPEG |
 | `/?product=proxy&lang=en` or `lang=ja` | 1280 × 800 | Proxy popup JPEG |
-| `/proxy/manager.html?lang=en` or `lang=ja` | 1280 × 800 | Proxy manager opaque PNG |
+| `/proxy/manager.html?lang=en` or `lang=ja` | 1280 × 800 | Historical manager route, available only from older builds |
 | `/?product=chrome&mode=promo` | 440 × 280 | Chrome small promo JPEG |
 | `/?product=proxy&mode=promo` | 440 × 280 | Proxy small promo JPEG |
 
@@ -23,3 +23,5 @@ Use browser capture, not reconstructed product markup. Set device scale to 1 aft
 The 2026-09-13 set was captured in the Codex in-app browser. Popup compositions label their sample data; manager captures show built-in sample profiles. Neither is evidence of installed Chrome runtime or network testing.
 
 Run the site's existing `npm run sync:product-icons` command after updating artwork to synchronize its canonical copies. This does not deploy the website.
+
+Current temoto Proxy uses only `popup.html` for home and profile editing. The retired manager route must not be used for new artwork. Existing manager images remain historical release material. Recapture the popup and its inline editor in English before publishing the popup-only version.

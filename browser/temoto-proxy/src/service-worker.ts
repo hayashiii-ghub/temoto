@@ -1,4 +1,4 @@
-import { createProxyRuntime } from "./proxy-runtime.js";
+import { createProxyRuntime, sessionCredentialsForProfile } from "./proxy-runtime.js";
 import type { ProxyProfile, ProxyStatus } from "./proxy-core.js";
 import type { SessionCredentials } from "./proxy-runtime.js";
 import { credentialsForProxyChallenge, proxyControlMatches } from "./proxy-core.js";
@@ -59,7 +59,6 @@ async function handleMessage(message: RuntimeMessage) {
     case "DIAGNOSE": return { ok: true, result: await runtime.diagnose(message.profileId) };
     case "EXPORT_PROFILES": return { ok: true, json: await runtime.exportProfiles() };
     case "IMPORT_PROFILES": return { ok: true, state: await runtime.importProfiles(message.json, message.mode) };
-    case "OPEN_MANAGER": await chrome.tabs.create({ url: chrome.runtime.getURL("manager.html") }); return { ok: true };
     default: return { ok: false, error: "Unknown message" };
   }
 }
@@ -75,7 +74,6 @@ chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => 
   if (!isTrustedCompanionSender(sender)) return false;
   handleCompanionMessage(message, {
     runtime,
-    openManager: async () => { await chrome.tabs.create({ url: chrome.runtime.getURL("manager.html") }); },
   })
     .then(async (response) => { await refreshAction().catch(() => {}); sendResponse(response); })
     .catch((error: unknown) => sendResponse({
@@ -103,7 +101,7 @@ chrome.webRequest.onAuthRequired.addListener(
         const profile = state.profiles.find((item) => item.id === state.activeProfileId);
         if (!profile || !proxyControlMatches(effective, state.activeFingerprint)) { callback({}); return; }
         const stored = session as { proxyCredentials: Record<string, SessionCredentials> };
-        const credentials = stored.proxyCredentials?.[profile.id];
+        const credentials = sessionCredentialsForProfile(profile, stored.proxyCredentials?.[profile.id]);
         const attemptKey = `${details.requestId}:${profile?.id || "none"}`;
         const attempts = authAttempts.get(attemptKey) || 0;
         const authCredentials = credentialsForProxyChallenge(details, profile, credentials, attempts);
@@ -128,7 +126,6 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   if (reason === "install" && !state.profiles.length) {
     const profile = createDefaultProfile();
     await chrome.storage.local.set({ profiles: [profile], selectedProfileId: profile.id });
-    await chrome.tabs.create({ url: chrome.runtime.getURL("manager.html") });
   }
   await refreshAction();
 });

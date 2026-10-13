@@ -6,7 +6,6 @@ import { t } from "./i18n.js";
 interface StateResponse { ok: true; state: EffectiveState }
 interface DiagnosticResponse { ok: true; result: DiagnosticResult }
 interface ExportResponse { ok: true; json: string }
-interface BasicResponse { ok: true }
 
 interface MessagePayloads {
   GET_STATE: undefined;
@@ -20,7 +19,6 @@ interface MessagePayloads {
   DIAGNOSE: { profileId: string };
   EXPORT_PROFILES: undefined;
   IMPORT_PROFILES: { json: string; mode: "replace" | "merge" };
-  OPEN_MANAGER: undefined;
 }
 
 interface MessageResponses {
@@ -35,7 +33,6 @@ interface MessageResponses {
   DIAGNOSE: DiagnosticResponse;
   EXPORT_PROFILES: ExportResponse;
   IMPORT_PROFILES: StateResponse;
-  OPEN_MANAGER: BasicResponse;
 }
 
 type MessageType = keyof MessagePayloads;
@@ -118,7 +115,6 @@ async function previewMessage<T extends MessageType>(type: T, payload: MessagePa
     previewState.selectedProfileId = previewState.profiles[0]?.id || null;
     return response();
   }
-  if (type === "OPEN_MANAGER") { window.location.assign("manager.html"); return { ok: true }; }
   throw new Error("Unknown preview message");
 }
 

@@ -15,7 +15,7 @@ const features = [
   ["Video Speed", "Control playback from 0.25× to 5×. Follow each video’s actual rate with popup controls or G/D/S."],
 ] as const;
 const faqs = [
-  ["What is temoto?", "temoto is a pair of focused Chrome extensions: four tools for the current page, and a separate manager for development proxy settings."],
+  ["What is temoto?", "temoto is a pair of focused Chrome extensions: four tools for the current page, and an independent popup for development proxy profiles."],
   ["Why are there two extensions?", "Chrome's proxy permission changes browser-wide network behavior. Keeping Proxy separate lets you install that permission only when you need it."],
   ["What is included in temoto?", "Color Picker, Screenshot, CSS, and Video Speed."],
   ["Which proxy types are supported?", "HTTP, HTTPS, SOCKS4, SOCKS5, domain routing, generated or existing PAC scripts, and authenticated profiles."],
@@ -85,7 +85,7 @@ export default function Home() {
       </section>
       <section className="section privacy" aria-labelledby="privacy-title">
         <h2 id="privacy-title">Permissions, plainly.</h2>
-        <dl className="privacyFacts"><div><dt>Page tools</dt><dd>Color, screenshot, and CSS tools act on the current page when you choose them.</dd></div><div><dt>Video Speed</dt><dd>Local shortcuts remain available on supported pages and follow each video’s actual rate.</dd></div><div><dt>Proxy</dt><dd>Active profiles affect browser-wide routing. Turning off clears temoto&apos;s override, not other extensions&apos; settings.</dd></div><div><dt>Credentials</dt><dd>Kept for the current browser session. Never included in exported profiles.</dd></div></dl>
+        <dl className="privacyFacts"><div><dt>Page tools</dt><dd>Color, screenshot, and CSS tools act on the current page when you choose them.</dd></div><div><dt>Video Speed</dt><dd>Local shortcuts remain available on supported pages and follow each video’s actual rate.</dd></div><div><dt>Proxy</dt><dd>Active profiles affect browser-wide routing. Turning off clears temoto&apos;s override, not other extensions&apos; settings.</dd></div><div><dt>Passwords</dt><dd>Kept for the current browser session. Never included in exported profiles.</dd></div></dl>
         <p className="section-copy">No temoto account, analytics, or telemetry. Page content, settings, and proxy credentials are not sent to us.</p>
         <div className="privacy-links"><a href={`${repositoryUrl}/blob/main/browser/temoto-chrome/PRIVACY.md`}>Chrome privacy <Arrow /></a><a href={`${repositoryUrl}/blob/main/browser/temoto-proxy/PRIVACY.md`}>Proxy privacy <Arrow /></a></div>
       </section>

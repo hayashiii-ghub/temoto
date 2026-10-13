@@ -28,6 +28,8 @@ Use [`browser/shared/STORE-CAPTURE.md`](../browser/shared/STORE-CAPTURE.md) and 
 
 The UI was simplified to compact English-only layouts on October 13, 2026; the current Store and website screenshots still show the earlier layout and need recapture before publishing that UI.
 
-The Chrome showcase and English/Japanese launcher Store images were recaptured on October 12, 2026 from the built four-tool popup through the existing capture stage. The Proxy showcase remains the September 12 capture. The strict popup theme remains the default UI. For future captures, use the core preview at `/?lang=en` and the separate Proxy preview at `/popup.html?lang=en`; use sample profiles, not credentials or private destinations. The old manager captures are no longer used and were removed.
+The Chrome showcase and English/Japanese launcher Store images were recaptured on October 12, 2026 from the built four-tool popup through the existing capture stage. The Proxy showcase remains the September 12 capture. The strict popup theme remains the default UI. For future captures, use the core preview at `/?lang=en` and the separate Proxy preview at `/popup.html?lang=en`; use sample profiles, not credentials or private destinations. The standalone Proxy manager has been retired. Its existing Store images and `site/public/product-proxy-manager.png` remain historical release material; do not delete or treat them as current UI evidence.
 
 After recapturing a showcase image, update its first-12-character SHA-256 query in `site/app/page.tsx`, preserve direct delivery (`unoptimized`), and run `npm run lint` and `npm test` in `site/`. Tests check dimensions, revision hashes, and Store-copy consistency. Keep capture notes here, not under the publicly served directory.
+
+Proxy now adds and edits profiles inside its popup. Recapture the popup home and inline editor before a release; the existing Proxy showcase and manager artwork have not been updated for this change.

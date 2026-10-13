@@ -23,6 +23,12 @@ export interface SessionCredentials {
   password: string;
 }
 
+export function sessionCredentialsForProfile(profile: ProxyProfile, credentials?: SessionCredentials | null): SessionCredentials | null {
+  return profile.auth.enabled && credentials?.password && credentials.username === profile.auth.username
+    ? credentials
+    : null;
+}
+
 interface SessionState {
   proxyCredentials: Record<string, SessionCredentials>;
 }
@@ -94,7 +100,7 @@ export function createProxyRuntime(
       ...profile,
       auth: {
         ...profile.auth,
-        passwordReady: Boolean(credentials.proxyCredentials?.[profile.id]?.password),
+        passwordReady: Boolean(sessionCredentialsForProfile(profile, credentials.proxyCredentials?.[profile.id])),
       },
     }));
     const status = statusFromEffectiveState({
@@ -229,7 +235,13 @@ export function createProxyRuntime(
       await chromeApi.storage.local.set({ profiles, selectedProfileId: profile.id });
     }
     if (profile.auth.enabled && password) await setCredentials(profile.id, profile.auth.username, password);
-    if (!profile.auth.enabled) await clearCredentials(profile.id);
+    else {
+      const credentials = (await session()).proxyCredentials?.[profile.id];
+      if (!profile.auth.enabled || exists?.auth.username !== profile.auth.username
+        || (credentials && !sessionCredentialsForProfile(profile, credentials))) {
+        await clearCredentials(profile.id);
+      }
+    }
     return effectiveState();
   }
 

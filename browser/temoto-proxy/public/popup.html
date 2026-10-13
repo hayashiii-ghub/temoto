@@ -2,38 +2,135 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>temoto Proxy</title>
     <link rel="stylesheet" href="popup-tokens.css" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="profile-editor.css" />
   </head>
   <body class="popup-page">
     <main class="popup-shell">
-      <header class="product-header">
-        <div class="brand" translate="no">temoto <span>Proxy</span></div>
-        <button class="icon-button" id="open-manager" type="button" aria-label="Open profile manager" title="Open profile manager">
-          <svg width="20" height="20" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M40,88H73a32,32,0,0,0,62,0h81a8,8,0,0,0,0-16H135a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16Zm64-24A16,16,0,1,1,88,80,16,16,0,0,1,104,64ZM216,168H199a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16h97a32,32,0,0,0,62,0h17a8,8,0,0,0,0-16Zm-48,24a16,16,0,1,1,16-16A16,16,0,0,1,168,192Z" /></svg>
-        </button>
-      </header>
+      <section id="home-view" class="popup-view">
+        <header class="product-header">
+          <div class="brand" translate="no">temoto <span>Proxy</span></div>
+          <button class="icon-button" id="new-profile" type="button" aria-label="New profile" title="New profile"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg></button>
+        </header>
+        <div class="home-scroll">
+          <section class="popup-status" aria-live="polite">
+            <div class="status-line"><i id="status-dot"></i><span id="status-label">Reading Chrome settings…</span><span class="popup-scope" id="scope-status"></span></div>
+            <h1 id="active-name" hidden></h1>
+            <p id="active-detail" hidden></p>
+          </section>
+          <div class="popup-primary-actions" id="popup-actions" hidden>
+            <button class="button secondary" id="toggle-active" type="button" disabled>Off</button>
+          </div>
+          <div class="notice" id="status-notice" role="status" hidden></div>
+          <div class="action-result" id="action-result" role="alert" hidden></div>
+          <section class="popup-profiles" aria-labelledby="profiles-title">
+            <div class="section-heading"><h2 id="profiles-title">Profiles</h2><span id="profile-count"></span></div>
+            <div class="profile-list" id="profile-list"></div>
+          </section>
+          <details class="popup-options settings-section">
+            <summary>Options</summary>
+            <div class="options-content">
+              <div class="paired-actions"><button class="button secondary" id="import-profiles" type="button">Import</button><button class="button secondary" id="export-profiles" type="button">Export</button></div>
+              <input id="import-file" type="file" accept="application/json,.json" hidden />
+              <div id="import-choice" class="inline-confirm" hidden><p>Merge this file, or replace all profiles? Replace clears the active setting and session passwords.</p><div class="paired-actions"><button class="button secondary" id="import-merge" type="button">Merge</button><button class="button secondary" id="import-replace" type="button">Replace all</button></div><button class="button secondary" id="import-cancel" type="button">Cancel</button></div>
+          <details class="settings-section global-settings">
+            <summary><span><strong>Incognito</strong></span></summary>
+            <label class="inline-choice"><input type="checkbox" id="incognito-enabled" /><span><strong>Apply active profile in incognito</strong></span></label>
+            <p class="permission-state" id="incognito-help" hidden></p>
+            <label class="inline-choice compact" id="incognito-session-row" hidden><input type="checkbox" id="incognito-session" checked /><span><strong>Session only</strong></span></label>
+          </details>
 
-      <section class="popup-status" aria-live="polite">
-        <div class="status-line"><i id="status-dot"></i><span id="status-label">Reading Chrome settings…</span><span class="popup-scope" id="scope-status"></span></div>
-        <h1 id="active-name">Proxy state</h1>
-        <p id="active-detail">Checking the effective browser configuration.</p>
-        <div class="popup-primary-actions" id="popup-actions" hidden>
-          <button class="button primary" id="toggle-active" type="button" disabled>Loading…</button>
-          <button class="button secondary" id="test-active" type="button" hidden>Test</button>
+            </div>
+          </details>
         </div>
       </section>
+      <section id="editor-view" class="popup-view" hidden>
+        <header class="product-header editor-header">
+          <button class="back-button" id="close-editor" type="button" aria-label="Back to profiles"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>
+          <h1 id="editor-title">New profile</h1>
+        </header>
+        <form id="profile-form" method="post" novalidate>
+          <div class="editor-scroll">
+            <div class="action-result" id="editor-result" tabindex="-1" role="alert" hidden></div>
+            <div class="editor-fields">
+              <label class="field"><span>Profile name</span><input name="name" maxlength="80" required autocomplete="off" /></label>
+              <fieldset class="segmented"><legend class="visually-hidden">Connection type</legend>
+                <label><input type="radio" name="kind" value="fixed" checked /><span>Fixed proxy</span></label>
+                <label><input type="radio" name="kind" value="pac" /><span>PAC URL</span></label>
+                <label id="routing-kind" hidden><input type="radio" name="kind" value="rules" /><span>Domain routing</span></label>
+              </fieldset>
+          <section class="connection-section" id="fixed-section">
+            <div class="connection-heading"><h2>Connection</h2>
+              <label class="inline-choice protocol-choice"><span>Use protocol-specific proxies</span><input type="checkbox" name="perProtocol" /></label>
+            </div>
+            <div id="single-endpoint" class="endpoint-block">
+              <div class="endpoint-grid" data-endpoint="single"></div>
+            </div>
+            <div id="protocol-endpoints" class="protocol-endpoints" hidden>
+              <div class="endpoint-block"><h3>HTTP requests</h3><div class="endpoint-grid" data-endpoint="http"></div></div>
+              <div class="endpoint-block"><h3>HTTPS requests</h3><div class="endpoint-grid" data-endpoint="https"></div></div>
+              <div class="endpoint-block"><h3>Fallback</h3><div class="endpoint-grid" data-endpoint="fallback"></div></div>
+            </div>
+          </section>
 
-      <div class="notice" id="status-notice" role="status" hidden></div>
-      <div class="action-result" id="action-result" role="alert" hidden></div>
+          <section class="connection-section" id="routing-section" hidden>
+            <div class="section-intro"><h2>Routing rules</h2></div>
+            <div class="routing-default">
+              <span>When no rule matches</span>
+              <select name="defaultAction"><option value="proxy">Use proxy</option><option value="direct">Connect directly</option></select>
+            </div>
+            <div class="rule-list" id="rule-list"></div>
+            <button class="row-add" id="add-rule" type="button">＋ Add domain rule</button>
+          </section>
 
-      <section class="popup-profiles" aria-labelledby="profiles-title">
-        <div class="section-heading"><h2 id="profiles-title">Profiles</h2><span id="profile-count"></span></div>
-        <div class="profile-list" id="profile-list"></div>
+          <section class="connection-section" id="pac-section" hidden>
+            <div class="section-intro"><h2>PAC</h2></div>
+            <div class="form-grid two-columns">
+              <label class="field"><span>Source</span><select name="pacSource"><option value="inline">Inline script</option><option value="url">PAC URL</option></select></label>
+              <label class="inline-choice compact"><input type="checkbox" name="pacMandatory" /><span><strong>Block direct fallback</strong></span></label>
+            </div>
+            <label class="field"><span id="pac-value-label">PAC script</span><textarea name="pacValue" rows="9" spellcheck="false"></textarea></label>
+          </section>
+
+          <details class="settings-section" id="bypass-section">
+            <summary><span><strong>Direct connections</strong></span></summary>
+            <label class="field"><span>Bypass list · one per line</span><textarea name="bypassList" rows="5" spellcheck="false" placeholder="&lt;local&gt;&#10;localhost&#10;*.internal.test"></textarea></label>
+          </details>
+
+          <details class="settings-section" id="authentication-section">
+            <summary><span><strong>Authentication</strong></span></summary>
+            <label class="inline-choice"><input type="checkbox" name="authEnabled" /><span><strong>Proxy authentication</strong></span></label>
+            <div id="auth-fields" class="form-grid auth-grid" hidden>
+              <label class="field"><span>Username</span><input name="username" autocomplete="username" /></label>
+              <label class="field"><span>Session password</span><input name="password" type="password" autocomplete="current-password" placeholder="Password" /></label>
+              <label class="field full-span"><span>Allowed proxy hosts · one per line</span><textarea name="authHosts" rows="3" spellcheck="false" placeholder="proxy.example.com"></textarea></label>
+              <div class="credential-state full-span" id="credential-state"></div>
+            </div>
+          </details>
+
+          <details class="settings-section" id="connection-test-section">
+            <summary><span><strong>Connection test</strong></span></summary>
+            <div class="diagnostic-row">
+              <label class="field"><span>Test URL</span><input name="diagnosticUrl" type="url" placeholder="https://example.com/" /></label>
+              <button class="button secondary" id="run-diagnostic" type="button">Save & test</button>
+            </div>
+            <div class="diagnostic-result" id="diagnostic-result" role="status" hidden></div>
+          </details>
+
+
+              <details id="profile-tools" class="settings-section">
+                <summary>Profile actions</summary>
+                <div class="paired-actions"><button class="button secondary" id="duplicate-profile" type="button">Duplicate</button><button class="button secondary" id="delete-profile" type="button">Delete</button></div>
+                <div id="delete-choice" class="inline-confirm" hidden><p id="delete-message"></p><div class="paired-actions"><button class="button secondary" id="delete-cancel" type="button">Keep profile</button><button class="button secondary" id="delete-confirm" type="button">Delete profile</button></div></div>
+              </details>
+            </div>
+          </div>
+          <footer class="editor-footer"><button class="button secondary" id="cancel-edit" type="button">Cancel</button><button class="button primary" id="save-profile" type="submit">Save</button></footer>
+        </form>
       </section>
-
     </main>
     <script type="module" src="popup.js"></script>
   </body>

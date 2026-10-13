@@ -1,55 +1,46 @@
 # temoto Proxy
 
-`temoto Proxy` uses an English-only interface to turn Chrome proxy settings into named development workspaces that are visible, reversible and safe to share. It is a separate companion to `temoto for Chrome` because Chrome's mandatory `proxy` permission changes browser-wide network behavior.
+`temoto Proxy` is an English-only Chrome extension for saving and switching development proxy profiles. Add and edit profiles inside the popup; there is no separate manager tab. It remains independently installable from `temoto` because Chrome's `proxy` permission changes browser-wide connection settings.
 
-## Product goal
-
-Web developers can switch browser network routes without proxy expertise or fear of leaving Chrome misconfigured. Every effective state is visible, every temoto override can be cleared, and traffic content never leaves the browser through temoto.
+日本語の機能説明と操作例は [FEATURES.ja.md](./FEATURES.ja.md) を参照してください。
 
 ## Features
 
-- Fixed HTTP, HTTPS, SOCKS4 and SOCKS5 proxy profiles.
-- Single-proxy or protocol-specific HTTP, HTTPS and fallback endpoints.
-- Ordered domain routing rules compiled to a local PAC script.
-- Inline or URL-based PAC profiles with explicit mandatory-mode warnings.
-- Chrome-compatible bypass lists.
-- One-click activation and a safe Off action that clears temoto's setting instead of forcing direct mode.
-- Detection of policy and higher-priority extension conflicts.
-- Session-only proxy authentication restricted to explicit proxy hosts.
-- Credential-free connection diagnostics against a public user-selected URL without redirect following.
-- Secret-free JSON import, export and team sharing; imported test URLs reset to the public default, and replace imports clear session passwords.
-- Explicit, isolated incognito control with session-only or persistent scope.
-- Persistent toolbar state and recovery across Manifest V3 service-worker restarts.
-- An allowlisted companion summary in the `temoto for Chrome` side panel for effective status and opening the manager.
+- Use the header `+` to add a Fixed proxy or PAC URL profile, and `Edit` beside a saved profile to change it.
+- Click a profile to activate it. Off clears temoto's override and lets Chrome's underlying setting take effect.
+- Keep existing Domain routing, per-protocol HTTP/HTTPS/fallback endpoints, inline PAC, bypass rules, and authentication settings editable. Advanced imported profiles retain the existing schema and fields.
+- Run a connection test from the editor for the active profile. The test uses HEAD, omits page credentials, and does not follow redirects.
+- Use collapsed home Options for Import, Export, and explicitly enabled Incognito access.
+- Duplicate the saved configuration or delete a profile from editor Profile actions. Active-profile edits reapply when saved; deleting an active profile clears its override first.
+- Restore unfinished popup drafts during the same browser session without retaining draft passwords.
+- Show effective state, policy/extension conflicts, credential readiness, and actual failures inline.
+
+The popup-only changes are local source work, not a claim about the live Store package. Existing Store and website images require refresh before this version is released.
 
 ## Privacy and permissions
 
-The extension does not collect browsing history, URLs, request or response bodies, analytics, or telemetry. Profiles remain in `chrome.storage.local`. Proxy passwords remain only in `chrome.storage.session` and are excluded from exports.
+Profiles, connection configuration, authentication usernames, and selected state remain in `chrome.storage.local`. Passwords stay in `chrome.storage.session`; draft state also uses session storage with password fields excluded. Exported profiles omit authentication usernames and passwords but retain the connection configuration needed to reuse the profile.
 
-The `proxy` permission is the product's core capability. `webRequest` and `webRequestAuthProvider`, together with `<all_urls>`, are used only to answer proxy authentication challenges for explicitly allowed proxy hosts. They are not used to inspect or modify page traffic.
+The extension does not collect browsing history, request/response bodies, analytics, or telemetry. `proxy` controls the selected Chrome proxy setting; `webRequest` and `webRequestAuthProvider` handle bounded challenges from explicitly allowed proxy hosts. `<all_urls>` supports those challenges and user-requested public connection tests.
 
-See [PRIVACY.md](./PRIVACY.md) for the complete policy.
+See [PRIVACY.md](./PRIVACY.md) for the full policy.
 
-## Development
+## Development and release
 
-All extension runtime code lives in `src/` as strict TypeScript. The build emits browser-ready ES modules into `dist/client` alongside the static HTML, CSS, and manifest files from `public/`.
+Runtime code lives in `src/` as strict TypeScript. The build emits browser-ready modules and the popup's HTML/CSS into `dist/client`.
 
 ```sh
 npm run check
 ```
 
-Load `dist/client` from `chrome://extensions` as an unpacked extension.
-
-## temoto for Chrome integration
-
-The extension exposes a versioned, extension-ID-allowlisted API to `temoto for Chrome`. It returns only profile identity and effective status; endpoints, PAC contents, bypass rules, authentication data, and complete profiles never cross the extension boundary.
-
-Both unpacked extensions use the public keys issued by the Developer Dashboard, so their local IDs match the store items. The companion allowlist connects temoto Proxy `hohabmdadcdkifcmbclkgnomhhlllnbb` only to the existing temoto for Chrome item `gcncgknjklghkoeiapcbdghodepnllid`.
-
-Create the Chrome Web Store ZIP:
+Load `dist/client` as an unpacked extension from `chrome://extensions`. Do not apply a real proxy merely to verify popup layout.
 
 ```sh
 npm run package
 ```
 
-The Web Store ZIP omits the manifest `key` because the dashboard rejects that field; unpacked builds retain the store-issued public key so their ID matches the reserved store item.
+Packaging produces a ZIP with `manifest.json` at its root and removes the manifest `key`; unpacked builds retain the reserved Store identity. [store/listing.md](./store/listing.md) is the authoritative release copy and checklist. [CHROMEWEBSTORE.md](./CHROMEWEBSTORE.md) tracks the unpublished popup-only changes.
+
+## Companion compatibility
+
+The extension-ID-allowlisted API still provides `GET_SUMMARY` with profile identity and effective status. It never returns endpoints, rules, PAC content, authentication data, or complete profiles. `OPEN_MANAGER` is retained only as a compatibility error directing callers to the Chrome toolbar; it does not open a page.

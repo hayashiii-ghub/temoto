@@ -44,23 +44,24 @@ test("external callers are accepted only when their extension ID matches", () =>
   assert.equal(isTrustedCompanionSender({}, "allowed"), false);
 });
 
-test("the companion API supports summary and manager opening only", async () => {
+test("the companion API keeps summaries and directs legacy manager requests to the toolbar", async () => {
   const calls = [];
   const runtime = {
     async effectiveState() { calls.push(["summary"]); return state; },
   };
-  const openManager = async () => { calls.push(["manager"]); };
   const message = (action, payload = {}) => ({ namespace: "temoto-proxy", protocolVersion: COMPANION_PROTOCOL_VERSION, action, ...payload });
 
-  assert.equal((await handleCompanionMessage(message("GET_SUMMARY"), { runtime, openManager })).summary.status.code, "active");
-  assert.deepEqual(await handleCompanionMessage(message("OPEN_MANAGER"), { runtime, openManager }), { ok: true, protocolVersion: COMPANION_PROTOCOL_VERSION });
-  await assert.rejects(handleCompanionMessage(message("ACTIVATE_PROFILE", { profileId: "staging" }), { runtime, openManager }), /Unsupported companion action/);
-  await assert.rejects(handleCompanionMessage(message("DEACTIVATE"), { runtime, openManager }), /Unsupported companion action/);
-  assert.deepEqual(calls, [["summary"], ["manager"]]);
+  assert.equal((await handleCompanionMessage(message("GET_SUMMARY"), { runtime })).summary.status.code, "active");
+  assert.deepEqual(await handleCompanionMessage(message("OPEN_MANAGER"), { runtime }), {
+    ok: false, protocolVersion: COMPANION_PROTOCOL_VERSION, error: "Open temoto Proxy from the Chrome toolbar.",
+  });
+  await assert.rejects(handleCompanionMessage(message("ACTIVATE_PROFILE", { profileId: "staging" }), { runtime }), /Unsupported companion action/);
+  await assert.rejects(handleCompanionMessage(message("DEACTIVATE"), { runtime }), /Unsupported companion action/);
+  assert.deepEqual(calls, [["summary"]]);
 });
 
 test("the companion API rejects unknown versions, actions and invalid profile IDs", async () => {
-  const dependencies = { runtime: {}, openManager: async () => {} };
+  const dependencies = { runtime: {} };
   await assert.rejects(handleCompanionMessage({ namespace: "other", protocolVersion: 1, action: "GET_SUMMARY" }, dependencies), /Unsupported companion request/);
   await assert.rejects(handleCompanionMessage({ namespace: "temoto-proxy", protocolVersion: 2, action: "GET_SUMMARY" }, dependencies), /Unsupported companion request/);
   await assert.rejects(handleCompanionMessage({ namespace: "temoto-proxy", protocolVersion: 1, action: "SAVE_PROFILE" }, dependencies), /Unsupported companion action/);

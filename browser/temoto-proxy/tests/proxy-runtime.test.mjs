@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createProfile, profileToProxyConfig } from "../dist/client/proxy-core.js";
-import { createProxyRuntime } from "../dist/client/proxy-runtime.js";
+import { createProfile, credentialsForProxyChallenge, profileToProxyConfig } from "../dist/client/proxy-core.js";
+import { createProxyRuntime, sessionCredentialsForProfile } from "../dist/client/proxy-runtime.js";
 
 function storageArea(initial = {}) {
   const data = structuredClone(initial);
@@ -149,6 +149,77 @@ test("credentials are written only to session storage and surfaced as readiness"
   assert.equal(mock.local.data.proxyCredentials, undefined);
   assert.equal(mock.session.data.proxyCredentials.secure.password, "session-secret");
   assert.equal(state.profiles[0].auth.passwordReady, true);
+});
+
+for (const active of [false, true]) {
+  test(`changing a ${active ? "active" : "saved"} profile username without a password clears only its session credentials`, async () => {
+    const mock = chromeMock();
+    const profile = createProfile({ id: "secure", auth: { enabled: true, username: "dev", allowedHosts: ["proxy.test"] } });
+    await mock.local.set({ profiles: [profile] });
+    const runtime = createProxyRuntime(mock.api);
+    await runtime.setCredentials(profile.id, "dev", "old-password");
+    const other = { username: "other", password: "other-password" };
+    await mock.session.set({ proxyCredentials: { ...mock.session.data.proxyCredentials, other } });
+    if (active) await runtime.activate(profile.id);
+    const updated = await runtime.saveProfile({ ...profile, auth: { ...profile.auth, username: "new-user" } });
+    assert.equal(updated.profiles[0].auth.username, "new-user");
+    assert.equal(updated.profiles[0].auth.passwordReady, false);
+    assert.equal(mock.session.data.proxyCredentials.secure, undefined);
+    assert.deepEqual(mock.session.data.proxyCredentials.other, other);
+    assert.equal(mock.local.data.proxyCredentials, undefined);
+  });
+}
+
+test("saving an unchanged username with a blank password retains the current session credentials", async () => {
+  const mock = chromeMock();
+  const profile = createProfile({ id: "secure", auth: { enabled: true, username: "dev", allowedHosts: ["proxy.test"] } });
+  await mock.local.set({ profiles: [profile] });
+  const runtime = createProxyRuntime(mock.api);
+  await runtime.setCredentials(profile.id, "dev", "session-secret");
+  const updated = await runtime.saveProfile({ ...profile, name: "Renamed profile" });
+  assert.equal(updated.profiles[0].auth.passwordReady, true);
+  assert.deepEqual(mock.session.data.proxyCredentials.secure, { username: "dev", password: "session-secret" });
+});
+
+test("a replacement password binds credentials to the newly saved username", async () => {
+  const mock = chromeMock();
+  const profile = createProfile({ id: "secure", auth: { enabled: true, username: "dev", allowedHosts: ["proxy.test"] } });
+  await mock.local.set({ profiles: [profile] });
+  const runtime = createProxyRuntime(mock.api);
+  await runtime.setCredentials(profile.id, "dev", "old-password");
+  const updated = await runtime.saveProfile({ ...profile, auth: { ...profile.auth, username: "new-user" } }, "new-password");
+  assert.equal(updated.profiles[0].auth.passwordReady, true);
+  assert.deepEqual(mock.session.data.proxyCredentials.secure, { username: "new-user", password: "new-password" });
+});
+
+test("legacy mismatched session credentials are never reported ready or used for a challenge", async () => {
+  const mock = chromeMock();
+  const profile = createProfile({ id: "secure", auth: { enabled: true, username: "new-user", allowedHosts: ["proxy.test"] } });
+  const stale = { username: "old-user", password: "old-password" };
+  await mock.local.set({ profiles: [profile] });
+  await mock.session.set({ proxyCredentials: { secure: stale } });
+  const runtime = createProxyRuntime(mock.api);
+  assert.equal((await runtime.effectiveState()).profiles[0].auth.passwordReady, false);
+  const challenge = { isProxy: true, challenger: { host: "proxy.test", port: 8080 } };
+  assert.equal(credentialsForProxyChallenge(challenge, profile, sessionCredentialsForProfile(profile, stale), 0), null);
+  const matching = { username: "new-user", password: "new-password" };
+  assert.deepEqual(credentialsForProxyChallenge(challenge, profile, sessionCredentialsForProfile(profile, matching), 0), matching);
+  await runtime.saveProfile(profile);
+  assert.equal(mock.session.data.proxyCredentials.secure, undefined);
+});
+
+test("a failed active-profile save retains matching credentials for the rolled-back username", async () => {
+  const mock = chromeMock();
+  const profile = createProfile({ id: "secure", auth: { enabled: true, username: "dev", allowedHosts: ["proxy.test"] } });
+  await mock.local.set({ profiles: [profile] });
+  const runtime = createProxyRuntime(mock.api);
+  await runtime.setCredentials(profile.id, "dev", "session-secret");
+  await runtime.activate(profile.id);
+  mock.behavior.failNextSetAfterWrite = true;
+  await assert.rejects(runtime.saveProfile({ ...profile, auth: { ...profile.auth, username: "new-user" } }), /simulated set failure/);
+  assert.equal(mock.local.data.profiles[0].auth.username, "dev");
+  assert.deepEqual(mock.session.data.proxyCredentials.secure, { username: "dev", password: "session-secret" });
+  assert.equal((await runtime.effectiveState()).profiles[0].auth.passwordReady, true);
 });
 
 test("editing an active profile reapplies its validated Chrome configuration", async () => {
