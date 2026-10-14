@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const title = "temoto for Chrome";
+const title = "temoto";
 const description =
   "Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching in one Chrome extension.";
 
