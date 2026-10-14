@@ -14,7 +14,7 @@ function statusError(state: ProxyState | null): string {
   return state.error || ({ conflict: "Another extension or Chrome policy controls proxy settings.", changed: "Chrome's proxy setting no longer matches this profile.", error: "Could not read proxy settings." }[state.status]);
 }
 
-export default function ProxyPanel({ onError }: { onError?: (message: string) => void }) {
+export default function ProxyPanel() {
   const [state, setState] = useState<ProxyState | null>(null);
   const [draft, setDraft] = useState<ProxyDraft | null>(null);
   const [error, setError] = useState("");
@@ -31,7 +31,7 @@ export default function ProxyPanel({ onError }: { onError?: (message: string) =>
   const issue = error || statusError(state);
 
   function report(message: string, focus = false) {
-    setError(message); onError?.(message);
+    setError(message);
     if (focus) requestErrorFocus((value) => value + 1);
   }
   useEffect(() => {

@@ -240,7 +240,6 @@ async function capture(tab: CaptureTarget, captureFrame: () => Promise<string>):
 
 async function captureFullPage(tab: CaptureTarget, captureFrame: () => Promise<string>): Promise<{ frameCount: number; height: number }> {
   const setup = await executeInTab(tab.id, () => {
-    const stateKey = "__temotoFullPageCaptureState";
     const captureWindow = window as typeof window & { __temotoFullPageCaptureState?: FullPageCaptureState };
     const previous = captureWindow.__temotoFullPageCaptureState;
     if (previous) {

@@ -22,7 +22,7 @@ Use browser capture, not reconstructed product markup. Set device scale to 1 aft
 
 The 2026-09-13 set was captured in the Codex in-app browser. Popup compositions label their sample data; manager captures show built-in sample profiles. Neither is evidence of installed Chrome runtime or network testing.
 
-Run the site's existing `npm run sync:product-icons` command after updating main-extension artwork to synchronize its Chrome icon and launcher copies. It no longer rebuilds or refreshes legacy Proxy images. This does not deploy the website.
+Brand assets are served from `browser/shared/` and the core extension's bundled Geist font. The capture stage does not depend on the website's public assets. Store artwork stays in each extension's `store/assets/`; the website's OG template uses its separate 416 × 402 launcher capture.
 
 On October 13, 2026 the built five-row launcher—Color Picker, Screenshot, CSS, Video Speed, and Proxy—was recaptured for the site as a 416 × 402 PNG (SHA-256 prefix `47ae7d5e3c53`) and for the English/Japanese Store artwork as 1280 × 800 JPEGs. Formats, dimensions, and the saved images were checked. The single-product OG image was also refreshed as a 1200 × 630 PNG. These captures do not verify native Chrome permissions or real proxy traffic.
 

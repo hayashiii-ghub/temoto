@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { captureVisible, captureFullPage, detectPage, getSettings, pickColor, refreshPage, startMeasure } from "../src/extension-api.ts";
 
-test("old and malformed settings cannot corrupt the four-tool preferences", async () => {
+test("old and malformed settings cannot corrupt color preferences", async () => {
   let requested;
   globalThis.chrome = {
     runtime: { id: "test-extension" },

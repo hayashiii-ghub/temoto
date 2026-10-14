@@ -1,8 +1,10 @@
 # Chrome Web Store readiness — temoto Proxy
 
-Last updated: 2026-10-13
+Last updated: 2026-10-14
 
 This is the retained legacy standalone extension, rather than a second main product. Simple Proxy switching is now developed in [temoto for Chrome](../temoto-chrome/). Its code, profiles, and credentials are preserved for existing users and explicit migration.
+
+The separate Chrome Web Store item was unpublished on October 14, 2026. The historical package and Store artwork remain available locally; no new legacy release is planned by this cleanup.
 
 The legacy popup-only editor is local source work. Source version **1.2.0** is unchanged. No upload, submission, or publication of these changes is claimed. No new legacy release is authorized by the main-extension integration.
 
@@ -26,7 +28,7 @@ The legacy popup-only editor is local source work. Source version **1.2.0** is u
 
 - Verify the installed extension's popup/editor/draft and legacy profiles in stable Chrome.
 - Review real proxy activation, Off, authentication, conflicts, and Incognito against a controlled disposable proxy.
-- Recapture the current popup home and inline editor. Existing Store manager images and website copies remain historical material and are not current release evidence.
+- Recapture the current popup home and inline editor. Existing Store manager images remain historical material and are not current release evidence.
 - Select a release version, prepare an authorized ZIP, and verify matching public policy/listing/dashboard declarations.
 - Treat package creation, submission, review, and public availability as separate states requiring their own evidence.
 

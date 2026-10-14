@@ -166,7 +166,7 @@ function ScreenshotPanel({ onError }: { onError: (message: string) => void }) {
       <button className="secondary-action" type="button" disabled={busy} onClick={() => run("visible")}>
         <Camera size={18} /> {t("Visible area")}
       </button>
-      <button className="secondary-action full-page-action" type="button" disabled={busy} onClick={() => run("full")}>
+      <button className="secondary-action" type="button" disabled={busy} onClick={() => run("full")}>
         <ArrowsOutLineVertical size={18} /> {t("Full page")}
       </button>
       {busy && <p role="status">{t("Capturing… Keep the page active.")}</p>}

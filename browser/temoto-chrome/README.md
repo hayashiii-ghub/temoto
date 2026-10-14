@@ -1,6 +1,6 @@
 # temoto for Chrome
 
-`temoto for Chrome` keeps five tools in one English-only popup: Color Picker, Screenshot, CSS, Video Speed, and Proxy. This README describes the integrated source under development. The manifest remains at version 1.1.0; this change has not been submitted or published.
+`temoto for Chrome` keeps five tools in one English-only popup: Color Picker, Screenshot, CSS, Video Speed, and Proxy. Version 1.2.0 was submitted to Chrome Web Store review on October 14, 2026, with automatic publication after approval enabled. This README describes the current source; [CHROMEWEBSTORE.md](./CHROMEWEBSTORE.md) records the submitted artifact and last verified Store state.
 
 ## Features
 

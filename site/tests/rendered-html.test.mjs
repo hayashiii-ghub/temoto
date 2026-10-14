@@ -96,17 +96,28 @@ test("renders the five launcher tools and sample playback rate without JavaScrip
   assert.match(rows.find(row => row.includes("Video Speed")), /1\.5×/);
 });
 
-test("retains canonical main-product copies and historical Proxy artwork", () => {
-  assert.deepEqual(
-    readFileSync(new URL("../public/product-chrome-icon.png", import.meta.url)),
-    readFileSync(new URL("../../browser/temoto-chrome/public/icons/icon-128.png", import.meta.url)),
-  );
-  assert.deepEqual(
-    readFileSync(new URL("../public/product-chrome-launcher.jpg", import.meta.url)),
-    readFileSync(new URL("../../browser/temoto-chrome/store/assets/screenshot-launcher-1280x800.jpg", import.meta.url)),
-  );
-  for (const asset of ["showcase/chrome-launcher.png", "product-proxy-icon.png", "product-proxy-popup.jpg", "product-proxy-manager.png", "showcase/proxy-popup.png", "temoto-proxy-mark.svg"]) {
-    assert.ok(readFileSync(new URL(`../public/${asset}`, import.meta.url)).length > 0, `${asset} must remain stored source material`);
+test("keeps rendered assets, font licenses and OG source dependencies available", async () => {
+  const html = await (await render()).text();
+  const dependencies = new Set();
+  for (const match of html.matchAll(/<img\b[^>]*>/g)) {
+    const source = attribute(match[0], "src");
+    if (source.startsWith("/")) dependencies.add(new URL(`../public${source}`, import.meta.url).href);
+  }
+  const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+  for (const match of css.matchAll(/url\("(\/[^"\n]+)"\)/g)) {
+    dependencies.add(new URL(`../public${match[1]}`, import.meta.url).href);
+  }
+  const ogSource = new URL("../scripts/og.html", import.meta.url);
+  const og = readFileSync(ogSource, "utf8");
+  for (const match of og.matchAll(/(?:src="|url\(")(\.\.\/public\/[^"\n]+)"/g)) {
+    dependencies.add(new URL(match[1], ogSource).href);
+  }
+  assert.ok(dependencies.size > 0, "the page and OG source must declare local assets");
+  for (const dependency of dependencies) {
+    assert.ok(readFileSync(new URL(dependency)).length > 0, `${dependency} must be available`);
+  }
+  for (const license of ["brand/Geist-LICENSE.txt", "brand/Inter-OFL.txt", "tools/PHOSPHOR-LICENSE"]) {
+    assert.ok(readFileSync(new URL(`../public/${license}`, import.meta.url)).length > 0, `${license} must be retained`);
   }
 });
 

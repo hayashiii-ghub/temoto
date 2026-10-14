@@ -5,7 +5,6 @@ import { dirname, extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const browserRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const siteRoot = resolve(browserRoot, "../site/public");
 const port = Number(process.env.TEMOTO_CAPTURE_PORT || 4190);
 const types = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".woff": "font/woff", ".woff2": "font/woff2" };
 
@@ -48,8 +47,12 @@ createServer(async (request, response) => {
       root = resolve(browserRoot, "temoto-proxy/dist/client");
       relative = url.pathname.slice(7);
     } else if (url.pathname.startsWith("/brand/")) {
-      const files = { "Geist-Variable.woff2": "brand/Geist-Variable.woff2", "temoto-mark.svg": "temoto-mark.svg", "temoto-proxy-mark.svg": "temoto-proxy-mark.svg" };
-      root = siteRoot;
+      const files = {
+        "Geist-Variable.woff2": "temoto-chrome/public/fonts/geist-latin-wght-normal.woff2",
+        "temoto-mark.svg": "shared/temoto-mark.svg",
+        "temoto-proxy-mark.svg": "shared/temoto-proxy-mark.svg",
+      };
+      root = browserRoot;
       relative = files[url.pathname.slice(7)];
       if (!relative) throw new Error("Unknown brand asset");
     } else {

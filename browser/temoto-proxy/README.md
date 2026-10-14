@@ -1,6 +1,6 @@
 # temoto Proxy
 
-This is the retained **legacy standalone extension**. Simple Proxy switching now belongs to [temoto for Chrome](../temoto-chrome/), alongside its four page tools. The legacy source stays available for existing advanced profiles and is no longer presented as the main product.
+This is the retained **legacy standalone extension**. Its Chrome Web Store item was unpublished on October 14, 2026. Simple Proxy switching now belongs to [temoto for Chrome](../temoto-chrome/), alongside its four page tools. The legacy source stays available for existing advanced profiles.
 
 To move: select Off in this old extension, then recreate the needed Fixed endpoints or PAC URLs in temoto → Proxy. There is no automatic migration or activation, and the old profiles and credentials are preserved.
 
@@ -19,7 +19,7 @@ The legacy English-only popup still adds, edits, and switches development proxy 
 - Restore unfinished popup drafts during the same browser session without retaining draft passwords.
 - Show effective state, policy/extension conflicts, credential readiness, and actual failures inline.
 
-The popup-only changes are local source work, not a claim about the live Store package. Existing Store and website images require refresh before this version is released.
+The popup-only changes are retained source work, not a claim about the former Store package. Historical artwork remains in `store/assets/`; recapture it from the current built UI if a separate legacy release is ever authorized.
 
 ## Privacy and permissions
 

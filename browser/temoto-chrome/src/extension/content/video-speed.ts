@@ -1,5 +1,4 @@
 ((): void => {
-  const cleanupKey = "__temotoVideoSpeedShortcutCleanup";
   const temotoWindow = window as typeof window & { __temotoVideoSpeedShortcutCleanup?: () => void };
   temotoWindow.__temotoVideoSpeedShortcutCleanup?.();
 

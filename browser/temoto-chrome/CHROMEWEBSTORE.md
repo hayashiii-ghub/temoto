@@ -4,6 +4,8 @@ Last updated: 2026-10-14
 
 The five-tool **1.2.0** update was submitted to Chrome Web Store review on **2026-10-14**. The dashboard confirmed submission and shows **Awaiting review** (審査待ち). The user explicitly authorized automatic publication after approval, and that setting remains enabled. Approval and publication have not been confirmed; the public main extension is still **1.1.0** at this check. The English listing and artwork are saved, native Chrome 1.2.0 QA is complete including the user's manual new-color eyedropper confirmation, and the source/policy were pushed as commit `8764534` with the updated public policy verified. GitHub Chrome, website, and legacy Proxy checks all passed. The package and current Store draft support English only; Japanese copy and artwork remain local reference material. The former standalone temoto Proxy has been unpublished, while its source and existing users' saved data remain available for migration.
 
+The subsequent repository cleanup removes unused source code, styles, and website assets. It does not replace the submitted ZIP or change the release version. Package a later source revision only as part of a separate release.
+
 ## Store listing
 
 [store/listing.md](./store/listing.md) remains the authoritative English listing copy, name, summary, detailed description, primary language, single purpose, suggested category, and reviewer instructions. It also retains Japanese copy for local reference; previously saved Japanese dashboard fields are not displayed for the English-only 1.2.0 draft. Keep those fields there rather than maintaining duplicate listing prose here. Do not add a Japanese package catalog to restore the old listing locale; the approved UI and package remain English-only.
