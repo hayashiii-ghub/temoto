@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-14
 
-The five-tool **1.2.0** ZIP has been built, verified, and uploaded to the existing Store item, with version **1.2.0** confirmed in the dashboard. The English description, homepage, privacy fields, reviewer instructions, and final artwork are saved. Native Chrome 1.2.0 QA is complete except for picking a new color with the native eyedropper, which awaits the user's manual check. The package contains only the English catalog, so the current dashboard listing supports English only; Japanese copy and artwork below remain local reference material. The update has not been submitted for review or published; the public main extension remains **1.1.0**. The former standalone temoto Proxy has been unpublished, while its source and existing users' saved data remain available for migration.
+The five-tool **1.2.0** update was submitted to Chrome Web Store review on **2026-10-14**. The dashboard confirmed submission and shows **Awaiting review** (審査待ち). The user explicitly authorized automatic publication after approval, and that setting remains enabled. Approval and publication have not been confirmed; the public main extension is still **1.1.0** at this check. The English listing and artwork are saved, native Chrome 1.2.0 QA is complete including the user's manual new-color eyedropper confirmation, and the source/policy were pushed as commit `8764534` with the updated public policy verified. GitHub Chrome, website, and legacy Proxy checks all passed. The package and current Store draft support English only; Japanese copy and artwork remain local reference material. The former standalone temoto Proxy has been unpublished, while its source and existing users' saved data remain available for migration.
 
 ## Store listing
 
@@ -28,9 +28,9 @@ The final source uses `activeTab`, `scripting`, `storage`, `clipboardWrite`, req
 
 ## Privacy and data use
 
-The local policy for version 1.2.0 is [PRIVACY.md](./PRIVACY.md). Data handled locally includes requested screenshots and computed CSS, current-page/video state, picked colors and recent history, color-format preferences, and named simple proxy profiles/state. Integrated Proxy stores no usernames or passwords, performs no diagnostics, and does not configure incognito. Screenshot provides Visible area and Full page with automatic preparation and no configurable capture options. Screenshots expire after one hour and are removed on the next capture save/load, or by the preview's Close action. Dashboard disclosure guidance remains in [listing.md](./store/listing.md#privacy-practices). The existing Website content and Web history selections, No remote code setting, and all three checked certifications were retained.
+The policy for version 1.2.0 is [PRIVACY.md](./PRIVACY.md). Data handled locally includes requested screenshots and computed CSS, current-page/video state, picked colors and recent history, color-format preferences, and named simple proxy profiles/state. Integrated Proxy stores no usernames or passwords, performs no diagnostics, and does not configure incognito. Screenshot provides Visible area and Full page with automatic preparation and no configurable capture options. Screenshots expire after one hour and are removed on the next capture save/load, or by the preview's Close action. Dashboard disclosure guidance remains in [listing.md](./store/listing.md#privacy-practices). The existing Website content and Web history selections, No remote code setting, and all three checked certifications were retained.
 
-Policy URL saved in the dashboard: https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY.md. The 1.2.0 policy update remains local and has not been pushed; verify the public content after pushing and before submission.
+Policy URL saved in the dashboard: https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY.md. The public GitHub page was checked after pushing commit `8764534`: it shows the October 14, 2026 policy date and version 1.2.0 text.
 
 ## Distribution and developer details
 
@@ -43,7 +43,7 @@ The dashboard's existing free pricing, public visibility, and all-region distrib
 
 | Source/change | Date | Scope | Status |
 | --- | --- | --- | --- |
-| 1.2.0 release package | 2026-10-14 | Five-tool integration, quiet restricted-page detection, and capture error recovery fix | Dashboard version, English listing, and artwork confirmed; native new-color pick and review submission pending |
+| 1.2.0 release package | 2026-10-14 | Five-tool integration, quiet restricted-page detection, and capture error recovery fix | Submitted; Awaiting review; automatic publication after approval enabled; public version still 1.1.0 at this check |
 | Quiet restricted-page detection; source 1.1.0 at that stage | 2026-10-14 | Disable unavailable page tools without an access-error banner on popup open | Historical local verification below |
 | Five-tool integration; source 1.1.0 at that stage | 2026-10-13 | Color Picker, Screenshot, CSS, Video Speed, and simple Fixed/PAC URL Proxy switching | Historical local verification below |
 | Earlier four-tool cleanup | 2026-10-12 | Remove environment and reset surfaces | Historical local verification below |
@@ -52,7 +52,7 @@ The [2026-09-13 handoff](../STORE-HANDOFF-2026-09-13.md) records earlier prepara
 
 ## Integration verification
 
-Final 1.2.0 verification on 2026-10-14: **125 core tests**, the production build with checks for **20 required extension files**, and **4 Sites packaging tests** passed, including the capture error recovery fix. The final archive is `release/temoto-for-chrome-v1.2.0.zip` (**177,102 bytes**), SHA-256 `620aa17207726459c86ddc2348c0bbe433020253749c8003c36e874c6633b071`. Its root layout, version, permissions, and sole English catalog were checked. Upload completed, and the dashboard shows draft **1.2.0** while the public release is still **1.1.0**.
+Final 1.2.0 verification on 2026-10-14: **125 core tests**, the production build with checks for **20 required extension files**, and **4 Sites packaging tests** passed, including the capture error recovery fix. The final archive is `release/temoto-for-chrome-v1.2.0.zip` (**177,102 bytes**), SHA-256 `620aa17207726459c86ddc2348c0bbe433020253749c8003c36e874c6633b071`. Its root layout, version, permissions, and sole English catalog were checked. The dashboard shows submitted draft **1.2.0** awaiting review while the public release is still **1.1.0** at this check. GitHub Chrome, website, and legacy Proxy checks for source commit `8764534` all passed.
 
 Native Google Chrome 1.2.0 QA on 2026-10-14:
 
@@ -61,7 +61,7 @@ Native Google Chrome 1.2.0 QA on 2026-10-14:
 - CSS displayed the expected computed values. All declarations and the unique selector were copied through the native clipboard and pasted into a textarea successfully.
 - Fixed and PAC profiles routed controlled test traffic. Off cleared the override and stopped access through the test route. Draft restoration, inactive save-only behavior, active Save & reapply, and deletion passed. The final state is Off with all test profiles deleted.
 - Visible-area PNG save produced 2772 × 1692. Full-page PNG save produced 2772 × 4800 with all three fixture sections visually confirmed; scroll position returned from 56 to 56. Fit/100% and preview reload worked. Full-image Copy pasted into a separate test page as a decoded `image/png` at 2772 × 4800. Switching tabs with Ctrl+Tab immediately after starting a full capture interrupted it without opening a new capture tab and restored scroll position to 56.
-- Color HEX/RGB/HSL clipboard copy and preferred-format persistence passed. A new native eyedropper pick could not be completed through automation and remains **unverified**, pending the user's manual check.
+- Color HEX/RGB/HSL clipboard copy and preferred-format persistence passed. After automation could not complete the native eyedropper interaction, the user manually confirmed successful acquisition of a new color on 2026-10-14.
 
 Completed locally on 2026-10-13 for the integrated source:
 
@@ -71,7 +71,7 @@ Completed locally on 2026-10-13 for the integrated source:
 - Browser preview verified Fixed/PAC URL creation, save, edit, activation, Off, deletion, active-profile Save & reapply, unfinished-draft reload, and focus on validation errors. This preview does not apply Chrome's real proxy setting.
 - The built five-row launcher was recaptured as the site's 416 × 402 PNG (SHA-256 prefix `47ae7d5e3c53`) and English/Japanese Store JPEGs at 1280 × 800. Formats, dimensions, and saved-image appearance were checked. The single-product OG image is an updated 1200 × 630 PNG.
 
-The native new-color eyedropper check is the remaining manual QA item. Earlier four-tool installed-Chrome results below are historical. The completed upload, dashboard work, and native checks do not establish review submission, approval, or publication. The updated policy must also be publicly available before submission.
+Native 1.2.0 QA is complete with the user's manual eyedropper confirmation. Earlier four-tool installed-Chrome results below are historical. The later Store submission receipt and Awaiting review status were confirmed separately; no approval or public 1.2.0 release is recorded.
 
 The redesigned landing page passed lint, a production build, and all 6 site tests on 2026-10-14. Its Store action explicitly identifies the page as a preview of the next extension update.
 
@@ -98,8 +98,8 @@ The checks below were verified on 2026-10-12 for the earlier four-tool source, b
 
 ## Review notes
 
-- No new Store review or rejection is recorded in this task.
+- The submission receipt showed “この拡張機能は審査のために送信されました” and “アイテムを送信しました”. The status tab then showed “ステータス: 審査待ち” and “このドラフトは審査待ちです”. Automatic publication after approval remains enabled with the user's explicit authorization. No review decision is recorded.
 - CSS provides computed declarations for the selected element, not the original stylesheet or complete layout reconstruction.
 - User speed commands remain 0.25–5×; observed actual rates may be outside that range and must still be displayed accurately.
 - Browser-tab closure can leave a screenshot record until expiry cleanup; the preview's Close action removes it immediately.
-- The manual new-color eyedropper check, public policy push/verification, review submission, and publication remain release steps. Follow the [submission checklist](./store/listing.md#submission-checklist).
+- Review completion and verification of the automatically published 1.2.0 Store version remain outstanding. Follow the [submission checklist](./store/listing.md#submission-checklist).
