@@ -1,6 +1,6 @@
 # Chrome Web Store submission copy
 
-Updated on **2026-10-14** for the five-tool **1.2.0** release. The update has been submitted to Chrome Web Store review, and the dashboard confirmed **Awaiting review** (審査待ち). Automatic publication after approval is enabled with the user's explicit authorization. It was then published: the public listing showed **1.2.0** on 2026-10-15. The English listing and artwork are saved, native Chrome 1.2.0 QA passed including the user's manual new-color confirmation, and the source/policy were pushed as commit `8764534`. The public policy's commit, October 14 date, and version 1.2.0 text were verified, and GitHub Chrome, website, and legacy Proxy checks all passed. The former standalone temoto Proxy has been unpublished.
+Updated on **2026-10-15** for the **1.2.1** font-loading fix and shorter English listing. The 1.2.1 ZIP and the 617-character English description were submitted for review. The dashboard confirmed **Awaiting review**, with automatic publication after approval enabled. The public baseline is **1.2.0**; the former standalone temoto Proxy remains unpublished, reconfirmed in its dashboard on 2026-10-15.
 
 This is the authoritative listing, permission, privacy-disclosure, and reviewer copy. [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) tracks readiness. The [2026-09-13 handoff](../../STORE-HANDOFF-2026-09-13.md) is historical preparation evidence for an earlier source state.
 
@@ -14,7 +14,7 @@ temoto for Chrome
 
 English
 
-The 1.2.0 package contains only `_locales/en`, and the current dashboard language is English only. Previously saved Japanese descriptions and screenshots are not displayed for this draft. Japanese copy and assets are retained below as local reference material; do not add a Japanese package catalog to restore the old listing locale.
+The 1.2.1 package contains only `_locales/en`, and the current dashboard language is English only. Previously saved Japanese descriptions and screenshots are not displayed for this draft. Japanese copy and assets are retained below as local reference material; do not add a Japanese package catalog to restore the old listing locale.
 
 **Suggested category**
 
@@ -22,31 +22,21 @@ Choose the closest current dashboard category for developer productivity/tools w
 
 **Summary (English)**
 
-Color Picker, screenshots, CSS, video speed and simple proxy switching in one compact Chrome toolkit.
+Color Picker, screenshots, CSS, video speed and proxy switching.
 
 **Detailed description (English)**
 
 Five tools, close at hand.
 
-temoto for Chrome puts Color Picker, Screenshot, CSS, Video Speed, and Proxy in one English-only popup.
+• Color Picker — Pick a color and copy HEX, RGB or HSL.
+• Screenshot — Capture the visible area or full page. Copy or save a PNG.
+• CSS — Inspect an element and copy its computed styles.
+• Video Speed — Adjust playback speed with popup controls or G / D / S shortcuts.
+• Proxy — Switch saved Fixed or PAC URL profiles using your own proxy server.
 
-Color Picker: pick an on-screen color and copy HEX, RGB, or HSL. Return to the latest eight picked colors, stored locally.
+No account, ads or analytics. Page content, screenshots and settings are not sent to the developer. Proxy affects regular Chrome windows and routes traffic through your chosen server.
 
-Screenshot: capture the visible area or the full page. Review it at Fit or 100% zoom, then copy the image or save a PNG. Capture preparation runs automatically, with no setup needed.
-
-CSS: select an element to inspect its dimensions, spacing, typography, colors, and borders. Copy grouped CSS declarations or its unique selector separately. These are computed values for the selected element, rather than the page's original stylesheet.
-
-Video Speed: use popup controls from 0.25× to 5×, or press G to toggle 1× / 1.5×, D to add 0.25×, and S to subtract 0.25×. Each video keeps its own rate when media changes. The popup and subtle video badges follow the actual playback speed, including a page's own rates outside the controls' range.
-
-Proxy: save named Fixed profiles with one HTTP, HTTPS, SOCKS4, or SOCKS5 endpoint, or a PAC URL. Add, edit, delete, and click a saved profile to activate it. Adding or saving an inactive profile only saves it. Editing the active profile uses Save & reapply and immediately updates its current setting. Off clears temoto's override so Chrome's underlying setting can take effect. Proxy affects all regular Chrome windows; it does not configure incognito or provide custom authentication, diagnostics, domain routing, or import/export. Supply your own proxy or PAC URL.
-
-Moving from the old temoto Proxy: first select Off in that old extension, then recreate the needed Fixed endpoints or PAC URLs here. There is no automatic migration or activation; old profiles and credentials remain in the legacy extension.
-
-Open temoto from the Chrome toolbar, choose a tool, and use Back to return to the five-tool launcher. Color, screenshot, and CSS tools run when selected. Video shortcuts remain available on supported pages without opening the popup.
-
-temoto processes tools locally and does not upload page content, screenshots, or settings to the developer. Selecting a proxy routes Chrome traffic through the user's chosen server; Chrome fetches a selected PAC URL as needed. It has no accounts, analytics, or advertising. Persistent HTTP(S) page access enables local Video Speed controls and a limited video bridge on pages that explicitly opt in. That bridge provides only an extension-availability check and video-speed control in the requesting tab.
-
-Support and source: https://github.com/hayashiii-ghub/temoto
+Support: https://github.com/hayashiii-ghub/temoto/issues
 
 **Summary (Japanese)**
 
@@ -136,7 +126,7 @@ No login required. Open temoto on an HTTP(S) page: pick/copy a color; capture Vi
 6. Open Proxy, save a named Fixed endpoint or PAC URL, and confirm that saving does not activate it. Click a saved profile to activate it for regular Chrome windows, edit inactive profiles without changing the connection, verify active edits use Save & reapply, delete profiles, and select Off to clear temoto's override. Verify incognito is unchanged and an underlying Chrome/system setting can take effect after Off. Confirm policy/extension conflicts and failures are shown honestly. Do not configure real production traffic for this check.
 7. Optional video bridge check: use the opted-in fixture to check extension availability and set video speed in the requesting tab. Confirm that it exposes no screenshots, picked colors, preferences, or other-tab controls.
 
-## Submission checklist
+## 1.2.0 submission record
 
 - [x] Preserve the existing source identity, Item ID `gcncgknjklghkoeiapcbdghodepnllid`, and its public key.
 - [x] Select **1.2.0** as the release version; the source manifest and package version are 1.2.0. The update was published; the public listing showed 1.2.0 on 2026-10-15.

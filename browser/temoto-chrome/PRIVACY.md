@@ -1,8 +1,8 @@
 # Privacy Policy for temoto for Chrome
 
-Last updated: October 14, 2026
+Last updated: October 15, 2026
 
-This policy applies to temoto for Chrome version 1.2.0 and describes its data handling. It does not confirm the behavior of earlier Chrome Web Store versions.
+This policy applies to temoto for Chrome versions 1.2.0 and 1.2.1 and describes their data handling. It does not confirm the behavior of earlier Chrome Web Store versions.
 
 temoto for Chrome provides Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching. Proxy applies across regular Chrome windows; the other tools operate on the page the user is viewing.
 

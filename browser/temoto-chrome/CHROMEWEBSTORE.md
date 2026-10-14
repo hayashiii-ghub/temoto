@@ -4,13 +4,13 @@ Last updated: 2026-10-15
 
 The five-tool **1.2.0** update was submitted to Chrome Web Store review on **2026-10-14**. It was approved and published automatically: on **2026-10-15** the public Store listing showed version **1.2.0**, updated October 14, 2026, with the five-tool description. The English listing and artwork are saved, native Chrome 1.2.0 QA is complete including the user's manual new-color eyedropper confirmation, and the source/policy were pushed as commit `8764534` with the updated public policy verified. GitHub Chrome, website, and legacy Proxy checks all passed. The package and current Store draft support English only; Japanese copy and artwork remain local reference material. The former standalone temoto Proxy has been unpublished, while its source and existing users' saved data remain available for migration.
 
-The subsequent repository cleanup removes unused source code, styles, and website assets. It does not replace the submitted ZIP or change the release version. Package a later source revision only as part of a separate release.
+The post-1.2.0 cleanup and font fix are packaged for the user-authorized 1.2.1 update. The published 1.2.0 ZIP is preserved unchanged.
 
-The 2026-10-15 source follow-up loads the bundled video-badge font through the extension worker, avoiding YouTube Music's page connection-policy warning. The 132 core tests, production build, and 4 Sites tests passed. Native Chrome verified the font loaded and G/D/S controls worked; two extension reloads followed by page reloads produced no temoto font warnings. This fix is in the local unpacked build and source only; the published 1.2.0 ZIP remains unchanged.
+The 2026-10-15 source follow-up loads the bundled video-badge font through the extension worker, avoiding YouTube Music's page connection-policy warning. The 132 core tests, production build, and 4 Sites tests passed. Native Chrome verified the font loaded and G/D/S controls worked; two extension reloads followed by page reloads produced no temoto font warnings. The 1.2.1 ZIP and shorter English listing were submitted for review on 2026-10-15. The receipt and **Awaiting review** status were verified; automatic publication after approval remains enabled. Its archive is `release/temoto-for-chrome-v1.2.1.zip` (176,921 bytes), SHA-256 `94ef33e00ffc2c8748932f24749493a7dff649dc2015eb4999f05175cc014559`. The dashboard shows submitted 1.2.1 and published 1.2.0 with unchanged permissions. The legacy Proxy dashboard was also checked: it remains a draft with no published version.
 
 ## Store listing
 
-[store/listing.md](./store/listing.md) remains the authoritative English listing copy, name, summary, detailed description, primary language, single purpose, suggested category, and reviewer instructions. It also retains Japanese copy for local reference; previously saved Japanese dashboard fields are not displayed for the English-only 1.2.0 draft. Keep those fields there rather than maintaining duplicate listing prose here. Do not add a Japanese package catalog to restore the old listing locale; the approved UI and package remain English-only.
+[store/listing.md](./store/listing.md) remains the authoritative English listing copy, name, summary, detailed description, primary language, single purpose, suggested category, and reviewer instructions. It also retains Japanese copy for local reference; previously saved Japanese dashboard fields are not displayed for the English-only 1.2.1 draft. Keep those fields there rather than maintaining duplicate listing prose here. Do not add a Japanese package catalog to restore the old listing locale; the approved UI and package remain English-only.
 
 Source identity: `temoto for Chrome`, Store Item ID `gcncgknjklghkoeiapcbdghodepnllid`.
 
@@ -22,7 +22,7 @@ Use the existing [Store capture workflow](../shared/STORE-CAPTURE.md) and the fi
 | --- | --- | --- |
 | Store icon | 128 × 128 PNG | Canonical source icon uploaded again and saved in the dashboard |
 | English launcher screenshot | 1280 × 800 JPEG | Old common images removed; one latest English image saved |
-| Japanese launcher screenshot | 1280 × 800 JPEG | Local reference only; not displayed by the current 1.2.0 draft |
+| Japanese launcher screenshot | 1280 × 800 JPEG | Local reference only; not displayed by the current 1.2.1 draft |
 | Small promo tile | 440 × 280 JPEG | Existing tile visually matched the current asset and was retained |
 | Additional tool screenshots / marquee | Optional | Not required for this source task |
 
@@ -32,13 +32,13 @@ The final source uses `activeTab`, `scripting`, `storage`, `clipboardWrite`, req
 
 ## Privacy and data use
 
-The policy for version 1.2.0 is [PRIVACY.md](./PRIVACY.md). Data handled locally includes requested screenshots and computed CSS, current-page/video state, picked colors and recent history, color-format preferences, and named simple proxy profiles/state. Integrated Proxy stores no usernames or passwords, performs no diagnostics, and does not configure incognito. Screenshot provides Visible area and Full page with automatic preparation and no configurable capture options. Screenshots expire after one hour and are removed on the next capture save/load, or by the preview's Close action. Dashboard disclosure guidance remains in [listing.md](./store/listing.md#privacy-practices). The existing Website content and Web history selections, No remote code setting, and all three checked certifications were retained.
+The policy for versions 1.2.0 and 1.2.1 is [PRIVACY.md](./PRIVACY.md). Data handled locally includes requested screenshots and computed CSS, current-page/video state, picked colors and recent history, color-format preferences, and named simple proxy profiles/state. Integrated Proxy stores no usernames or passwords, performs no diagnostics, and does not configure incognito. Screenshot provides Visible area and Full page with automatic preparation and no configurable capture options. Screenshots expire after one hour and are removed on the next capture save/load, or by the preview's Close action. Dashboard disclosure guidance remains in [listing.md](./store/listing.md#privacy-practices). The existing Website content and Web history selections, No remote code setting, and all three checked certifications were retained.
 
 Policy URL saved in the dashboard: https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY.md. The public GitHub page was checked after pushing commit `8764534`: it shows the October 14, 2026 policy date and version 1.2.0 text.
 
 ## Distribution and developer details
 
-The dashboard's existing free pricing, public visibility, and all-region distribution were confirmed and retained. Keep the existing Store item, publisher name, public contact email, and category. Public visibility is the distribution setting; it does not mean version 1.2.0 has been published.
+The dashboard's existing free pricing, public visibility, and all-region distribution were confirmed and retained. Keep the existing Store item, publisher name, public contact email, and category. Public visibility is the distribution setting; the 1.2.1 update is awaiting review and is not yet public.
 
 - Support: https://github.com/hayashiii-ghub/temoto/issues
 - Homepage: https://temoto.hayashiii-gpt.chatgpt.site
@@ -47,6 +47,7 @@ The dashboard's existing free pricing, public visibility, and all-region distrib
 
 | Source/change | Date | Scope | Status |
 | --- | --- | --- | --- |
+| 1.2.1 release package | 2026-10-15 | Bundled video-badge font loading fix and shorter English Store copy | Awaiting review; automatic publication after approval |
 | 1.2.0 release package | 2026-10-14 | Five-tool integration, quiet restricted-page detection, and capture error recovery fix | Published; public listing showed 1.2.0 on 2026-10-15 |
 | Quiet restricted-page detection; source 1.1.0 at that stage | 2026-10-14 | Disable unavailable page tools without an access-error banner on popup open | Historical local verification below |
 | Five-tool integration; source 1.1.0 at that stage | 2026-10-13 | Color Picker, Screenshot, CSS, Video Speed, and simple Fixed/PAC URL Proxy switching | Historical local verification below |
