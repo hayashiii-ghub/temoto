@@ -16,8 +16,10 @@ function createPageWorker({
   frames = [{ frameId: 0, url: "https://page.test/watch", title: "Watch", rates: [] }],
   failure = null,
   failAt = 1,
+  fetchResource = async () => { throw new Error("Unexpected fetch"); },
 } = {}) {
-  const calls = { queries: 0, scripts: [], proxy: 0, storage: 0 };
+  const calls = { queries: 0, scripts: [], proxy: 0, storage: 0, fetches: [] };
+  let messageListener;
   const chrome = {
     tabs: { async query() {
       calls.queries++;
@@ -40,11 +42,19 @@ function createPageWorker({
       })));
     } },
     storage: { local: { async get() { calls.storage++; throw new Error("Unexpected storage access"); } } },
-    runtime: { id: "temoto", onMessage: { addListener() {} } },
+    runtime: {
+      id: "temoto",
+      getURL(path) { return new URL(path, "chrome-extension://temoto/").href; },
+      onMessage: { addListener(listener) { messageListener = listener; } },
+    },
   };
   Object.defineProperty(chrome, "proxy", { get() { calls.proxy++; throw new Error("Unexpected Proxy access"); } });
   const context = {
     chrome, Error, URL,
+    async fetch(url) {
+      calls.fetches.push(url);
+      return fetchResource(url);
+    },
     withCaptureLock: (operation) => operation(),
     isTrustedProxyPopup: () => true,
     createProxyRuntime() { calls.proxy++; throw new Error("Unexpected Proxy runtime"); },
@@ -53,8 +63,70 @@ function createPageWorker({
   return {
     calls,
     async message(type) { return structuredClone(await context.pageMessage({ type }, {})); },
+    runtimeMessage(message, sender) {
+      return new Promise((resolve) => {
+        const keepAlive = messageListener(JSON.parse(JSON.stringify(message)), sender, (response) => {
+          resolve(JSON.parse(JSON.stringify(response)));
+        });
+        assert.equal(keepAlive, true);
+      });
+    },
   };
 }
+
+test("GET_VIDEO_BADGE_FONT returns the fixed bundled font as JSON-safe bytes", async () => {
+  const bytes = [0, 1, 127, 128, 254, 255];
+  for (const url of ["http://page.test/watch", "https://page.test/watch"]) {
+    const worker = createPageWorker({
+      fetchResource: async () => ({ ok: true, async arrayBuffer() { return Uint8Array.from(bytes).buffer; } }),
+    });
+    const response = await worker.runtimeMessage({
+      type: "GET_VIDEO_BADGE_FONT", url: "https://other.test/private", path: "../manifest.json",
+    }, { id: "temoto", tab: { id: 0 }, url });
+    assert.deepEqual(response, { ok: true, bytes });
+    assert.deepEqual(Array.from(new Uint8Array(response.bytes)), bytes);
+    assert.deepEqual(worker.calls.fetches, ["chrome-extension://temoto/fonts/geist-latin-wght-normal.woff2"]);
+    assert.equal(worker.calls.queries, 0);
+    assert.equal(worker.calls.scripts.length, 0);
+    assert.equal(worker.calls.proxy, 0);
+    assert.equal(worker.calls.storage, 0);
+  }
+});
+
+test("GET_VIDEO_BADGE_FONT rejects untrusted senders before fetching", async () => {
+  const trusted = { id: "temoto", tab: { id: 7 }, url: "https://page.test/watch" };
+  for (const sender of [
+    { ...trusted, id: "other" },
+    { ...trusted, tab: undefined },
+    { ...trusted, tab: {} },
+    { ...trusted, url: "chrome-extension://temoto/index.html" },
+    { ...trusted, url: undefined },
+  ]) {
+    const worker = createPageWorker();
+    const response = await worker.runtimeMessage({ type: "GET_VIDEO_BADGE_FONT" }, sender);
+    assert.equal(response.ok, false);
+    assert.equal(typeof response.error, "string");
+    assert.ok(response.error.length > 0);
+    assert.deepEqual(worker.calls.fetches, []);
+  }
+});
+
+test("GET_VIDEO_BADGE_FONT reports HTTP and network failures through the runtime listener", async () => {
+  for (const fetchResource of [
+    async () => ({ ok: false }),
+    async () => { throw new Error("Font fetch failed"); },
+  ]) {
+    const worker = createPageWorker({ fetchResource });
+    const response = await worker.runtimeMessage({ type: "GET_VIDEO_BADGE_FONT" }, {
+      id: "temoto", tab: { id: 7 }, url: "https://page.test/watch",
+    });
+    assert.equal(response.ok, false);
+    assert.equal(typeof response.error, "string");
+    assert.ok(response.error.length > 0);
+    assert.equal(response.bytes, undefined);
+    assert.deepEqual(worker.calls.fetches, ["chrome-extension://temoto/fonts/geist-latin-wght-normal.woff2"]);
+  }
+});
 
 for (const type of ["DETECT_PAGE", "GET_PAGE_STATE"]) {
   test(`${type} skips internal, unsupported and Web Store pages before scripting`, async () => {

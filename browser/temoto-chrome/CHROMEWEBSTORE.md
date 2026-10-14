@@ -1,10 +1,12 @@
 # Chrome Web Store readiness — temoto for Chrome
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 The five-tool **1.2.0** update was submitted to Chrome Web Store review on **2026-10-14**. It was approved and published automatically: on **2026-10-15** the public Store listing showed version **1.2.0**, updated October 14, 2026, with the five-tool description. The English listing and artwork are saved, native Chrome 1.2.0 QA is complete including the user's manual new-color eyedropper confirmation, and the source/policy were pushed as commit `8764534` with the updated public policy verified. GitHub Chrome, website, and legacy Proxy checks all passed. The package and current Store draft support English only; Japanese copy and artwork remain local reference material. The former standalone temoto Proxy has been unpublished, while its source and existing users' saved data remain available for migration.
 
 The subsequent repository cleanup removes unused source code, styles, and website assets. It does not replace the submitted ZIP or change the release version. Package a later source revision only as part of a separate release.
+
+The 2026-10-15 source follow-up loads the bundled video-badge font through the extension worker, avoiding YouTube Music's page connection-policy warning. The 132 core tests, production build, and 4 Sites tests passed. Native Chrome verified the font loaded and G/D/S controls worked; two extension reloads followed by page reloads produced no temoto font warnings. This fix is in the local unpacked build and source only; the published 1.2.0 ZIP remains unchanged.
 
 ## Store listing
 

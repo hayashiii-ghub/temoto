@@ -60,6 +60,7 @@ function loadContentScript(initialSpeed = 1.5, videoCount = 2, fontOptions = nul
   const fonts = new Set();
   const requestedFonts = [];
   const createdFonts = [];
+  let pageFetches = 0;
   let observerCallback = () => {};
   let disconnected = false;
   let canceledFrames = 0;
@@ -97,7 +98,6 @@ function loadContentScript(initialSpeed = 1.5, videoCount = 2, fontOptions = nul
   const chrome = {
     runtime: {
       id: "temoto-test",
-      getURL: (path) => `chrome-extension://temoto-test/${path}`,
       onMessage: {
         addListener(listener) { messageListeners.add(listener); },
         removeListener(listener) {
@@ -107,6 +107,11 @@ function loadContentScript(initialSpeed = 1.5, videoCount = 2, fontOptions = nul
       },
       sendMessage(message) {
         sentMessages.push(message);
+        if (message.type === "GET_VIDEO_BADGE_FONT") {
+          requestedFonts.push(message);
+          if (fontOptions?.requestFont) return fontOptions.requestFont(message);
+          return Promise.resolve({ ok: true, bytes: [1, 2, 3] });
+        }
         if (notificationError) {
           if (rejectNotification) return Promise.reject(notificationError);
           throw notificationError;
@@ -133,14 +138,12 @@ function loadContentScript(initialSpeed = 1.5, videoCount = 2, fontOptions = nul
     HTMLElement,
     MutationObserver,
     queueMicrotask: (callback) => notifications.push(callback),
+    fetch() {
+      pageFetches++;
+      assert.fail("The page must not fetch the badge font");
+    },
     ...(fontOptions && {
       FontFace: MockFontFace,
-      AbortController,
-      fetch: async (url, options) => {
-        requestedFonts.push({ url, options });
-        if (fontOptions.fetchFont) return fontOptions.fetchFont(url, options);
-        return { ok: true, arrayBuffer: async () => new Uint8Array([1, 2, 3]).buffer };
-      },
     }),
   });
 
@@ -150,7 +153,10 @@ function loadContentScript(initialSpeed = 1.5, videoCount = 2, fontOptions = nul
     fonts,
     requestedFonts,
     createdFonts,
-    settleFont: () => new Promise(setImmediate),
+    async settleFont() {
+      await new Promise(setImmediate);
+      assert.equal(pageFetches, 0, "The page must not fetch the badge font");
+    },
     flushNotifications() {
       while (notifications.length) notifications.shift()();
     },
@@ -449,21 +455,23 @@ test("video badges remain readable sans text when FontFace is unavailable", () =
   assert.ok(page.badges().every((badge) => badge.style.font.endsWith("sans-serif")));
   assert.ok(page.badges().every((badge) => badge.style.fontVariantNumeric === "tabular-nums"));
   assert.equal(page.requestedFonts.length, 0);
+  assert.deepEqual(page.sentMessages, []);
   page.keydown(keyEvent("d", [page.element()]));
   assert.deepEqual(page.videos.map((video) => video.playbackRate), [1.75, 1.75]);
 });
 
-test("the first video loads one local variable font and cleanup removes only temoto's face", async () => {
+test("the first video requests one worker font and cleanup removes only temoto's face", async () => {
   const page = loadContentScript(1.5, 2, {});
   const existingPageFont = { family: "page font" };
   page.fonts.add(existingPageFont);
   await page.settleFont();
   assert.equal(page.requestedFonts.length, 1);
-  assert.equal(page.requestedFonts[0].url, "chrome-extension://temoto-test/fonts/geist-latin-wght-normal.woff2");
+  assert.deepEqual(JSON.parse(JSON.stringify(page.requestedFonts[0])), { type: "GET_VIDEO_BADGE_FONT" });
   assert.equal(page.createdFonts.length, 1);
   assert.equal(page.createdFonts[0].family, "temoto Geist Sans");
   assert.equal(page.createdFonts[0].descriptors.weight, "100 900");
-  assert.ok(page.createdFonts[0].bytes instanceof ArrayBuffer);
+  assert.equal(Object.prototype.toString.call(page.createdFonts[0].bytes), "[object ArrayBuffer]");
+  assert.deepEqual(Array.from(new Uint8Array(page.createdFonts[0].bytes)), [1, 2, 3]);
   assert.ok(page.fonts.has(page.createdFonts[0]));
   page.replaceVideo(0, 1);
   await page.settleFont();
@@ -485,38 +493,62 @@ test("pages without videos wait to load the badge font until a video appears", a
   assert.equal(page.fonts.size, 1);
 });
 
-for (const failure of ["fetch", "decode"]) {
+for (const failure of ["request", "response", "decode"]) {
   test(`a badge font ${failure} failure does not disable local video controls`, async () => {
-    const options = failure === "fetch"
-      ? { fetchFont: async () => { throw new TypeError("CSP blocked resource"); } }
-      : { loadFont: async () => { throw new Error("Invalid font data"); } };
+    const options = failure === "request"
+      ? { requestFont: async () => { throw new Error("Could not establish connection"); } }
+      : failure === "response"
+        ? { requestFont: async () => ({ ok: false }) }
+        : { loadFont: async () => { throw new Error("Invalid font data"); } };
     const page = loadContentScript(1.5, 2, options);
     await page.settleFont();
+    assert.equal(page.requestedFonts.length, 1);
     assert.equal(page.fonts.size, 0);
     assert.equal(page.badges().length, 2);
+    assert.ok(page.badges().every((badge) => badge.style.font.endsWith("sans-serif")));
     page.keydown(keyEvent("d", [page.element()]));
     assert.deepEqual(page.videos.map((video) => video.playbackRate), [1.75, 1.75]);
     assert.equal(page.resources().disconnected, false);
   });
 }
 
-for (const pendingStage of ["fetch", "load"]) {
-  test(`invalidating a script during font ${pendingStage} aborts work and prevents late font registration`, async () => {
-    let finish;
-    const pending = new Promise((resolve) => { finish = resolve; });
-    const options = pendingStage === "fetch"
-      ? { fetchFont: () => pending }
-      : { loadFont: () => pending };
-    const page = loadContentScript(1.5, 2, options);
+test("invalid worker font bytes keep sans fallback and local video controls", async () => {
+  for (const bytes of [undefined, "1,2,3", [], [1, 256], [1, 2.5]]) {
+    const page = loadContentScript(1.5, 2, { requestFont: async () => ({ ok: true, bytes }) });
     await page.settleFont();
+    assert.equal(page.requestedFonts.length, 1);
+    assert.equal(page.createdFonts.length, 0);
     assert.equal(page.fonts.size, 0);
-    page.invalidate();
-    page.syncVideos();
-    assert.equal(page.requestedFonts[0].options.signal.aborted, true);
-    finish(pendingStage === "fetch" ? { ok: true, arrayBuffer: async () => new Uint8Array([1]).buffer } : undefined);
-    await page.settleFont();
-    assert.equal(page.fonts.size, 0);
-    assert.equal(page.badges().length, 0);
-    assert.equal(page.resources().disconnected, true);
-  });
+    assert.ok(page.badges().every((badge) => badge.style.font.endsWith("sans-serif")));
+    page.keydown(keyEvent("d", [page.element()]));
+    assert.deepEqual(page.videos.map((video) => video.playbackRate), [1.75, 1.75]);
+    assert.equal(page.resources().disconnected, false);
+  }
+});
+
+for (const pendingStage of ["response", "load"]) {
+  for (const stop of ["cleanup", "invalidation"]) {
+    test(`${stop} during font ${pendingStage} prevents late font registration`, async () => {
+      let finish;
+      const pending = new Promise((resolve) => { finish = resolve; });
+      const options = pendingStage === "response"
+        ? { requestFont: () => pending }
+        : { loadFont: () => pending };
+      const page = loadContentScript(1.5, 2, options);
+      await page.settleFont();
+      assert.equal(page.requestedFonts.length, 1);
+      assert.equal(page.fonts.size, 0);
+      if (stop === "cleanup") page.cleanup();
+      else {
+        page.invalidate();
+        page.syncVideos();
+      }
+      finish(pendingStage === "response" ? { ok: true, bytes: [1, 2, 3] } : undefined);
+      await page.settleFont();
+      assert.equal(page.createdFonts.length, pendingStage === "response" ? 0 : 1);
+      assert.equal(page.fonts.size, 0);
+      assert.equal(page.badges().length, 0);
+      assert.equal(page.resources().disconnected, true);
+    });
+  }
 }

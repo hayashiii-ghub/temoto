@@ -20,7 +20,6 @@
   let stopped = false;
   let fontRequested = false;
   let badgeFont: FontFace | null = null;
-  let fontRequest: AbortController | null = null;
   const badgeFontFamily = "temoto Geist Sans";
 
   const isActive = (): boolean => {
@@ -43,18 +42,16 @@
   };
   const loadBadgeFont = async (): Promise<void> => {
     if (fontRequested || !isActive()) return;
-    if (typeof FontFace !== "function" || typeof fetch !== "function" || typeof AbortController !== "function"
-      || !document.fonts?.add || !document.fonts?.delete) return;
+    if (typeof FontFace !== "function" || !document.fonts?.add || !document.fonts?.delete) return;
     fontRequested = true;
-    const controller = new AbortController();
-    fontRequest = controller;
     try {
-      const url = chrome.runtime.getURL("fonts/geist-latin-wght-normal.woff2");
-      const response = await fetch(url, { signal: controller.signal });
-      if (!response.ok) return;
-      const bytes = await response.arrayBuffer();
+      const response = await chrome.runtime.sendMessage({ type: "GET_VIDEO_BADGE_FONT" }) as
+        { ok?: boolean; bytes?: unknown } | undefined;
       if (!isActive()) return;
-      // Binary data lets FontFace avoid making a page-scoped font URL request.
+      if (!response?.ok || !Array.isArray(response.bytes) || !response.bytes.length
+        || !response.bytes.every((byte) => Number.isInteger(byte) && byte >= 0 && byte <= 255)) return;
+      // Fetching in the worker keeps page connection policies out of local font loading.
+      const bytes = new Uint8Array(response.bytes).buffer;
       const face = new FontFace(badgeFontFamily, bytes, { weight: "100 900", style: "normal", display: "swap" });
       await face.load();
       if (!isActive()) return;
@@ -62,8 +59,6 @@
       badgeFont = face;
     } catch (error) {
       onNotificationError(error);
-    } finally {
-      if (fontRequest === controller) fontRequest = null;
     }
   };
 
@@ -256,8 +251,6 @@
   function cleanup(): void {
     if (stopped) return;
     stopped = true;
-    fontRequest?.abort();
-    fontRequest = null;
     if (badgeFont) {
       try {
         document.fonts.delete(badgeFont);

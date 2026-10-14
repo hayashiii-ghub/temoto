@@ -477,6 +477,16 @@ async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.M
     }
     case "VIDEO_STATE_CHANGED":
       return { ok: true };
+    case "GET_VIDEO_BADGE_FONT": {
+      if (sender.id !== chrome.runtime.id || sender.tab?.id === undefined
+        || !/^https?:\/\//.test(sender.url || "")) {
+        return { ok: false, error: "Video fonts are available only to temoto's page controls" };
+      }
+      const response = await fetch(chrome.runtime.getURL("fonts/geist-latin-wght-normal.woff2"));
+      if (!response.ok) return { ok: false, error: "Video font is unavailable" };
+      // Chrome messages serialize JSON, so return bytes without an ArrayBuffer.
+      return { ok: true, bytes: Array.from(new Uint8Array(await response.arrayBuffer())) };
+    }
     case "SET_VIDEO_SPEED": {
       const { changed } = await applyVideoSpeed(message.speed);
       return { ok: changed > 0, changed, error: changed ? undefined : "No video found on this page" };
