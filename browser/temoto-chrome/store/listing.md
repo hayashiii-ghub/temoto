@@ -1,6 +1,6 @@
 # Chrome Web Store submission copy
 
-Updated on **2026-10-14** for the five-tool **1.2.0** release. The update has been submitted to Chrome Web Store review, and the dashboard confirms **Awaiting review** (審査待ち). Automatic publication after approval is enabled with the user's explicit authorization. Approval and publication are not yet confirmed; the public main extension is still **1.1.0** at this check. The English listing and artwork are saved, native Chrome 1.2.0 QA passed including the user's manual new-color confirmation, and the source/policy were pushed as commit `8764534`. The public policy's commit, October 14 date, and version 1.2.0 text were verified, and GitHub Chrome, website, and legacy Proxy checks all passed. The former standalone temoto Proxy has been unpublished.
+Updated on **2026-10-14** for the five-tool **1.2.0** release. The update has been submitted to Chrome Web Store review, and the dashboard confirmed **Awaiting review** (審査待ち). Automatic publication after approval is enabled with the user's explicit authorization. It was then published: the public listing showed **1.2.0** on 2026-10-15. The English listing and artwork are saved, native Chrome 1.2.0 QA passed including the user's manual new-color confirmation, and the source/policy were pushed as commit `8764534`. The public policy's commit, October 14 date, and version 1.2.0 text were verified, and GitHub Chrome, website, and legacy Proxy checks all passed. The former standalone temoto Proxy has been unpublished.
 
 This is the authoritative listing, permission, privacy-disclosure, and reviewer copy. [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) tracks readiness. The [2026-09-13 handoff](../../STORE-HANDOFF-2026-09-13.md) is historical preparation evidence for an earlier source state.
 
@@ -139,7 +139,7 @@ No login required. Open temoto on an HTTP(S) page: pick/copy a color; capture Vi
 ## Submission checklist
 
 - [x] Preserve the existing source identity, Item ID `gcncgknjklghkoeiapcbdghodepnllid`, and its public key.
-- [x] Select **1.2.0** as the release version; the source manifest and package version are 1.2.0. The update is submitted and awaiting review; publication is not yet confirmed.
+- [x] Select **1.2.0** as the release version; the source manifest and package version are 1.2.0. The update was published; the public listing showed 1.2.0 on 2026-10-15.
 - [x] Complete native 1.2.0 QA: Color HEX/RGB/HSL copy and format persistence passed, and the user manually confirmed successful new-color acquisition. Screenshot, CSS, Video Speed, restricted-page, and controlled Proxy checks passed; see [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md#integration-verification).
 - [x] Run final 1.2.0 `npm test` (**125 passed**), `npm run build` (checks for **20 required extension files** passed), and `npm run test:sites` (**4 passed**) on 2026-10-14, including the capture error recovery fix. The redesigned landing page separately passed lint/build and all 6 tests on 2026-10-14.
 - [x] Review the refreshed five-row English/Japanese launcher JPEGs. Browser preview covered Fixed/PAC URL creation, save/edit/activation/Off/delete, active Save & reapply, unfinished-draft reload, and validation-error focus.
@@ -154,4 +154,4 @@ No login required. Open temoto on an HTTP(S) page: pick/copy a color; capture Vi
 - [x] Confirm the updated public privacy policy content: GitHub shows commit 8764534, the October 14, 2026 date, and version 1.2.0 text.
 - [x] Confirm and retain the existing free pricing, public visibility, and all-region distribution. Public visibility does not mean the new version has been published.
 - [x] Submit the update for review and verify the submission receipt and Awaiting review status. Automatic publication after approval remains enabled with the user's explicit authorization.
-- [ ] Confirm the review decision and public 1.2.0 Store release after automatic publication. The public version remains 1.1.0 at this check.
+- [x] Confirm the public 1.2.0 Store release after automatic publication: the public listing showed 1.2.0 on 2026-10-15.

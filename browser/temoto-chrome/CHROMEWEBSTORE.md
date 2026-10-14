@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-14
 
-The five-tool **1.2.0** update was submitted to Chrome Web Store review on **2026-10-14**. The dashboard confirmed submission and shows **Awaiting review** (審査待ち). The user explicitly authorized automatic publication after approval, and that setting remains enabled. Approval and publication have not been confirmed; the public main extension is still **1.1.0** at this check. The English listing and artwork are saved, native Chrome 1.2.0 QA is complete including the user's manual new-color eyedropper confirmation, and the source/policy were pushed as commit `8764534` with the updated public policy verified. GitHub Chrome, website, and legacy Proxy checks all passed. The package and current Store draft support English only; Japanese copy and artwork remain local reference material. The former standalone temoto Proxy has been unpublished, while its source and existing users' saved data remain available for migration.
+The five-tool **1.2.0** update was submitted to Chrome Web Store review on **2026-10-14**. It was approved and published automatically: on **2026-10-15** the public Store listing showed version **1.2.0**, updated October 14, 2026, with the five-tool description. The English listing and artwork are saved, native Chrome 1.2.0 QA is complete including the user's manual new-color eyedropper confirmation, and the source/policy were pushed as commit `8764534` with the updated public policy verified. GitHub Chrome, website, and legacy Proxy checks all passed. The package and current Store draft support English only; Japanese copy and artwork remain local reference material. The former standalone temoto Proxy has been unpublished, while its source and existing users' saved data remain available for migration.
 
 The subsequent repository cleanup removes unused source code, styles, and website assets. It does not replace the submitted ZIP or change the release version. Package a later source revision only as part of a separate release.
 
@@ -45,7 +45,7 @@ The dashboard's existing free pricing, public visibility, and all-region distrib
 
 | Source/change | Date | Scope | Status |
 | --- | --- | --- | --- |
-| 1.2.0 release package | 2026-10-14 | Five-tool integration, quiet restricted-page detection, and capture error recovery fix | Submitted; Awaiting review; automatic publication after approval enabled; public version still 1.1.0 at this check |
+| 1.2.0 release package | 2026-10-14 | Five-tool integration, quiet restricted-page detection, and capture error recovery fix | Published; public listing showed 1.2.0 on 2026-10-15 |
 | Quiet restricted-page detection; source 1.1.0 at that stage | 2026-10-14 | Disable unavailable page tools without an access-error banner on popup open | Historical local verification below |
 | Five-tool integration; source 1.1.0 at that stage | 2026-10-13 | Color Picker, Screenshot, CSS, Video Speed, and simple Fixed/PAC URL Proxy switching | Historical local verification below |
 | Earlier four-tool cleanup | 2026-10-12 | Remove environment and reset surfaces | Historical local verification below |
@@ -54,7 +54,7 @@ The [2026-09-13 handoff](../STORE-HANDOFF-2026-09-13.md) records earlier prepara
 
 ## Integration verification
 
-Final 1.2.0 verification on 2026-10-14: **125 core tests**, the production build with checks for **20 required extension files**, and **4 Sites packaging tests** passed, including the capture error recovery fix. The final archive is `release/temoto-for-chrome-v1.2.0.zip` (**177,102 bytes**), SHA-256 `620aa17207726459c86ddc2348c0bbe433020253749c8003c36e874c6633b071`. Its root layout, version, permissions, and sole English catalog were checked. The dashboard shows submitted draft **1.2.0** awaiting review while the public release is still **1.1.0** at this check. GitHub Chrome, website, and legacy Proxy checks for source commit `8764534` all passed.
+Final 1.2.0 verification on 2026-10-14: **125 core tests**, the production build with checks for **20 required extension files**, and **4 Sites packaging tests** passed, including the capture error recovery fix. The final archive is `release/temoto-for-chrome-v1.2.0.zip` (**177,102 bytes**), SHA-256 `620aa17207726459c86ddc2348c0bbe433020253749c8003c36e874c6633b071`. Its root layout, version, permissions, and sole English catalog were checked. The public Store listing showed **1.2.0** on 2026-10-15. GitHub Chrome, website, and legacy Proxy checks for source commit `8764534` all passed.
 
 Native Google Chrome 1.2.0 QA on 2026-10-14:
 
@@ -73,9 +73,9 @@ Completed locally on 2026-10-13 for the integrated source:
 - Browser preview verified Fixed/PAC URL creation, save, edit, activation, Off, deletion, active-profile Save & reapply, unfinished-draft reload, and focus on validation errors. This preview does not apply Chrome's real proxy setting.
 - The built five-row launcher was recaptured as the site's 416 × 402 PNG (SHA-256 prefix `47ae7d5e3c53`) and English/Japanese Store JPEGs at 1280 × 800. Formats, dimensions, and saved-image appearance were checked. The single-product OG image is an updated 1200 × 630 PNG.
 
-Native 1.2.0 QA is complete with the user's manual eyedropper confirmation. Earlier four-tool installed-Chrome results below are historical. The later Store submission receipt and Awaiting review status were confirmed separately; no approval or public 1.2.0 release is recorded.
+Native 1.2.0 QA is complete with the user's manual eyedropper confirmation. Earlier four-tool installed-Chrome results below are historical. The later Store submission was confirmed separately, and the public listing showed 1.2.0 on 2026-10-15.
 
-The redesigned landing page passed lint, a production build, and all 6 site tests on 2026-10-14. Its Store action explicitly identifies the page as a preview of the next extension update.
+The redesigned landing page passed lint, a production build, and all 6 site tests on 2026-10-14. Its upcoming-release notice was later removed from the Store action.
 
 The quiet restricted-page follow-up on 2026-10-14 passed 115 core tests, the production build with all 20 required files, and 4 Sites packaging tests. Browser QA of the built popup and worker with simulated Chrome API responses verified no banner for internal pages, access denial, or passive detection failure; normal-page tools remain enabled and explicit CSS failure still appears within its row. Native Chrome installation and Store submission were not performed for this follow-up.
 
@@ -100,8 +100,8 @@ The checks below were verified on 2026-10-12 for the earlier four-tool source, b
 
 ## Review notes
 
-- The submission receipt showed “この拡張機能は審査のために送信されました” and “アイテムを送信しました”. The status tab then showed “ステータス: 審査待ち” and “このドラフトは審査待ちです”. Automatic publication after approval remains enabled with the user's explicit authorization. No review decision is recorded.
+- The submission receipt showed “この拡張機能は審査のために送信されました” and “アイテムを送信しました”. The status tab then showed “ステータス: 審査待ち” and “このドラフトは審査待ちです”. Automatic publication after approval remains enabled with the user's explicit authorization. The update was later published; the public listing showed 1.2.0 on 2026-10-15.
 - CSS provides computed declarations for the selected element, not the original stylesheet or complete layout reconstruction.
 - User speed commands remain 0.25–5×; observed actual rates may be outside that range and must still be displayed accurately.
 - Browser-tab closure can leave a screenshot record until expiry cleanup; the preview's Close action removes it immediately.
-- Review completion and verification of the automatically published 1.2.0 Store version remain outstanding. Follow the [submission checklist](./store/listing.md#submission-checklist).
+- The automatically published 1.2.0 Store version was verified on the public listing on 2026-10-15.

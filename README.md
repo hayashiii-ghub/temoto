@@ -1,6 +1,6 @@
 # temoto
 
-temoto brings Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching into one Chrome extension. Version 1.2.0 was submitted to Chrome Web Store review on October 14, 2026, with automatic publication after approval enabled. See [release status](./browser/temoto-chrome/CHROMEWEBSTORE.md) for the last verified Store state.
+temoto brings Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching into one Chrome extension. Version 1.2.0 is public on the Chrome Web Store (updated October 14, 2026). See [release status](./browser/temoto-chrome/CHROMEWEBSTORE.md) for the last verified Store state.
 
 - [Website](https://temoto.hayashiii-gpt.chatgpt.site)
 - [temoto for Chrome](https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid)
@@ -15,7 +15,7 @@ A compact browser toolkit with five tools:
 - Video Speed: popup controls and page shortcuts that follow each video's actual rate.
 - Proxy: named single-endpoint Fixed profiles or PAC URLs, with Add/Edit/Delete, click to activate, and Off. Adding a profile saves it without applying it. Editing the active profile uses Save & reapply and updates its current setting immediately; other saves keep the profile inactive.
 
-Source, privacy details, development commands, and packaging instructions are in [`browser/temoto-chrome/`](./browser/temoto-chrome/). The existing Store link does not confirm that this integrated source has been released.
+Source, privacy details, development commands, and packaging instructions are in [`browser/temoto-chrome/`](./browser/temoto-chrome/).
 
 Proxy requires Chrome's `proxy` permission and affects all regular Chrome windows. It supports HTTP, HTTPS, SOCKS4, SOCKS5, and PAC URLs. Off clears temoto's override, allowing the underlying setting to take effect. The simple switcher does not include custom authentication, connection diagnostics, domain routing, import/export, or incognito configuration.
 
