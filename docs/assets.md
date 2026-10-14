@@ -30,4 +30,4 @@ The selected B / Joint mark uses two angular pieces in a 160 × 160 frame. Proxy
 
 The previous `product-*` copies, standalone-Proxy showcase, unused motion components, and image-copy build hooks were removed in the October 14 cleanup. Original Store images and the legacy source remain under `browser/`; removed website copies remain in Git history.
 
-Run `npm run lint` and `npm test` in `site/` after website changes. Its tests cover rendered content, the current asset references, the single Store action and preview notice, and OG dimensions. Local builds, deployed website state, and Chrome Store publication are separate verification steps.
+Run `npm run lint` and `npm test` in `site/` after website changes. Its tests cover rendered content, the current asset references, the single Store action, and OG dimensions. Local builds, deployed website state, and Chrome Store publication are separate verification steps.

@@ -17,7 +17,7 @@ export default function Home() {
       <section className="hero" aria-labelledby="temoto-title">
         <p className="eyebrow">A small toolkit for Chrome</p>
         <h1 id="temoto-title"><span>Less friction.</span><span>More doing.</span></h1>
-        <a className="store-link" href={chromeStoreUrl} aria-describedby="release-note">Add to Chrome</a>
+        <a className="store-link" href={chromeStoreUrl}>Add to Chrome</a>
         <p className="hero-meta">Free · Open source · No account</p>
       </section>
       <section className="product" aria-label="Five tools, close at hand">
@@ -28,7 +28,6 @@ export default function Home() {
       </section>
     </main>
     <footer className="footer">
-      <p id="release-note">This is a preview of the next temoto update.<br />The Store link opens the current release.</p>
       <nav aria-label="Resources">
         <a href={repositoryUrl}>GitHub</a>
         <a href={`${repositoryUrl}/blob/main/browser/temoto-chrome/PRIVACY.md`}>Privacy</a>

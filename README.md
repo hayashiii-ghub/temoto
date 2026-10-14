@@ -1,6 +1,6 @@
 # temoto
 
-temoto brings Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching into one Chrome extension. The website previews this update. Version 1.2.0 was submitted to Chrome Web Store review on October 14, 2026, with automatic publication after approval enabled. See [release status](./browser/temoto-chrome/CHROMEWEBSTORE.md) for the last verified Store state.
+temoto brings Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching into one Chrome extension. Version 1.2.0 was submitted to Chrome Web Store review on October 14, 2026, with automatic publication after approval enabled. See [release status](./browser/temoto-chrome/CHROMEWEBSTORE.md) for the last verified Store state.
 
 - [Website](https://temoto.hayashiii-gpt.chatgpt.site)
 - [temoto for Chrome](https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid)

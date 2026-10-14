@@ -52,7 +52,7 @@ test("renders the selected English landing-page message without JavaScript", asy
   assert.doesNotMatch(text, /Switch Origin|Site Reset|selected.region capture|authenticated proxy profiles|domain routing|connection diagnostics|built.in VPN|temoto for macOS|ShelfDrop/i);
 });
 
-test("keeps public metadata, one Store action and the upcoming-release notice", async () => {
+test("keeps public metadata, one Store action and footer resources", async () => {
   const html = await (await render()).text();
   const title = /<title>([\s\S]*?)<\/title>/.exec(html)?.[1] ?? "";
   assert.match(title, /temoto/i);
@@ -67,12 +67,13 @@ test("keeps public metadata, one Store action and the upcoming-release notice", 
   assert.equal(storeLinks.length, 1, "the page should have one Chrome Store action");
   assert.equal(attribute(storeLinks[0], "href"), storeUrl);
   assert.equal(textContent(storeLinks[0]), "Add to Chrome");
+  assert.equal(attribute(storeLinks[0], "aria-describedby"), "");
   assert.doesNotMatch(html, /chromewebstore\.google\.com\/detail\/temoto-proxy/);
 
   const footer = /<footer\b[^>]*>([\s\S]*?)<\/footer>/.exec(html)?.[1] ?? "";
   assert.match(footer, /href="https:\/\/github\.com\/hayashiii-ghub\/temoto"[^>]*>GitHub<\/a>/);
   assert.match(footer, /href="https:\/\/github\.com\/hayashiii-ghub\/temoto\/blob\/main\/browser\/temoto-chrome\/PRIVACY\.md"[^>]*>Privacy<\/a>/);
-  assert.match(textContent(footer), /This is a preview of the next temoto update\. The Store link opens the current release\./);
+  assert.equal(textContent(footer), "GitHub Privacy");
 });
 
 test("keeps public response headers below the hosting gateway limit", async () => {

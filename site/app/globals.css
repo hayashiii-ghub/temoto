@@ -48,7 +48,7 @@ h1 span { display: block; }
 .launcher { display: block; width: var(--launcher-width); height: auto; margin-inline: auto; border-radius: 8px; }
 .product-figure figcaption { margin-top: 64px; font-size: 28px; line-height: 1.5; }
 .mobile-break { display: none; }
-.footer { display: flex; align-items: end; justify-content: space-between; gap: 32px; padding: 40px clamp(24px, 6.9vw, 100px); background: var(--black); color: #a2a2a0; font-size: 14px; line-height: 1.7; }
+.footer { display: flex; align-items: end; justify-content: flex-end; gap: 32px; padding: 40px clamp(24px, 6.9vw, 100px); background: var(--black); color: #a2a2a0; font-size: 14px; line-height: 1.7; }
 .footer nav { display: flex; gap: 28px; }
 .footer a { display: inline-flex; align-items: center; min-height: 44px; }
 .footer a:hover { color: var(--white); }
