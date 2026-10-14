@@ -275,8 +275,8 @@ function PopupApp() {
       if (disposed) return;
       if (pageResult.status === "fulfilled" && initialSequence === refreshSequence.current) setPage(pageResult.value);
       if (settingsResult.status === "fulfilled") setSettings(settingsResult.value);
-      const failure = pageResult.status === "rejected" ? pageResult.reason : settingsResult.status === "rejected" ? settingsResult.reason : null;
-      if (failure && initialSession === toolSession.current) setError(errorMessage(failure, t("Could not initialize temoto")));
+      // Passive page detection can fail on Chrome-owned pages; unavailable tools stay disabled.
+      if (settingsResult.status === "rejected" && initialSession === toolSession.current) setError(t("Could not load settings"));
     });
     let timer: number | undefined;
     const onMessage = (message: { type?: string }, sender: chrome.runtime.MessageSender) => {

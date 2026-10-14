@@ -23,6 +23,8 @@ const archiveRoot = resolve(temporaryRoot, "client");
 const archiveManifest = { ...manifest, version: archiveVersion };
 delete archiveManifest.key;
 cpSync(buildRoot, archiveRoot, { recursive: true });
+cpSync(resolve(projectRoot, "public/icons"), resolve(archiveRoot, "icons"), { recursive: true });
+rmSync(resolve(archiveRoot, "fonts/README.md"), { force: true });
 writeFileSync(resolve(archiveRoot, "manifest.json"), `${JSON.stringify(archiveManifest, null, 2)}\n`);
 
 const zip = spawnSync("zip", ["-qr", archivePath, "."], {

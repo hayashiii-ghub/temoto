@@ -1,6 +1,6 @@
 # Chrome Web Store submission copy
 
-Prepared locally on **2026-10-13** for the upcoming five-tool integration. The source manifest remains **1.1.0**; the next release version has not been selected. These changes have not been uploaded, submitted, or published in this task. This file describes the current worktree, not the live Store package.
+Updated on **2026-10-14** for the five-tool **1.2.0** release. The verified ZIP has been uploaded, with draft version 1.2.0 confirmed in the dashboard. The English description, homepage, privacy fields, short reviewer instructions, and final artwork are saved. Native Chrome 1.2.0 QA passed except for a new native eyedropper pick, which remains unverified pending the user's manual check. Public policy push/verification, review submission, and publication remain pending; the public main extension remains **1.1.0**. The former standalone temoto Proxy has been unpublished.
 
 This is the authoritative listing, permission, privacy-disclosure, and reviewer copy. [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) tracks readiness. The [2026-09-13 handoff](../../STORE-HANDOFF-2026-09-13.md) is historical preparation evidence for an earlier source state.
 
@@ -14,15 +14,17 @@ temoto for Chrome
 
 English
 
+The 1.2.0 package contains only `_locales/en`, and the current dashboard language is English only. Previously saved Japanese descriptions and screenshots are not displayed for this draft. Japanese copy and assets are retained below as local reference material; do not add a Japanese package catalog to restore the old listing locale.
+
 **Suggested category**
 
 Choose the closest current dashboard category for developer productivity/tools when preparing the release.
 
-**Summary**
+**Summary (English)**
 
 Color Picker, screenshots, CSS, video speed and simple proxy switching in one compact Chrome toolkit.
 
-**Detailed description**
+**Detailed description (English)**
 
 Five tools, close at hand.
 
@@ -45,6 +47,34 @@ Open temoto from the Chrome toolbar, choose a tool, and use Back to return to th
 temoto processes tools locally and does not upload page content, screenshots, or settings to the developer. Selecting a proxy routes Chrome traffic through the user's chosen server; Chrome fetches a selected PAC URL as needed. It has no accounts, analytics, or advertising. Persistent HTTP(S) page access enables local Video Speed controls and a limited video bridge on pages that explicitly opt in. That bridge provides only an extension-availability check and video-speed control in the requesting tab.
 
 Support and source: https://github.com/hayashiii-ghub/temoto
+
+**Summary (Japanese)**
+
+色の取得、スクリーンショット、CSS確認、動画速度、シンプルなProxy切替を、ひとつのコンパクトなChromeツールに。
+
+**Detailed description (Japanese)**
+
+5つの道具を、手元に。
+
+temoto for Chromeは、Color Picker、Screenshot、CSS、Video Speed、Proxyをひとつのポップアップにまとめた拡張機能です。操作画面は英語です。
+
+Color Picker：画面上の色を取得し、HEX・RGB・HSLでコピーできます。取得した直近8色をローカルに保存し、あとから選び直せます。
+
+Screenshot：表示範囲またはページ全体を撮影できます。Fitまたは100%表示で確認し、画像のコピーやPNG保存ができます。撮影前の準備は自動で行われ、設定は不要です。
+
+CSS：ページ上の要素を選び、寸法、余白、文字、色、境界線を確認できます。項目ごとのCSS宣言や、要素を特定するセレクターを別々にコピーできます。表示するのは選択要素の計算済みスタイルで、ページの元のスタイルシートではありません。
+
+Video Speed：ポップアップから0.25〜5倍速で操作できます。Gキーで1倍／1.5倍を切り替え、Dキーで0.25倍上げ、Sキーで0.25倍下げられます。動画が切り替わっても、その動画自身の再生速度を保ちます。ポップアップと動画上の小さな表示は実際の速度に追従し、ページ側が操作範囲外の速度に設定した場合も、その値を表示します。
+
+Proxy：HTTP・HTTPS・SOCKS4・SOCKS5のいずれか1つの接続先を持つFixedプロファイル、またはPAC URLに名前を付けて保存できます。追加、編集、削除ができ、保存済みプロファイルをクリックすると適用されます。新規追加や使用していないプロファイルの保存だけでは、接続は変わりません。使用中のプロファイルはSave & reapplyで保存すると、変更がすぐに再適用されます。Offはtemotoの上書きを解除し、Chromeの元の設定が使える状態に戻します。Proxyの設定は通常のChromeウィンドウ全体に適用されます。シークレットモードの設定、独自の認証処理、接続診断、ドメイン別ルール、インポート／エクスポートは提供しません。ProxyサーバーやPAC URLはご自身で用意してください。
+
+旧temoto Proxyから移行する場合は、先に旧拡張機能でOffを選び、必要なFixed接続先やPAC URLをtemotoで作り直してください。自動移行や自動適用は行いません。旧プロファイルと認証情報は、旧拡張機能に残ります。
+
+Chromeのツールバーからtemotoを開き、使いたい道具を選びます。Backで5つの道具の一覧に戻れます。色の取得、撮影、CSS確認は、選択したときに動作します。動画のショートカットは、対応ページでポップアップを開かずに使えます。
+
+temotoは各ツールをローカルで処理し、ページの内容、スクリーンショット、設定を開発者へ送信しません。Proxyを選ぶとChromeの通信は指定したサーバーを経由し、選択したPAC URLは必要に応じてChromeが取得します。アカウント、アクセス解析、広告はありません。HTTP(S)ページへの継続的なアクセスは、ローカルの動画速度操作と、明示的に有効化されたページの限定的な動画連携に使います。この連携で行えるのは、要求元タブでの拡張機能の有無の確認と動画速度の操作だけです。
+
+サポート・ソースコード：https://github.com/hayashiii-ghub/temoto
 
 ## Privacy practices
 
@@ -84,9 +114,19 @@ https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY
 
 The English/Japanese launcher JPEGs were recaptured locally on 2026-10-13 from the built five-row launcher at 1280 × 800. Their formats, dimensions, and saved-image appearance were checked. The site showcase is a 416 × 402 PNG with SHA-256 prefix `47ae7d5e3c53`; the single-product OG image is a refreshed 1200 × 630 PNG. Legacy standalone Proxy images remain historical material. Use the existing [Store capture workflow](../../shared/STORE-CAPTURE.md) for subsequent artwork; captures do not prove native Chrome permission handling or real proxy traffic.
 
+On 2026-10-14, old common Store screenshots were removed, leaving one latest English image. The canonical 128 × 128 PNG icon was uploaded again and saved. The existing small promo tile visually matched the current asset and was retained. A Japanese screenshot had been saved before upload, but it is not displayed by the English-only 1.2.0 draft and remains local reference material.
+
 ## Reviewer test instructions
 
 No temoto account is required. The four page tools need no credentials. Use a disposable proxy/PAC supplied by the reviewer to test routing; the extension supplies no proxy service and stores no custom authentication credentials.
+
+**Dashboard additional instructions (453 characters; 500-character limit)**
+
+The following shortened instructions have been saved in the dashboard:
+
+No login required. Open temoto on an HTTP(S) page: pick/copy a color; capture Visible area/Full page, reload preview, Copy/Save PNG; select CSS and press Esc to exit; use Video Speed and G/D/S on HTML5 video. Proxy: add a disposable Fixed endpoint or PAC URL. Saving does not activate it; click its row to apply, edit with Save & reapply, then Off. Use your own test proxy; none is supplied. Proxy affects regular windows only and stores no credentials.
+
+**Full reviewer test steps**
 
 1. Open an HTTP(S) page and click the temoto toolbar icon. Confirm the launcher has exactly Color Picker, Screenshot, CSS, Video Speed, and Proxy. Its controls and page overlays remain English when Chrome or the page uses another language.
 2. Pick a color with Chrome's native eyedropper. Confirm HEX/RGB/HSL copy, revisit the tool, and check that only actual picks enter the latest-eight history. Selecting a history color must not create a duplicate.
@@ -99,14 +139,17 @@ No temoto account is required. The four page tools need no credentials. Use a di
 ## Submission checklist
 
 - [x] Preserve the existing source identity, Item ID `gcncgknjklghkoeiapcbdghodepnllid`, and its public key.
-- [ ] Select the next release version; source is still 1.1.0 and no new release is recorded.
-- [ ] Verify all five tools in current stable Google Chrome, including capture reload, clipboard, CSS selection, media replacement, and controlled Proxy activation/Off.
-- [x] Run full `npm test` (104 passed), `npm run build` (checks for 20 required extension files passed), and `npm run test:sites` (4 passed) for the integrated source on 2026-10-13. Website lint/build and all 8 tests also passed at that stage; the redesigned landing page passed lint/build and all 6 tests on 2026-10-14.
+- [x] Select **1.2.0** as the release version; the source manifest and package version are 1.2.0. The update has not yet been submitted for review or published.
+- [ ] Complete the new native eyedropper pick manually. Color HEX/RGB/HSL copy and format persistence passed, but new-color acquisition remains unverified. Native 1.2.0 screenshot, CSS, Video Speed, restricted-page, and controlled Proxy checks passed; see [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md#integration-verification).
+- [x] Run final 1.2.0 `npm test` (**125 passed**), `npm run build` (checks for **20 required extension files** passed), and `npm run test:sites` (**4 passed**) on 2026-10-14, including the capture error recovery fix. The redesigned landing page separately passed lint/build and all 6 tests on 2026-10-14.
 - [x] Review the refreshed five-row English/Japanese launcher JPEGs. Browser preview covered Fixed/PAC URL creation, save/edit/activation/Off/delete, active Save & reapply, unfinished-draft reload, and validation-error focus.
-- [ ] Accept the added proxy permission in native Chrome and verify integrated Proxy against a controlled real network. Browser-preview operations above do not satisfy this check.
-- [ ] Review the retained small promo tile against the final release package.
-- [ ] After release authorization, run `npm run package` without overwriting a previously submitted ZIP. Check the archive's manifest identity, version, permissions, and root layout.
-- [ ] Publish the updated privacy policy and confirm its public URL.
-- [ ] Review dashboard privacy disclosures, publisher/contact details, category, regions, and visibility for the final package.
-- [ ] With explicit submission authorization, upload the ZIP, listing, and required artwork; verify the dashboard receipt.
+- [x] Obtain the user's authorization for the added Proxy permission, load native Chrome 1.2.0, and verify Fixed/PAC routing, Off, draft restoration, inactive save-only behavior, active Save & reapply, and deletion. Leave Proxy Off with all test profiles deleted.
+- [x] Save one latest English/common screenshot after deleting the old images, upload the canonical 128 × 128 PNG icon, and retain the visually matching existing promo tile. Japanese artwork remains local reference only for this English-only draft.
+- [x] Package and check `release/temoto-for-chrome-v1.2.0.zip`: **177,102 bytes**, SHA-256 `620aa17207726459c86ddc2348c0bbe433020253749c8003c36e874c6633b071`; manifest identity, version, permissions, and root layout checked.
+- [x] Upload the final 1.2.0 ZIP to the existing Store item; the new `proxy` justification field appeared. Confirm draft version 1.2.0 in the dashboard and public version 1.1.0.
+- [x] Save the English detailed description, canonical homepage, single purpose, all permission justifications, corrected temoto privacy URL, and shortened reviewer instructions. Retain the existing Website content/Web history selections, No remote code setting, and three checked certifications. Previously saved Japanese fields are not displayed by the current English-only draft.
+- [x] Unpublish the former standalone temoto Proxy; retain its source and existing profiles/credentials for manual migration.
+- [ ] Push the local 1.2.0 privacy policy update and confirm its public URL before submission.
+- [x] Confirm and retain the existing free pricing, public visibility, and all-region distribution. Public visibility does not mean the new version has been published.
+- [ ] Submit the prepared update for review and verify the dashboard receipt.
 - [ ] With explicit publication authorization, publish or release the reviewed package and verify its public Store state.

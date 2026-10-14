@@ -1,8 +1,8 @@
 # Privacy Policy for temoto for Chrome
 
-Last updated: October 13, 2026 (local draft for the five-tool integration; not yet published)
+Last updated: October 14, 2026
 
-This policy describes the five-tool source under development. It does not confirm the behavior of the currently published Chrome Web Store package.
+This policy applies to temoto for Chrome version 1.2.0 and describes its data handling. It does not confirm the behavior of earlier Chrome Web Store versions.
 
 temoto for Chrome provides Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching. Proxy applies across regular Chrome windows; the other tools operate on the page the user is viewing.
 
@@ -64,4 +64,4 @@ Information received from Chrome APIs is used only for temoto's stated user-faci
 
 ## Changes and contact
 
-Before release, publish this policy and align the Chrome Web Store privacy declarations with the released source. Questions can be submitted through the project's [GitHub issue tracker](https://github.com/hayashiii-ghub/temoto/issues).
+We will update this policy if the extension's data handling changes. Questions can be submitted through the project's [GitHub issue tracker](https://github.com/hayashiii-ghub/temoto/issues).

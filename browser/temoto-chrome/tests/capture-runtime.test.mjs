@@ -35,13 +35,22 @@ function useLockEnvironment(t) {
   return { session };
 }
 
-function createCaptureWorker(t, { blockScroll = false, failCaptureAt = Infinity } = {}) {
+function createCaptureWorker(t, { blockScroll = false, failCaptureAt = Infinity, onWait, onCapture } = {}) {
   const { session } = useLockEnvironment(t);
   const saved = [];
   const opened = [];
   const styles = [];
   const capturedOverlayStates = [];
   const waits = [];
+  const activationListeners = new Set();
+  const activeTabs = new Map([[1, 1], [2, 9]]);
+  const queries = [];
+  let focusedWindow = 1;
+  const activate = (tabId, windowId = 1, dispatch = true) => {
+    activeTabs.set(windowId, tabId);
+    if (dispatch) for (const listener of activationListeners) listener({ tabId, windowId });
+  };
+  const focusWindow = (windowId) => { focusedWindow = windowId; };
   let blocked = false;
   const style = (initial = {}) => {
     const properties = new Map(Object.entries(initial).map(([name, value]) => [name, typeof value === "object" ? value : { value, priority: "important" }]));
@@ -73,15 +82,30 @@ function createCaptureWorker(t, { blockScroll = false, failCaptureAt = Infinity 
   };
   const frameWindow = {};
   const frameDocument = { querySelectorAll: () => [frameBadge] };
-  const immediateTimeout = (callback, delay) => { waits.push(delay); callback(); return 1; };
+  const immediateTimeout = (callback, delay) => {
+    waits.push(delay);
+    onWait?.(delay, capturedOverlayStates.length, activate);
+    callback();
+    return 1;
+  };
   const chrome = Object.assign(globalThis.chrome, {
     tabs: {
-      async query() { return [{ id: 1, windowId: 1, active: true }]; },
-      async captureVisibleTab() {
+      async query(options) {
+        queries.push(structuredClone(options));
+        const windowId = options.windowId ?? focusedWindow;
+        return [{ id: activeTabs.get(windowId), windowId, active: true }];
+      },
+      onActivated: {
+        addListener(listener) { activationListeners.add(listener); },
+        removeListener(listener) { activationListeners.delete(listener); },
+      },
+      async captureVisibleTab(windowId) {
+        assert.equal(windowId, 1);
         capturedOverlayStates.push([inspector, badge, frameBadge].map((element) => ({
           value: element.style.getPropertyValue("visibility"), priority: element.style.getPropertyPriority("visibility"),
         })));
         if (capturedOverlayStates.length === failCaptureAt) throw new Error("Native capture failed");
+        onCapture?.(capturedOverlayStates.length, activate, focusWindow);
         return "data:image/png;base64,identical";
       },
       async create(tab) { opened.push(tab); },
@@ -109,7 +133,7 @@ function createCaptureWorker(t, { blockScroll = false, failCaptureAt = Infinity 
     async savePendingCapture(capture) { saved.push(structuredClone(capture)); return `capture-${saved.length}`; },
   };
   vm.runInNewContext(`${workerSource}\nglobalThis.captureMessage = handleMessage;`, context);
-  return { session, saved, opened, styles, root, window, inspector, badge, frameBadge, ordinary, capturedOverlayStates, waits, message: (message, sender = {}) => context.captureMessage(message, sender) };
+  return { session, saved, opened, styles, root, window, inspector, badge, frameBadge, ordinary, capturedOverlayStates, waits, queries, activationListeners, message: (message, sender = {}) => context.captureMessage(message, sender) };
 }
 
 test("full-page capture preserves identical image sections and restores the original page", async (t) => {
@@ -151,7 +175,66 @@ function assertOverlaysRestored(page) {
   assert.equal(page.ordinary.style.getPropertyPriority("visibility"), "");
 }
 
+function assertCaptureDiscarded(page) {
+  assert.equal(page.saved.length, 0);
+  assert.equal(page.opened.length, 0);
+  assert.equal(page.session[CAPTURE_LOCK_KEY], undefined);
+  assert.equal(page.activationListeners.size, 0);
+  assert.equal(page.window.scrollX, 12);
+  assert.equal(page.window.scrollY, 400);
+  assert.equal(page.root.style.getPropertyValue("scroll-behavior"), "smooth");
+  assert.ok(page.styles.every((element) => element.removed));
+  assertOverlaysRestored(page);
+}
+
 for (const type of ["CAPTURE_VISIBLE", "CAPTURE_FULL_PAGE"]) {
+  test(`${type} rejects a tab switch during settling before taking a screenshot`, async (t) => {
+    const page = createCaptureWorker(t, { onWait(delay, count, activate) {
+      if (delay === captureUtils.CAPTURE_SCROLL_SETTLE_MS && count === 0) activate(2);
+    } });
+    await assert.rejects(page.message({ type }), /Keep the selected page active/);
+    assert.equal(page.capturedOverlayStates.length, 0);
+    assertCaptureDiscarded(page);
+  });
+
+  test(`${type} discards the final screenshot when the selected tab changes during native capture`, async (t) => {
+    const lastFrame = type === "CAPTURE_FULL_PAGE" ? 3 : 1;
+    const page = createCaptureWorker(t, { onCapture(count, activate) {
+      if (count === lastFrame) activate(2);
+    } });
+    await assert.rejects(page.message({ type }), /Keep the selected page active/);
+    assert.equal(page.capturedOverlayStates.length, lastFrame);
+    assertCaptureDiscarded(page);
+  });
+
+  test(`${type} still rejects a switch away and back before the screenshot resolves`, async (t) => {
+    const page = createCaptureWorker(t, { onCapture(_count, activate) {
+      activate(2);
+      activate(1);
+    } });
+    await assert.rejects(page.message({ type }), /Keep the selected page active/);
+    assertCaptureDiscarded(page);
+  });
+
+  test(`${type} checks the active tab after capture even before an activation event is delivered`, async (t) => {
+    const page = createCaptureWorker(t, { onCapture(_count, activate) { activate(2, 1, false); } });
+    await assert.rejects(page.message({ type }), /Keep the selected page active/);
+    assertCaptureDiscarded(page);
+  });
+
+  test(`${type} keeps checking the original window when another window becomes active`, async (t) => {
+    const page = createCaptureWorker(t, { onCapture(_count, activate, focusWindow) {
+      activate(10, 2);
+      focusWindow(2);
+    } });
+    const result = await page.message({ type });
+    assert.equal(result.ok, true);
+    assert.equal(page.saved.length, 1);
+    assert.ok(page.queries.slice(1).every((query) => query.windowId === 1));
+    assert.equal(page.activationListeners.size, 0);
+    assertOverlaysRestored(page);
+  });
+
   test(`${type} hides only temoto overlays in every frame and preserves inspector state`, async (t) => {
     const page = createCaptureWorker(t);
     await page.message({ type });

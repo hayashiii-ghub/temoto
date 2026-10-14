@@ -25,6 +25,11 @@ interface CaptureFrame {
   scrollY: number;
 }
 
+interface CaptureTarget {
+  id: number;
+  windowId: number;
+}
+
 interface SavedStyleProperty {
   value: string;
   priority: string;
@@ -83,6 +88,36 @@ async function activeTab(): Promise<chrome.tabs.Tab & { id: number; windowId: nu
   return tab as chrome.tabs.Tab & { id: number; windowId: number };
 }
 
+async function withCaptureTarget<T>(
+  capture: (tab: CaptureTarget, captureFrame: () => Promise<string>) => Promise<T>,
+): Promise<T> {
+  const tab = await activeTab();
+  let changed = false;
+  const onActivated = (info: chrome.tabs.OnActivatedInfo) => {
+    if (info.windowId === tab.windowId && info.tabId !== tab.id) changed = true;
+  };
+  const activation = chrome.tabs.onActivated;
+  activation?.addListener(onActivated);
+  const assertActive = async () => {
+    const [visibleTab] = await chrome.tabs.query({ active: true, windowId: tab.windowId });
+    if (changed || visibleTab?.id !== tab.id) {
+      throw new Error("Keep the selected page active until the capture finishes");
+    }
+  };
+  const captureFrame = async () => {
+    await assertActive();
+    const dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
+    await assertActive();
+    return dataUrl;
+  };
+  try {
+    // Remember a switch away and back while the native screenshot is pending.
+    return await capture(tab, captureFrame);
+  } finally {
+    activation?.removeListener(onActivated);
+  }
+}
+
 async function executeInTab<Args extends unknown[] = [], Result = unknown>(
   tabId: number,
   func: (...args: Args) => Result,
@@ -92,18 +127,61 @@ async function executeInTab<Args extends unknown[] = [], Result = unknown>(
   return result?.result;
 }
 
-async function executeInActiveTab<Args extends unknown[] = [], Result = unknown>(
-  func: (...args: Args) => Result,
-  args: Args = [] as unknown as Args,
-  allFrames = false,
-): Promise<Array<chrome.scripting.InjectionResult<chrome.scripting.Awaited<Result>>>> {
-  const tab = await activeTab();
-  return chrome.scripting.executeScript<Args, Result>({ target: { tabId: tab.id, allFrames }, func, args });
+function unavailablePage(): PageDetection {
+  return { url: "", hostname: "", origin: "", title: "", videoCount: 0, playbackRate: 1 };
 }
 
-async function installVideoSpeedShortcuts() {
+function isDetectablePageUrl(value: string | undefined): boolean {
+  if (!value) return false;
+  try {
+    const url = new URL(value);
+    return ["http:", "https:"].includes(url.protocol)
+      && url.hostname !== "chromewebstore.google.com"
+      && !(url.hostname === "chrome.google.com" && /^\/webstore(?:\/|$)/.test(url.pathname));
+  } catch {
+    return false;
+  }
+}
+
+function isUnavailablePageError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : typeof error === "string" ? error : "";
+  return /^Cannot access a chrome:\/\/ URL\.?$/i.test(message)
+    || /^Cannot access a chrome-extension:\/\/ URL of different extension\.?$/i.test(message)
+    || /^Cannot access contents of (?:url "[^"]+"|the page)\. Extension manifest must request permission to access (?:this|the respective) host\.$/i.test(message)
+    || /^The (?:extensions gallery|New Tab Page|sign-in page) cannot be scripted\.$/i.test(message)
+    || /^No tab with id: \d+\.?$/i.test(message)
+    || /^No frame with id:? \d+(?: in tab (?:with id )?\d+)?\.?$/i.test(message)
+    || /^(?:Tab containing frame with ID \d+|Frame with ID \d+) was removed\.$/i.test(message)
+    || /^Frame with ID \d+ is (?:not ready|showing error page)\.?$/i.test(message);
+}
+
+async function detectPageState(installShortcuts: boolean): Promise<PageDetection> {
   const tab = await activeTab();
-  await chrome.scripting.executeScript({ target: { tabId: tab.id, allFrames: true }, files: ["content/video-speed.js"] });
+  if (!isDetectablePageUrl(tab.url)) return unavailablePage();
+
+  try {
+    if (installShortcuts) {
+      await chrome.scripting.executeScript({ target: { tabId: tab.id, allFrames: true }, files: ["content/video-speed.js"] });
+    }
+    const results = await chrome.scripting.executeScript({ target: { tabId: tab.id, allFrames: true }, func: () => {
+      const videos = Array.from(document.querySelectorAll("video"));
+      return { url: location.href, hostname: location.hostname, origin: location.origin, title: document.title, videoCount: videos.length, playbackRate: videos[0]?.playbackRate || 1 };
+    } });
+    const topFrame = results.find((entry) => entry.frameId === 0)?.result
+      || results[0]?.result
+      || unavailablePage();
+    const videoFrames = results
+      .map((entry) => entry.result)
+      .filter((entry): entry is PageDetection => Boolean(entry?.videoCount));
+    return {
+      ...topFrame,
+      videoCount: videoFrames.reduce((total, frame) => total + frame.videoCount, 0),
+      playbackRate: videoFrames[0]?.playbackRate || 1,
+    };
+  } catch (error) {
+    if (isUnavailablePageError(error)) return unavailablePage();
+    throw error;
+  }
 }
 
 async function applyVideoSpeed(rawSpeed: unknown, tabId?: number): Promise<{ speed: number; changed: number }> {
@@ -144,18 +222,15 @@ async function setTemotoOverlayVisibility(tabId: number, hidden: boolean): Promi
   }, args: [hidden] });
 }
 
-async function capture(): Promise<void> {
-  const tab = await activeTab();
+async function capture(tab: CaptureTarget, captureFrame: () => Promise<string>): Promise<void> {
   let dataUrl;
   let currentViewport: CaptureViewport | undefined;
   try {
     currentViewport = await executeInTab(tab.id, () => ({ width: window.innerWidth, height: window.innerHeight }));
     if (!currentViewport) throw new Error("The selected page viewport is unavailable");
-    const [visibleTab] = await chrome.tabs.query({ active: true, windowId: tab.windowId });
-    if (visibleTab?.id !== tab.id) throw new Error("Keep the selected page active until the capture finishes");
     await setTemotoOverlayVisibility(tab.id, true);
     await wait(CAPTURE_SCROLL_SETTLE_MS);
-    dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
+    dataUrl = await captureFrame();
   } finally {
     await setTemotoOverlayVisibility(tab.id, false).catch(() => {});
   }
@@ -163,8 +238,7 @@ async function capture(): Promise<void> {
   await chrome.tabs.create({ url: chrome.runtime.getURL(`capture.html?id=${encodeURIComponent(captureId)}`) });
 }
 
-async function captureFullPage(): Promise<{ frameCount: number; height: number }> {
-  const tab = await activeTab();
+async function captureFullPage(tab: CaptureTarget, captureFrame: () => Promise<string>): Promise<{ frameCount: number; height: number }> {
   const setup = await executeInTab(tab.id, () => {
     const stateKey = "__temotoFullPageCaptureState";
     const captureWindow = window as typeof window & { __temotoFullPageCaptureState?: FullPageCaptureState };
@@ -343,12 +417,9 @@ async function captureFullPage(): Promise<{ frameCount: number; height: number }
       documentHeight = Math.max(documentHeight, metrics.documentHeight);
       normalizeCaptureMetrics(documentHeight, setup.viewport.height, setup.pixelRatio);
 
-      const currentTab = await activeTab();
-      if (currentTab.id !== tab.id) throw new Error("Keep the page active until the full-page capture finishes");
-
       await setTemotoOverlayVisibility(tab.id, true);
       await wait(CAPTURE_SCROLL_SETTLE_MS);
-      const dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
+      const dataUrl = await captureFrame();
       frames.push({ dataUrl, scrollY: metrics.scrollY });
 
       await wait(CAPTURE_INTERVAL_MS);
@@ -403,23 +474,7 @@ async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.M
   switch (message.type) {
     case "DETECT_PAGE":
     case "GET_PAGE_STATE": {
-      if (message.type === "DETECT_PAGE") await installVideoSpeedShortcuts();
-      const results = await executeInActiveTab(() => {
-        const videos = Array.from(document.querySelectorAll("video"));
-        return { url: location.href, hostname: location.hostname, origin: location.origin, title: document.title, videoCount: videos.length, playbackRate: videos[0]?.playbackRate || 1 };
-      }, [], true);
-      const topFrame: PageDetection = results.find((entry) => entry.frameId === 0)?.result
-        || results[0]?.result
-        || { url: "", hostname: "", origin: "", title: "", videoCount: 0, playbackRate: 1 };
-      const videoFrames = results
-        .map((entry) => entry.result)
-        .filter((entry): entry is PageDetection => Boolean(entry?.videoCount));
-      const page = {
-        ...topFrame,
-        videoCount: videoFrames.reduce((total, frame) => total + frame.videoCount, 0),
-        playbackRate: videoFrames[0]?.playbackRate || 1,
-      };
-      return { ok: true, page };
+      return { ok: true, page: await detectPageState(message.type === "DETECT_PAGE") };
     }
     case "VIDEO_STATE_CHANGED":
       return { ok: true };
@@ -456,10 +511,10 @@ async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.M
       return { ok: true, speed };
     }
     case "CAPTURE_VISIBLE":
-      await withCaptureLock(capture);
+      await withCaptureLock(() => withCaptureTarget(capture));
       return { ok: true };
     case "CAPTURE_FULL_PAGE": {
-      const result = await withCaptureLock(captureFullPage);
+      const result = await withCaptureLock(() => withCaptureTarget(captureFullPage));
       return { ok: true, ...result };
     }
     case "START_MEASURE": {

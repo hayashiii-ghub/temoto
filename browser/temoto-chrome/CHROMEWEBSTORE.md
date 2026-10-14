@@ -2,11 +2,11 @@
 
 Last updated: 2026-10-14
 
-The five-tool integration is local development work. Proxy is now a simple switcher inside the main extension; the retained standalone source and its saved data are for existing users and migration. Source version **1.1.0** is unchanged; a release version has not been selected. No upload, submission, review result, or publication is claimed for this change.
+The five-tool **1.2.0** ZIP has been built, verified, and uploaded to the existing Store item, with version **1.2.0** confirmed in the dashboard. The English description, homepage, privacy fields, reviewer instructions, and final artwork are saved. Native Chrome 1.2.0 QA is complete except for picking a new color with the native eyedropper, which awaits the user's manual check. The package contains only the English catalog, so the current dashboard listing supports English only; Japanese copy and artwork below remain local reference material. The update has not been submitted for review or published; the public main extension remains **1.1.0**. The former standalone temoto Proxy has been unpublished, while its source and existing users' saved data remain available for migration.
 
 ## Store listing
 
-[store/listing.md](./store/listing.md) remains the authoritative English copy, name, summary, detailed description, primary language, single purpose, suggested category, and reviewer instructions. Keep those fields there rather than maintaining duplicate listing prose here.
+[store/listing.md](./store/listing.md) remains the authoritative English listing copy, name, summary, detailed description, primary language, single purpose, suggested category, and reviewer instructions. It also retains Japanese copy for local reference; previously saved Japanese dashboard fields are not displayed for the English-only 1.2.0 draft. Keep those fields there rather than maintaining duplicate listing prose here. Do not add a Japanese package catalog to restore the old listing locale; the approved UI and package remain English-only.
 
 Source identity: `temoto for Chrome`, Store Item ID `gcncgknjklghkoeiapcbdghodepnllid`.
 
@@ -16,24 +16,25 @@ Use the existing [Store capture workflow](../shared/STORE-CAPTURE.md) and the fi
 
 | Asset | Dimensions | Current readiness |
 | --- | --- | --- |
-| Store icon | 128 × 128 PNG | Existing source; recheck final package |
-| English/Japanese launcher screenshots | 1280 × 800 JPEG | Five-row built-UI recapture and saved-image review completed locally on 2026-10-13 |
-| Small promo tile | 440 × 280 JPEG | Existing brand-only tile retained; final package review pending |
+| Store icon | 128 × 128 PNG | Canonical source icon uploaded again and saved in the dashboard |
+| English launcher screenshot | 1280 × 800 JPEG | Old common images removed; one latest English image saved |
+| Japanese launcher screenshot | 1280 × 800 JPEG | Local reference only; not displayed by the current 1.2.0 draft |
+| Small promo tile | 440 × 280 JPEG | Existing tile visually matched the current asset and was retained |
 | Additional tool screenshots / marquee | Optional | Not required for this source task |
 
 ## Permissions justification
 
-The final source uses `activeTab`, `scripting`, `storage`, `clipboardWrite`, required `proxy`, and HTTP(S) content-script access for local Video Speed controls and the opted-in video bridge. Its packaged badge font is web-accessible on HTTP(S) pages; it introduces no new permission or remote font request. Proxy affects regular Chrome windows across tabs through `regular_only`; adding a profile does not activate it and Off clears temoto's override. No new proxy host access, `webRequest`, or `webRequestAuthProvider` is needed. Exact justifications remain in [listing.md](./store/listing.md#privacy-practices); verify them against the final packaged manifest before uploading.
+The final source uses `activeTab`, `scripting`, `storage`, `clipboardWrite`, required `proxy`, and HTTP(S) content-script access for local Video Speed controls and the opted-in video bridge. Its packaged badge font is web-accessible on HTTP(S) pages; it introduces no new permission or remote font request. Proxy affects regular Chrome windows across tabs through `regular_only`; adding a profile does not activate it and Off clears temoto's override. No new proxy host access, `webRequest`, or `webRequestAuthProvider` is needed. The final ZIP's manifest matches these permissions, and the upload exposed the new `proxy` justification field. All permission justifications and the single-purpose description have been updated and saved; their exact copy remains in [listing.md](./store/listing.md#privacy-practices).
 
 ## Privacy and data use
 
-The local policy draft is [PRIVACY.md](./PRIVACY.md). Data handled locally includes requested screenshots and computed CSS, current-page/video state, picked colors and recent history, color-format preferences, and named simple proxy profiles/state. Integrated Proxy stores no usernames or passwords, performs no diagnostics, and does not configure incognito. Screenshot provides Visible area and Full page with automatic preparation and no configurable capture options. Screenshots expire after one hour and are removed on the next capture save/load, or by the preview's Close action. Dashboard disclosure guidance and certification checks remain in [listing.md](./store/listing.md#privacy-practices).
+The local policy for version 1.2.0 is [PRIVACY.md](./PRIVACY.md). Data handled locally includes requested screenshots and computed CSS, current-page/video state, picked colors and recent history, color-format preferences, and named simple proxy profiles/state. Integrated Proxy stores no usernames or passwords, performs no diagnostics, and does not configure incognito. Screenshot provides Visible area and Full page with automatic preparation and no configurable capture options. Screenshots expire after one hour and are removed on the next capture save/load, or by the preview's Close action. Dashboard disclosure guidance remains in [listing.md](./store/listing.md#privacy-practices). The existing Website content and Web history selections, No remote code setting, and all three checked certifications were retained.
 
-Policy URL for release: https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY.md. Public availability of this updated draft is pending merge/publication and must be checked before submission.
+Policy URL saved in the dashboard: https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY.md. The 1.2.0 policy update remains local and has not been pushed; verify the public content after pushing and before submission.
 
 ## Distribution and developer details
 
-Keep the existing Store item. Publisher name, public contact email, category, visibility, and regions have not been read from the live dashboard in this task; preserve existing values unless the user authorizes a change and verify them at release time.
+The dashboard's existing free pricing, public visibility, and all-region distribution were confirmed and retained. Keep the existing Store item, publisher name, public contact email, and category. Public visibility is the distribution setting; it does not mean version 1.2.0 has been published.
 
 - Support: https://github.com/hayashiii-ghub/temoto/issues
 - Homepage: https://temoto.hayashiii-gpt.chatgpt.site
@@ -42,12 +43,25 @@ Keep the existing Store item. Publisher name, public contact email, category, vi
 
 | Source/change | Date | Scope | Status |
 | --- | --- | --- | --- |
-| Five-tool integration; manifest still 1.1.0 | 2026-10-13 | Color Picker, Screenshot, CSS, Video Speed, and simple Fixed/PAC URL Proxy switching | Local draft, not submitted |
+| 1.2.0 release package | 2026-10-14 | Five-tool integration, quiet restricted-page detection, and capture error recovery fix | Dashboard version, English listing, and artwork confirmed; native new-color pick and review submission pending |
+| Quiet restricted-page detection; source 1.1.0 at that stage | 2026-10-14 | Disable unavailable page tools without an access-error banner on popup open | Historical local verification below |
+| Five-tool integration; source 1.1.0 at that stage | 2026-10-13 | Color Picker, Screenshot, CSS, Video Speed, and simple Fixed/PAC URL Proxy switching | Historical local verification below |
 | Earlier four-tool cleanup | 2026-10-12 | Remove environment and reset surfaces | Historical local verification below |
 
 The [2026-09-13 handoff](../STORE-HANDOFF-2026-09-13.md) records earlier preparation evidence. It does not establish live Store status for this work.
 
 ## Integration verification
+
+Final 1.2.0 verification on 2026-10-14: **125 core tests**, the production build with checks for **20 required extension files**, and **4 Sites packaging tests** passed, including the capture error recovery fix. The final archive is `release/temoto-for-chrome-v1.2.0.zip` (**177,102 bytes**), SHA-256 `620aa17207726459c86ddc2348c0bbe433020253749c8003c36e874c6633b071`. Its root layout, version, permissions, and sole English catalog were checked. Upload completed, and the dashboard shows draft **1.2.0** while the public release is still **1.1.0**.
+
+Native Google Chrome 1.2.0 QA on 2026-10-14:
+
+- The user authorized the added Proxy permission. Load unpacked with the built folder selected again showed 1.2.0; Reload alone had left 1.1.0 loaded. Restricted `chrome://` pages stayed quiet with unavailable page tools disabled.
+- Video controls changed 2× to an actual 2.05×; a page-set 6× appeared as 6× in the popup. A replacement video kept its own 1×, then D changed it to 1.25×. Typing `gsd` in a textbox did not change playback speed.
+- CSS displayed the expected computed values. All declarations and the unique selector were copied through the native clipboard and pasted into a textarea successfully.
+- Fixed and PAC profiles routed controlled test traffic. Off cleared the override and stopped access through the test route. Draft restoration, inactive save-only behavior, active Save & reapply, and deletion passed. The final state is Off with all test profiles deleted.
+- Visible-area PNG save produced 2772 × 1692. Full-page PNG save produced 2772 × 4800 with all three fixture sections visually confirmed; scroll position returned from 56 to 56. Fit/100% and preview reload worked. Full-image Copy pasted into a separate test page as a decoded `image/png` at 2772 × 4800. Switching tabs with Ctrl+Tab immediately after starting a full capture interrupted it without opening a new capture tab and restored scroll position to 56.
+- Color HEX/RGB/HSL clipboard copy and preferred-format persistence passed. A new native eyedropper pick could not be completed through automation and remains **unverified**, pending the user's manual check.
 
 Completed locally on 2026-10-13 for the integrated source:
 
@@ -57,9 +71,11 @@ Completed locally on 2026-10-13 for the integrated source:
 - Browser preview verified Fixed/PAC URL creation, save, edit, activation, Off, deletion, active-profile Save & reapply, unfinished-draft reload, and focus on validation errors. This preview does not apply Chrome's real proxy setting.
 - The built five-row launcher was recaptured as the site's 416 × 402 PNG (SHA-256 prefix `47ae7d5e3c53`) and English/Japanese Store JPEGs at 1280 × 800. Formats, dimensions, and saved-image appearance were checked. The single-product OG image is an updated 1200 × 630 PNG.
 
-The integrated build has not yet received the added permission in native Chrome, and real-network Proxy QA remains pending. Earlier four-tool installed-Chrome results below do not verify this new runtime or permission. Required permission disclosure and the updated public policy must match the final package before an authorized release. The source integration and website update are separate from a version bump, ZIP update, or Store submission; none of those extension release steps has been performed.
+The native new-color eyedropper check is the remaining manual QA item. Earlier four-tool installed-Chrome results below are historical. The completed upload, dashboard work, and native checks do not establish review submission, approval, or publication. The updated policy must also be publicly available before submission.
 
 The redesigned landing page passed lint, a production build, and all 6 site tests on 2026-10-14. Its Store action explicitly identifies the page as a preview of the next extension update.
+
+The quiet restricted-page follow-up on 2026-10-14 passed 115 core tests, the production build with all 20 required files, and 4 Sites packaging tests. Browser QA of the built popup and worker with simulated Chrome API responses verified no banner for internal pages, access denial, or passive detection failure; normal-page tools remain enabled and explicit CSS failure still appears within its row. Native Chrome installation and Store submission were not performed for this follow-up.
 
 Migration is manual: Off in the legacy extension, then recreate the necessary Fixed endpoints or PAC URLs in temoto. Existing legacy profiles and credentials remain untouched.
 
@@ -75,7 +91,7 @@ The checks below were verified on 2026-10-12 for the earlier four-tool source, b
 
 - Chrome checks: 81 tests, build verification, and 4 Sites packaging tests passed.
 - Site checks: lint, build, and 8 rendered-HTML tests passed. The production preview at `http://127.0.0.1:4305/` rendered in Google Chrome with no captured warnings or errors.
-- The built `dist/client` was loaded into the user's Chrome as the unpacked version of the reserved core item. The Store listing has not been updated by this task.
+- The built `dist/client` was loaded into the user's Chrome as the unpacked version of the reserved core item. At that stage, the Store listing had not been updated.
 - Native Chrome checks covered color picking and history, CSS selection/copy/exit, region/viewport/full-page capture, image copy, Fit/100% preview, reload recovery, and a completed PNG export (2912 × 1692).
 - Video checks covered a loaded HTML5 sample video, a matching 1.25× rate and badge, and a new video starting at its own 1×. The fixture also confirmed popup control at 2× and the D shortcut at 2.25×.
 - At that stage, the site development preview encountered a Node-to-Miniflare `fetch failed`; the standard production preview avoided that development transport and rendered successfully. No runtime configuration or dependency change was made.
@@ -86,4 +102,4 @@ The checks below were verified on 2026-10-12 for the earlier four-tool source, b
 - CSS provides computed declarations for the selected element, not the original stylesheet or complete layout reconstruction.
 - User speed commands remain 0.25–5×; observed actual rates may be outside that range and must still be displayed accurately.
 - Browser-tab closure can leave a screenshot record until expiry cleanup; the preview's Close action removes it immediately.
-- Broader stable-Chrome QA (including third-party players, long pages, and frame boundaries), final artwork review, version selection, packaging, public policy verification, and dashboard checks remain release steps. Follow the [submission checklist](./store/listing.md#submission-checklist).
+- The manual new-color eyedropper check, public policy push/verification, review submission, and publication remain release steps. Follow the [submission checklist](./store/listing.md#submission-checklist).
