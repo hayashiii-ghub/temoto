@@ -45,7 +45,7 @@ test("renders the selected English landing-page message without JavaScript", asy
   assert.match(html, /<html lang="en">/);
   const heading = /<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(html)?.[1] ?? "";
   assert.equal(textContent(heading), "Less friction. More doing.");
-  assert.match(text, /A small toolkit for Chrome/);
+  assert.match(html, /<p class="eyebrow">A small toolkit<\/p>/);
   assert.match(text, /Free · Open source · No account/);
   assert.match(text, /Color, capture, CSS, video, proxy\. All close at hand\./);
   assert.doesNotMatch(text, /[\u3040-\u30ff\u3400-\u9fff]/);
@@ -57,7 +57,7 @@ test("keeps public metadata, one Store action and footer resources", async () =>
   const title = /<title>([\s\S]*?)<\/title>/.exec(html)?.[1] ?? "";
   assert.match(title, /temoto/i);
   assert.match(html, /name="description" content="[^"]+"/);
-  assert.match(html, /property="og:image" content="https:\/\/temoto\.hayashiii-gpt\.chatgpt\.site\/og-temoto\.png\?v=7707304e185e"/);
+  assert.match(html, /property="og:image" content="https:\/\/temoto\.hayashiii-gpt\.chatgpt\.site\/og-temoto\.png\?v=ad48b7f1619d"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
   assert.match(html, /rel="icon" href="https:\/\/temoto\.hayashiii-gpt\.chatgpt\.site\/temoto-mark\.svg" type="image\/svg\+xml"/);
   assert.match(html, /<img\b[^>]*src="\/temoto-mark\.svg"/);

@@ -1,18 +1,20 @@
-# Chrome Web Store readiness — temoto for Chrome
+# Chrome Web Store readiness — temoto
 
 Last updated: 2026-10-15
+
+Version **1.2.2** is being prepared for submission with browser-following light/dark appearance and the product name **temoto**. Its archive is `release/temoto-v1.2.2.zip` (177,419 bytes), SHA-256 `eaa5049f96147e2869fce1ca809e166673c7ba798640c814365a429c1f79655d`. The package title **temoto** and draft **1.2.2** were verified in the dashboard. The 135 core tests, production build, 4 Sites tests, 53 legacy checks, and website lint/build with 6 tests passed. Light/dark browser QA covered popup tools, capture pixels, CSS inspection and video badges. Existing Store ID, permissions, and saved data remain unchanged.
 
 The five-tool **1.2.0** update was submitted to Chrome Web Store review on **2026-10-14**. It was approved and published automatically: on **2026-10-15** the public Store listing showed version **1.2.0**, updated October 14, 2026, with the five-tool description. The English listing and artwork are saved, native Chrome 1.2.0 QA is complete including the user's manual new-color eyedropper confirmation, and the source/policy were pushed as commit `8764534` with the updated public policy verified. GitHub Chrome, website, and legacy Proxy checks all passed. The package and current Store draft support English only; Japanese copy and artwork remain local reference material. The former standalone temoto Proxy has been unpublished, while its source and existing users' saved data remain available for migration.
 
 The post-1.2.0 cleanup and font fix are packaged for the user-authorized 1.2.1 update. The published 1.2.0 ZIP is preserved unchanged.
 
-The 2026-10-15 source follow-up loads the bundled video-badge font through the extension worker, avoiding YouTube Music's page connection-policy warning. The 132 core tests, production build, and 4 Sites tests passed. Native Chrome verified the font loaded and G/D/S controls worked; two extension reloads followed by page reloads produced no temoto font warnings. The 1.2.1 ZIP and shorter English listing were submitted for review on 2026-10-15. The receipt and **Awaiting review** status were verified; automatic publication after approval remains enabled. Its archive is `release/temoto-for-chrome-v1.2.1.zip` (176,921 bytes), SHA-256 `94ef33e00ffc2c8748932f24749493a7dff649dc2015eb4999f05175cc014559`. The dashboard shows submitted 1.2.1 and published 1.2.0 with unchanged permissions. The legacy Proxy dashboard was also checked: it remains a draft with no published version.
+The 2026-10-15 source follow-up loads the bundled video-badge font through the extension worker, avoiding YouTube Music's page connection-policy warning. The 132 core tests, production build, and 4 Sites tests passed. Native Chrome verified the font loaded and G/D/S controls worked; two extension reloads followed by page reloads produced no temoto font warnings. The 1.2.1 ZIP and shorter English listing were submitted for review on 2026-10-15. The receipt and **Awaiting review** status were verified; automatic publication after approval remains enabled. Its archive is `release/temoto-for-chrome-v1.2.1.zip` (176,921 bytes), SHA-256 `94ef33e00ffc2c8748932f24749493a7dff649dc2015eb4999f05175cc014559`. At submission, the dashboard showed submitted 1.2.1 and published 1.2.0 with unchanged permissions. On 2026-10-15, the public Store page and dashboard were checked again and both showed published **1.2.1**. The legacy Proxy dashboard was also checked: it remains a draft with no published version.
 
 ## Store listing
 
 [store/listing.md](./store/listing.md) remains the authoritative English listing copy, name, summary, detailed description, primary language, single purpose, suggested category, and reviewer instructions. It also retains Japanese copy for local reference; previously saved Japanese dashboard fields are not displayed for the English-only 1.2.1 draft. Keep those fields there rather than maintaining duplicate listing prose here. Do not add a Japanese package catalog to restore the old listing locale; the approved UI and package remain English-only.
 
-Source identity: `temoto for Chrome`, Store Item ID `gcncgknjklghkoeiapcbdghodepnllid`.
+Source identity: `temoto`, Store Item ID `gcncgknjklghkoeiapcbdghodepnllid`.
 
 ## Graphics and assets
 

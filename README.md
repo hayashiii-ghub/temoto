@@ -1,11 +1,11 @@
 # temoto
 
-temoto brings Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching into one Chrome extension. Version 1.2.0 is public on the Chrome Web Store (updated October 14, 2026). See [release status](./browser/temoto-chrome/CHROMEWEBSTORE.md) for the last verified Store state.
+temoto brings Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching into one Chrome extension. Version 1.2.1 is public on the Chrome Web Store (verified October 15, 2026). See [release status](./browser/temoto-chrome/CHROMEWEBSTORE.md) for the last verified Store state.
 
 - [Website](https://temoto.hayashiii-gpt.chatgpt.site)
-- [temoto for Chrome](https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid)
+- [temoto](https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid)
 
-## temoto for Chrome
+## temoto
 
 A compact browser toolkit with five tools:
 
@@ -31,12 +31,12 @@ There is no automatic migration or activation. Existing profiles and credentials
 
 temoto does not use accounts, analytics, or telemetry. Colors, preferences, and simple proxy profiles remain in Chrome's local extension storage. Integrated Proxy stores no authentication usernames or passwords. Traffic goes through a user-supplied proxy only after activation; Chrome fetches a selected PAC URL as needed.
 
-- [temoto for Chrome privacy policy](./browser/temoto-chrome/PRIVACY.md)
+- [temoto privacy policy](./browser/temoto-chrome/PRIVACY.md)
 - [Legacy temoto Proxy privacy policy](./browser/temoto-proxy/PRIVACY.md)
 
 ## Development
 
-Validate temoto for Chrome:
+Validate temoto:
 
 ```sh
 cd browser/temoto-chrome
@@ -66,7 +66,7 @@ npm test
 ## Repository structure
 
 ```text
-browser/temoto-chrome/  temoto for Chrome
+browser/temoto-chrome/  temoto
 browser/temoto-proxy/   retained legacy temoto Proxy
 browser/shared/         shared design tokens, icon renderer, and Store capture tools
 site/                   public website

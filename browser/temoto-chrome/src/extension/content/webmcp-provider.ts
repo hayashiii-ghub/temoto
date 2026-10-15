@@ -79,7 +79,7 @@
   const tools: ToolDefinition[] = [
     {
       name: "temoto_ping",
-      description: "Check that temoto for Chrome is installed and reachable from this page.",
+      description: "Check that temoto is installed and reachable from this page.",
       inputSchema: { type: "object", properties: {}, additionalProperties: false },
       annotations: { readOnlyHint: true, untrustedContentHint: false },
       execute: async () => callExtension({ type: "WEBMCP_PING" }),

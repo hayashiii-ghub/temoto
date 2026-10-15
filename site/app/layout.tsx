@@ -18,13 +18,13 @@ export const metadata: Metadata = {
     description,
     type: "website",
     locale: "en_US",
-    images: [{ url: "/og-temoto.png?v=7707304e185e", width: 1200, height: 630, alt: title }],
+    images: [{ url: "/og-temoto.png?v=ad48b7f1619d", width: 1200, height: 630, alt: title }],
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: ["/og-temoto.png?v=7707304e185e"],
+    images: ["/og-temoto.png?v=ad48b7f1619d"],
   },
 };
 

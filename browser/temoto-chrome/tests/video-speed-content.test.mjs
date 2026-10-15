@@ -5,7 +5,7 @@ import vm from "node:vm";
 
 const source = await readFile(new URL("../dist/client/content/video-speed.js", import.meta.url), "utf8");
 
-function loadContentScript(initialSpeed = 1.5, videoCount = 2, fontOptions = null) {
+function loadContentScript(initialSpeed = 1.5, videoCount = 2, fontOptions = null, lightMode = false) {
   class HTMLElement {
     constructor(tagName = "DIV", isContentEditable = false) {
       this.tagName = tagName;
@@ -60,6 +60,12 @@ function loadContentScript(initialSpeed = 1.5, videoCount = 2, fontOptions = nul
   const fonts = new Set();
   const requestedFonts = [];
   const createdFonts = [];
+  const themeListeners = new Set();
+  const lightScheme = {
+    matches: lightMode,
+    addEventListener(type, listener) { if (type === "change") themeListeners.add(listener); },
+    removeEventListener(type, listener) { if (type === "change") themeListeners.delete(listener); },
+  };
   let pageFetches = 0;
   let observerCallback = () => {};
   let disconnected = false;
@@ -70,6 +76,10 @@ function loadContentScript(initialSpeed = 1.5, videoCount = 2, fontOptions = nul
   const window = {
     innerWidth: 1024,
     innerHeight: 768,
+    matchMedia(query) {
+      assert.equal(query, "(prefers-color-scheme: light)");
+      return lightScheme;
+    },
     addEventListener(type, listener) {
       if (!windowListeners.has(type)) windowListeners.set(type, new Set());
       windowListeners.get(type).add(listener);
@@ -170,11 +180,16 @@ function loadContentScript(initialSpeed = 1.5, videoCount = 2, fontOptions = nul
       throwOnRemove = message === "Extension context invalidated.";
     },
     cleanup: () => window.__temotoVideoSpeedShortcutCleanup?.(),
+    setLightMode(matches) {
+      lightScheme.matches = matches;
+      themeListeners.forEach((listener) => listener({ matches }));
+    },
     resources: () => ({
       disconnected,
       canceledFrames,
       windowListeners: [...windowListeners.values()].reduce((sum, set) => sum + set.size, 0),
       documentListeners: [...documentListeners.values()].reduce((sum, set) => sum + set.size, 0),
+      themeListeners: themeListeners.size,
       videoListeners: videos.reduce((sum, video) => sum
         + [...video.listeners.values()].reduce((count, set) => count + set.size, 0), 0),
     }),
@@ -245,6 +260,39 @@ test("each video shows a passive badge that follows rate changes", () => {
   assert.deepEqual(page.badges().map((badge) => badge.textContent), ["1.5×", "2.25×"]);
 });
 
+for (const lightMode of [false, true]) {
+  test(`video badges start in the browser's ${lightMode ? "light" : "dark"} scheme`, () => {
+    const page = loadContentScript(1.5, 2, null, lightMode);
+    assert.ok(page.badges().every((badge) => badge.style.background === (lightMode ? "rgba(244,244,242,.88)" : "rgba(8,8,8,.38)")));
+    assert.ok(page.badges().every((badge) => badge.style.color === (lightMode ? "rgba(8,8,8,.78)" : "rgba(255,255,255,.72)")));
+  });
+}
+
+test("scheme changes update existing and new badges without changing speeds, and cleanup removes the listener", () => {
+  const page = loadContentScript();
+  page.flushNotifications();
+  const initialMessages = page.sentMessages.length;
+  page.setLightMode(true);
+  page.flushNotifications();
+  assert.ok(page.badges().every((badge) => badge.style.background === "rgba(244,244,242,.88)"));
+  assert.ok(page.badges().every((badge) => badge.style.color === "rgba(8,8,8,.78)"));
+  assert.deepEqual(page.videos.map((video) => video.playbackRate), [1.5, 1.5]);
+  assert.equal(page.sentMessages.length, initialMessages);
+  page.replaceVideo(0, 2);
+  assert.ok(page.badges().every((badge) => badge.style.background === "rgba(244,244,242,.88)"));
+  page.setLightMode(false);
+  const badges = page.badges();
+  assert.ok(badges.every((badge) => badge.style.background === "rgba(8,8,8,.38)"));
+  assert.ok(badges.every((badge) => badge.style.color === "rgba(255,255,255,.72)"));
+  assert.deepEqual(page.videos.map((video) => video.playbackRate), [2, 1.5]);
+  assert.equal(page.resources().themeListeners, 1);
+  page.cleanup();
+  assert.equal(page.resources().themeListeners, 0);
+  page.setLightMode(true);
+  assert.ok(badges.every((badge) => badge.style.background === "rgba(8,8,8,.38)"));
+  assert.equal(page.badges().length, 0);
+});
+
 test("page shortcuts ignore editable fields and modifier combinations", () => {
   const page = loadContentScript();
   page.keydown(keyEvent("g", [page.element("INPUT")]));
@@ -295,6 +343,7 @@ function assertStopped(page) {
     canceledFrames: 1,
     windowListeners: 0,
     documentListeners: 0,
+    themeListeners: 0,
     videoListeners: 0,
   });
   const speeds = page.videos.map((video) => video.playbackRate);

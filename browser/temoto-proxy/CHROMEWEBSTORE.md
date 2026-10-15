@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-14
 
-This is the retained legacy standalone extension, rather than a second main product. Simple Proxy switching is now developed in [temoto for Chrome](../temoto-chrome/). Its code, profiles, and credentials are preserved for existing users and explicit migration.
+This is the retained legacy standalone extension, rather than a second main product. Simple Proxy switching is now developed in [temoto](../temoto-chrome/). Its code, profiles, and credentials are preserved for existing users and explicit migration.
 
 The separate Chrome Web Store item was unpublished on October 14, 2026. The historical package and Store artwork remain available locally; no new legacy release is planned by this cleanup.
 

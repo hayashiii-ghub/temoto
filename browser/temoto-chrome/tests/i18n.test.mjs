@@ -16,14 +16,14 @@ test("the core manifest resolves its product labels from the sole English catalo
     readFile(new URL("capture.html", root), "utf8"),
   ]);
 
-  assert.equal(manifest.version, "1.2.1");
+  assert.equal(manifest.version, "1.2.2");
   assert.equal(manifest.default_locale, "en");
   assert.deepEqual(catalogs, ["en"]);
   for (const label of [manifest.name, manifest.description, manifest.action.default_title, manifest.commands._execute_action.description]) {
     const key = /^__MSG_(\w+)__$/.exec(label)?.[1];
     assert.ok(key && en[key]?.message, `unresolved manifest label: ${label}`);
   }
-  assert.equal(en.extensionName.message, "temoto for Chrome");
+  assert.equal(en.extensionName.message, "temoto");
   assert.match(popup, /<html lang="en">/);
   assert.match(capture, /<html lang="en">/);
   const badgeFont = manifest.web_accessible_resources?.find((entry) => entry.resources.includes("fonts/geist-latin-wght-normal.woff2"));

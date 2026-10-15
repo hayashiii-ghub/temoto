@@ -13,7 +13,7 @@ body:
     attributes:
       label: 製品
       options:
-        - temoto for Chrome
+        - temoto
         - temoto Proxy（旧拡張）
         - Webサイト
     validations:

@@ -494,7 +494,7 @@ async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.M
     case "WEBMCP_PING":
       return {
         ok: true,
-        name: "temoto for Chrome",
+        name: "temoto",
         version: chrome.runtime.getManifest().version,
       };
     case "WEBMCP_SET_VIDEO_SPEED": {

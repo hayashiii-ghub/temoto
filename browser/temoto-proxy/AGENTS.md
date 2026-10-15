@@ -16,7 +16,7 @@ For migration, first select Off in the legacy extension, then recreate needed Fi
 - Replace imports clear every session password, and all imports reset diagnostic URLs to the public default before profiles can be used.
 - Diagnostics accept public HTTP(S) destinations only, omit credentials and response bodies, and never follow redirects.
 - Keep all operations inside the popup. Do not restore a standalone manager page, options_ui entry, or side panel. Home contains effective state, scope, profile activation, Off, a header New action, and a separate Edit action per saved profile.
-- Share the popup's 416px width, header and brand treatment, settings-button states, and feedback tones with `temoto for Chrome` through `browser/shared/temoto-popup-tokens.css`. Fit height to content up to 580px, then scroll the profile list.
+- Share the popup's 416px width, header and brand treatment, settings-button states, and feedback tones with `temoto` through `browser/shared/temoto-popup-tokens.css`. Fit height to content up to 580px, then scroll the profile list.
 - The allowlisted companion API provides GET_SUMMARY only. Legacy OPEN_MANAGER requests return an explicit instruction to open temoto Proxy from the Chrome toolbar; they must not open a tab. Summaries may contain profile identity and effective status, never credentials, PAC contents, endpoints, bypass rules, or full configuration.
 
 ## Visual decisions

@@ -2,7 +2,7 @@
 
 ## Legacy scope
 
-This source is retained for existing users and advanced-profile migration. The main product is now [temoto for Chrome](../temoto-chrome/), with simple Proxy switching integrated as its fifth tool. Do not present this standalone extension as a second main product or automatically migrate/apply its saved settings.
+This source is retained for existing users and advanced-profile migration. The main product is now [temoto](../temoto-chrome/), with simple Proxy switching integrated as its fifth tool. Do not present this standalone extension as a second main product or automatically migrate/apply its saved settings.
 
 Select Off here before recreating needed Fixed endpoints or PAC URLs in temoto. Existing profiles and credentials are preserved. The requirements below describe only the retained legacy runtime.
 

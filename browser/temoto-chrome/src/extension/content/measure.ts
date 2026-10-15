@@ -33,11 +33,10 @@
   const shadow = host.attachShadow({ mode: "open" });
   const style = document.createElement("style");
   style.textContent = `
-    :host { color-scheme: dark; }
     *, *::before, *::after { box-sizing: border-box; }
     [hidden] { display: none !important; }
     .outline { position: fixed; pointer-events: none; border: 1px solid #9974f8; background: #9974f810; }
-    .guide, .panel, .tooltip { color: #f4f4f2; background: #080808; border: 1px solid #484848; font: 12px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .guide, .panel, .tooltip { color-scheme: dark; color: #f4f4f2; background: #080808; border: 1px solid #484848; font: 12px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     .guide { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 24px); padding-left: 12px; pointer-events: auto; }
     .guide span { padding: 10px 0; }
     .guide strong { color: #bba4fb; white-space: nowrap; }
@@ -67,6 +66,16 @@
     summary:focus-visible { outline: 2px solid #bba4fb; outline-offset: -3px; }
     pre { margin: 0; padding: 0 12px 12px; white-space: pre-wrap; overflow-wrap: anywhere; user-select: text; color: #d8d8d5; font: 10px/1.6 ui-monospace, monospace; }
     .hint { margin: 0; padding: 9px 12px; border-top: 1px solid #303030; color: #aaa; font-size: 11px; }
+    @media (prefers-color-scheme: light) {
+      .guide, .panel, .tooltip { color-scheme: light; color: #161616; background: #f4f4f2; border-color: #c7c7c3; }
+      header, .close, .element, .row, dt, .actions, .actions button + button, .another, details, .hint { border-color: #c7c7c3; }
+      .guide strong, .element, .primary { color: #6540b8; }
+      button:hover { background: #e8e8e5; }
+      button:focus-visible, summary:focus-visible { outline-color: #6540b8; }
+      button:disabled, dt, .hint { color: #62625e; }
+      .swatch { border-color: #62625e; }
+      pre { color: #161616; }
+    }
     @media (forced-colors: active) { .outline { border: 2px solid Highlight; } button:focus-visible { outline-color: Highlight; } }
   `;
   const create = <K extends keyof HTMLElementTagNameMap>(tag: K, className = "", text = ""): HTMLElementTagNameMap[K] => {

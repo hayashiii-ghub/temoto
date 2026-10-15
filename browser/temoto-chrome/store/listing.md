@@ -1,6 +1,6 @@
 # Chrome Web Store submission copy
 
-Updated on **2026-10-15** for the **1.2.1** font-loading fix and shorter English listing. The 1.2.1 ZIP and the 617-character English description were submitted for review. The dashboard confirmed **Awaiting review**, with automatic publication after approval enabled. The public baseline is **1.2.0**; the former standalone temoto Proxy remains unpublished, reconfirmed in its dashboard on 2026-10-15.
+Updated on **2026-10-15** for **1.2.2**, adding automatic light/dark appearance and simplifying the product name to **temoto**. Submission preparation is in progress; [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) records the last verified Store state.
 
 This is the authoritative listing, permission, privacy-disclosure, and reviewer copy. [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) tracks readiness. The [2026-09-13 handoff](../../STORE-HANDOFF-2026-09-13.md) is historical preparation evidence for an earlier source state.
 
@@ -8,13 +8,13 @@ This is the authoritative listing, permission, privacy-disclosure, and reviewer 
 
 **Name**
 
-temoto for Chrome
+temoto
 
 **Primary language**
 
 English
 
-The 1.2.1 package contains only `_locales/en`, and the current dashboard language is English only. Previously saved Japanese descriptions and screenshots are not displayed for this draft. Japanese copy and assets are retained below as local reference material; do not add a Japanese package catalog to restore the old listing locale.
+The 1.2.2 package contains only `_locales/en`, and the current dashboard language is English only. Previously saved Japanese descriptions and screenshots are not displayed for this draft. Japanese copy and assets are retained below as local reference material; do not add a Japanese package catalog to restore the old listing locale.
 
 **Suggested category**
 
@@ -26,7 +26,7 @@ Color Picker, screenshots, CSS, video speed and proxy switching.
 
 **Detailed description (English)**
 
-Five tools, close at hand.
+Five tools, close at hand. Automatically follows your browser’s light or dark appearance.
 
 • Color Picker — Pick a color and copy HEX, RGB or HSL.
 • Screenshot — Capture the visible area or full page. Copy or save a PNG.
@@ -46,7 +46,7 @@ Support: https://github.com/hayashiii-ghub/temoto/issues
 
 5つの道具を、手元に。
 
-temoto for Chromeは、Color Picker、Screenshot、CSS、Video Speed、Proxyをひとつのポップアップにまとめた拡張機能です。操作画面は英語です。
+temotoは、Color Picker、Screenshot、CSS、Video Speed、Proxyをひとつのポップアップにまとめた拡張機能です。操作画面は英語です。
 
 Color Picker：画面上の色を取得し、HEX・RGB・HSLでコピーできます。取得した直近8色をローカルに保存し、あとから選び直せます。
 
@@ -118,7 +118,7 @@ No login required. Open temoto on an HTTP(S) page: pick/copy a color; capture Vi
 
 **Full reviewer test steps**
 
-1. Open an HTTP(S) page and click the temoto toolbar icon. Confirm the launcher has exactly Color Picker, Screenshot, CSS, Video Speed, and Proxy. Its controls and page overlays remain English when Chrome or the page uses another language.
+1. Open an HTTP(S) page and click the temoto toolbar icon. Confirm the launcher has exactly Color Picker, Screenshot, CSS, Video Speed, and Proxy. Its controls and page overlays remain English when Chrome or the page uses another language. Change the browser light/dark preference and verify that the popup, capture preview, CSS inspector and video badges follow it.
 2. Pick a color with Chrome's native eyedropper. Confirm HEX/RGB/HSL copy, revisit the tool, and check that only actual picks enter the latest-eight history. Selecting a history color must not create a duplicate.
 3. Capture the visible area and the full page. Confirm that these are the only two capture actions, with no Capture options section. Confirm separate capture previews, image dimensions, Fit/100% zoom, Copy, and Save PNG. Reload a preview within an hour to confirm it retains its own capture; its Close action deletes that capture.
 4. Start CSS inspection, select an element, inspect size, margin/padding, font, colors, and borders, then copy one group or all groups. Copy the unique selector separately. Esc exits; selected-element data is not saved as a page log.

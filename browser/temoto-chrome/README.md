@@ -1,8 +1,10 @@
-# temoto for Chrome
+# temoto
 
-`temoto for Chrome` keeps five tools in one English-only popup: Color Picker, Screenshot, CSS, Video Speed, and Proxy. Version 1.2.0 is public on the Chrome Web Store. This README describes the current source; [CHROMEWEBSTORE.md](./CHROMEWEBSTORE.md) records the published artifact and subsequent source fixes.
+`temoto` keeps five tools in one English-only popup: Color Picker, Screenshot, CSS, Video Speed, and Proxy. Version 1.2.1 is public on the Chrome Web Store. This README describes the current source; [CHROMEWEBSTORE.md](./CHROMEWEBSTORE.md) records the published artifact and subsequent source fixes.
 
 ## Features
+
+The current source follows the browser’s light/dark preference automatically across the popup, capture preview, and page overlays. This appearance update is included in the 1.2.2 package.
 
 - Pick a color from the screen, copy HEX, RGB, or HSL, and return to the latest eight picked colors. History contains actual picks, not the preview's initial color.
 - Capture the visible area or the full page. Inspect the result with Fit or 100% zoom, then copy it or save a PNG. Capture preparation, lazy-content preloading, and animation freezing run automatically; there are no capture settings.
@@ -54,6 +56,6 @@ Load `dist/client` as an unpacked extension from `chrome://extensions` after run
 npm run package
 ```
 
-The command validates the extension build and creates `release/temoto-for-chrome-v<version>.zip` with `manifest.json` at the archive root. The Web Store ZIP omits the manifest `key`; unpacked builds retain the store-issued public key so their ID matches the existing store item. Store copy, privacy declarations, permission justifications, and reviewer steps remain authoritative in [store/listing.md](./store/listing.md). [CHROMEWEBSTORE.md](./CHROMEWEBSTORE.md) tracks release readiness and links to that material.
+The command validates the extension build and creates `release/temoto-v<version>.zip` with `manifest.json` at the archive root. The Web Store ZIP omits the manifest `key`; unpacked builds retain the store-issued public key so their ID matches the existing store item. Store copy, privacy declarations, permission justifications, and reviewer steps remain authoritative in [store/listing.md](./store/listing.md). [CHROMEWEBSTORE.md](./CHROMEWEBSTORE.md) tracks release readiness and links to that material.
 
 Do not overwrite a previously submitted ZIP while the source version is unchanged. Select the next release version and regenerate the package only as part of an authorized release.

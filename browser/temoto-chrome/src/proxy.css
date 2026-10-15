@@ -16,20 +16,20 @@
 .proxy-edit-cell { height: var(--temoto-launcher-row-height); display: grid; place-items: center; border-bottom: 1px solid var(--line); }
 .proxy-edit { width: var(--temoto-control-height); height: var(--temoto-control-height); padding: 0; display: grid; place-items: center; border: 0; border-radius: 0; background: transparent; color: inherit; }
 .proxy-select:hover:not(:disabled), .proxy-edit:hover:not(:disabled) { background: var(--temoto-popup-surface-hover); }
-.proxy-profile-row.is-active, .proxy-off.is-active { background: var(--temoto-popup-accent); color: var(--temoto-popup-bg); }
+.proxy-profile-row.is-active, .proxy-off.is-active { background: var(--temoto-popup-accent); color: var(--temoto-popup-on-accent); }
 .proxy-profile-row.is-active .proxy-copy small { color: inherit; }
-.proxy-profile-row.is-active button:focus-visible, .proxy-off.is-active:focus-visible, .proxy-kind button[aria-pressed="true"]:focus-visible { outline-color: var(--temoto-popup-bg); }
+.proxy-profile-row.is-active button:focus-visible, .proxy-off.is-active:focus-visible, .proxy-kind button[aria-pressed="true"]:focus-visible { outline-color: var(--temoto-popup-on-accent); }
 .proxy-editor { margin: 0; }
 .proxy-fields { margin: 0; padding: 0; border: 0; min-width: 0; }
 .proxy-field { display: grid; grid-template-columns: 82px minmax(0, 1fr); align-items: center; gap: 16px; min-height: 68px; padding: 12px 24px; border-bottom: 1px solid var(--line); }
 .proxy-field > span { color: var(--temoto-popup-muted); font-size: .75rem; line-height: 1.4; }
-.proxy-field input, .proxy-field select { width: 100%; min-width: 0; height: var(--temoto-control-height); padding: 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--temoto-popup-text); font-family: var(--temoto-ui-font); font-size: var(--temoto-control-font-size); font-weight: var(--temoto-control-font-weight); line-height: 1.4; color-scheme: dark; }
+.proxy-field input, .proxy-field select { width: 100%; min-width: 0; height: var(--temoto-control-height); padding: 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--temoto-popup-text); font-family: var(--temoto-ui-font); font-size: var(--temoto-control-font-size); font-weight: var(--temoto-control-font-weight); line-height: 1.4; color-scheme: inherit; }
 .proxy-field select, .proxy-field select option { background-color: var(--temoto-popup-bg); color: var(--temoto-popup-text); }
 .proxy-field input:focus-visible, .proxy-field select:focus-visible { outline: none; border-bottom-color: var(--temoto-popup-focus); box-shadow: inset 0 -1px var(--temoto-popup-focus); }
 .proxy-kind { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .proxy-kind button { height: var(--temoto-control-height); border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--temoto-popup-text); }
 .proxy-kind button + button { border-left: 1px solid var(--line); }
-.proxy-kind button[aria-pressed="true"] { background: var(--temoto-popup-accent); color: var(--temoto-popup-bg); }
+.proxy-kind button[aria-pressed="true"] { background: var(--temoto-popup-accent); color: var(--temoto-popup-on-accent); }
 .proxy-action-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .proxy-action { min-height: var(--temoto-action-row-height); padding: 0 16px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: var(--temoto-popup-bg); color: var(--temoto-popup-text); }
 .proxy-action-row .proxy-action + .proxy-action { border-left: 1px solid var(--line); }

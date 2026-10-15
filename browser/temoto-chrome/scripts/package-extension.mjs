@@ -15,7 +15,7 @@ if (manifest.version !== packageJson.version) {
 }
 
 mkdirSync(releaseRoot, { recursive: true });
-const filename = `temoto-for-chrome-v${archiveVersion}.zip`;
+const filename = `temoto-v${archiveVersion}.zip`;
 const archivePath = resolve(releaseRoot, filename);
 rmSync(archivePath, { force: true });
 const temporaryRoot = mkdtempSync(resolve(tmpdir(), "temoto-chrome-package-"));

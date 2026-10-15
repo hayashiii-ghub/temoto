@@ -21,6 +21,7 @@
   let fontRequested = false;
   let badgeFont: FontFace | null = null;
   const badgeFontFamily = "temoto Geist Sans";
+  const lightScheme = typeof window.matchMedia === "function" ? window.matchMedia("(prefers-color-scheme: light)") : null;
 
   const isActive = (): boolean => {
     if (stopped) return false;
@@ -39,6 +40,23 @@
     } else {
       isActive();
     }
+  };
+  const styleBadge = (badge: HTMLDivElement) => {
+    Object.assign(badge.style, lightScheme?.matches ? {
+      border: "1px solid rgba(8,8,8,.12)",
+      background: "rgba(244,244,242,.88)",
+      color: "rgba(8,8,8,.78)",
+      textShadow: "none",
+    } : {
+      border: "1px solid rgba(255,255,255,.09)",
+      background: "rgba(8,8,8,.38)",
+      color: "rgba(255,255,255,.72)",
+      textShadow: "0 1px 2px rgba(0,0,0,.45)",
+    });
+  };
+  const syncBadgeTheme = () => {
+    if (!isActive()) return;
+    trackedVideos.forEach(({ badge }) => styleBadge(badge));
   };
   const loadBadgeFont = async (): Promise<void> => {
     if (fontRequested || !isActive()) return;
@@ -149,18 +167,15 @@
       boxSizing: "border-box",
       minWidth: "30px",
       padding: "2px 5px",
-      border: "1px solid rgba(255,255,255,.09)",
       borderRadius: "4px",
-      background: "rgba(8,8,8,.38)",
-      color: "rgba(255,255,255,.72)",
       font: `600 12px/1.2 "${badgeFontFamily}", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`,
       fontVariantNumeric: "tabular-nums",
       letterSpacing: "-.01em",
       textAlign: "center",
-      textShadow: "0 1px 2px rgba(0,0,0,.45)",
       backdropFilter: "blur(5px)",
       WebkitBackdropFilter: "blur(5px)",
     });
+    styleBadge(badge);
     badge.textContent = formatSpeed(video.playbackRate);
 
     const onRateChange = () => syncVideo(video);
@@ -248,9 +263,11 @@
   window.addEventListener("scroll", schedulePosition, true);
   window.addEventListener("resize", schedulePosition);
   document.addEventListener("fullscreenchange", schedulePosition);
+  lightScheme?.addEventListener("change", syncBadgeTheme);
   function cleanup(): void {
     if (stopped) return;
     stopped = true;
+    lightScheme?.removeEventListener("change", syncBadgeTheme);
     if (badgeFont) {
       try {
         document.fonts.delete(badgeFont);

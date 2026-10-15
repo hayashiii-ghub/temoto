@@ -1,6 +1,6 @@
 # temoto Proxy
 
-This is the retained **legacy standalone extension**. Its Chrome Web Store item was unpublished on October 14, 2026. Simple Proxy switching now belongs to [temoto for Chrome](../temoto-chrome/), alongside its four page tools. The legacy source stays available for existing advanced profiles.
+This is the retained **legacy standalone extension**. Its Chrome Web Store item was unpublished on October 14, 2026. Simple Proxy switching now belongs to [temoto](../temoto-chrome/), alongside its four page tools. The legacy source stays available for existing advanced profiles.
 
 To move: select Off in this old extension, then recreate the needed Fixed endpoints or PAC URLs in temoto → Proxy. There is no automatic migration or activation, and the old profiles and credentials are preserved.
 

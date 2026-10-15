@@ -45,7 +45,7 @@ function loadWebMCPContentScripts({ optedIn = true, supported = true } = {}) {
       async sendMessage(message) {
         sentMessages.push(message);
         if (message.type === "WEBMCP_PING") {
-          return { ok: true, name: "temoto for Chrome", version: "0.2.0" };
+          return { ok: true, name: "temoto", version: "0.2.0" };
         }
         if (message.type === "WEBMCP_SET_VIDEO_SPEED") {
           return { ok: true, speed: message.speed, changed: 2 };
@@ -103,7 +103,7 @@ test("bridges WebMCP calls to the extension runtime", async () => {
   ]);
   assert.deepEqual(JSON.parse(pingResult.content[0].text), {
     ok: true,
-    name: "temoto for Chrome",
+    name: "temoto",
     version: "0.2.0",
   });
   assert.deepEqual(JSON.parse(speedResult.content[0].text), {
