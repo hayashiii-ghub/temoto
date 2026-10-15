@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 const title = "temoto";
 const description =
   "Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching in one Chrome extension.";
+
+export const viewport: Viewport = { colorScheme: "light dark", themeColor: "#9974f8" };
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://temoto.hayashiii-gpt.chatgpt.site"),

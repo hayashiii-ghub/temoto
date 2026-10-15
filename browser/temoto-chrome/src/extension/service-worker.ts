@@ -184,8 +184,14 @@ async function detectPageState(installShortcuts: boolean): Promise<PageDetection
   }
 }
 
+function clampPlaybackSpeed(value: unknown): number {
+  const numericValue = Number(value);
+  const speed = Number.isFinite(numericValue) ? numericValue : 1;
+  return Math.round(Math.min(5, Math.max(0.25, speed)) * 100) / 100;
+}
+
 async function applyVideoSpeed(rawSpeed: unknown, tabId?: number): Promise<{ speed: number; changed: number }> {
-  const speed = Math.round(Math.min(5, Math.max(0.25, Number(rawSpeed) || 1)) * 100) / 100;
+  const speed = clampPlaybackSpeed(rawSpeed);
   const targetTabId = tabId ?? (await activeTab()).id;
   const results = await chrome.scripting.executeScript({ target: { tabId: targetTabId, allFrames: true }, func: (nextSpeed) => {
     const videos = Array.from(document.querySelectorAll("video"));
@@ -499,7 +505,7 @@ async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.M
       };
     case "WEBMCP_SET_VIDEO_SPEED": {
       if (sender.tab?.id === undefined) return { ok: false, error: "The WebMCP tab is unavailable" };
-      const speed = Math.round(Math.min(5, Math.max(0.25, Number(message.speed) || 1)) * 100) / 100;
+      const speed = clampPlaybackSpeed(message.speed);
       const response = await chrome.tabs.sendMessage(sender.tab.id, {
         type: "APPLY_VIDEO_SPEED",
         speed,
@@ -513,7 +519,7 @@ async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.M
       };
     }
     case "VIDEO_SPEED_SHORTCUT": {
-      const speed = Math.round(Math.min(5, Math.max(0.25, Number(message.speed) || 1)) * 100) / 100;
+      const speed = clampPlaybackSpeed(message.speed);
       if (sender.tab?.id) {
         await chrome.tabs.sendMessage(sender.tab.id, { type: "APPLY_VIDEO_SPEED", speed }).catch(() => {});
       }

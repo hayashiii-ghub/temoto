@@ -243,6 +243,16 @@ test("page shortcuts change every video without opening the popup", () => {
   assert.equal(page.sentMessages[0].speed, 1.75);
 });
 
+test("page shortcuts retain hundredths from the video's actual speed", () => {
+  for (const [key, expected] of [["d", 1.58], ["s", 1.08], ["g", 1.5]]) {
+    const page = loadContentScript(1.33);
+    assert.ok(page.badges().every((badge) => badge.textContent === "1.33×"));
+    page.keydown(keyEvent(key, [page.element()]));
+    assert.deepEqual(page.videos.map((video) => video.playbackRate), [expected, expected]);
+    assert.equal(page.sentMessages[0].speed, expected);
+  }
+});
+
 test("G toggles every video between 1x and 1.5x", () => {
   const page = loadContentScript();
   page.keydown(keyEvent("g", [page.element()]));
@@ -316,6 +326,14 @@ test("background shortcut messages synchronize videos in the frame", () => {
   const response = page.message({ type: "APPLY_VIDEO_SPEED", speed: 2.25 });
   assert.deepEqual(page.videos.map((video) => video.playbackRate), [2.25, 2.25]);
   assert.deepEqual(JSON.parse(JSON.stringify(response)), { changed: 2 });
+});
+
+test("background speed messages preserve hundredths and apply the shared bounds", () => {
+  const page = loadContentScript(1.33);
+  for (const [speed, expected] of [[1.38, 1.38], [1.28, 1.28], [1.333, 1.33], [0, 0.25], [7, 5], [NaN, 1], [Infinity, 1]]) {
+    page.message({ type: "APPLY_VIDEO_SPEED", speed });
+    assert.deepEqual(page.videos.map((video) => video.playbackRate), [expected, expected]);
+  }
 });
 
 test("a reused video's badge follows its actual speed after a silent reset", () => {

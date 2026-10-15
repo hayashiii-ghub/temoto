@@ -8,7 +8,7 @@ export function clampPlaybackSpeed(value: unknown): number {
     MAX_PLAYBACK_SPEED,
     Math.max(MIN_PLAYBACK_SPEED, Number.isFinite(numericValue) ? numericValue : 1),
   );
-  return Math.round(clamped * 20) / 20;
+  return Math.round(clamped * 100) / 100;
 }
 
 export function speedFromShortcut(key: unknown, currentSpeed: unknown): number | null {

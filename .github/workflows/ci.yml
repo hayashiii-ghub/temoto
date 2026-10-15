@@ -56,11 +56,11 @@ jobs:
       - name: Install Chrome extension dependencies
         run: npm ci
 
-      - name: Test Chrome extension
-        run: npm test
-
       - name: Build Chrome extension
         run: npm run build
+
+      - name: Test Chrome extension
+        run: npm run test:unit
 
       - name: Test Chrome extension Sites build
         run: npm run test:sites

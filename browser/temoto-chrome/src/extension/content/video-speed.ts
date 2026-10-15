@@ -208,7 +208,7 @@
     scheduleNotification();
   };
   const applySpeed = (rawSpeed: unknown): number => {
-    const nextSpeed = clamp(Number(rawSpeed) || 1);
+    const nextSpeed = clamp(rawSpeed);
     const pageVideos = videos();
     pageVideos.forEach((video) => {
       video.playbackRate = nextSpeed;
@@ -240,7 +240,7 @@
 
     const pageVideos = videos();
     if (!pageVideos.length) return;
-    const currentSpeed = pageVideos[0].playbackRate || 1;
+    const currentSpeed = pageVideos[0].playbackRate;
     const nextSpeed = key === "g"
       ? (clamp(currentSpeed) === 1.5 ? 1 : 1.5)
       : clamp(currentSpeed + (key === "d" ? 0.25 : -0.25));

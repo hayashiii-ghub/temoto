@@ -23,3 +23,4 @@ Run checks for the product you changed:
 - Preserve the separate npm lockfiles in `browser/temoto-chrome/` and `site/`; these projects are not an npm workspace.
 - Do not edit generated or dependency directories such as `.build/`, `node_modules/`, `dist/`, `.vinext/`, or `.wrangler/`.
 - Reuse the existing scripts and package commands instead of duplicating build or release logic.
+- The website keeps its purple hero and black lower section/footer in both themes. Only the tool demo follows the browser's light/dark preference automatically. Its five launcher buttons open interactive demos styled like the extension; use sample content and in-memory profiles, with no proxy or browser settings changes.

@@ -63,6 +63,8 @@ npm run lint
 npm test
 ```
 
+The website's five interactive tool demos follow the browser's light/dark preference and use sample content. The purple hero and black lower section remain fixed. Its build uses a fresh temporary cache so old font files do not enter the deployed output.
+
 ## Repository structure
 
 ```text

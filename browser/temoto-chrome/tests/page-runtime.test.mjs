@@ -18,16 +18,22 @@ function createPageWorker({
   failAt = 1,
   fetchResource = async () => { throw new Error("Unexpected fetch"); },
 } = {}) {
-  const calls = { queries: 0, scripts: [], proxy: 0, storage: 0, fetches: [] };
+  const calls = { queries: 0, scripts: [], messages: [], proxy: 0, storage: 0, fetches: [] };
   let messageListener;
   const chrome = {
-    tabs: { async query() {
-      calls.queries++;
-      // A second query would select another tab. Detection must retain the first.
-      return [calls.queries === 1 ? tab : { ...tab, id: 99 }];
-    } },
+    tabs: {
+      async query() {
+        calls.queries++;
+        // A second query would select another tab. Detection must retain the first.
+        return [calls.queries === 1 ? tab : { ...tab, id: 99 }];
+      },
+      async sendMessage(tabId, message) {
+        calls.messages.push({ tabId, message: structuredClone(message) });
+        return { changed: 1 };
+      },
+    },
     scripting: { async executeScript({ target, files, func, args = [] }) {
-      calls.scripts.push({ target: structuredClone(target), files });
+      calls.scripts.push({ target: structuredClone(target), files, args: structuredClone(args) });
       if (failure && calls.scripts.length === failAt) throw new Error(failure);
       if (files) return [{ frameId: 0 }];
       return Promise.all(frames.map(async ({ frameId, url, title, rates }) => ({
@@ -125,6 +131,41 @@ test("GET_VIDEO_BADGE_FONT reports HTTP and network failures through the runtime
     assert.ok(response.error.length > 0);
     assert.equal(response.bytes, undefined);
     assert.deepEqual(worker.calls.fetches, ["chrome-extension://temoto/fonts/geist-latin-wght-normal.woff2"]);
+  }
+});
+
+test("popup, WebMCP and shortcut speed commands preserve hundredths and share bounds", async () => {
+  const sender = { id: "temoto", tab: { id: 7 }, url: "https://page.test/watch" };
+  for (const [speed, expected] of [
+    [1.33 + 0.05, 1.38],
+    [1.33 + 0.25, 1.58],
+    [1.33 - 0.25, 1.08],
+    [1.337, 1.34],
+    [0, 0.25],
+    [7, 5],
+    ["invalid", 1],
+  ]) {
+    for (const type of ["SET_VIDEO_SPEED", "WEBMCP_SET_VIDEO_SPEED", "VIDEO_SPEED_SHORTCUT"]) {
+      const worker = createPageWorker({ frames: [
+        { frameId: 0, url: sender.url, title: "Watch", rates: [1.33] },
+      ] });
+      const response = await worker.runtimeMessage({ type, speed }, sender);
+      const label = `${type}: ${speed}`;
+      assert.equal(response.ok, true, label);
+      if (type === "SET_VIDEO_SPEED") {
+        assert.equal(response.changed, 1, label);
+        assert.deepEqual(worker.calls.scripts.map(({ target, args }) => ({ target, args })), [
+          { target: { tabId: 7, allFrames: true }, args: [expected] },
+        ], label);
+        assert.deepEqual(worker.calls.messages, [], label);
+      } else {
+        assert.equal(response.speed, expected, label);
+        assert.deepEqual(worker.calls.messages, [
+          { tabId: 7, message: { type: "APPLY_VIDEO_SPEED", speed: expected } },
+        ], label);
+        assert.equal(worker.calls.scripts.length, 0, label);
+      }
+    }
   }
 });
 

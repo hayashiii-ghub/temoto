@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { LauncherPreview } from "./components/launcher-preview";
 
 const repositoryUrl = "https://github.com/hayashiii-ghub/temoto";
@@ -9,7 +8,7 @@ export default function Home() {
     <a className="skip-link" href="#content">Skip to content</a>
     <header className="brand-header">
       <a className="brand" href="#top" aria-label="temoto home">
-        <Image className="brand-mark" src="/temoto-mark.svg" alt="" width={32} height={36} unoptimized />
+        <img className="brand-mark" src="/temoto-mark.svg" alt="" width={32} height={36} />
         <span>temoto</span>
       </a>
     </header>
@@ -24,6 +23,7 @@ export default function Home() {
         <figure className="product-figure">
           <div className="launcher"><LauncherPreview /></div>
           <figcaption>Color, capture, CSS, video, proxy.<br className="mobile-break" /> All close at hand.</figcaption>
+          <p className="demo-caption" id="demo-note">Click a tool to try the interactive demo.</p>
         </figure>
       </section>
     </main>

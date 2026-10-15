@@ -58,4 +58,4 @@ npm run package
 
 The command validates the extension build and creates `release/temoto-v<version>.zip` with `manifest.json` at the archive root. The Web Store ZIP omits the manifest `key`; unpacked builds retain the store-issued public key so their ID matches the existing store item. Store copy, privacy declarations, permission justifications, and reviewer steps remain authoritative in [store/listing.md](./store/listing.md). [CHROMEWEBSTORE.md](./CHROMEWEBSTORE.md) tracks release readiness and links to that material.
 
-Do not overwrite a previously submitted ZIP while the source version is unchanged. Select the next release version and regenerate the package only as part of an authorized release.
+The packager refuses to overwrite an existing ZIP. Select the next release version and regenerate the package only as part of an authorized release. Routine builds keep canonical icons unchanged; run `npm run build:icons` only when intentionally regenerating those assets.
