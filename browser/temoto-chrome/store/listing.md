@@ -1,6 +1,6 @@
 # Chrome Web Store submission copy
 
-Updated on **2026-10-15** for **1.2.2**, adding automatic light/dark appearance and simplifying the product name to **temoto**. Submission preparation is in progress; [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) records the last verified Store state.
+Updated and submitted on **2026-10-15** for **1.2.2**, adding automatic light/dark appearance and simplifying the product name to **temoto**. The receipt and **Awaiting review** status were verified after the user completed submission, with automatic publication after approval selected. The public version remains **1.2.1**; [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) records the verified Store state.
 
 This is the authoritative listing, permission, privacy-disclosure, and reviewer copy. [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) tracks readiness. The [2026-09-13 handoff](../../STORE-HANDOFF-2026-09-13.md) is historical preparation evidence for an earlier source state.
 

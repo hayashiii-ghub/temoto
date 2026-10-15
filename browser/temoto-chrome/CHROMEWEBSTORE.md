@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-15
 
-Version **1.2.2** is being prepared for submission with browser-following light/dark appearance and the product name **temoto**. Its archive is `release/temoto-v1.2.2.zip` (177,419 bytes), SHA-256 `eaa5049f96147e2869fce1ca809e166673c7ba798640c814365a429c1f79655d`. The package title **temoto** and draft **1.2.2** were verified in the dashboard. The 135 core tests, production build, 4 Sites tests, 53 legacy checks, and website lint/build with 6 tests passed. Light/dark browser QA covered popup tools, capture pixels, CSS inspection and video badges. Existing Store ID, permissions, and saved data remain unchanged.
+Version **1.2.2** was submitted on **2026-10-15** with browser-following light/dark appearance and the product name **temoto**. The user completed the final submission; the receipt and **Awaiting review** status were verified. Automatic publication after approval was selected. The dashboard shows submitted **1.2.2** and published **1.2.1**. Its archive is `release/temoto-v1.2.2.zip` (177,419 bytes), SHA-256 `eaa5049f96147e2869fce1ca809e166673c7ba798640c814365a429c1f79655d`. The 135 core tests, production build, 4 Sites tests, 53 legacy checks, and website lint/build with 6 tests passed. Light/dark browser QA covered popup tools, capture pixels, CSS inspection and video badges. Existing Store ID, permissions, and saved data remain unchanged. Source commit `4d9c2f8` was pushed to main. Website version 48 was published with the shorter description and matching OG image; live HTML was verified.
 
 The five-tool **1.2.0** update was submitted to Chrome Web Store review on **2026-10-14**. It was approved and published automatically: on **2026-10-15** the public Store listing showed version **1.2.0**, updated October 14, 2026, with the five-tool description. The English listing and artwork are saved, native Chrome 1.2.0 QA is complete including the user's manual new-color eyedropper confirmation, and the source/policy were pushed as commit `8764534` with the updated public policy verified. GitHub Chrome, website, and legacy Proxy checks all passed. The package and current Store draft support English only; Japanese copy and artwork remain local reference material. The former standalone temoto Proxy has been unpublished, while its source and existing users' saved data remain available for migration.
 
@@ -12,7 +12,7 @@ The 2026-10-15 source follow-up loads the bundled video-badge font through the e
 
 ## Store listing
 
-[store/listing.md](./store/listing.md) remains the authoritative English listing copy, name, summary, detailed description, primary language, single purpose, suggested category, and reviewer instructions. It also retains Japanese copy for local reference; previously saved Japanese dashboard fields are not displayed for the English-only 1.2.1 draft. Keep those fields there rather than maintaining duplicate listing prose here. Do not add a Japanese package catalog to restore the old listing locale; the approved UI and package remain English-only.
+[store/listing.md](./store/listing.md) remains the authoritative English listing copy, name, summary, detailed description, primary language, single purpose, suggested category, and reviewer instructions. It also retains Japanese copy for local reference; previously saved Japanese dashboard fields are not displayed for the English-only 1.2.2 submission. Keep those fields there rather than maintaining duplicate listing prose here. Do not add a Japanese package catalog to restore the old listing locale; the approved UI and package remain English-only.
 
 Source identity: `temoto`, Store Item ID `gcncgknjklghkoeiapcbdghodepnllid`.
 
@@ -24,7 +24,7 @@ Use the existing [Store capture workflow](../shared/STORE-CAPTURE.md) and the fi
 | --- | --- | --- |
 | Store icon | 128 × 128 PNG | Canonical source icon uploaded again and saved in the dashboard |
 | English launcher screenshot | 1280 × 800 JPEG | Old common images removed; one latest English image saved |
-| Japanese launcher screenshot | 1280 × 800 JPEG | Local reference only; not displayed by the current 1.2.1 draft |
+| Japanese launcher screenshot | 1280 × 800 JPEG | Local reference only; not displayed by the current 1.2.2 submission |
 | Small promo tile | 440 × 280 JPEG | Existing tile visually matched the current asset and was retained |
 | Additional tool screenshots / marquee | Optional | Not required for this source task |
 
@@ -34,13 +34,13 @@ The final source uses `activeTab`, `scripting`, `storage`, `clipboardWrite`, req
 
 ## Privacy and data use
 
-The policy for versions 1.2.0 and 1.2.1 is [PRIVACY.md](./PRIVACY.md). Data handled locally includes requested screenshots and computed CSS, current-page/video state, picked colors and recent history, color-format preferences, and named simple proxy profiles/state. Integrated Proxy stores no usernames or passwords, performs no diagnostics, and does not configure incognito. Screenshot provides Visible area and Full page with automatic preparation and no configurable capture options. Screenshots expire after one hour and are removed on the next capture save/load, or by the preview's Close action. Dashboard disclosure guidance remains in [listing.md](./store/listing.md#privacy-practices). The existing Website content and Web history selections, No remote code setting, and all three checked certifications were retained.
+The policy for versions 1.2.0, 1.2.1 and 1.2.2 is [PRIVACY.md](./PRIVACY.md). Data handled locally includes requested screenshots and computed CSS, current-page/video state, picked colors and recent history, color-format preferences, and named simple proxy profiles/state. Integrated Proxy stores no usernames or passwords, performs no diagnostics, and does not configure incognito. Screenshot provides Visible area and Full page with automatic preparation and no configurable capture options. Screenshots expire after one hour and are removed on the next capture save/load, or by the preview's Close action. Dashboard disclosure guidance remains in [listing.md](./store/listing.md#privacy-practices). The existing Website content and Web history selections, No remote code setting, and all three checked certifications were retained.
 
-Policy URL saved in the dashboard: https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY.md. The public GitHub page was checked after pushing commit `8764534`: it shows the October 14, 2026 policy date and version 1.2.0 text.
+Policy URL saved in the dashboard: https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY.md. The public GitHub content was checked after pushing commit `4d9c2f8`: it shows the October 15, 2026 policy date, the name temoto, and coverage through version 1.2.2.
 
 ## Distribution and developer details
 
-The dashboard's existing free pricing, public visibility, and all-region distribution were confirmed and retained. Keep the existing Store item, publisher name, public contact email, and category. Public visibility is the distribution setting; the 1.2.1 update is awaiting review and is not yet public.
+The dashboard's existing free pricing, public visibility, and all-region distribution were confirmed and retained. Keep the existing Store item, publisher name, public contact email, and category. Public visibility is the distribution setting; the 1.2.2 update is awaiting review and is not yet public. Version 1.2.1 remains the public release.
 
 - Support: https://github.com/hayashiii-ghub/temoto/issues
 - Homepage: https://temoto.hayashiii-gpt.chatgpt.site
@@ -49,7 +49,8 @@ The dashboard's existing free pricing, public visibility, and all-region distrib
 
 | Source/change | Date | Scope | Status |
 | --- | --- | --- | --- |
-| 1.2.1 release package | 2026-10-15 | Bundled video-badge font loading fix and shorter English Store copy | Awaiting review; automatic publication after approval |
+| 1.2.2 release package | 2026-10-15 | Automatic light/dark appearance and the product name temoto | Awaiting review; automatic publication after approval selected |
+| 1.2.1 release package | 2026-10-15 | Bundled video-badge font loading fix and shorter English Store copy | Published; public listing and dashboard verified on 2026-10-15 |
 | 1.2.0 release package | 2026-10-14 | Five-tool integration, quiet restricted-page detection, and capture error recovery fix | Published; public listing showed 1.2.0 on 2026-10-15 |
 | Quiet restricted-page detection; source 1.1.0 at that stage | 2026-10-14 | Disable unavailable page tools without an access-error banner on popup open | Historical local verification below |
 | Five-tool integration; source 1.1.0 at that stage | 2026-10-13 | Color Picker, Screenshot, CSS, Video Speed, and simple Fixed/PAC URL Proxy switching | Historical local verification below |
