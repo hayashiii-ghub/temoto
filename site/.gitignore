@@ -1,5 +1,7 @@
 /node_modules/
 /dist/
+/.vinext/
+/.wrangler/
 /coverage/
 /.vercel/
 /.site-build-*/
