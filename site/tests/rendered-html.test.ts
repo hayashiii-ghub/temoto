@@ -1,22 +1,14 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import test from "node:test";
+import { test } from "bun:test";
 
 const storeUrl = "https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid";
 
-async function render(pathname = "/") {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
-
-  return worker.fetch(
-    new Request(new URL(pathname, "http://localhost/"), { headers: { accept: "text/html" } }),
-    { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
-    { waitUntil() {}, passThroughOnException() {} },
-  );
+function render() {
+  return readFileSync(new URL("../dist/index.html", import.meta.url), "utf8");
 }
 
-function textContent(html) {
+function textContent(html: string) {
   return html
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, "")
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/g, "")
@@ -25,27 +17,23 @@ function textContent(html) {
     .trim();
 }
 
-function attribute(tag, name) {
+function attribute(tag: string, name: string) {
   return new RegExp(`\\b${name}="([^"]*)"`).exec(tag)?.[1] ?? "";
 }
 
-function pngSize(file) {
+function pngSize(file: URL) {
   const png = readFileSync(file);
   assert.deepEqual(png.subarray(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), "file must contain PNG bytes");
   return { png, width: png.readUInt32BE(16), height: png.readUInt32BE(20) };
 }
 
 test("renders the selected English landing-page message without JavaScript", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-
-  const html = await response.text();
+  const html = render();
   const text = textContent(html);
   assert.match(html, /<html lang="en">/);
   const heading = /<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(html)?.[1] ?? "";
   assert.equal(textContent(heading), "Less friction. More doing.");
-  assert.match(html, /<p class="eyebrow">A small toolkit<\/p>/);
+  assert.doesNotMatch(html, /A small toolkit/);
   assert.match(text, /Free · Open source · No account/);
   assert.match(text, /Color, capture, CSS, video, proxy\. All close at hand\./);
   assert.doesNotMatch(text, /[\u3040-\u30ff\u3400-\u9fff]/);
@@ -53,13 +41,13 @@ test("renders the selected English landing-page message without JavaScript", asy
 });
 
 test("keeps public metadata, one Store action and footer resources", async () => {
-  const html = await (await render()).text();
+  const html = render();
   const title = /<title>([\s\S]*?)<\/title>/.exec(html)?.[1] ?? "";
   assert.match(title, /temoto/i);
   assert.match(html, /name="description" content="[^"]+"/);
-  assert.match(html, /property="og:image" content="https:\/\/temoto\.hayashiii-gpt\.chatgpt\.site\/og-temoto\.png\?v=ad48b7f1619d"/);
+  assert.match(html, /property="og:image" content="https:\/\/temoto\.shigoto\.dev\/og-temoto\.png\?v=ad48b7f1619d"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
-  assert.match(html, /rel="icon" href="https:\/\/temoto\.hayashiii-gpt\.chatgpt\.site\/temoto-mark\.svg" type="image\/svg\+xml"/);
+  assert.match(html, /rel="icon" href="\/temoto-mark\.svg" type="image\/svg\+xml"/);
   assert.match(html, /<img\b[^>]*src="\/temoto-mark\.svg"/);
 
   const links = [...html.matchAll(/<a\b[^>]*>[\s\S]*?<\/a>/g)].map(match => match[0]);
@@ -76,17 +64,26 @@ test("keeps public metadata, one Store action and footer resources", async () =>
   assert.equal(textContent(footer), "GitHub Privacy");
 });
 
-test("keeps public response headers below the hosting gateway limit", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  const headerBytes = Buffer.byteLength(
-    [...response.headers].map(([name, value]) => `${name}: ${value}\r\n`).join(""),
-  );
-  assert.ok(headerBytes < 32 * 1024, `Unexpected ${headerBytes}-byte header block`);
+test("ships browser bundles and font assets without a server runtime", () => {
+  const html = render();
+  const assetURLs = [...html.matchAll(/<(?:script|link)\b[^>]*(?:src|href)="(\/assets\/[^"\n]+)"/g)].map(match => match[1]);
+  assert.ok(assetURLs.some(url => url.endsWith(".js")), "hydration bundle must be linked");
+  assert.ok(assetURLs.some(url => url.endsWith(".css")), "page styles must be linked");
+  for (const url of assetURLs) {
+    const asset = readFileSync(new URL(`../dist${url}`, import.meta.url), "utf8");
+    assert.ok(asset.length > 0, `${url} must be available`);
+    if (url.endsWith(".css")) {
+      for (const match of asset.matchAll(/url\(["']?(\/[^)"']+)["']?\)/g)) {
+        assert.ok(readFileSync(new URL(`../dist${match[1]}`, import.meta.url)).length > 0, `${match[1]} must be deployed`);
+      }
+    }
+  }
+  assert.match(html, /rel="canonical" href="https:\/\/temoto\.shigoto\.dev\/"/);
+  assert.doesNotMatch(html, /_vinext|_next|chatgpt\.site|server\/index/);
 });
 
 test("renders the five launcher tools and sample playback rate without JavaScript", async () => {
-  const html = await (await render()).text();
+  const html = render();
   const tools = ["Color Picker", "Screenshot", "CSS", "Video Speed", "Proxy"];
   const lists = [...html.matchAll(/<(ul|ol)\b[^>]*>([\s\S]*?)<\/\1>/g)].map(match => match[2]);
   const launcher = lists.find(list => tools.every(tool => textContent(list).includes(tool)));
@@ -94,17 +91,17 @@ test("renders the five launcher tools and sample playback rate without JavaScrip
   const rows = [...launcher.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map(match => textContent(match[1]));
   assert.equal(rows.length, 5);
   for (const tool of tools) assert.ok(rows.some(row => row.includes(tool)), `${tool} must have a launcher row`);
-  assert.match(rows.find(row => row.includes("Video Speed")), /1\.5×/);
+  assert.match(rows.find(row => row.includes("Video Speed")) ?? "", /1\.5×/);
 });
 
 test("keeps rendered assets, font licenses and OG source dependencies available", async () => {
-  const html = await (await render()).text();
-  const dependencies = new Set();
+  const html = render();
+  const dependencies = new Set<string>();
   for (const match of html.matchAll(/<img\b[^>]*>/g)) {
     const source = attribute(match[0], "src");
     if (source.startsWith("/")) dependencies.add(new URL(`../public${source}`, import.meta.url).href);
   }
-  const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
   for (const match of css.matchAll(/url\("(\/[^"\n]+)"\)/g)) {
     dependencies.add(new URL(`../public${match[1]}`, import.meta.url).href);
   }

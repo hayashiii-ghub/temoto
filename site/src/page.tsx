@@ -14,7 +14,6 @@ export default function Home() {
     </header>
     <main id="content">
       <section className="hero" aria-labelledby="temoto-title">
-        <p className="eyebrow">A small toolkit</p>
         <h1 id="temoto-title"><span>Less friction.</span><span>More doing.</span></h1>
         <a className="store-link" href={chromeStoreUrl}>Add to Chrome</a>
         <p className="hero-meta">Free · Open source · No account</p>
