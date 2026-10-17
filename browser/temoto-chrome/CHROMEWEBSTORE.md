@@ -1,8 +1,10 @@
 # Chrome Web Store readiness — temoto
 
-Last updated: 2026-10-15
+Last updated: 2026-10-17
 
-Version **1.2.2** was submitted on **2026-10-15** with browser-following light/dark appearance and the product name **temoto**. The user completed the final submission; the receipt and **Awaiting review** status were verified. Automatic publication after approval was selected. The dashboard shows submitted **1.2.2** and published **1.2.1**. Its archive is `release/temoto-v1.2.2.zip` (177,419 bytes), SHA-256 `eaa5049f96147e2869fce1ca809e166673c7ba798640c814365a429c1f79655d`. The 135 core tests, production build, 4 Sites tests, 53 legacy checks, and website lint/build with 6 tests passed. Light/dark browser QA covered popup tools, capture pixels, CSS inspection and video badges. Existing Store ID, permissions, and saved data remain unchanged. Source commit `4d9c2f8` was pushed to main. Website version 48 was published with the shorter description and matching OG image; live HTML was verified.
+On **2026-10-17**, the dashboard showed **1.2.2** as both the published version and the current draft, with the existing permissions unchanged. The homepage-only update to **https://temoto.shigoto.dev/** was saved and submitted for review after the user's approval. The submission receipt and **Awaiting review** status were verified; automatic publication after approval was selected.
+
+Version **1.2.2** was submitted on **2026-10-15** with browser-following light/dark appearance and the product name **temoto**. The user completed the final submission; the receipt and **Awaiting review** status were verified at that time. Automatic publication after approval was selected. At submission, the dashboard showed submitted **1.2.2** and published **1.2.1**. Its archive is `release/temoto-v1.2.2.zip` (177,419 bytes), SHA-256 `eaa5049f96147e2869fce1ca809e166673c7ba798640c814365a429c1f79655d`. The 135 core tests, production build, 4 Sites tests, 53 legacy checks, and website lint/build with 6 tests passed. Light/dark browser QA covered popup tools, capture pixels, CSS inspection and video badges. Existing Store ID, permissions, and saved data remain unchanged. Source commit `4d9c2f8` was pushed to main. Website version 48 was published with the shorter description and matching OG image; live HTML was verified.
 
 The five-tool **1.2.0** update was submitted to Chrome Web Store review on **2026-10-14**. It was approved and published automatically: on **2026-10-15** the public Store listing showed version **1.2.0**, updated October 14, 2026, with the five-tool description. The English listing and artwork are saved, native Chrome 1.2.0 QA is complete including the user's manual new-color eyedropper confirmation, and the source/policy were pushed as commit `8764534` with the updated public policy verified. GitHub Chrome, website, and legacy Proxy checks all passed. The package and current Store draft support English only; Japanese copy and artwork remain local reference material. The former standalone temoto Proxy has been unpublished, while its source and existing users' saved data remain available for migration.
 
@@ -40,16 +42,16 @@ Policy URL saved in the dashboard: https://github.com/hayashiii-ghub/temoto/blob
 
 ## Distribution and developer details
 
-The dashboard's existing free pricing, public visibility, and all-region distribution were confirmed and retained. Keep the existing Store item, publisher name, public contact email, and category. Public visibility is the distribution setting; the 1.2.2 update is awaiting review and is not yet public. Version 1.2.1 remains the public release.
+The dashboard's existing free pricing, public visibility, and all-region distribution were confirmed and retained. Keep the existing Store item, publisher name, public contact email, and category. Public visibility is the distribution setting; the dashboard showed published **1.2.2** on **2026-10-17**.
 
 - Support: https://github.com/hayashiii-ghub/temoto/issues
-- Homepage: https://temoto.shigoto.dev
+- Homepage: https://temoto.shigoto.dev/
 
 ## Version history
 
 | Source/change | Date | Scope | Status |
 | --- | --- | --- | --- |
-| 1.2.2 release package | 2026-10-15 | Automatic light/dark appearance and the product name temoto | Awaiting review; automatic publication after approval selected |
+| 1.2.2 release package | 2026-10-15 | Automatic light/dark appearance and the product name temoto | Published; dashboard verified on 2026-10-17 |
 | 1.2.1 release package | 2026-10-15 | Bundled video-badge font loading fix and shorter English Store copy | Published; public listing and dashboard verified on 2026-10-15 |
 | 1.2.0 release package | 2026-10-14 | Five-tool integration, quiet restricted-page detection, and capture error recovery fix | Published; public listing showed 1.2.0 on 2026-10-15 |
 | Quiet restricted-page detection; source 1.1.0 at that stage | 2026-10-14 | Disable unavailable page tools without an access-error banner on popup open | Historical local verification below |
