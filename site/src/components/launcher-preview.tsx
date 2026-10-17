@@ -1,8 +1,5 @@
-"use client";
-
 import { useRef, useState } from "react";
 import { ColorDemo, ScreenshotDemo, CssDemo, VideoDemo, ProxyDemo } from "./tool-demos";
-import "./launcher-preview.css";
 
 const tools = [
   { label: "Color Picker", icon: "eyedropper" },

@@ -2,7 +2,7 @@
 
 temoto brings Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching into one Chrome extension. Version 1.2.1 is public on the Chrome Web Store (verified October 15, 2026). See [release status](./browser/temoto-chrome/CHROMEWEBSTORE.md) for the last verified Store state.
 
-- [Website](https://temoto.hayashiii-gpt.chatgpt.site)
+- [Website](https://temoto.shigoto.dev)
 - [temoto](https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid)
 
 ## temoto
@@ -58,12 +58,12 @@ Validate the website:
 
 ```sh
 cd site
-npm install
-npm run lint
-npm test
+bun install --frozen-lockfile
+bun run check
+bun run test
 ```
 
-The website's five interactive tool demos follow the browser's light/dark preference and use sample content. The purple hero and black lower section remain fixed. Its build uses a fresh temporary cache so old font files do not enter the deployed output.
+The website's five interactive tool demos follow the browser's light/dark preference and use sample content. The purple hero and black lower section remain fixed. The site uses Bun 1.4.2 and TypeScript to generate static HTML and browser bundles in `site/dist/`. `bun run dev` starts a local preview; the Vercel project uses `site/` as its root and publishes `dist/`.
 
 ## Repository structure
 
@@ -75,7 +75,7 @@ site/                   public website
 docs/                   asset ownership and maintenance guide
 ```
 
-The main extension, website, and retained legacy source keep separate builds and npm lockfiles; this repository is not an npm workspace.
+The main extension and retained legacy source keep separate npm builds and lockfiles. The website has its own Bun lockfile; this repository is not a package workspace.
 
 ## Assets and release material
 

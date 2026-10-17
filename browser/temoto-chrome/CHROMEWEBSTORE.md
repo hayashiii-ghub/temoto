@@ -43,7 +43,7 @@ Policy URL saved in the dashboard: https://github.com/hayashiii-ghub/temoto/blob
 The dashboard's existing free pricing, public visibility, and all-region distribution were confirmed and retained. Keep the existing Store item, publisher name, public contact email, and category. Public visibility is the distribution setting; the 1.2.2 update is awaiting review and is not yet public. Version 1.2.1 remains the public release.
 
 - Support: https://github.com/hayashiii-ghub/temoto/issues
-- Homepage: https://temoto.hayashiii-gpt.chatgpt.site
+- Homepage: https://temoto.shigoto.dev
 
 ## Version history
 
