@@ -273,8 +273,8 @@ test("each video shows a passive badge that follows rate changes", () => {
 for (const lightMode of [false, true]) {
   test(`video badges start in the browser's ${lightMode ? "light" : "dark"} scheme`, () => {
     const page = loadContentScript(1.5, 2, null, lightMode);
-    assert.ok(page.badges().every((badge) => badge.style.background === (lightMode ? "rgba(244,244,242,.88)" : "rgba(8,8,8,.38)")));
-    assert.ok(page.badges().every((badge) => badge.style.color === (lightMode ? "rgba(8,8,8,.78)" : "rgba(255,255,255,.72)")));
+    assert.ok(page.badges().every((badge) => badge.style.background === (lightMode ? "rgba(255,255,255,.9)" : "rgba(32,33,36,.8)")));
+    assert.ok(page.badges().every((badge) => badge.style.color === (lightMode ? "rgba(32,33,36,.9)" : "rgba(232,234,237,.9)")));
   });
 }
 
@@ -284,22 +284,22 @@ test("scheme changes update existing and new badges without changing speeds, and
   const initialMessages = page.sentMessages.length;
   page.setLightMode(true);
   page.flushNotifications();
-  assert.ok(page.badges().every((badge) => badge.style.background === "rgba(244,244,242,.88)"));
-  assert.ok(page.badges().every((badge) => badge.style.color === "rgba(8,8,8,.78)"));
+  assert.ok(page.badges().every((badge) => badge.style.background === "rgba(255,255,255,.9)"));
+  assert.ok(page.badges().every((badge) => badge.style.color === "rgba(32,33,36,.9)"));
   assert.deepEqual(page.videos.map((video) => video.playbackRate), [1.5, 1.5]);
   assert.equal(page.sentMessages.length, initialMessages);
   page.replaceVideo(0, 2);
-  assert.ok(page.badges().every((badge) => badge.style.background === "rgba(244,244,242,.88)"));
+  assert.ok(page.badges().every((badge) => badge.style.background === "rgba(255,255,255,.9)"));
   page.setLightMode(false);
   const badges = page.badges();
-  assert.ok(badges.every((badge) => badge.style.background === "rgba(8,8,8,.38)"));
-  assert.ok(badges.every((badge) => badge.style.color === "rgba(255,255,255,.72)"));
+  assert.ok(badges.every((badge) => badge.style.background === "rgba(32,33,36,.8)"));
+  assert.ok(badges.every((badge) => badge.style.color === "rgba(232,234,237,.9)"));
   assert.deepEqual(page.videos.map((video) => video.playbackRate), [2, 1.5]);
   assert.equal(page.resources().themeListeners, 1);
   page.cleanup();
   assert.equal(page.resources().themeListeners, 0);
   page.setLightMode(true);
-  assert.ok(badges.every((badge) => badge.style.background === "rgba(8,8,8,.38)"));
+  assert.ok(badges.every((badge) => badge.style.background === "rgba(32,33,36,.8)"));
   assert.equal(page.badges().length, 0);
 });
 

@@ -1,4 +1,6 @@
 import { cp, mkdtemp, rename, rm } from "node:fs/promises";
+import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderToString } from "react-dom/server";
@@ -8,7 +10,8 @@ export const siteRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 export const distRoot = join(siteRoot, "dist");
 const siteURL = "https://temoto.shigoto.dev";
 const description = "Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching in one Chrome extension.";
-const imageURL = `${siteURL}/og-temoto.png?v=ad48b7f1619d`;
+const imageHash = createHash("sha256").update(readFileSync(join(siteRoot, "public/og-temoto.png"))).digest("hex").slice(0, 12);
+const imageURL = `${siteURL}/og-temoto.png?v=${imageHash}`;
 
 function renderDocument(scripts: string[], styles: string[]): string {
   return `<!DOCTYPE html>
@@ -17,7 +20,8 @@ function renderDocument(scripts: string[], styles: string[]): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#9974f8">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#202124" media="(prefers-color-scheme: dark)">
 <title>temoto</title>
 <meta name="description" content="${description}">
 <link rel="canonical" href="${siteURL}/">

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { test } from "bun:test";
 
 const storeUrl = "https://chromewebstore.google.com/detail/temoto-for-chrome/gcncgknjklghkoeiapcbdghodepnllid";
@@ -45,7 +46,8 @@ test("keeps public metadata, one Store action and footer resources", async () =>
   const title = /<title>([\s\S]*?)<\/title>/.exec(html)?.[1] ?? "";
   assert.match(title, /temoto/i);
   assert.match(html, /name="description" content="[^"]+"/);
-  assert.match(html, /property="og:image" content="https:\/\/temoto\.shigoto\.dev\/og-temoto\.png\?v=ad48b7f1619d"/);
+  const ogHash = createHash("sha256").update(readFileSync(new URL("../public/og-temoto.png", import.meta.url))).digest("hex").slice(0, 12);
+  assert.ok(html.includes(`property="og:image" content="https://temoto.shigoto.dev/og-temoto.png?v=${ogHash}"`));
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
   assert.match(html, /rel="icon" href="\/temoto-mark\.svg" type="image\/svg\+xml"/);
   assert.match(html, /<img\b[^>]*src="\/temoto-mark\.svg"/);
@@ -61,7 +63,7 @@ test("keeps public metadata, one Store action and footer resources", async () =>
   const footer = /<footer\b[^>]*>([\s\S]*?)<\/footer>/.exec(html)?.[1] ?? "";
   assert.match(footer, /href="https:\/\/github\.com\/hayashiii-ghub\/temoto"[^>]*>GitHub<\/a>/);
   assert.match(footer, /href="https:\/\/github\.com\/hayashiii-ghub\/temoto\/blob\/main\/browser\/temoto-chrome\/PRIVACY\.md"[^>]*>Privacy<\/a>/);
-  assert.equal(textContent(footer), "GitHub Privacy");
+  assert.equal(textContent(footer), "temoto GitHub Privacy");
 });
 
 test("ships browser bundles and font assets without a server runtime", () => {

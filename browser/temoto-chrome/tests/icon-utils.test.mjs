@@ -61,7 +61,7 @@ test("the 16px toolbar divider is crisp and preserves transparent panel spaces",
   }
 });
 
-test("the retained shared Joint paths match the website mark", () => {
-  const paths = (url) => [...readFileSync(url, "utf8").matchAll(/<path d="([^"]+)"/g)].map((match) => match[1]);
-  assert.deepEqual(paths(new URL("../../shared/temoto-mark.svg", import.meta.url)), paths(new URL("../../../site/public/temoto-mark.svg", import.meta.url)));
+test("the website mark retains the approved toolbar outline geometry", () => {
+  const shapes = (url) => [...readFileSync(url, "utf8").matchAll(/<(?:rect|path)\b[^>]*>/g)].map((match) => match[0].replace(/\s+/g, " ").replace(/\s*\/>$/, "/>"));
+  assert.deepEqual(shapes(new URL("../icons/toolbar.svg", import.meta.url)), shapes(new URL("../../../site/public/temoto-mark.svg", import.meta.url)));
 });

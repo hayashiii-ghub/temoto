@@ -24,7 +24,7 @@ export function LauncherPreview() {
       if (event.key === "Escape" && active !== null) { event.preventDefault(); close(); }
     }}>
       <div className="launcher-preview__surface">
-        {active === null ? <p className="launcher-preview__brand">temoto</p> : <div className="launcher-preview__header">
+        {active === null ? <p className="launcher-preview__brand"><img src="/temoto-mark.svg" alt="" width={20} height={20} />temoto</p> : <div className="launcher-preview__header">
           <button ref={backButton} onClick={close} aria-label="Back to tools">←</button>
           <img className="launcher-preview__icon" src={`/tools/${tools[active].icon}.svg`} alt="" width={20} height={20} />
           <h2>{tools[active].label}</h2>

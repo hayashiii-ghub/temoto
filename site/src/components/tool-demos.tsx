@@ -15,7 +15,7 @@ function Failure({ message }: { message: string }) {
 }
 
 const colors = [
-  { hex: "#9974F8", rgb: "rgb(153, 116, 248)", hsl: "hsl(257, 90%, 71%)" },
+  { hex: "#4B4B4B", rgb: "rgb(75, 75, 75)", hsl: "hsl(0, 0%, 29.4%)" },
   { hex: "#F4F4F2", rgb: "rgb(244, 244, 242)", hsl: "hsl(60, 8%, 95%)" },
   { hex: "#080808", rgb: "rgb(8, 8, 8)", hsl: "hsl(0, 0%, 3%)" },
   { hex: "#C7B5FA", rgb: "rgb(199, 181, 250)", hsl: "hsl(256, 87%, 85%)" },
@@ -35,15 +35,15 @@ export function ColorDemo() {
     setRecent(previous => [index, ...previous.filter(item => item !== index)].slice(0, 8));
     setPicking(false);
   }
-  return <>
+  return <div className="demo-color-screen">
     <div className="demo-color" style={{ background: colors[selected].hex }} aria-label={`Selected color ${colors[selected].hex}`} />
-    <div className="demo-columns">{(["hex", "rgb", "hsl"] as const).map(item => <button key={item} aria-pressed={format === item} onClick={() => setFormat(item)}>{item.toUpperCase()}</button>)}</div>
-    <output className="demo-value">{value}</output>
-    <div className="demo-columns"><button onClick={() => setPicking(!picking)} aria-expanded={picking}>{picking ? "Cancel" : "Pick a color"}</button><button onClick={() => void copy(value)}>Copy value</button></div>
+    <div className="demo-color-formats" role="group" aria-label="Color format">{(["hex", "rgb", "hsl"] as const).map(item => <button key={item} aria-pressed={format === item} onClick={() => setFormat(item)}>{item.toUpperCase()}</button>)}</div>
+    <div className="demo-color-readout"><output>{value}</output><button className="demo-color-copy" onClick={() => void copy(value)} aria-label="Copy value" title="Copy value"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="1"/><path d="M16 8V5H5v11h3"/></svg></button></div>
+    <button className="demo-color-pick" onClick={() => setPicking(!picking)} aria-expanded={picking}><img src="/tools/eyedropper.svg" alt="" width={18} height={18} />{picking ? "Cancel" : "Pick a color"}</button>
     {picking && <div className="demo-palette" aria-label="Sample colors">{colors.map((color, index) => <button key={color.hex} aria-label={`Pick ${color.hex}`} style={{ "--swatch": color.hex } as CSSProperties} onClick={() => pick(index)}><span /></button>)}</div>}
-    {!picking && recent.length > 0 && <div className="demo-palette" aria-label="Recent colors">{recent.map(index => <button key={index} aria-label={`Use ${colors[index].hex}`} style={{ "--swatch": colors[index].hex } as CSSProperties} onClick={() => setSelected(index)}><span /></button>)}</div>}
+    {!picking && recent.length > 0 && <div className="demo-palette" role="group" aria-label="Recent colors">{recent.map(index => <button key={index} aria-label={`Use ${colors[index].hex}`} aria-pressed={selected === index} style={{ "--swatch": colors[index].hex } as CSSProperties} onClick={() => setSelected(index)}><span /></button>)}</div>}
     <Failure message={error} />
-  </>;
+  </div>;
 }
 
 type Capture = { blob: Blob; url: string; width: number; height: number };
@@ -62,7 +62,7 @@ export function ScreenshotDemo() {
       const context = canvas.getContext("2d");
       if (!context) throw new Error("Canvas unavailable");
       context.fillStyle = "#f4f4f2"; context.fillRect(0, 0, canvas.width, canvas.height);
-      context.fillStyle = "#9974f8"; context.fillRect(0, 0, 640, 220);
+      context.fillStyle = "#e8eaed"; context.fillRect(0, 0, 640, 220);
       context.fillStyle = "#080808"; context.font = "bold 28px Arial"; context.fillText("temoto", 32, 50);
       context.font = "bold 48px Arial"; context.fillText("Less friction.", 32, 126); context.fillText("More doing.", 32, 180);
       context.font = "20px Arial";

@@ -184,7 +184,6 @@ body[data-surface="capture"] { min-width: 320px; min-height: 100vh; background: 
 .color-screen .color-readout strong { font-size: 20px; overflow-wrap: anywhere; line-height: 1.4; }
 .color-formats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .color-formats button { min-height: var(--temoto-control-height); border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: transparent; cursor: pointer; font-size: var(--temoto-control-font-size); font-weight: var(--temoto-control-font-weight); line-height: 1.4; }
-.color-formats button:last-child { border-right: 0; }
 .color-formats button[aria-pressed="true"] { background: var(--temoto-popup-accent); color: var(--temoto-popup-on-accent); }
 .color-history { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); padding: 12px 24px; gap: 2px; }
 .color-history button { min-height: var(--temoto-control-height); padding: 4px; display: grid; place-items: center; border: 1px solid transparent; background: transparent; cursor: pointer; }
@@ -197,3 +196,110 @@ body[data-surface="capture"] { min-width: 320px; min-height: 100vh; background: 
 .capture-toolbar button { min-height: var(--temoto-control-height); padding: 0 16px; border: 1px solid var(--line); background: transparent; font-size: var(--temoto-control-font-size); font-weight: var(--temoto-control-font-weight); line-height: 1.4; cursor: pointer; }
 .capture-toolbar button[aria-pressed="true"] { background: var(--temoto-popup-accent); color: var(--temoto-popup-on-accent); }
 button:disabled { cursor: default; opacity: var(--temoto-popup-disabled-opacity); }
+
+/* temoto's native-style surfaces are scoped here; legacy Proxy keeps shared tokens. */
+body[data-surface="popup"], body[data-surface="capture"] {
+  --temoto-popup-width: 360px;
+  --temoto-popup-header-height: 56px;
+  --temoto-popup-brand-size: 18px;
+  --temoto-popup-brand-weight: 600;
+  --temoto-control-height: 44px;
+  --temoto-action-row-height: 48px;
+  --temoto-launcher-row-height: 52px;
+  --temoto-control-font-size: 13px;
+  --temoto-label-font-size: 14px;
+  --temoto-popup-bg: #202124;
+  --temoto-popup-text: #e8eaed;
+  --temoto-popup-muted: #9aa0a6;
+  --temoto-popup-quiet: #9aa0a6;
+  --temoto-popup-line: #3c4043;
+  --temoto-popup-line-strong: #9aa0a6;
+  --temoto-popup-surface: #292a2d;
+  --temoto-popup-surface-hover: #303134;
+  --temoto-popup-control-text: #e8eaed;
+  --temoto-popup-control-hover-text: #e8eaed;
+  --temoto-popup-control-hover-bg: #303134;
+  --temoto-popup-accent: #3c4043;
+  --temoto-popup-on-accent: #e8eaed;
+  --temoto-popup-accent-soft: #303134;
+  --temoto-popup-accent-text: #e8eaed;
+  --temoto-popup-focus: #e8eaed;
+  --temoto-launcher-hover: #303134;
+  --temoto-launcher-active: #3c4043;
+  --temoto-launcher-disabled: #9aa0a6;
+  --temoto-empty-text: #9aa0a6;
+  --temoto-capture-stage: #292a2d;
+  --temoto-capture-action: #292a2d;
+  --temoto-capture-placeholder: #9aa0a6;
+  --temoto-capture-status: #9aa0a6;
+  --temoto-capture-toolbar: #e8eaed;
+  --temoto-preview-bg: #17181a;
+}
+@media (prefers-color-scheme: light) {
+  body[data-surface="popup"], body[data-surface="capture"] {
+    --temoto-popup-bg: #fff;
+    --temoto-popup-text: #202124;
+    --temoto-popup-muted: #5f6368;
+    --temoto-popup-quiet: #5f6368;
+    --temoto-popup-line: #dadce0;
+    --temoto-popup-line-strong: #5f6368;
+    --temoto-popup-surface: #f1f3f4;
+    --temoto-popup-surface-hover: #f1f3f4;
+    --temoto-popup-control-text: #3c4043;
+    --temoto-popup-control-hover-text: #202124;
+    --temoto-popup-control-hover-bg: #f1f3f4;
+    --temoto-popup-accent: #e8eaed;
+    --temoto-popup-on-accent: #202124;
+    --temoto-popup-accent-soft: #f1f3f4;
+    --temoto-popup-accent-text: #3c4043;
+    --temoto-popup-focus: #3c4043;
+    --temoto-launcher-hover: #f1f3f4;
+    --temoto-launcher-active: #e8eaed;
+    --temoto-launcher-disabled: #5f6368;
+    --temoto-empty-text: #5f6368;
+    --temoto-capture-stage: #f1f3f4;
+    --temoto-capture-action: #fff;
+    --temoto-capture-placeholder: #5f6368;
+    --temoto-capture-status: #5f6368;
+    --temoto-capture-toolbar: #3c4043;
+    --temoto-preview-bg: #f1f3f4;
+  }
+}
+.popup-shell { border-color: var(--line); }
+.app-header, .launcher-header { padding-left: 16px; }
+.brand-lockup { gap: 8px; }
+.brand-mark { flex: 0 0 auto; }
+.launcher-list { padding: 0 8px 8px; }
+.launcher-card { position: relative; padding: 0 8px; gap: 14px; border: 0; border-radius: 6px; }
+.launcher-card:not(:last-child)::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: 0; border-bottom: 1px solid var(--line); }
+.launcher-card:hover::after { border-color: transparent; }
+.launcher-card > svg { color: var(--temoto-popup-control-text); }
+.launcher-card:hover > svg { color: inherit; }
+.launcher-label strong { letter-spacing: 0; }
+.launcher-meta.is-accent { color: var(--temoto-popup-muted); font-size: 12px; font-weight: 500; }
+.tool-screen-header { grid-template-columns: 52px minmax(0, 1fr); }
+.tool-screen-header .icon-button { width: 44px; height: 44px; margin-left: 8px; border: 0; border-radius: 6px; }
+.tool-screen-identity { padding: 0 12px 0 4px; }
+.tool-screen-identity strong { font-size: 15px; letter-spacing: 0; }
+.tool-screen-body .primary-action, .tool-screen-body .secondary-action { min-height: 48px; }
+.color-screen { padding: 16px; gap: 10px; }
+.color-swatch { height: 76px; flex: 0 0 auto; border: 1px solid var(--temoto-swatch-border); border-radius: 7px; forced-color-adjust: none; }
+.color-formats { padding: 3px; gap: 2px; background: var(--temoto-popup-surface); border: 1px solid var(--line); border-radius: 7px; }
+.color-formats button { min-height: 36px; border: 1px solid transparent; border-radius: 5px; color: var(--temoto-popup-control-text); }
+.color-formats button[aria-pressed="true"] { border-color: var(--temoto-popup-line-strong); background: var(--temoto-popup-bg); color: var(--temoto-popup-text); }
+.color-screen .color-readout { min-height: 44px; padding: 0 4px 0 12px; border: 1px solid var(--temoto-popup-line-strong); border-radius: 7px; }
+.color-screen .color-readout strong { flex: 1; min-width: 0; font-size: 14px; }
+.color-copy, .color-pick { border: 0; border-radius: 6px; background: transparent; color: var(--temoto-popup-text); cursor: pointer; }
+.color-copy { width: 40px; height: 40px; display: grid; place-items: center; flex: 0 0 auto; }
+.color-pick { min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--temoto-popup-line-strong); font-size: 13px; font-weight: 500; }
+.color-copy:hover:not(:disabled), .color-pick:hover:not(:disabled) { background: var(--temoto-popup-control-hover-bg); }
+.color-history { padding: 2px 0 0; gap: 1px; }
+.color-history button { border-radius: 6px; }
+.color-history button[aria-pressed="true"] { border-color: var(--temoto-popup-line-strong); }
+.color-history i { border-radius: 4px; forced-color-adjust: none; }
+.speed-presets button.is-active, .capture-toolbar button[aria-pressed="true"] { box-shadow: inset 0 -2px var(--temoto-popup-text); }
+.capture-stage, .capture-actions button { border-radius: 6px; }
+.capture-toolbar > div { overflow: hidden; border-radius: 6px; }
+@media (forced-colors: active) {
+  .color-formats button[aria-pressed="true"], .color-history button[aria-pressed="true"], .speed-presets button.is-active, .capture-toolbar button[aria-pressed="true"] { outline: 2px solid Highlight; outline-offset: -2px; }
+}

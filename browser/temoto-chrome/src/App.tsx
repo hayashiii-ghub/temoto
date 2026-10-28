@@ -59,6 +59,7 @@ function errorMessage(error: unknown, fallback: string): string {
 function Brand({ descriptor }: { descriptor?: string }) {
   return (
     <div className="brand-lockup">
+      <svg className="brand-mark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3.25" y="3.25" width="17.5" height="17.5" rx="2.5" /><path d="M3.5 9h17M12 9v11.5" /></svg>
       <div className="brand-name">
         <span>temoto</span>
         {descriptor && <span className="brand-context"> {descriptor}</span>}
@@ -95,7 +96,7 @@ function LauncherRow({ icon: Icon, label, meta, metaAccent = false, error, busy 
 }) {
   return (
     <button className={`launcher-card${error ? " has-error" : ""}`} type="button" onClick={onClick} disabled={disabled} aria-busy={busy || undefined} title={disabled && !busy ? t("Unavailable on this page") : undefined}>
-      <Icon size={22} weight="regular" aria-hidden="true" />
+      <Icon size={20} weight="regular" aria-hidden="true" />
       <span className="launcher-label"><strong>{label}</strong>{error && <small className="launcher-error" role="alert">{error}</small>}</span>
       {meta && <span className={`launcher-meta${metaAccent ? " is-accent" : ""}`}>{meta}</span>}
     </button>
@@ -224,14 +225,15 @@ function ColorPanel({ settings, onChange, onError }: {
     catch (error) { onError(errorMessage(error, t("Could not save settings"))); }
   };
   return <section className="tool-screen-body tool-detail-body color-screen">
-    <div className="color-readout"><i style={{ background: settings.lastColor }} /><strong>{value}</strong></div>
+    <div className="color-swatch" style={{ background: settings.lastColor }} aria-hidden="true" />
     <div className="color-formats" role="group" aria-label={t("Color format")}>
       {(["hex", "rgb", "hsl"] as const).map((format) => <button key={format} type="button" aria-pressed={settings.colorFormat === format} onClick={() => changeFormat(format)} disabled={busy}>{format.toUpperCase()}</button>)}
     </div>
-    <div className="tool-primary-actions">
-      <button className="primary-action" type="button" onClick={pick} disabled={busy}><Eyedropper size={18} aria-hidden="true" />{t("Pick a color")}</button>
-      <button className="secondary-action" type="button" onClick={() => copy()} disabled={busy}><Copy size={18} />{t("Copy value")}</button>
+    <div className="color-readout">
+      <strong>{value}</strong>
+      <button className="color-copy" type="button" onClick={() => copy()} disabled={busy} aria-label={t("Copy value")} title={t("Copy value")}><Copy size={18} aria-hidden="true" /></button>
     </div>
+    <button className="color-pick" type="button" onClick={pick} disabled={busy}><Eyedropper size={18} aria-hidden="true" />{t("Pick a color")}</button>
     {settings.colorHistory.length > 0 && <div className="color-history" role="group" aria-label={t("Recent colors")}>
       {settings.colorHistory.map((color) => <button key={color} type="button" aria-label={t("Select {color}", { color })} title={color} aria-pressed={settings.lastColor === color} onClick={() => selectColor(color)} disabled={busy}><i style={{ background: color }} /></button>)}
     </div>}
