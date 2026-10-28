@@ -23,6 +23,8 @@ function fixture(t) {
     "package.json": `${JSON.stringify({ version })}\n`,
     "dist/client/manifest.json": `${JSON.stringify(manifest, null, 2)}\n`,
     "dist/client/index.html": "<!doctype html><title>Packaging fixture</title>\n",
+    "dist/client/toolbar-theme.html": "<!doctype html><script src=\"toolbar-theme.js\"></script>\n",
+    "dist/client/toolbar-theme.js": "// Fixture toolbar theme monitor\n",
     "dist/client/fonts/geist-latin-wght-normal.woff2": Buffer.from("fixture font bytes"),
     "dist/client/fonts/LICENSE-Geist.txt": "Fixture font license must remain bundled.\n",
     "dist/client/fonts/README.md": "Source notes are not a runtime asset.\n",
@@ -30,6 +32,12 @@ function fixture(t) {
   for (const size of [16, 32, 48, 128]) {
     files[`dist/client/icons/icon-${size}.png`] = Buffer.from(`stale built icon ${size}`);
     files[`public/icons/icon-${size}.png`] = Buffer.from(`canonical source icon ${size}`);
+  }
+  for (const theme of ["light", "dark"]) {
+    for (const size of [16, 24, 32, 48]) {
+      files[`dist/client/icons/toolbar-${theme}-${size}.png`] = Buffer.from(`stale ${theme} toolbar icon ${size}`);
+      files[`public/icons/toolbar-${theme}-${size}.png`] = Buffer.from(`canonical ${theme} toolbar icon ${size}`);
+    }
   }
   for (const [name, content] of Object.entries(files)) {
     const path = join(root, name);
@@ -120,9 +128,18 @@ test("publishes a valid keyless archive with canonical icons without modifying s
   for (const name of ["fonts/geist-latin-wght-normal.woff2", "fonts/LICENSE-Geist.txt"]) {
     assert.deepEqual(archiveMember(archive, name), readFileSync(join(root, "dist/client", name)));
   }
+  for (const name of ["toolbar-theme.html", "toolbar-theme.js"]) {
+    assert.deepEqual(archiveMember(archive, name), readFileSync(join(root, "dist/client", name)));
+  }
   for (const size of [16, 32, 48, 128]) {
     const name = `icons/icon-${size}.png`;
     assert.deepEqual(archiveMember(archive, name), readFileSync(join(root, "public", name)));
+  }
+  for (const theme of ["light", "dark"]) {
+    for (const size of [16, 24, 32, 48]) {
+      const name = `icons/toolbar-${theme}-${size}.png`;
+      assert.deepEqual(archiveMember(archive, name), readFileSync(join(root, "public", name)));
+    }
   }
   for (const [name, content] of Object.entries(files)) {
     assert.deepEqual(readFileSync(join(root, name)), Buffer.from(content), `${name} was modified`);

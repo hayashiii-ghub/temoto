@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { inflateSync } from "node:zlib";
 import test from "node:test";
 import { createPanelIcon, renderPanelIcon } from "../scripts/panel-icon.mjs";
+import { createToolbarIcon, renderToolbarIcon } from "../scripts/toolbar-icon.mjs";
 
 // zlib compression can differ across supported Node versions; compare pixels.
 function decoded(buffer) {
@@ -33,6 +34,31 @@ test("the 16px panel retains a dark divider, white panels and transparent corner
   assert.deepEqual(pixel(10, 8), [255, 255, 255, 255]);
   assert.ok(pixel(7, 8)[0] < 64, "the vertical divider must remain dark at 16px");
   assert.ok(pixel(4, 5)[0] < 64, "the horizontal divider must remain dark at 16px");
+});
+
+test("toolbar icons match the outline source at every supported size and background", () => {
+  for (const background of ["light", "dark"]) {
+    for (const size of [16, 24, 32, 48]) {
+      const path = new URL(`../public/icons/toolbar-${background}-${size}.png`, import.meta.url);
+      assert.deepEqual(decoded(readFileSync(path)), decoded(createToolbarIcon(size, background)));
+      const icon = renderToolbarIcon(size, background);
+      assert.equal(icon.width, size);
+      assert.equal(icon.height, size);
+      assert.equal(icon.pixels[3], 0, "corner must remain transparent");
+    }
+  }
+});
+
+test("the 16px toolbar divider is crisp and preserves transparent panel spaces", () => {
+  for (const [background, channel] of [["light", 75], ["dark", 199]]) {
+    const { pixels } = renderToolbarIcon(16, background);
+    const pixel = (x, y) => [...pixels.subarray((y * 16 + x) * 4, (y * 16 + x) * 4 + 4)];
+    assert.deepEqual(pixel(7, 8), [channel, channel, channel, 255]);
+    assert.deepEqual(pixel(5, 6), [channel, channel, channel, 255]);
+    assert.equal(pixel(5, 8)[3], 0);
+    assert.equal(pixel(10, 8)[3], 0);
+    assert.equal(pixel(8, 4)[3], 0);
+  }
 });
 
 test("the retained shared Joint paths match the website mark", () => {

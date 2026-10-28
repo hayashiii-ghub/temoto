@@ -11,7 +11,7 @@
     "package": "npm run build && node scripts/package-extension.mjs",
     "preview": "vite preview",
     "test": "npm run typecheck:app && npm run build:extension-runtime && npm run test:unit",
-    "test:unit": "node --test tests/url-utils.test.mjs tests/page-safety.test.mjs tests/page-runtime.test.mjs tests/capture-utils.test.mjs tests/capture-plan.test.mjs tests/video-speed.test.mjs tests/video-speed-content.test.mjs tests/webmcp-content.test.mjs tests/i18n.test.mjs tests/icon-utils.test.mjs tests/color-utils.test.mjs tests/inspect-content.test.mjs tests/capture-store.test.mjs tests/capture-runtime.test.mjs tests/extension-api.test.mjs tests/proxy-core.test.mjs tests/proxy-runtime.test.mjs tests/proxy-api.test.mjs tests/package-extension.test.mjs",
+    "test:unit": "node --test tests/url-utils.test.mjs tests/page-safety.test.mjs tests/page-runtime.test.mjs tests/capture-utils.test.mjs tests/capture-plan.test.mjs tests/video-speed.test.mjs tests/video-speed-content.test.mjs tests/webmcp-content.test.mjs tests/i18n.test.mjs tests/icon-utils.test.mjs tests/toolbar-icon.test.mjs tests/color-utils.test.mjs tests/inspect-content.test.mjs tests/capture-store.test.mjs tests/capture-runtime.test.mjs tests/extension-api.test.mjs tests/proxy-core.test.mjs tests/proxy-runtime.test.mjs tests/proxy-api.test.mjs tests/package-extension.test.mjs",
     "typecheck": "npm run typecheck:app && tsc -p tsconfig.extension.json --noEmit",
     "typecheck:app": "tsc -p tsconfig.json",
     "test:sites": "node --test tests/sites-worker.test.mjs"

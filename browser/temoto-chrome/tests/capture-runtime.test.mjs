@@ -129,7 +129,7 @@ function createCaptureWorker(t, { blockScroll = false, failCaptureAt = Infinity,
     runtime: { getURL: (path) => `chrome-extension://temoto/${path}`, onMessage: { addListener() {} } },
   });
   const context = {
-    ...captureUtils, chrome, withCaptureLock, setTimeout: immediateTimeout,
+    ...captureUtils, chrome, withCaptureLock, setTimeout: immediateTimeout, startToolbarIconSync() {},
     async savePendingCapture(capture) { saved.push(structuredClone(capture)); return `capture-${saved.length}`; },
   };
   vm.runInNewContext(`${workerSource}\nglobalThis.captureMessage = handleMessage;`, context);

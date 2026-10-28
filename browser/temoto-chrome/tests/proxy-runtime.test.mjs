@@ -171,6 +171,7 @@ test("all five worker messages reject content scripts and non-popup extension pa
   let created = 0;
   const context = {
     chrome: { runtime: { id: "temoto", onMessage: { addListener() {} } } },
+    startToolbarIconSync() {},
     isTrustedProxyPopup,
     createProxyRuntime() { created++; return { async getState() { return { profiles: [], activeProfileId: null, status: "off" }; } }; },
   };
