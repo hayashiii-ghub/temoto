@@ -122,7 +122,7 @@ async function executeInTab<Args extends unknown[] = [], Result = unknown>(
   tabId: number,
   func: (...args: Args) => Result,
   args: Args = [] as unknown as Args,
-): Promise<chrome.scripting.Awaited<Result> | undefined> {
+): Promise<Awaited<Result> | undefined> {
   const [result] = await chrome.scripting.executeScript<Args, Result>({ target: { tabId }, func, args });
   return result?.result;
 }
