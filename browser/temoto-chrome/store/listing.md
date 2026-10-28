@@ -97,12 +97,14 @@ https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY
 
 ## Graphic assets
 
+The 1.2.3 launcher keeps hover highlights evenly inset and row dividers visible. Its English launcher screenshot and small promo tile were refreshed locally on 2026-10-28 with the T-panel mark and current light UI. Both exports are sRGB JPEGs without alpha; their dimensions and rendered contents were checked. They have not yet been submitted.
+
 - Store icon: `public/icons/icon-128.png` (128 × 128 PNG).
 - Launcher screenshot: `store/assets/screenshot-launcher-1280x800.jpg` (1280 × 800 JPEG).
 - Small promo tile: `store/assets/promo-small-440x280.jpg` (440 × 280 JPEG).
 - Optional marquee promo tile: 1400 × 560 PNG or JPEG.
 
-The English/Japanese launcher JPEGs were recaptured locally on 2026-10-13 from the built five-row launcher at 1280 × 800. Their formats, dimensions, and saved-image appearance were checked. The site showcase is a 416 × 402 PNG with SHA-256 prefix `47ae7d5e3c53`; the single-product OG image is a refreshed 1200 × 630 PNG. Legacy standalone Proxy images remain historical material. Use the existing [Store capture workflow](../../../AGENTS.md#store-capture-and-release) for subsequent artwork; captures do not prove native Chrome permission handling or real proxy traffic.
+The site showcase is a current 360 × 326 PNG; the OG and X metadata share the refreshed 1200 × 630 PNG. The Japanese launcher and legacy standalone Proxy images remain historical material. Use the existing [Store capture workflow](../../../AGENTS.md#assets-capture-and-release) for subsequent artwork; captures do not prove native Chrome permission handling or real proxy traffic.
 
 On 2026-10-14, old common Store screenshots were removed, leaving one latest English image. The canonical 128 × 128 PNG icon was uploaded again and saved. The existing small promo tile visually matched the current asset and was retained. A Japanese screenshot had been saved before upload, but it is not displayed by the English-only 1.2.0 draft and remains local reference material.
 

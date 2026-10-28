@@ -270,9 +270,12 @@ body[data-surface="popup"], body[data-surface="capture"] {
 .brand-lockup { gap: 8px; }
 .brand-mark { flex: 0 0 auto; }
 .launcher-list { padding: 0 8px 8px; }
-.launcher-card { position: relative; padding: 0 8px; gap: 14px; border: 0; border-radius: 6px; }
+.launcher-card { position: relative; isolation: isolate; padding: 0 8px; gap: 14px; border: 0; border-radius: 6px; }
+.launcher-card::before { content: ""; position: absolute; inset: 4px 0; z-index: -1; border-radius: inherit; pointer-events: none; transition: background .16s ease; }
+.launcher-card:is(:hover, :active) { background: transparent; }
+.launcher-card:hover:not(:disabled)::before { background: var(--temoto-launcher-hover); }
+.launcher-card:active:not(:disabled)::before { background: var(--temoto-launcher-active); }
 .launcher-card:not(:last-child)::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: 0; border-bottom: 1px solid var(--line); }
-.launcher-card:hover::after { border-color: transparent; }
 .launcher-card > svg { color: var(--temoto-popup-control-text); }
 .launcher-card:hover > svg { color: inherit; }
 .launcher-label strong { letter-spacing: 0; }
