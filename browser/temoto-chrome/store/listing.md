@@ -1,8 +1,8 @@
 # Chrome Web Store submission copy
 
-Updated and submitted on **2026-10-15** for **1.2.2**, adding automatic light/dark appearance and simplifying the product name to **temoto**. The receipt and **Awaiting review** status were verified after the user completed submission, with automatic publication after approval selected. The public version remains **1.2.1**; [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) records the verified Store state.
+Updated and submitted on **2026-10-15** for **1.2.2**, adding automatic light/dark appearance and simplifying the product name to **temoto**. The receipt and **Awaiting review** status were verified after the user completed submission, with automatic publication after approval selected. The public version remains **1.2.1**; [CHROMEWEBSTORE.md](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/temoto-chrome/CHROMEWEBSTORE.md) records the verified Store state.
 
-This is the authoritative listing, permission, privacy-disclosure, and reviewer copy. [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) tracks readiness. The [2026-09-13 handoff](../../STORE-HANDOFF-2026-09-13.md) is historical preparation evidence for an earlier source state.
+This is the authoritative listing, permission, privacy-disclosure, and reviewer copy. [CHROMEWEBSTORE.md](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/temoto-chrome/CHROMEWEBSTORE.md) tracks readiness. The [2026-09-13 handoff](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/STORE-HANDOFF-2026-09-13.md) is historical preparation evidence for an earlier source state.
 
 ## Product details
 
@@ -102,7 +102,7 @@ https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY
 - Small promo tile: `store/assets/promo-small-440x280.jpg` (440 × 280 JPEG).
 - Optional marquee promo tile: 1400 × 560 PNG or JPEG.
 
-The English/Japanese launcher JPEGs were recaptured locally on 2026-10-13 from the built five-row launcher at 1280 × 800. Their formats, dimensions, and saved-image appearance were checked. The site showcase is a 416 × 402 PNG with SHA-256 prefix `47ae7d5e3c53`; the single-product OG image is a refreshed 1200 × 630 PNG. Legacy standalone Proxy images remain historical material. Use the existing [Store capture workflow](../../shared/STORE-CAPTURE.md) for subsequent artwork; captures do not prove native Chrome permission handling or real proxy traffic.
+The English/Japanese launcher JPEGs were recaptured locally on 2026-10-13 from the built five-row launcher at 1280 × 800. Their formats, dimensions, and saved-image appearance were checked. The site showcase is a 416 × 402 PNG with SHA-256 prefix `47ae7d5e3c53`; the single-product OG image is a refreshed 1200 × 630 PNG. Legacy standalone Proxy images remain historical material. Use the existing [Store capture workflow](../../../AGENTS.md#store-capture-and-release) for subsequent artwork; captures do not prove native Chrome permission handling or real proxy traffic.
 
 On 2026-10-14, old common Store screenshots were removed, leaving one latest English image. The canonical 128 × 128 PNG icon was uploaded again and saved. The existing small promo tile visually matched the current asset and was retained. A Japanese screenshot had been saved before upload, but it is not displayed by the English-only 1.2.0 draft and remains local reference material.
 
@@ -130,7 +130,7 @@ No login required. Open temoto on an HTTP(S) page: pick/copy a color; capture Vi
 
 - [x] Preserve the existing source identity, Item ID `gcncgknjklghkoeiapcbdghodepnllid`, and its public key.
 - [x] Select **1.2.0** as the release version; the source manifest and package version are 1.2.0. The update was published; the public listing showed 1.2.0 on 2026-10-15.
-- [x] Complete native 1.2.0 QA: Color HEX/RGB/HSL copy and format persistence passed, and the user manually confirmed successful new-color acquisition. Screenshot, CSS, Video Speed, restricted-page, and controlled Proxy checks passed; see [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md#integration-verification).
+- [x] Complete native 1.2.0 QA: Color HEX/RGB/HSL copy and format persistence passed, and the user manually confirmed successful new-color acquisition. Screenshot, CSS, Video Speed, restricted-page, and controlled Proxy checks passed; see [CHROMEWEBSTORE.md](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/temoto-chrome/CHROMEWEBSTORE.md#integration-verification).
 - [x] Run final 1.2.0 `npm test` (**125 passed**), `npm run build` (checks for **20 required extension files** passed), and `npm run test:sites` (**4 passed**) on 2026-10-14, including the capture error recovery fix. The redesigned landing page separately passed lint/build and all 6 tests on 2026-10-14.
 - [x] Review the refreshed five-row English/Japanese launcher JPEGs. Browser preview covered Fixed/PAC URL creation, save/edit/activation/Off/delete, active Save & reapply, unfinished-draft reload, and validation-error focus.
 - [x] Obtain the user's authorization for the added Proxy permission, load native Chrome 1.2.0, and verify Fixed/PAC routing, Off, draft restoration, inactive save-only behavior, active Save & reapply, and deletion. Leave Proxy Off with all test profiles deleted.

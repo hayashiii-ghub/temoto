@@ -1,28 +1,35 @@
 # Repository guide
 
-This repository contains the main `temoto` Chrome extension and its public website. The former standalone `temoto Proxy` source remains available for migration and existing users.
+## Structure and checks
 
-## Project map
+Run commands in the affected directory; use Node 22 for extensions and Bun 1.4.2 for the site, matching CI.
 
-- `browser/temoto-chrome/`: the Chrome extension. Follow its nested `AGENTS.md` when working in this directory.
-- `browser/temoto-proxy/`: legacy standalone Proxy source and saved-data compatibility. Preserve existing profiles and credentials; follow its nested `AGENTS.md` when working there.
-- `browser/shared/`: shared design sources and capture tools, including those retained for the legacy extension.
-- `site/`: the public website for temoto, built with Bun and TypeScript. React generates static HTML at build time and hydrates the five demos in the browser. Edit `site/src/`; Vercel publishes `site/dist/` at `https://temoto.shigoto.dev`.
+| Directory | Purpose | Commands |
+| --- | --- | --- |
+| `browser/temoto-chrome/` | Main extension; edit `src/` | `npm ci`, `npm test`, `npm run build`, `npm run test:sites` |
+| `browser/temoto-proxy/` | Retained legacy extension | `npm ci`, `npm run check` |
+| `browser/shared/` | Shared design/capture tools | Check affected consumers |
+| `site/` | Static website; edit `src/` | `bun install --frozen-lockfile`, `bun run check`, `bun run test` |
 
-## Validation
+Keep separate npm/Bun lockfiles and existing scripts. Do not edit generated `dist/`, `.build/`, `release/` or dependencies. Preserve the Chrome Sites build bridge/tests. Vercel publishes `site/dist/` from `site/`; retain the former Sites `.openai/hosting.json`.
 
-Run checks for the product you changed:
+PRs describe changes and verification. Run previews yourself, check responsive/unpacked behavior when relevant, and stop servers afterward.
 
-- Chrome extension: from `browser/temoto-chrome/`, run `npm test`, `npm run build`, and `npm run test:sites`
-- Legacy Proxy, when changed: from `browser/temoto-proxy/`, run `npm run check`
-- Website: use Bun 1.4.2. From `site/`, run `bun install --frozen-lockfile`, `bun run check`, and `bun run test`. `bun run dev` serves a local preview; stop it after verification.
+## Product boundaries
 
-## Working conventions
+- Main product: lowercase `temoto`, English-only, exactly Color Picker, Screenshot, CSS, Video Speed and Proxy. Preserve the flat, ruled popup, neutral inline errors, browser-following light/dark appearance and shared `browser/shared/temoto-popup-tokens.css`. Keep environment/reset/settings surfaces and study assets out of the product.
+- Preserve selected LP copy/layout, purple hero and black lower section/footer in both themes, with no eyebrow. Only tool demos follow browser appearance; use sample data and in-memory Proxy profiles without changing browser settings.
+- Restore page state after captures, including failures; appearance must not alter captured pixels. CSS exposes computed declarations. Confirm clipboard success. Keep unavailable-page detection quiet until a requested operation needs feedback.
+- Display actual video speed, including page-selected rates outside the controls' range. Never apply a previous choice to later/replaced videos. Ignore editable/modifier shortcuts and clean up page scripts/overlays. The explicitly opted-in WebMCP bridge exposes only availability and video-speed control in its own tab.
+- Main Proxy keeps required `proxy`, `regular_only` and Off that clears its override. Saving inactive profiles/drafts must not activate routing; active edits use Save & reapply. Do not add authentication, diagnostics, routing rules, import/export, incognito or extra host/webRequest access. Drafts exclude passwords and clear on Save/Cancel/Delete.
+- Preserve legacy source, advanced profiles and credentials without automatic migration/activation. Passwords stay session-only; exports omit credentials and replacement imports clear session passwords. Keep diagnostics public HTTP(S), without credentials/bodies/redirects, and Incognito opt-in/access. Preserve truthful failures and reversible Off. Allowlisted GET_SUMMARY returns identity/status only; OPEN_MANAGER directs users to the toolbar.
 
-- Keep changes scoped to the affected product unless a cross-product brand, asset, or release change is explicitly required.
-- Preserve the extension npm lockfiles and the website Bun lockfile; these projects are not a package workspace. The website has no Next.js, vinext, or Worker runtime. Vercel uses `site/` as its project root; retain `site/.openai/hosting.json` only to identify the former Sites deployment for redirect management.
-- Do not edit generated or dependency directories such as `.build/`, `node_modules/`, `dist/`.
-- Reuse the existing scripts and package commands instead of duplicating build or release logic.
-- The website keeps its purple hero and black lower section/footer in both themes. Only the tool demo follows the browser's light/dark preference automatically. Its five launcher buttons open interactive demos styled like the extension; use sample content and in-memory profiles, with no proxy or browser settings changes.
+## Assets, capture and release
 
-- Preserve the selected landing-page copy and layout; the hero eyebrow “A small toolkit” was removed on 2026-10-17.
+Keep shared canonical marks, existing icon commands and `store/assets/` images. Preserve font/icon licenses and attribution; core Geist comes from `@fontsource-variable/geist@5.3.0`. Verify rendered badge fonts; retain a system fallback without styling page content. Keep design material outside deployed `site/public/`.
+
+Build the extension; run `node browser/shared/serve-store-capture.mjs` from root for built UI/sample data at `127.0.0.1:4190` (`TEMOTO_CAPTURE_PORT` overrides it). `/?product=chrome&lang=en` (or `ja`): 1280×800; add `&mode=promo`: 440×280. Set scale 1 after navigation, inspect saved dimensions/clipping/alpha and stop the server. Previews do not prove installed behavior or real traffic. OG source: `site/scripts/og.html` / `render-og.sh`; keep OG/X metadata aligned.
+
+`npm run package` in the extension directory creates a keyless Store ZIP in `release/`; unpacked builds retain the reserved identity. Never overwrite submitted ZIPs. Version bumps, website publication and Store submission/release need authorization. Verify package identity/permissions, native Chrome behavior, submission receipt and public status separately.
+
+Keep both `PRIVACY.md` policies at their existing public URLs and each `store/listing.md` as authoritative listing/permission/reviewer copy. Keep user guidance in README.md and work instructions in AGENTS.md; ask before creating another explanatory document.
