@@ -1,9 +1,9 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { createTemotoIcon } from "../../shared/icon-utils.mjs";
+import { createPanelIcon } from "./panel-icon.mjs";
 
 const directory = new URL("../public/icons/", import.meta.url);
 await mkdir(directory, { recursive: true });
 for (const size of [16, 32, 48, 128]) {
-  await writeFile(new URL(`icon-${size}.png`, directory), createTemotoIcon(size));
+  await writeFile(new URL(`icon-${size}.png`, directory), createPanelIcon(size));
 }
-console.log("Generated transparent Joint icons for temoto.");
+console.log("Generated temoto Chrome panel icons.");
