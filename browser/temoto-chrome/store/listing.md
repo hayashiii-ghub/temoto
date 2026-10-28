@@ -80,7 +80,6 @@ Provide a compact local browser-work toolkit for web developers: inspect colors 
 - `storage`: Saves the last picked color, up to eight recent colors, preferred color format, proxy profiles, and selected proxy state locally. Temporary capture coordination metadata and password-free Proxy editor drafts use browser-session storage. Save, Cancel, or Delete clears the draft; reopening it does not apply a proxy.
 - `proxy`: Reads, applies, verifies, and clears user-selected Fixed or PAC URL configurations for regular Chrome windows. This required permission affects browser-wide routing, rather than only the current tab. Integrated Proxy does not add host permissions, `webRequest`, or `webRequestAuthProvider`; HTTP(S) page access remains for Video Speed.
 - `clipboardWrite`: Copies user-selected color values, screenshots, CSS declarations, or selectors.
-- `offscreen`: Monitors the local light or dark color preference in a hidden extension page to select the toolbar icon color.
 
 **Data-use disclosure guidance**
 
@@ -119,7 +118,7 @@ No login required. Open temoto on an HTTP(S) page: pick/copy a color; capture Vi
 
 **Full reviewer test steps**
 
-1. Open an HTTP(S) page and click the temoto toolbar icon. Confirm the launcher has exactly Color Picker, Screenshot, CSS, Video Speed, and Proxy. Its controls and page overlays remain English when Chrome or the page uses another language. Change the light/dark preference and verify that the toolbar icon, popup, capture preview, CSS inspector and video badges follow it. Custom Chrome themes can differ from the reported preference.
+1. Open an HTTP(S) page and click the temoto toolbar icon. Confirm the launcher has exactly Color Picker, Screenshot, CSS, Video Speed, and Proxy. Its controls and page overlays remain English when Chrome or the page uses another language. Change the light/dark preference and verify that the popup, capture preview, CSS inspector and video badges follow it. Check the fixed dark-outline icon with a white panel and transparent corners against standard light and dark toolbars; its appearance can vary with custom Chrome themes.
 2. Pick a color with Chrome's native eyedropper. Confirm HEX/RGB/HSL copy, revisit the tool, and check that only actual picks enter the latest-eight history. Selecting a history color must not create a duplicate.
 3. Capture the visible area and the full page. Confirm that these are the only two capture actions, with no Capture options section. Confirm separate capture previews, image dimensions, Fit/100% zoom, Copy, and Save PNG. Reload a preview within an hour to confirm it retains its own capture; its Close action deletes that capture.
 4. Start CSS inspection, select an element, inspect size, margin/padding, font, colors, and borders, then copy one group or all groups. Copy the unique selector separately. Esc exits; selected-element data is not saved as a page log.

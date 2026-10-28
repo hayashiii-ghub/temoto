@@ -2,7 +2,6 @@ import { savePendingCapture } from "./capture-store.js";
 import { withCaptureLock } from "./capture-lock.js";
 import { isTrustedProxyPopup } from "./proxy-core.js";
 import { createProxyRuntime } from "./proxy-runtime.js";
-import { startToolbarIconSync } from "./toolbar-icon.js";
 import {
   CAPTURE_INTERVAL_MS,
   CAPTURE_PRELOAD_SCROLL_INTERVAL_MS,
@@ -544,11 +543,8 @@ async function handleMessage(message: ExtensionMessage, sender: chrome.runtime.M
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message?.target === "toolbar-icon" || message?.target === "toolbar-theme") return false;
   handleMessage(message as ExtensionMessage, sender).then(sendResponse).catch((error: unknown) => {
     sendResponse({ ok: false, error: error instanceof Error ? error.message : "Unexpected extension error" });
   });
   return true;
 });
-
-startToolbarIconSync();

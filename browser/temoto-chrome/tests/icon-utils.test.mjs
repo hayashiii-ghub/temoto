@@ -36,28 +36,42 @@ test("the 16px panel retains a dark divider, white panels and transparent corner
   assert.ok(pixel(4, 5)[0] < 64, "the horizontal divider must remain dark at 16px");
 });
 
-test("toolbar icons match the outline source at every supported size and background", () => {
-  for (const background of ["light", "dark"]) {
-    for (const size of [16, 24, 32, 48]) {
-      const path = new URL(`../public/icons/toolbar-${background}-${size}.png`, import.meta.url);
-      assert.deepEqual(decoded(readFileSync(path)), decoded(createToolbarIcon(size, background)));
-      const icon = renderToolbarIcon(size, background);
-      assert.equal(icon.width, size);
-      assert.equal(icon.height, size);
-      assert.equal(icon.pixels[3], 0, "corner must remain transparent");
-    }
+test("toolbar icons match the outline source at every supported size", () => {
+  for (const size of [16, 24, 32, 48]) {
+    const path = new URL(`../public/icons/toolbar-${size}.png`, import.meta.url);
+    assert.deepEqual(decoded(readFileSync(path)), decoded(createToolbarIcon(size)));
+    const icon = renderToolbarIcon(size);
+    assert.equal(icon.width, size);
+    assert.equal(icon.height, size);
+    assert.equal(icon.pixels[3], 0, "corner must remain transparent");
   }
 });
 
-test("the 16px toolbar divider is crisp and preserves transparent panel spaces", () => {
-  for (const [background, channel] of [["light", 75], ["dark", 199]]) {
-    const { pixels } = renderToolbarIcon(16, background);
-    const pixel = (x, y) => [...pixels.subarray((y * 16 + x) * 4, (y * 16 + x) * 4 + 4)];
-    assert.deepEqual(pixel(7, 8), [channel, channel, channel, 255]);
-    assert.deepEqual(pixel(5, 6), [channel, channel, channel, 255]);
-    assert.equal(pixel(5, 8)[3], 0);
-    assert.equal(pixel(10, 8)[3], 0);
-    assert.equal(pixel(8, 4)[3], 0);
+test("the 16px toolbar divider is crisp with white panels and transparent corners", () => {
+  const { pixels } = renderToolbarIcon(16);
+  const channel = 75;
+  const pixel = (x, y) => [...pixels.subarray((y * 16 + x) * 4, (y * 16 + x) * 4 + 4)];
+  assert.deepEqual(pixel(7, 8), [channel, channel, channel, 255]);
+  assert.deepEqual(pixel(5, 6), [channel, channel, channel, 255]);
+  assert.deepEqual(pixel(5, 8), [255, 255, 255, 255]);
+  assert.deepEqual(pixel(10, 8), [255, 255, 255, 255]);
+  assert.deepEqual(pixel(8, 4), [255, 255, 255, 255]);
+  assert.equal(pixel(0, 0)[3], 0);
+});
+
+test("toolbar strokes retain contrast against their opaque panel at every size", () => {
+  const luminance = (rgb) => rgb.map((value) => value / 255)
+    .map((value) => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4)
+    .reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index], 0);
+  for (const size of [16, 24, 32, 48]) {
+    const { pixels } = renderToolbarIcon(size);
+    const colors = [];
+    for (let offset = 0; offset < pixels.length; offset += 4) {
+      if (pixels[offset + 3] === 255) colors.push([...pixels.subarray(offset, offset + 3)]);
+    }
+    assert.ok(colors.some((rgb) => rgb.every((value) => value === 255)), "panel must stay opaque white");
+    const stroke = Math.min(...colors.map(luminance));
+    assert.ok(1.05 / (stroke + 0.05) >= 7, "dark stroke must contrast against the white panel");
   }
 });
 

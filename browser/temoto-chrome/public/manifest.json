@@ -12,8 +12,7 @@
     "scripting",
     "storage",
     "clipboardWrite",
-    "proxy",
-    "offscreen"
+    "proxy"
   ],
   "background": {
     "service_worker": "service-worker.js",
@@ -59,10 +58,10 @@
     "default_title": "__MSG_actionTitle__",
     "default_popup": "index.html",
     "default_icon": {
-      "16": "icons/toolbar-light-16.png",
-      "24": "icons/toolbar-light-24.png",
-      "32": "icons/toolbar-light-32.png",
-      "48": "icons/toolbar-light-48.png"
+      "16": "icons/toolbar-16.png",
+      "24": "icons/toolbar-24.png",
+      "32": "icons/toolbar-32.png",
+      "48": "icons/toolbar-48.png"
     }
   },
   "icons": {

@@ -50,7 +50,6 @@ temoto does not upload page content, screenshots, colors, or settings to the dev
 - `storage`: save picked colors, the recent color history, preferred color format, and proxy profiles/state locally; hold temporary capture coordination metadata and password-free Proxy editor drafts in session storage.
 - `proxy`: read, apply, verify, and clear user-selected proxy configuration for regular Chrome windows. This is a required permission and affects browser-wide routing rather than a single tab.
 - `clipboardWrite`: copy user-selected color values, screenshots, CSS declarations, and selectors.
-- `offscreen`: read changes to the local light or dark color preference in a hidden extension page so the toolbar icon can adjust its color.
 - Website access on HTTP(S) pages: load local Video Speed shortcuts and badges in page frames and enable the limited video bridge on explicitly opted-in top-level pages. A bundled font is exposed to these pages only to render the local video badge; no remote font service is used. This access is not used to transmit browsing activity or page content.
 
 Color picking, screenshots, CSS inspection, and proxy activation remain user initiated. Proxy uses `regular_only` and does not configure incognito. It adds no host permissions, `webRequest`, or `webRequestAuthProvider`; the existing HTTP(S) page access is for Video Speed. temoto does not request site-data-clearing access.
