@@ -16,7 +16,7 @@ test("the core manifest resolves its product labels from the sole English catalo
     readFile(new URL("capture.html", root), "utf8"),
   ]);
 
-  assert.equal(manifest.version, "1.2.3");
+  assert.equal(manifest.version, "1.2.4");
   assert.equal(manifest.default_locale, "en");
   assert.deepEqual(catalogs, ["en"]);
   for (const label of [manifest.name, manifest.description, manifest.action.default_title, manifest.commands._execute_action.description]) {

@@ -270,7 +270,7 @@ body[data-surface="popup"], body[data-surface="capture"] {
 .brand-lockup { gap: 8px; }
 .brand-mark { flex: 0 0 auto; }
 .launcher-list { padding: 0 8px 8px; }
-.launcher-card { position: relative; isolation: isolate; padding: 0 8px; gap: 14px; border: 0; border-radius: 6px; }
+.launcher-card { position: relative; isolation: isolate; padding: 0 8px; gap: 14px; border: 0; border-radius: 0; }
 .launcher-card::before { content: ""; position: absolute; inset: 4px 0; z-index: -1; border-radius: inherit; pointer-events: none; transition: background .16s ease; }
 .launcher-card:is(:hover, :active) { background: transparent; }
 .launcher-card:hover:not(:disabled)::before { background: var(--temoto-launcher-hover); }
@@ -281,28 +281,28 @@ body[data-surface="popup"], body[data-surface="capture"] {
 .launcher-label strong { letter-spacing: 0; }
 .launcher-meta.is-accent { color: var(--temoto-popup-muted); font-size: 12px; font-weight: 500; }
 .tool-screen-header { grid-template-columns: 52px minmax(0, 1fr); }
-.tool-screen-header .icon-button { width: 44px; height: 44px; margin-left: 8px; border: 0; border-radius: 6px; }
+.tool-screen-header .icon-button { width: 44px; height: 44px; margin-left: 8px; border: 0; border-radius: 0; }
 .tool-screen-identity { padding: 0 12px 0 4px; }
 .tool-screen-identity strong { font-size: 15px; letter-spacing: 0; }
 .tool-screen-body .primary-action, .tool-screen-body .secondary-action { min-height: 48px; }
 .color-screen { padding: 16px; gap: 10px; }
-.color-swatch { height: 76px; flex: 0 0 auto; border: 1px solid var(--temoto-swatch-border); border-radius: 7px; forced-color-adjust: none; }
-.color-formats { padding: 3px; gap: 2px; background: var(--temoto-popup-surface); border: 1px solid var(--line); border-radius: 7px; }
-.color-formats button { min-height: 36px; border: 1px solid transparent; border-radius: 5px; color: var(--temoto-popup-control-text); }
+.color-swatch { height: 76px; flex: 0 0 auto; border: 1px solid var(--temoto-swatch-border); border-radius: 0; forced-color-adjust: none; }
+.color-formats { padding: 3px; gap: 2px; background: var(--temoto-popup-surface); border: 1px solid var(--line); border-radius: 0; }
+.color-formats button { min-height: 36px; border: 1px solid transparent; border-radius: 0; color: var(--temoto-popup-control-text); }
 .color-formats button[aria-pressed="true"] { border-color: var(--temoto-popup-line-strong); background: var(--temoto-popup-bg); color: var(--temoto-popup-text); }
-.color-screen .color-readout { min-height: 44px; padding: 0 4px 0 12px; border: 1px solid var(--temoto-popup-line-strong); border-radius: 7px; }
+.color-screen .color-readout { min-height: 44px; padding: 0 4px 0 12px; border: 1px solid var(--temoto-popup-line-strong); border-radius: 0; }
 .color-screen .color-readout strong { flex: 1; min-width: 0; font-size: 14px; }
-.color-copy, .color-pick { border: 0; border-radius: 6px; background: transparent; color: var(--temoto-popup-text); cursor: pointer; }
+.color-copy, .color-pick { border: 0; border-radius: 0; background: transparent; color: var(--temoto-popup-text); cursor: pointer; }
 .color-copy { width: 40px; height: 40px; display: grid; place-items: center; flex: 0 0 auto; }
 .color-pick { min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--temoto-popup-line-strong); font-size: 13px; font-weight: 500; }
 .color-copy:hover:not(:disabled), .color-pick:hover:not(:disabled) { background: var(--temoto-popup-control-hover-bg); }
 .color-history { padding: 2px 0 0; gap: 1px; }
-.color-history button { border-radius: 6px; }
+.color-history button { border-radius: 0; }
 .color-history button[aria-pressed="true"] { border-color: var(--temoto-popup-line-strong); }
-.color-history i { border-radius: 4px; forced-color-adjust: none; }
+.color-history i { border-radius: 0; forced-color-adjust: none; }
 .speed-presets button.is-active, .capture-toolbar button[aria-pressed="true"] { box-shadow: inset 0 -2px var(--temoto-popup-text); }
-.capture-stage, .capture-actions button { border-radius: 6px; }
-.capture-toolbar > div { overflow: hidden; border-radius: 6px; }
+.capture-stage, .capture-actions button { border-radius: 0; }
+.capture-toolbar > div { overflow: hidden; border-radius: 0; }
 @media (forced-colors: active) {
   .color-formats button[aria-pressed="true"], .color-history button[aria-pressed="true"], .speed-presets button.is-active, .capture-toolbar button[aria-pressed="true"] { outline: 2px solid Highlight; outline-offset: -2px; }
 }

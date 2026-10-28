@@ -26,6 +26,18 @@ test("checked-in Chrome icons match the panel source", () => {
   }
 });
 
+test("large panel icons keep the white fill inside the opaque black border", () => {
+  for (const size of [48, 128]) {
+    const { pixels } = renderPanelIcon(size);
+    for (let offset = 0; offset < pixels.length; offset += 4) {
+      const [r, g, b, alpha] = pixels.subarray(offset, offset + 4);
+      if (alpha > 0 && alpha < 255) {
+        assert.ok(Math.max(r, g, b) <= 8, `${size}px outer edge must not contain a pale fringe`);
+      }
+    }
+  }
+});
+
 test("the 16px panel retains a dark divider, white panels and transparent corners", () => {
   const { pixels } = renderPanelIcon(16);
   const pixel = (x, y) => [...pixels.subarray((y * 16 + x) * 4, (y * 16 + x) * 4 + 4)];

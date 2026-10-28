@@ -1,6 +1,6 @@
 # Chrome Web Store submission copy
 
-Version **1.2.2** was submitted on **2026-10-15**, adding automatic light/dark appearance and simplifying the product name to **temoto**. The public Store listing showed **1.2.2** on **2026-10-28**. Version **1.2.3** is being prepared locally; this preparation has not submitted it. The current dashboard draft and review status of the separate artwork update have not been checked.
+On **2026-10-28**, the developer dashboard package details showed published version **1.2.2** and draft **1.2.3**; the draft status explicitly said it was not published. Version **1.2.4** restores square corners to the popup controls and capture preview and removes the pale fringe around the extension icon; it changes no functionality, permissions, or data handling. It was submitted for review on **2026-10-28** with automatic publication after approval enabled. The submission receipt was confirmed; the update is not yet confirmed public.
 
 This is the authoritative listing, permission, privacy-disclosure, and reviewer copy. The [historical Store notes](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/temoto-chrome/CHROMEWEBSTORE.md) and [2026-09-13 handoff](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/STORE-HANDOFF-2026-09-13.md) describe earlier source states.
 
@@ -14,7 +14,7 @@ temoto
 
 English
 
-The 1.2.3 package contains only `_locales/en`. The dashboard was previously configured for English only; its current draft state has not been checked. Japanese copy and assets are retained below as local reference material; do not add a Japanese package catalog to restore the old listing locale.
+The 1.2.4 package contains only `_locales/en`. The dashboard and uploaded draft were confirmed to use English only on 2026-10-28. Japanese copy and assets are retained below as local reference material; do not add a Japanese package catalog to restore the old listing locale.
 
 **Suggested category**
 
@@ -97,7 +97,7 @@ https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY
 
 ## Graphic assets
 
-The 1.2.3 launcher keeps hover highlights evenly inset and row dividers visible. Its English launcher screenshot and small promo tile were refreshed locally on 2026-10-28 with the T-panel mark and current light UI. Both exports are sRGB JPEGs without alpha; their dimensions and rendered contents were checked. They have not yet been submitted.
+The 1.2.3 launcher keeps hover highlights evenly inset and row dividers visible. Its English launcher screenshot and small promo tile were refreshed locally on 2026-10-28 with the T-panel mark and current light UI. Both exports are sRGB JPEGs without alpha; their dimensions and rendered contents were checked. The existing launcher screenshot and promo tile were retained for 1.2.4; its 128px Store icon was replaced with the fringe-free panel render and saved before submission.
 
 - Store icon: `public/icons/icon-128.png` (128 × 128 PNG).
 - Launcher screenshot: `store/assets/screenshot-launcher-1280x800.jpg` (1280 × 800 JPEG).
@@ -147,3 +147,12 @@ No login required. Open temoto on an HTTP(S) page: pick/copy a color; capture Vi
 - [x] Confirm and retain the existing free pricing, public visibility, and all-region distribution. Public visibility does not mean the new version has been published.
 - [x] Submit the update for review and verify the submission receipt and Awaiting review status. Automatic publication after approval remains enabled with the user's explicit authorization.
 - [x] Confirm the public 1.2.0 Store release after automatic publication: the public listing showed 1.2.0 on 2026-10-15.
+
+## 1.2.4 submission record
+
+- 2026-10-28: restored square corners in the popup controls, hover backgrounds and capture preview. Kept the icon outline and dividers while moving its white fill inside the black border to remove a pale outer fringe.
+- Final Chrome checks: `npm test` **150 passed**, `npm run package` build verification passed, `npm run test:sites` **4 passed**. The fringe regression test fails against the previous 48px/128px icon renders and passes against the updated source.
+- Store ZIP: `release/temoto-v1.2.4.zip`, **188,105 bytes**, SHA-256 `17237cf219679f827e66d84a646128be2c0ecfe18b844121f52b936b232c9f2d`. Root manifest is 1.2.4 without `key`; all other manifest values match 1.2.3. Existing release ZIPs were preserved.
+- Existing unpacked Chrome extension updated to **1.2.4**. Its loaded 128px icon hash matches the packaged source. The former build and icons are retained outside the repository in the local release outputs.
+- Dashboard package page confirmed draft **1.2.4** and published **1.2.2** before submission. Replaced and saved only the Store icon; retained English copy, screenshot, promo, privacy/distribution settings and reviewer instructions.
+- The final submission dialog had automatic publication after approval checked. The receipt explicitly confirmed submission for review. Public availability remains a separate check after approval.

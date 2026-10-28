@@ -2,7 +2,7 @@
 
 Last updated: October 28, 2026
 
-This policy applies to temoto versions 1.2.0, 1.2.1, 1.2.2, and 1.2.3 and describes their data handling. It does not confirm the behavior of earlier Chrome Web Store versions.
+This policy applies to temoto versions 1.2.0, 1.2.1, 1.2.2, 1.2.3, and 1.2.4 and describes their data handling. It does not confirm the behavior of earlier Chrome Web Store versions.
 
 temoto provides Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching. Proxy applies across regular Chrome windows; the other tools operate on the page the user is viewing.
 
