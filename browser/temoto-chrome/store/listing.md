@@ -1,8 +1,8 @@
 # Chrome Web Store submission copy
 
-Updated and submitted on **2026-10-15** for **1.2.2**, adding automatic light/dark appearance and simplifying the product name to **temoto**. The receipt and **Awaiting review** status were verified after the user completed submission, with automatic publication after approval selected. The public version remains **1.2.1**; [CHROMEWEBSTORE.md](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/temoto-chrome/CHROMEWEBSTORE.md) records the verified Store state.
+Version **1.2.2** was submitted on **2026-10-15**, adding automatic light/dark appearance and simplifying the product name to **temoto**. The public Store listing showed **1.2.2** on **2026-10-28**. Version **1.2.3** is being prepared locally; this preparation has not submitted it. The current dashboard draft and review status of the separate artwork update have not been checked.
 
-This is the authoritative listing, permission, privacy-disclosure, and reviewer copy. [CHROMEWEBSTORE.md](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/temoto-chrome/CHROMEWEBSTORE.md) tracks readiness. The [2026-09-13 handoff](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/STORE-HANDOFF-2026-09-13.md) is historical preparation evidence for an earlier source state.
+This is the authoritative listing, permission, privacy-disclosure, and reviewer copy. The [historical Store notes](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/temoto-chrome/CHROMEWEBSTORE.md) and [2026-09-13 handoff](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/STORE-HANDOFF-2026-09-13.md) describe earlier source states.
 
 ## Product details
 
@@ -14,7 +14,7 @@ temoto
 
 English
 
-The 1.2.2 package contains only `_locales/en`, and the current dashboard language is English only. Previously saved Japanese descriptions and screenshots are not displayed for this draft. Japanese copy and assets are retained below as local reference material; do not add a Japanese package catalog to restore the old listing locale.
+The 1.2.3 package contains only `_locales/en`. The dashboard was previously configured for English only; its current draft state has not been checked. Japanese copy and assets are retained below as local reference material; do not add a Japanese package catalog to restore the old listing locale.
 
 **Suggested category**
 
