@@ -39,10 +39,10 @@
 /* In the integrated popup, selection and fields use the same neutral chrome. */
 .proxy-new, .proxy-delete { padding-inline: 16px; }
 .proxy-select { padding-inline: 16px; gap: 14px; }
-.proxy-edit { border-radius: 6px; }
+.proxy-edit { border-radius: 0; }
 .proxy-profile-row.is-active, .proxy-off.is-active { box-shadow: inset 3px 0 var(--temoto-popup-text); }
 .proxy-field { padding-inline: 16px; }
-.proxy-field input, .proxy-field select { padding: 0 8px; border: 1px solid var(--temoto-popup-line-strong); border-radius: 6px; }
+.proxy-field input, .proxy-field select { padding: 0 8px; border: 1px solid var(--temoto-popup-line-strong); border-radius: 0; }
 .proxy-field input:focus-visible, .proxy-field select:focus-visible { outline: 2px solid var(--temoto-popup-focus); outline-offset: -2px; box-shadow: none; }
 .proxy-kind button[aria-pressed="true"] { box-shadow: inset 0 -2px var(--temoto-popup-text); }
 @media (forced-colors: active) {
