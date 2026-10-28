@@ -17,8 +17,8 @@ PRs describe changes and verification. Run previews yourself, check responsive/u
 
 ## Product boundaries
 
-- Main product: lowercase `temoto`, English-only, exactly Color Picker, Screenshot, CSS, Video Speed and Proxy. Preserve the flat, ruled popup, neutral inline errors, browser-following light/dark appearance and shared `browser/shared/temoto-popup-tokens.css`. Keep environment/reset/settings surfaces and study assets out of the product.
-- Preserve selected LP copy/layout, purple hero and black lower section/footer in both themes, with no eyebrow. Only tool demos follow browser appearance; use sample data and in-memory Proxy profiles without changing browser settings.
+- Main product: lowercase `temoto`, English-only, exactly Color Picker, Screenshot, CSS, Video Speed and Proxy. Use the selected T-panel mark, compact neutral controls, thin outlines and browser-following light/dark appearance. Keep errors inline and neutral. Override shared tokens locally so the retained legacy Proxy design is unchanged; keep environment/reset/settings surfaces and study assets out of the product.
+- Align the LP and interactive demos with the extension's monochrome appearance in both themes. Keep the existing concise copy, one Store CTA and no eyebrow. Use sample data and in-memory Proxy profiles without changing browser settings.
 - Restore page state after captures, including failures; appearance must not alter captured pixels. CSS exposes computed declarations. Confirm clipboard success. Keep unavailable-page detection quiet until a requested operation needs feedback.
 - Display actual video speed, including page-selected rates outside the controls' range. Never apply a previous choice to later/replaced videos. Ignore editable/modifier shortcuts and clean up page scripts/overlays. The explicitly opted-in WebMCP bridge exposes only availability and video-speed control in its own tab.
 - Main Proxy keeps required `proxy`, `regular_only` and Off that clears its override. Saving inactive profiles/drafts must not activate routing; active edits use Save & reapply. Do not add authentication, diagnostics, routing rules, import/export, incognito or extra host/webRequest access. Drafts exclude passwords and clear on Save/Cancel/Delete.
@@ -26,7 +26,7 @@ PRs describe changes and verification. Run previews yourself, check responsive/u
 
 ## Assets, capture and release
 
-Keep shared canonical marks, existing icon commands and `store/assets/` images. Preserve font/icon licenses and attribution; core Geist comes from `@fontsource-variable/geist@5.3.0`. Verify rendered badge fonts; retain a system fallback without styling page content. Keep design material outside deployed `site/public/`.
+Keep the legacy shared mark, existing icon commands and `store/assets/` originals. The current Chrome/LP mark follows `browser/temoto-chrome/icons/toolbar.svg`. Preserve font/icon licenses and attribution; core Geist comes from `@fontsource-variable/geist@5.3.0`. Verify rendered badge fonts; retain a system fallback without styling page content. Keep design material outside deployed `site/public/`.
 
 Build the extension; run `node browser/shared/serve-store-capture.mjs` from root for built UI/sample data at `127.0.0.1:4190` (`TEMOTO_CAPTURE_PORT` overrides it). `/?product=chrome&lang=en` (or `ja`): 1280×800; add `&mode=promo`: 440×280. Set scale 1 after navigation, inspect saved dimensions/clipping/alpha and stop the server. Previews do not prove installed behavior or real traffic. OG source: `site/scripts/og.html` / `render-og.sh`; keep OG/X metadata aligned.
 

@@ -35,46 +35,46 @@
   style.textContent = `
     *, *::before, *::after { box-sizing: border-box; }
     [hidden] { display: none !important; }
-    .outline { position: fixed; pointer-events: none; border: 1px solid #9974f8; background: #9974f810; }
-    .guide, .panel, .tooltip { color-scheme: dark; color: #f4f4f2; background: #080808; border: 1px solid #484848; font: 12px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .outline { position: fixed; pointer-events: none; border: 1px solid #80868b; background: #80868b18; }
+    .guide, .panel, .tooltip { color-scheme: dark; color: #e8eaed; background: #202124; border: 1px solid #3c4043; font: 12px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     .guide { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 24px); padding-left: 12px; pointer-events: auto; }
     .guide span { padding: 10px 0; }
-    .guide strong { color: #bba4fb; white-space: nowrap; }
+    .guide strong { color: #e8eaed; white-space: nowrap; }
     .tooltip { position: fixed; padding: 6px 9px; font-family: ui-monospace, monospace; pointer-events: none; max-width: calc(100vw - 16px); }
     .panel { position: fixed; top: 12px; right: 12px; width: min(360px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow: auto; pointer-events: auto; overscroll-behavior: contain; }
-    header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #484848; }
+    header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #3c4043; }
     h2 { font: 500 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; padding: 12px; }
     button { appearance: none; border: 0; border-radius: 0; background: transparent; color: inherit; font: inherit; padding: 11px 12px; cursor: pointer; min-height: 40px; }
-    button:hover { background: #202020; }
-    button:focus-visible { outline: 2px solid #bba4fb; outline-offset: -3px; }
+    button:hover { background: #303134; }
+    button:focus-visible { outline: 2px solid #e8eaed; outline-offset: -3px; }
     button:disabled { color: #777; cursor: default; }
-    .close { border-left: 1px solid #484848; }
-    .element { margin: 0; padding: 10px 12px; border-bottom: 1px solid #484848; color: #bba4fb; overflow-wrap: anywhere; font: 11px/1.5 ui-monospace, monospace; }
+    .close { border-left: 1px solid #3c4043; }
+    .element { margin: 0; padding: 10px 12px; border-bottom: 1px solid #3c4043; color: #e8eaed; overflow-wrap: anywhere; font: 11px/1.5 ui-monospace, monospace; }
     dl { margin: 0; }
-    .row { display: grid; grid-template-columns: 82px minmax(0, 1fr); border-bottom: 1px solid #303030; }
+    .row { display: grid; grid-template-columns: 82px minmax(0, 1fr); border-bottom: 1px solid #3c4043; }
     dt, dd { margin: 0; padding: 8px 12px; }
-    dt { color: #aaa; border-right: 1px solid #303030; }
+    dt { color: #aaa; border-right: 1px solid #3c4043; }
     dd { overflow-wrap: anywhere; font: 11px/1.5 ui-monospace, monospace; }
     .swatch { display: inline-block; width: 10px; height: 10px; margin-right: 7px; border: 1px solid #777; vertical-align: -1px; }
-    .actions { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #484848; }
-    .actions button + button { border-left: 1px solid #484848; }
-    .primary { color: #c5b2fb; }
-    .another { width: 100%; text-align: left; border-bottom: 1px solid #484848; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #3c4043; }
+    .actions button + button { border-left: 1px solid #3c4043; }
+    .primary { color: #e8eaed; }
+    .another { width: 100%; text-align: left; border-bottom: 1px solid #3c4043; }
     .feedback { padding: 8px 12px; margin: 0; min-height: 34px; overflow-wrap: anywhere; }
-    details { border-top: 1px solid #303030; }
+    details { border-top: 1px solid #3c4043; }
     summary { padding: 10px 12px; cursor: pointer; }
-    summary:focus-visible { outline: 2px solid #bba4fb; outline-offset: -3px; }
-    pre { margin: 0; padding: 0 12px 12px; white-space: pre-wrap; overflow-wrap: anywhere; user-select: text; color: #d8d8d5; font: 10px/1.6 ui-monospace, monospace; }
-    .hint { margin: 0; padding: 9px 12px; border-top: 1px solid #303030; color: #aaa; font-size: 11px; }
+    summary:focus-visible { outline: 2px solid #e8eaed; outline-offset: -3px; }
+    pre { margin: 0; padding: 0 12px 12px; white-space: pre-wrap; overflow-wrap: anywhere; user-select: text; color: #e8eaed; font: 10px/1.6 ui-monospace, monospace; }
+    .hint { margin: 0; padding: 9px 12px; border-top: 1px solid #3c4043; color: #aaa; font-size: 11px; }
     @media (prefers-color-scheme: light) {
-      .guide, .panel, .tooltip { color-scheme: light; color: #161616; background: #f4f4f2; border-color: #c7c7c3; }
-      header, .close, .element, .row, dt, .actions, .actions button + button, .another, details, .hint { border-color: #c7c7c3; }
-      .guide strong, .element, .primary { color: #6540b8; }
-      button:hover { background: #e8e8e5; }
-      button:focus-visible, summary:focus-visible { outline-color: #6540b8; }
-      button:disabled, dt, .hint { color: #62625e; }
-      .swatch { border-color: #62625e; }
-      pre { color: #161616; }
+      .guide, .panel, .tooltip { color-scheme: light; color: #202124; background: #fff; border-color: #dadce0; }
+      header, .close, .element, .row, dt, .actions, .actions button + button, .another, details, .hint { border-color: #dadce0; }
+      .guide strong, .element, .primary { color: #3c4043; }
+      button:hover { background: #f1f3f4; }
+      button:focus-visible, summary:focus-visible { outline-color: #3c4043; }
+      button:disabled, dt, .hint { color: #5f6368; }
+      .swatch { border-color: #5f6368; }
+      pre { color: #202124; }
     }
     @media (forced-colors: active) { .outline { border: 2px solid Highlight; } button:focus-visible { outline-color: Highlight; } }
   `;

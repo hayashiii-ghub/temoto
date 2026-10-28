@@ -20,6 +20,7 @@ const required = [
   "dist/client/icons/icon-32.png",
   "dist/client/icons/icon-48.png",
   "dist/client/icons/icon-128.png",
+  ...[16, 24, 32, 48].map((size) => `dist/client/icons/toolbar-${size}.png`),
   "dist/client/fonts/geist-latin-wght-normal.woff2",
   "dist/client/fonts/LICENSE-Geist.txt",
   "dist/client/_locales/en/messages.json",
@@ -34,9 +35,9 @@ const webMcpProviderScript = manifest.content_scripts?.find((entry) => entry.js?
 const videoBadgeFont = manifest.web_accessible_resources?.find((entry) => entry.resources?.includes("fonts/geist-latin-wght-normal.woff2"));
 if (
   manifest.manifest_version !== 3
+  || Number(manifest.minimum_chrome_version) < 116
   || manifest.action?.default_popup !== "index.html"
-  || manifest.action?.default_icon?.["16"] !== "icons/icon-16.png"
-  || manifest.action?.default_icon?.["32"] !== "icons/icon-32.png"
+  || [16, 24, 32, 48].some((size) => manifest.action?.default_icon?.[size] !== `icons/toolbar-${size}.png`)
   || manifest.default_locale !== "en"
   || !videoBadgeFont?.matches?.includes("http://*/*")
   || !videoBadgeFont?.matches?.includes("https://*/*")
@@ -45,6 +46,8 @@ if (
   || manifest.side_panel
   || manifest.optional_permissions?.includes("browsingData")
   || !manifest.permissions?.includes("proxy")
+  || manifest.permissions?.includes("offscreen")
+  || manifest.optional_permissions?.includes("offscreen")
   || manifest.optional_permissions?.includes("proxy")
   || manifest.permissions?.some((permission) => ["webRequest", "webRequestAuthProvider", "tabs"].includes(permission))
   || !videoSpeedScript?.all_frames
@@ -71,6 +74,9 @@ if (locales.length !== 1 || locales[0] !== "en") {
 const clientRoot = resolve(root, "dist/client");
 for (const file of await readdir(clientRoot, { recursive: true })) {
   if (file === "content/selection.js") throw new Error("Removed region capture was packaged in the extension build");
+  if (["toolbar-icon.js", "toolbar-theme.html", "toolbar-theme.js"].includes(file) || /^icons\/toolbar-(?:light|dark)-\d+\.png$/.test(file)) {
+    throw new Error(`Obsolete toolbar theme asset was packaged: ${file}`);
+  }
   if (!/\.(?:html|css|js)$/.test(file)) continue;
   const content = await readFile(resolve(clientRoot, file), "utf8");
   if (/study/i.test(file) || /studyScreen|site-study|proxy-study|--temoto-study-/.test(content)) {

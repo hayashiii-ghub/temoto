@@ -56,7 +56,7 @@ function createPageWorker({
   };
   Object.defineProperty(chrome, "proxy", { get() { calls.proxy++; throw new Error("Unexpected Proxy access"); } });
   const context = {
-    chrome, Error, URL,
+    chrome, Error, URL, startToolbarIconSync() {},
     async fetch(url) {
       calls.fetches.push(url);
       return fetchResource(url);

@@ -97,12 +97,14 @@ https://github.com/hayashiii-ghub/temoto/blob/main/browser/temoto-chrome/PRIVACY
 
 ## Graphic assets
 
+The 1.2.3 launcher keeps hover highlights evenly inset and row dividers visible. Its English launcher screenshot and small promo tile were refreshed locally on 2026-10-28 with the T-panel mark and current light UI. Both exports are sRGB JPEGs without alpha; their dimensions and rendered contents were checked. They have not yet been submitted.
+
 - Store icon: `public/icons/icon-128.png` (128 × 128 PNG).
 - Launcher screenshot: `store/assets/screenshot-launcher-1280x800.jpg` (1280 × 800 JPEG).
 - Small promo tile: `store/assets/promo-small-440x280.jpg` (440 × 280 JPEG).
 - Optional marquee promo tile: 1400 × 560 PNG or JPEG.
 
-The English/Japanese launcher JPEGs were recaptured locally on 2026-10-13 from the built five-row launcher at 1280 × 800. Their formats, dimensions, and saved-image appearance were checked. The site showcase is a 416 × 402 PNG with SHA-256 prefix `47ae7d5e3c53`; the single-product OG image is a refreshed 1200 × 630 PNG. Legacy standalone Proxy images remain historical material. Use the existing [Store capture workflow](../../../AGENTS.md#store-capture-and-release) for subsequent artwork; captures do not prove native Chrome permission handling or real proxy traffic.
+The site showcase is a current 360 × 326 PNG; the OG and X metadata share the refreshed 1200 × 630 PNG. The Japanese launcher and legacy standalone Proxy images remain historical material. Use the existing [Store capture workflow](../../../AGENTS.md#assets-capture-and-release) for subsequent artwork; captures do not prove native Chrome permission handling or real proxy traffic.
 
 On 2026-10-14, old common Store screenshots were removed, leaving one latest English image. The canonical 128 × 128 PNG icon was uploaded again and saved. The existing small promo tile visually matched the current asset and was retained. A Japanese screenshot had been saved before upload, but it is not displayed by the English-only 1.2.0 draft and remains local reference material.
 
@@ -118,7 +120,7 @@ No login required. Open temoto on an HTTP(S) page: pick/copy a color; capture Vi
 
 **Full reviewer test steps**
 
-1. Open an HTTP(S) page and click the temoto toolbar icon. Confirm the launcher has exactly Color Picker, Screenshot, CSS, Video Speed, and Proxy. Its controls and page overlays remain English when Chrome or the page uses another language. Change the browser light/dark preference and verify that the popup, capture preview, CSS inspector and video badges follow it.
+1. Open an HTTP(S) page and click the temoto toolbar icon. Confirm the launcher has exactly Color Picker, Screenshot, CSS, Video Speed, and Proxy. Its controls and page overlays remain English when Chrome or the page uses another language. Change the light/dark preference and verify that the popup, capture preview, CSS inspector and video badges follow it. Check the fixed dark-outline icon with a white panel and transparent corners against standard light and dark toolbars; its appearance can vary with custom Chrome themes.
 2. Pick a color with Chrome's native eyedropper. Confirm HEX/RGB/HSL copy, revisit the tool, and check that only actual picks enter the latest-eight history. Selecting a history color must not create a duplicate.
 3. Capture the visible area and the full page. Confirm that these are the only two capture actions, with no Capture options section. Confirm separate capture previews, image dimensions, Fit/100% zoom, Copy, and Save PNG. Reload a preview within an hour to confirm it retains its own capture; its Close action deletes that capture.
 4. Start CSS inspection, select an element, inspect size, margin/padding, font, colors, and borders, then copy one group or all groups. Copy the unique selector separately. Esc exits; selected-element data is not saved as a page log.

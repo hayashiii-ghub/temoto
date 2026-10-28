@@ -43,14 +43,14 @@
   };
   const styleBadge = (badge: HTMLDivElement) => {
     Object.assign(badge.style, lightScheme?.matches ? {
-      border: "1px solid rgba(8,8,8,.12)",
-      background: "rgba(244,244,242,.88)",
-      color: "rgba(8,8,8,.78)",
+      border: "1px solid rgba(32,33,36,.18)",
+      background: "rgba(255,255,255,.9)",
+      color: "rgba(32,33,36,.9)",
       textShadow: "none",
     } : {
-      border: "1px solid rgba(255,255,255,.09)",
-      background: "rgba(8,8,8,.38)",
-      color: "rgba(255,255,255,.72)",
+      border: "1px solid rgba(232,234,237,.2)",
+      background: "rgba(32,33,36,.8)",
+      color: "rgba(232,234,237,.9)",
       textShadow: "0 1px 2px rgba(0,0,0,.45)",
     });
   };

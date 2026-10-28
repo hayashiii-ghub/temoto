@@ -31,6 +31,10 @@ function fixture(t) {
     files[`dist/client/icons/icon-${size}.png`] = Buffer.from(`stale built icon ${size}`);
     files[`public/icons/icon-${size}.png`] = Buffer.from(`canonical source icon ${size}`);
   }
+  for (const size of [16, 24, 32, 48]) {
+    files[`dist/client/icons/toolbar-${size}.png`] = Buffer.from(`stale toolbar icon ${size}`);
+    files[`public/icons/toolbar-${size}.png`] = Buffer.from(`canonical toolbar icon ${size}`);
+  }
   for (const [name, content] of Object.entries(files)) {
     const path = join(root, name);
     mkdirSync(resolve(path, ".."), { recursive: true });
@@ -124,6 +128,11 @@ test("publishes a valid keyless archive with canonical icons without modifying s
     const name = `icons/icon-${size}.png`;
     assert.deepEqual(archiveMember(archive, name), readFileSync(join(root, "public", name)));
   }
+  for (const size of [16, 24, 32, 48]) {
+    const name = `icons/toolbar-${size}.png`;
+    assert.deepEqual(archiveMember(archive, name), readFileSync(join(root, "public", name)));
+  }
+  assert.ok(!entries.some((name) => /^(?:toolbar-(?:icon|theme)\.(?:html|js)|icons\/toolbar-(?:light|dark)-\d+\.png)$/.test(name)));
   for (const [name, content] of Object.entries(files)) {
     assert.deepEqual(readFileSync(join(root, name)), Buffer.from(content), `${name} was modified`);
   }
