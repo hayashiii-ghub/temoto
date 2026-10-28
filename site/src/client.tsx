@@ -5,4 +5,6 @@ import "./components/launcher-preview.css";
 
 const root = document.getElementById("app");
 if (!root) throw new Error("Missing page root");
-hydrateRoot(root, <Home />);
+const brandMarkUrl = root.dataset.brandMarkUrl;
+if (!brandMarkUrl) throw new Error("Missing brand mark URL");
+hydrateRoot(root, <Home brandMarkUrl={brandMarkUrl} />);

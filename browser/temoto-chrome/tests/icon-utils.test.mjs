@@ -87,7 +87,7 @@ test("toolbar strokes retain contrast against their opaque panel at every size",
   }
 });
 
-test("the website mark retains the approved toolbar outline geometry", () => {
-  const shapes = (url) => [...readFileSync(url, "utf8").matchAll(/<(?:rect|path)\b[^>]*>/g)].map((match) => match[0].replace(/\s+/g, " ").replace(/\s*\/>$/, "/>"));
-  assert.deepEqual(shapes(new URL("../icons/toolbar.svg", import.meta.url)), shapes(new URL("../../../site/public/temoto-mark.svg", import.meta.url)));
+test("the website mark and fallback favicon match the current extension icon", () => {
+  assert.equal(readFileSync(new URL("../../../site/public/temoto-mark.svg", import.meta.url), "utf8"), readFileSync(new URL("../icons/panel.svg", import.meta.url), "utf8"));
+  assert.deepEqual(decoded(readFileSync(new URL("../../../site/public/favicon-32.png", import.meta.url))), decoded(createPanelIcon(32)));
 });
