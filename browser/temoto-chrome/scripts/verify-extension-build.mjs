@@ -35,7 +35,7 @@ const webMcpProviderScript = manifest.content_scripts?.find((entry) => entry.js?
 const videoBadgeFont = manifest.web_accessible_resources?.find((entry) => entry.resources?.includes("fonts/geist-latin-wght-normal.woff2"));
 if (
   manifest.manifest_version !== 3
-  || Number(manifest.minimum_chrome_version) < 118
+  || Number(manifest.minimum_chrome_version) < 116
   || manifest.action?.default_popup !== "index.html"
   || [16, 24, 32, 48].some((size) => manifest.action?.default_icon?.[size] !== `icons/toolbar-${size}.png`)
   || manifest.default_locale !== "en"
