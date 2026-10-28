@@ -35,7 +35,7 @@ test("renders the selected English landing-page message without JavaScript", asy
   const heading = /<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(html)?.[1] ?? "";
   assert.equal(textContent(heading), "Less friction. More doing.");
   assert.doesNotMatch(html, /A small toolkit/);
-  assert.match(text, /Free · Open source · No account/);
+  assert.doesNotMatch(text, /Free · Open source · No account/);
   assert.match(text, /Color, capture, CSS, video, proxy\. All close at hand\./);
   assert.doesNotMatch(text, /[\u3040-\u30ff\u3400-\u9fff]/);
   assert.doesNotMatch(text, /Switch Origin|Site Reset|selected.region capture|authenticated proxy profiles|domain routing|connection diagnostics|built.in VPN|temoto for macOS|ShelfDrop/i);

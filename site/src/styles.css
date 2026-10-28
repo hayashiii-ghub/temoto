@@ -51,10 +51,11 @@ a:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
 .page { min-height: 100vh; display: flex; flex-direction: column; max-width: 1440px; margin-inline: auto; padding-inline: clamp(24px, 5.55vw, 80px); }
 .skip-link { position: fixed; z-index: 2; top: 12px; left: 16px; padding: 12px 20px; background: var(--button); color: var(--button-text); transform: translateY(-160%); }
 .skip-link:focus { transform: translateY(0); }
-.brand-header { min-height: 144px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.brand-header { min-height: 144px; display: flex; align-items: center; justify-content: space-between; gap: clamp(12px, 3vw, 24px); }
 .brand, .footer-brand { display: inline-flex; align-items: center; gap: 12px; font-size: 24px; line-height: 1; font-weight: 600; letter-spacing: -.035em; }
 .brand-mark { flex: none; }
-.header-link { font-size: 15px; padding-block: 12px; }
+.header-links { display: flex; align-items: center; gap: clamp(12px, 3vw, 28px); flex: none; }
+.header-link { font-size: 15px; padding-block: 12px; white-space: nowrap; }
 .header-link:hover, .footer a:hover { text-decoration: underline; text-underline-offset: 4px; }
 main { flex: 1; display: flex; align-items: center; }
 .hero-layout { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 96px); align-items: center; padding-block: 64px 96px; }
@@ -62,9 +63,6 @@ main { flex: 1; display: flex; align-items: center; }
 h1 { font-size: clamp(52px, 5.55vw, 80px); font-weight: 600; line-height: 1.08; letter-spacing: -.045em; }
 h1 span { display: block; }
 .hero-description { max-width: 480px; margin-top: 28px; color: var(--muted); font-size: 17px; line-height: 1.6; }
-.store-link { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; margin-top: 32px; padding: 12px 24px; border-radius: 8px; background: var(--button); color: var(--button-text); font-size: 16px; font-weight: 600; transition: opacity .15s; }
-.store-link:hover { opacity: .85; }
-.hero-meta { margin-top: 16px; color: var(--muted); font-size: 14px; }
 .product { min-width: 0; }
 .product-figure { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 520px; padding: 48px 24px; border-radius: 12px; background: var(--soft-surface); }
 .launcher { width: min(360px, 100%); }
@@ -88,4 +86,3 @@ h1 span { display: block; }
   .footer { gap: 12px; }
   .footer nav { gap: 18px; }
 }
-@media (prefers-reduced-motion: reduce) { .store-link { transition: none; } }

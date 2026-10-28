@@ -11,15 +11,16 @@ export default function Home({ brandMarkUrl }: { brandMarkUrl: string }) {
         <img className="brand-mark" src={brandMarkUrl} alt="" width={32} height={32} />
         <span>temoto</span>
       </a>
-      <a className="header-link" href={repositoryUrl}>GitHub</a>
+      <nav className="header-links" aria-label="Primary">
+        <a className="header-link" href={chromeStoreUrl}>Add to Chrome</a>
+        <a className="header-link" href={repositoryUrl}>GitHub</a>
+      </nav>
     </header>
     <main id="content">
       <div className="hero-layout">
       <section className="hero" aria-labelledby="temoto-title">
         <h1 id="temoto-title"><span>Less friction.</span><span>More doing.</span></h1>
         <p className="hero-description">Color, capture, CSS, video, proxy. All close at hand.</p>
-        <a className="store-link" href={chromeStoreUrl}>Add to Chrome</a>
-        <p className="hero-meta">Free · Open source · No account</p>
       </section>
       <section className="product" aria-label="Five tools, close at hand">
         <figure className="product-figure">
