@@ -10,10 +10,15 @@ export const siteRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 export const distRoot = join(siteRoot, "dist");
 const siteURL = "https://temoto.shigoto.dev";
 const description = "Color Picker, Screenshot, CSS, Video Speed, and simple Proxy switching in one Chrome extension.";
-const imageHash = createHash("sha256").update(readFileSync(join(siteRoot, "public/og-temoto.png"))).digest("hex").slice(0, 12);
-const imageURL = `${siteURL}/og-temoto.png?v=${imageHash}`;
+function assetURL(filename: string): string {
+  const hash = createHash("sha256").update(readFileSync(join(siteRoot, "public", filename))).digest("hex").slice(0, 12);
+  return `/${filename}?v=${hash}`;
+}
 
 function renderDocument(scripts: string[], styles: string[]): string {
+  const imageURL = `${siteURL}${assetURL("og-temoto.png")}`;
+  const markURL = assetURL("temoto-mark.svg");
+  const faviconURL = assetURL("favicon-32.png");
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,8 +30,8 @@ function renderDocument(scripts: string[], styles: string[]): string {
 <title>temoto</title>
 <meta name="description" content="${description}">
 <link rel="canonical" href="${siteURL}/">
-<link rel="icon" href="/temoto-mark.svg" type="image/svg+xml">
-<link rel="shortcut icon" href="/temoto-mark.svg">
+<link rel="icon" href="${faviconURL}" type="image/png" sizes="32x32">
+<link rel="icon" href="${markURL}" type="image/svg+xml" sizes="any">
 <meta property="og:title" content="temoto">
 <meta property="og:description" content="${description}">
 <meta property="og:type" content="website">
@@ -43,7 +48,7 @@ function renderDocument(scripts: string[], styles: string[]): string {
 ${styles.map(url => `<link rel="stylesheet" href="${url}">`).join("\n")}
 </head>
 <body>
-<div id="app">${renderToString(<Home />)}</div>
+<div id="app" data-brand-mark-url="${markURL}">${renderToString(<Home brandMarkUrl={markURL} />)}</div>
 ${scripts.map(url => `<script type="module" src="${url}"></script>`).join("\n")}
 </body>
 </html>

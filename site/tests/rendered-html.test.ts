@@ -49,8 +49,15 @@ test("keeps public metadata, one Store action and footer resources", async () =>
   const ogHash = createHash("sha256").update(readFileSync(new URL("../public/og-temoto.png", import.meta.url))).digest("hex").slice(0, 12);
   assert.ok(html.includes(`property="og:image" content="https://temoto.shigoto.dev/og-temoto.png?v=${ogHash}"`));
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
-  assert.match(html, /rel="icon" href="\/temoto-mark\.svg" type="image\/svg\+xml"/);
-  assert.match(html, /<img\b[^>]*src="\/temoto-mark\.svg"/);
+  const markHash = createHash("sha256").update(readFileSync(new URL("../public/temoto-mark.svg", import.meta.url))).digest("hex").slice(0, 12);
+  const markURL = `/temoto-mark.svg?v=${markHash}`;
+  assert.ok(html.includes(`rel="icon" href="${markURL}" type="image/svg+xml" sizes="any"`));
+  assert.ok(html.includes(`data-brand-mark-url="${markURL}"`), "hydration must reuse the server-rendered icon URL");
+  const brandImages = [...html.matchAll(/<img\b[^>]*>/g)].filter(match => attribute(match[0], "src").startsWith("/temoto-mark.svg"));
+  assert.equal(brandImages.length, 3);
+  for (const [tag] of brandImages) assert.equal(attribute(tag, "src"), markURL);
+  const faviconHash = createHash("sha256").update(readFileSync(new URL("../public/favicon-32.png", import.meta.url))).digest("hex").slice(0, 12);
+  assert.ok(html.includes(`rel="icon" href="/favicon-32.png?v=${faviconHash}" type="image/png" sizes="32x32"`));
 
   const links = [...html.matchAll(/<a\b[^>]*>[\s\S]*?<\/a>/g)].map(match => match[0]);
   const storeLinks = links.filter(link => attribute(link, "href").startsWith("https://chromewebstore.google.com/"));

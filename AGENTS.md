@@ -26,7 +26,7 @@ PRs describe changes and verification. Run previews yourself, check responsive/u
 
 ## Assets, capture and release
 
-Keep the legacy shared mark, existing icon commands and `store/assets/` originals. The current Chrome/LP mark follows `browser/temoto-chrome/icons/toolbar.svg`. Preserve font/icon licenses and attribution; core Geist comes from `@fontsource-variable/geist@5.3.0`. Verify rendered badge fonts; retain a system fallback without styling page content. Keep design material outside deployed `site/public/`.
+Keep the legacy shared mark, existing icon commands and `store/assets/` originals. The LP mark and favicon follow `browser/temoto-chrome/icons/panel.svg`; keep `site/public/temoto-mark.svg` and `favicon-32.png` in sync with the panel source and generated 32px icon. Preserve font/icon licenses and attribution; core Geist comes from `@fontsource-variable/geist@5.3.0`. Verify rendered badge fonts; retain a system fallback without styling page content. Keep design material outside deployed `site/public/`.
 
 Build the extension; run `node browser/shared/serve-store-capture.mjs` from root for built UI/sample data at `127.0.0.1:4190` (`TEMOTO_CAPTURE_PORT` overrides it). `/?product=chrome&lang=en` (or `ja`): 1280×800; add `&mode=promo`: 440×280. Set scale 1 after navigation, inspect saved dimensions/clipping/alpha and stop the server. Previews do not prove installed behavior or real traffic. OG source: `site/scripts/og.html` / `render-og.sh`; keep OG/X metadata aligned.
 
