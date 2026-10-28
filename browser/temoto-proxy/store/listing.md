@@ -2,7 +2,7 @@
 
 This listing applies to the retained legacy standalone extension. The main product now integrates simple Proxy switching in [temoto](../../temoto-chrome/). Existing legacy profiles and credentials are preserved; no new legacy release is authorized by that integration.
 
-Popup-only revisions are local source work as of **2026-10-13**. The source version remains **1.2.0**; no new package upload, submission, or publication is claimed. The [2026-09-13 handoff](../../STORE-HANDOFF-2026-09-13.md) records earlier preparation, not verification of this UI. [CHROMEWEBSTORE.md](../CHROMEWEBSTORE.md) tracks the remaining release work.
+Popup-only revisions are local source work as of **2026-10-13**. The source version remains **1.2.0**; no new package upload, submission, or publication is claimed. The [2026-09-13 handoff](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/STORE-HANDOFF-2026-09-13.md) records earlier preparation, not verification of this UI. [CHROMEWEBSTORE.md](https://github.com/hayashiii-ghub/temoto/blob/92f621abd979fdfe2dcfaef3ecf5bbd602522be6/browser/temoto-proxy/CHROMEWEBSTORE.md) tracks the remaining release work.
 
 ## Product
 
