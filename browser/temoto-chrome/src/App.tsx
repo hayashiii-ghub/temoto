@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { MouseEventHandler, ReactNode } from "react";
 import {
   ArrowLeft,
@@ -57,9 +57,15 @@ function errorMessage(error: unknown, fallback: string): string {
 }
 
 function Brand({ descriptor }: { descriptor?: string }) {
+  const panelClip = useId();
   return (
     <div className="brand-lockup">
-      <svg className="brand-mark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3.25" y="3.25" width="17.5" height="17.5" rx="2.5" /><path d="M3.5 9h17M12 9v11.5" /></svg>
+      <svg className="brand-mark" width="20" height="20" viewBox="0 0 128 128" fill="var(--temoto-brand-fill)" stroke="var(--temoto-popup-bg)" aria-hidden="true">
+        <defs><clipPath id={panelClip}><rect x="8" y="8" width="112" height="112" rx="20" /></clipPath></defs>
+        <rect x="12" y="12" width="104" height="104" rx="16" stroke="none" />
+        <path d="M8 42H120 M64 42V120" fill="none" strokeWidth="7" clipPath={`url(#${panelClip})`} />
+        <rect x="12" y="12" width="104" height="104" rx="16" fill="none" strokeWidth="8" />
+      </svg>
       <div className="brand-name">
         <span>temoto</span>
         {descriptor && <span className="brand-context"> {descriptor}</span>}
