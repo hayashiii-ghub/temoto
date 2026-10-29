@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { inflateSync } from "node:zlib";
 import test from "node:test";
+import { Resvg } from "@resvg/resvg-js";
 import { createPanelIcon, renderPanelIcon } from "../scripts/panel-icon.mjs";
 import { createToolbarIcon, renderToolbarIcon } from "../scripts/toolbar-icon.mjs";
 
@@ -87,7 +88,10 @@ test("toolbar strokes retain contrast against their opaque panel at every size",
   }
 });
 
-test("the website mark and fallback favicon match the current extension icon", () => {
-  assert.equal(readFileSync(new URL("../../../site/public/temoto-mark.svg", import.meta.url), "utf8"), readFileSync(new URL("../icons/panel.svg", import.meta.url), "utf8"));
-  assert.deepEqual(decoded(readFileSync(new URL("../../../site/public/favicon-32.png", import.meta.url))), decoded(createPanelIcon(32)));
+test("the website mark keeps the panel geometry with surface-colored strokes", () => {
+  const panel = readFileSync(new URL("../icons/panel.svg", import.meta.url), "utf8");
+  const mark = readFileSync(new URL("../../../site/public/temoto-mark.svg", import.meta.url), "utf8");
+  assert.equal(mark, panel.replaceAll('stroke="#080808"', 'stroke="#202124"'));
+  const favicon = new Resvg(mark, { fitTo: { mode: "width", value: 32 } }).render().asPng();
+  assert.deepEqual(decoded(readFileSync(new URL("../../../site/public/favicon-32.png", import.meta.url))), decoded(favicon));
 });
