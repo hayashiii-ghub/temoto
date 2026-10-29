@@ -27,13 +27,13 @@ test("checked-in Chrome icons match the panel source", () => {
   }
 });
 
-test("large panel icons keep the white fill inside the opaque black border", () => {
+test("large panel icons keep the white fill inside the opaque surface-colored border", () => {
   for (const size of [48, 128]) {
     const { pixels } = renderPanelIcon(size);
     for (let offset = 0; offset < pixels.length; offset += 4) {
       const [r, g, b, alpha] = pixels.subarray(offset, offset + 4);
       if (alpha > 0 && alpha < 255) {
-        assert.ok(Math.max(r, g, b) <= 8, `${size}px outer edge must not contain a pale fringe`);
+        assert.ok([r, g, b].every((value, channel) => value <= [32, 33, 36][channel]), `${size}px outer edge must not contain a pale fringe`);
       }
     }
   }
@@ -62,10 +62,10 @@ test("toolbar icons match the outline source at every supported size", () => {
 
 test("the 16px toolbar divider is crisp with white panels and transparent corners", () => {
   const { pixels } = renderToolbarIcon(16);
-  const channel = 75;
+  const stroke = [32, 33, 36, 255];
   const pixel = (x, y) => [...pixels.subarray((y * 16 + x) * 4, (y * 16 + x) * 4 + 4)];
-  assert.deepEqual(pixel(7, 8), [channel, channel, channel, 255]);
-  assert.deepEqual(pixel(5, 6), [channel, channel, channel, 255]);
+  assert.deepEqual(pixel(7, 8), stroke);
+  assert.deepEqual(pixel(5, 6), stroke);
   assert.deepEqual(pixel(5, 8), [255, 255, 255, 255]);
   assert.deepEqual(pixel(10, 8), [255, 255, 255, 255]);
   assert.deepEqual(pixel(8, 4), [255, 255, 255, 255]);
@@ -91,7 +91,7 @@ test("toolbar strokes retain contrast against their opaque panel at every size",
 test("the website mark keeps the panel geometry with surface-colored strokes", () => {
   const panel = readFileSync(new URL("../icons/panel.svg", import.meta.url), "utf8");
   const mark = readFileSync(new URL("../../../site/public/temoto-mark.svg", import.meta.url), "utf8");
-  assert.equal(mark, panel.replaceAll('stroke="#080808"', 'stroke="#202124"'));
+  assert.equal(mark, panel);
   const favicon = new Resvg(mark, { fitTo: { mode: "width", value: 32 } }).render().asPng();
   assert.deepEqual(decoded(readFileSync(new URL("../../../site/public/favicon-32.png", import.meta.url))), decoded(favicon));
 });
