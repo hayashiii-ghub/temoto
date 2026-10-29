@@ -9,7 +9,7 @@ const divider = '<path d="M3.5 9h17M12 9v11.5"/>';
 
 export function renderToolbarIcon(size) {
   if (![16, 24, 32, 48].includes(size)) throw new Error("Unsupported toolbar icon size");
-  if (!source.includes(box) || !source.includes(divider) || !source.includes('stroke="#4b4b4b"') || !source.includes('stroke-width="1.6"')) {
+  if (!source.includes(box) || !source.includes(divider) || !source.includes('stroke="#202124"') || !source.includes('stroke-width="1.6"')) {
     throw new Error("Toolbar icon source geometry is not recognized");
   }
   let svg = source;
