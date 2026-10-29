@@ -209,6 +209,7 @@ body[data-surface="popup"], body[data-surface="capture"] {
   --temoto-control-font-size: 13px;
   --temoto-label-font-size: 14px;
   --temoto-popup-bg: #202124;
+  --temoto-brand-fill: #fff;
   --temoto-popup-text: #e8eaed;
   --temoto-popup-muted: #9aa0a6;
   --temoto-popup-quiet: #9aa0a6;
@@ -238,6 +239,7 @@ body[data-surface="popup"], body[data-surface="capture"] {
 @media (prefers-color-scheme: light) {
   body[data-surface="popup"], body[data-surface="capture"] {
     --temoto-popup-bg: #fff;
+    --temoto-brand-fill: #202124;
     --temoto-popup-text: #202124;
     --temoto-popup-muted: #5f6368;
     --temoto-popup-quiet: #5f6368;
