@@ -181,4 +181,5 @@ No login required. Open temoto on an HTTP(S) page: pick/copy a color; capture Vi
 The toolbar icon uses less padding so it appears larger, with size-specific rendering to retain crisp dividers. The Store icon, functionality, permissions, and data handling are unchanged.
 
 - 2026-10-30: verified `npm test` (150 passed), `npm run package` and `npm run test:sites` (4 passed) under Node 22.23.4. Store ZIP SHA-256: `04c9173c2238fa7bd6247720153bf6f8e22f79ee0d88d7983c37465529e5efc3`.
-- Submitted version **1.2.6** for review and confirmed the submission receipt. Automatic publication was off; after approval, publication requires a separate manual action. Version **1.2.5** was published when the submission was made.
+- Submitted version **1.2.6** for review and confirmed the submission receipt. The initial submission had automatic publication off. Version **1.2.5** was published when the submission was made.
+- 2026-10-30: canceled the initial review and resubmitted version **1.2.6** with automatic publication after approval enabled. The submission receipt and Awaiting review status were confirmed. Public availability remains unverified.
