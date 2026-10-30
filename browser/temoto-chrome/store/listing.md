@@ -176,6 +176,9 @@ No login required. Open temoto on an HTTP(S) page: pick/copy a color; capture Vi
 - At approximately **19:00 JST**, submitted 1.2.5 for review with the automatic-publication-after-approval checkbox checked. The receipts “この 拡張機能 は審査のために送信されました。” and “アイテムを送信しました。” were verified. The item list then showed **temoto version 1.2.5** with **Awaiting review** status; its screenshot was saved in the local preparation outputs. Public availability had not yet been verified at that point.
 - 2026-10-30: the developer dashboard showed version **1.2.5** as published.
 
-## 1.2.6 candidate
+## 1.2.6 submission record
 
-The toolbar icon uses less padding so it appears larger, with size-specific rendering to retain crisp dividers. The Store icon, functionality, permissions, and data handling are unchanged. This candidate has not been submitted.
+The toolbar icon uses less padding so it appears larger, with size-specific rendering to retain crisp dividers. The Store icon, functionality, permissions, and data handling are unchanged.
+
+- 2026-10-30: verified `npm test` (150 passed), `npm run package` and `npm run test:sites` (4 passed) under Node 22.23.4. Store ZIP SHA-256: `04c9173c2238fa7bd6247720153bf6f8e22f79ee0d88d7983c37465529e5efc3`.
+- Submitted version **1.2.6** for review and confirmed the submission receipt. Automatic publication was off; after approval, publication requires a separate manual action. Version **1.2.5** was published when the submission was made.
