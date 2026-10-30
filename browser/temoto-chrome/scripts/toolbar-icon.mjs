@@ -16,8 +16,10 @@ export function renderToolbarIcon(size) {
   if (size === 16) {
     // Align 1px strokes to pixel centers so the small divider remains crisp.
     svg = svg.replace('stroke-width="1.6"', 'stroke-width="1.5"')
-      .replace(box, '<rect x="3.75" y="3.75" width="16.5" height="16.5" rx="3"/>')
-      .replace(divider, '<path d="M3.75 9.75h16.5M11.25 9.75v10.5"/>');
+      .replace(box, '<rect x="2.25" y="2.25" width="19.5" height="19.5" rx="3"/>')
+      .replace(divider, '<path d="M2.25 9.75h19.5M11.25 9.75v12"/>');
+  } else {
+    svg = svg.replace('viewBox="0 0 24 24"', 'viewBox="1.25 1.25 21.5 21.5"');
   }
   svg = svg.replace("<rect ", '<rect fill="#ffffff" ');
   return new Resvg(svg, { fitTo: { mode: "width", value: size } }).render();
