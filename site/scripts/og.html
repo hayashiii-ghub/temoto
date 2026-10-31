@@ -8,25 +8,27 @@
     @font-face { font-family: "Geist"; src: url("../public/brand/Geist-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: block; }
     * { box-sizing: border-box; }
     html, body { color-scheme: light; width: 1200px; height: 630px; margin: 0; overflow: hidden; background: #fff; color: #202124; font-family: "Geist", sans-serif; -webkit-font-smoothing: antialiased; }
-    main { position: relative; width: 1200px; height: 630px; padding: 48px 64px; }
-    .brand { display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 600; letter-spacing: -.035em; }
-    .brand img { width: 32px; height: 32px; }
-    .copy { position: absolute; left: 64px; top: 200px; }
-    h1 { margin: 0; font-size: 70px; font-weight: 600; line-height: 1.08; letter-spacing: -.045em; }
-    h1 span { display: block; }
-    .description { max-width: 500px; margin: 26px 0 0; color: #5f6368; font-size: 18px; line-height: 1.5; }
-    .stage { position: absolute; top: 112px; right: 64px; width: 490px; height: 460px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: #f1f3f4; }
-    .launcher { display: block; width: 360px; height: auto; border: 1px solid #dadce0; border-radius: 8px; }
+    main { width: 1200px; height: 630px; padding: 64px 72px 80px; display: grid; grid-template-rows: 36px 1fr; gap: 32px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 28px; font-weight: 600; letter-spacing: -.035em; }
+    .brand img { display: block; width: 36px; height: 36px; }
+    .composition { display: grid; grid-template-columns: 560px 420px; align-items: center; gap: 76px; }
+    h1 { margin: 0; font-size: 80px; font-weight: 600; line-height: 1.05; letter-spacing: -.05em; }
+    h1 span { display: block; white-space: nowrap; }
+    .description { margin: 28px 0 0; color: #5f6368; font-size: 23px; line-height: 1.5; letter-spacing: -.015em; }
+    .description span { display: block; }
+    .launcher { display: block; width: 420px; height: auto; border-radius: 8px; box-shadow: 0 12px 32px -16px #20212430; }
   </style>
 </head>
 <body>
   <main>
     <header class="brand"><img src="../public/temoto-mark.svg" alt="" /><span>temoto</span></header>
-    <section class="copy">
-      <h1><span>Less friction.</span><span>More doing.</span></h1>
-      <p class="description">Color, capture, CSS, video, proxy. All close at hand.</p>
+    <section class="composition">
+      <div class="copy">
+        <h1><span>Less friction.</span><span>More doing.</span></h1>
+        <p class="description"><span>Color, capture, CSS, video, proxy.</span><span>All close at hand.</span></p>
+      </div>
+      <img class="launcher" src="../public/showcase/chrome-launcher-2x.png" alt="temoto's five tools: Color Picker, Screenshot, CSS, Video Speed, and Proxy" />
     </section>
-    <div class="stage"><img class="launcher" src="../public/showcase/chrome-launcher.png" alt="temoto's five tools: Color Picker, Screenshot, CSS, Video Speed, and Proxy" /></div>
   </main>
 </body>
 </html>
