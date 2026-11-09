@@ -18,6 +18,8 @@ Development and release instructions: [AGENTS.md](AGENTS.md).
 
 The website keeps its existing Bun 1.4.2 build. Cloudflare uses Node 24.22.1, `cf` 1.0.0-beta.28 and Wrangler 4.158.0, pinned in `site/package.json` and `site/bun.lock`. The default configuration targets `temoto-site-preview` without a custom domain. Explicit `--mode production` selects `temoto-site` and binds the existing `temoto.shigoto.dev` domain. Retain the last Vercel deployment and its DNS record for rollback.
 
+For automatic publishing, configure Cloudflare Workers Builds for `main` only, with Node 24.22.1, Bun 1.4.2, and root directory `site/`. Use build command `bun run check && bun run test && bun run cf:build:production` and deploy command `node node_modules/cf/bin/cf deploy --prebuilt --mode production --worker temoto-site`. The manual build and publication commands below remain available.
+
 Use the [shared Apple Container setup](/Users/hayashi/work/projects/dev-environment/README.md) with image `dev-environment:0.1.1`. Mount this checkout's `site/` at `/workspace`, use container `temoto-cf-preview-dev`, separate volumes `temoto-cf-preview-home` and `temoto-cf-preview-node-modules`, and map `127.0.0.1:8794` to container port `8794`. The source stays on Mac; dependencies and cache stay in the two volumes. Do not mount Mac credentials.
 
 ```sh
