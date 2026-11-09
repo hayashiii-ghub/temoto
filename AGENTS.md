@@ -2,7 +2,7 @@
 
 ## Structure and checks
 
-Run commands in the affected directory; use Node 22 for extensions and Bun 1.4.2 for the site, matching CI.
+Run commands in the affected directory; use Node 22 for extensions and Bun 1.4.4 for the site, matching CI.
 
 | Directory | Purpose | Commands |
 | --- | --- | --- |
