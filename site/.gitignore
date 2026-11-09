@@ -2,6 +2,7 @@
 /dist/
 /.vinext/
 /.wrangler/
+/.cloudflare/
 /coverage/
 /.vercel/
 /.site-build-*/
