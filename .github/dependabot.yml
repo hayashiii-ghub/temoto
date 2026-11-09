@@ -8,10 +8,30 @@ updates:
       time: "09:00"
       timezone: "Asia/Tokyo"
     open-pull-requests-limit: 3
+    cooldown:
+      default-days: 3
     groups:
-      minor-and-patch:
+      react:
         applies-to: version-updates
-        patterns: ["*"]
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+        update-types: ["minor", "patch"]
+      # Bunはdependency-typeの公式対応外のため、devDependencies追加時はこの一覧も更新する。
+      development:
+        applies-to: version-updates
+        patterns:
+          - "@types/bun"
+          - "cf"
+          - "typescript"
+          - "wrangler"
+        update-types: ["minor", "patch"]
+      production:
+        applies-to: version-updates
+        patterns:
+          - "*"
         update-types: ["minor", "patch"]
 
   - package-ecosystem: "npm"
@@ -24,10 +44,28 @@ updates:
       time: "09:00"
       timezone: "Asia/Tokyo"
     open-pull-requests-limit: 3
+    cooldown:
+      default-days: 3
     groups:
-      minor-and-patch:
+      react:
         applies-to: version-updates
-        patterns: ["*"]
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+        update-types: ["minor", "patch"]
+      development:
+        applies-to: version-updates
+        dependency-type: development
+        patterns:
+          - "*"
+        update-types: ["minor", "patch"]
+      production:
+        applies-to: version-updates
+        dependency-type: production
+        patterns:
+          - "*"
         update-types: ["minor", "patch"]
       security-updates:
         applies-to: security-updates
@@ -41,6 +79,8 @@ updates:
       time: "09:00"
       timezone: "Asia/Tokyo"
     open-pull-requests-limit: 3
+    cooldown:
+      default-days: 3
     groups:
       minor-and-patch:
         applies-to: version-updates
