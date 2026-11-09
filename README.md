@@ -16,7 +16,7 @@ Development and release instructions: [AGENTS.md](AGENTS.md).
 
 ## Website on Cloudflare
 
-The website keeps its existing Bun 1.4.4 build. Cloudflare uses Node 24.22.1, `cf` 1.0.0-beta.28 and Wrangler 4.158.0, pinned in `site/package.json` and `site/bun.lock`. The default configuration targets `temoto-site-preview` without a custom domain. Explicit `--mode production` selects `temoto-site` and binds the existing `temoto.shigoto.dev` domain. Retain the last Vercel deployment and its DNS record for rollback.
+The website keeps its existing Bun 1.4.4 build. Cloudflare uses Node 24.22.1, `cf` 1.0.0-beta.28 and Wrangler 4.158.0, pinned in `site/package.json` and `site/bun.lock`. The default configuration targets `temoto-site-preview` without a custom domain. Explicit `--mode production` selects `temoto-site` and binds the existing `temoto.shigoto.dev` domain. On 2026-11-09, the former Vercel project, deployments, and Vercel domain assignment were deleted after backup and verification. Cloudflare continues to serve `temoto.shigoto.dev`.
 
 For automatic publishing, configure Cloudflare Workers Builds for `main` only, with Node 24.22.1, Bun 1.4.4, and root directory `site/`. Use build command `bun run check && bun run test && bun run cf:build:production` and deploy command `node node_modules/cf/bin/cf deploy --prebuilt --mode production --worker temoto-site`. The manual build and publication commands below remain available.
 
@@ -35,6 +35,6 @@ Open `http://localhost:8794`. Stop the preview with Ctrl+C, then `container stop
 
 To prepare the production Worker without uploading, run `container exec -w /workspace temoto-cf-preview-dev bunx --package bun@1.4.4 bun run cf:check:production`. Both modes use the same Build Output directory, so rebuild the intended mode immediately before a later deploy. cf beta.28 rejects an explicitly mismatched mode, but omitting the mode trusts Build Output. Both check scripts specify the expected Worker name; a mismatched `--worker` is rejected. After review, the Mac command for production artifacts is `fnm exec --using=24.22.1 cf deploy --prebuilt --mode production --worker temoto-site`. It also applies the production custom domain, so treat it as a live DNS cutover and keep the domain declaration in source for later deployments.
 
-After cutover, verify the public domain and all five demos before retiring the old host. Keep Vercel and its automatic-deployment settings unchanged during the switch. For rollback, pause Cloudflare production publishing, detach the custom domain, then restore the saved Vercel CNAME record. Removing `domains` from this configuration alone does not detach an existing custom domain.
+Restoring the saved Vercel CNAME alone cannot recover the deleted project or deployments. To return to Vercel, first recreate the project, redeploy the site, and verify the new deployment target. Only then pause Cloudflare production publishing, detach the custom domain, and update DNS to the verified target. Removing `domains` from this configuration alone does not detach an existing custom domain.
 
 [MIT License](LICENSE)
