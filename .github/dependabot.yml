@@ -19,6 +19,12 @@ updates:
           - "@types/react"
           - "@types/react-dom"
         update-types: ["minor", "patch"]
+      # cf と wrangler はプレリリースを含め、常に同じ PR へ入れる。update-types は付けない。development より前で一致させる。
+      cloudflare-toolchain:
+        applies-to: version-updates
+        patterns:
+          - "cf"
+          - "wrangler"
       # Bunはdependency-typeの公式対応外のため、devDependencies追加時はこの一覧も更新する。
       development:
         applies-to: version-updates
