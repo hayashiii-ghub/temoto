@@ -37,6 +37,9 @@ jobs:
       - name: Test site
         run: bun run test
 
+      - name: Build Cloudflare production output
+        run: bun run cf:build:production
+
   chrome:
     runs-on: ubuntu-latest
     defaults:
